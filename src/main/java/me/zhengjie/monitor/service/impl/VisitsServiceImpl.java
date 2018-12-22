@@ -1,0 +1,87 @@
+package me.zhengjie.monitor.service.impl;
+
+import me.zhengjie.common.utils.IpUtil;
+import me.zhengjie.common.utils.RequestHolder;
+import me.zhengjie.common.utils.TimeUtil;
+import me.zhengjie.monitor.domain.Logging;
+import me.zhengjie.monitor.domain.Visits;
+import me.zhengjie.monitor.repository.LoggingRepository;
+import me.zhengjie.monitor.repository.VisitsRepository;
+import me.zhengjie.monitor.service.VisitsService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+/**
+ * @author jie
+ * @date 2018-12-13
+ */
+@Service
+@Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
+public class VisitsServiceImpl implements VisitsService {
+
+    @Autowired
+    private VisitsRepository visitsRepository;
+
+    @Autowired
+    private LoggingRepository loggingRepository;
+
+    @Override
+    public void save(HttpServletRequest request) {
+        LocalDate localDate = LocalDate.now();
+        Visits visits = visitsRepository.findByDate(localDate.toString());
+        if(visits != null){
+            visits.setPvCounts(visits.getPvCounts()+1);
+            long ipCounts = loggingRepository.findIp(localDate.toString(), localDate.plusDays(1).toString());
+            visits.setIpCounts(ipCounts);
+        }else {
+            visits = new Visits();
+            visits.setWeekDay(TimeUtil.getWeekDay());
+            visits.setPvCounts(1L);
+            visits.setIpCounts(1L);
+            visits.setDate(localDate.toString());
+        }
+        visitsRepository.save(visits);
+    }
+
+    @Override
+    public Object get() {
+        Map map = new HashMap();
+        LocalDate localDate = LocalDate.now();
+        Visits visits = visitsRepository.findByDate(localDate.toString());
+        if(visits == null){
+            save(RequestHolder.getHttpServletRequest());
+        }
+        List<Visits> list = visitsRepository.findAllVisits(localDate.minusDays(6).toString(),localDate.plusDays(1).toString());
+
+        long recentVisits = 0, recentIp = 0;
+        for (Visits data : list) {
+            recentVisits += data.getPvCounts();
+            recentIp += data.getIpCounts();
+        }
+        map.put("newVisits",visits.getPvCounts());
+        map.put("newIp",visits.getIpCounts());
+        map.put("recentVisits",recentVisits);
+        map.put("recentIp",recentIp);
+        return map;
+    }
+
+    @Override
+    public Object getChartData() {
+        Map map = new HashMap();
+        LocalDate localDate = LocalDate.now();
+        List<Visits> list = visitsRepository.findAllVisits(localDate.minusDays(6).toString(),localDate.plusDays(1).toString());
+        map.put("weekDays",list.stream().map(Visits::getWeekDay).collect(Collectors.toList()));
+        map.put("visitsData",list.stream().map(Visits::getPvCounts).collect(Collectors.toList()));
+        map.put("ipData",list.stream().map(Visits::getIpCounts).collect(Collectors.toList()));
+        return map;
+    }
+}

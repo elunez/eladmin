@@ -1,0 +1,90 @@
+server:
+  port: 80
+
+#配置数据源
+spring:
+  datasource:
+    druid:
+      type: com.alibaba.druid.pool.DruidDataSource
+      driverClassName: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+      url: jdbc:log4jdbc:mysql://localhost:3306/eladmin?serverTimezone=Asia/Shanghai&characterEncoding=utf8&useSSL=false
+      username: root
+      password: 123456
+
+      # 初始化连接大小
+      initial-size: 5
+      # 最小空闲连接数
+      min-idle: 5
+      max-active: 20
+      max-wait: 30000
+      # 可关闭的空闲连接间隔时间
+      time-between-eviction-runs-millis: 60000
+      # 配置连接在池中的最小生存时间
+      min-evictable-idle-time-millis: 300000
+      validation-query: select '1' from dual
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      # 打开PSCache，并且指定每个连接上PSCache的大小
+      pool-prepared-statements: true
+      max-open-prepared-statements: 20
+      max-pool-prepared-statement-per-connection-size: 20
+      # 配置监控统计拦截的filters
+      filters: stat
+
+      stat-view-servlet:
+        url-pattern: /druid/*
+        reset-enable: false
+        login-username: admin
+        login-password: 123456
+
+      web-stat-filter:
+        url-pattern: /*
+        exclusions: "*.js,*.gif,*.jpg,*.bmp,*.png,*.css,*.ico,/druid/*"
+
+  #配置 Jpa
+  jpa:
+    properties:
+      hibernate:
+        show_sql: true
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    open-in-view: true
+
+  jackson:
+    time-zone: GMT+8
+
+  redis:
+    #数据库索引
+    database: 0
+    host: 127.0.0.1
+    port: 6379
+    password:
+    jedis:
+      pool:
+        #最大连接数
+        max-active: 100
+        #最大阻塞等待时间(负数表示没限制)
+        max-wait: 2000
+        #最大空闲
+        max-idle: 500
+        #最小空闲
+        min-idle: 8
+    #连接超时时间
+    timeout: 5000
+
+#jwt
+jwt:
+  header: Authorization
+  secret: mySecret
+  # token 过期时间 1个小时
+  expiration: 3600000
+#  expiration: 60000
+  auth:
+    # 授权路径
+    path: /login
+    # 获取用户信息
+    account: /info
