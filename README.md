@@ -1,9 +1,9 @@
 # eladmin
 
-项目基于 Spring Boot 2.1.0 、 Spring boot Jpa、 Spring Security、redis、Vue的前后端分离的权限管理系统， 权限控制采用 RBAC 思想，支持 动态路由、项目1.0版本提供一个纯净的后台管理，第三方工具将在后面的版本中添加，前端源码地址：[el-admin-qd](el-admin-qd)
+项目基于 Spring Boot 2.1.0 、 Spring boot Jpa、 Spring Security、redis、Vue的前后端分离的权限管理系统， 权限控制采用 RBAC 思想，支持 动态路由、项目1.0版本提供一个纯净的后台管理，第三方工具将在后面的版本中添加，前端源码地址：[https://github.com/elunez/eladmin-qd](https://github.com/elunez/eladmin-qd)
 
 #### 预览地址
-[https://auauz.net](https://auauz.net)
+[http://auauz.net](http://auauz.net)
 
 #### 系统功能模块
 
