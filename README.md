@@ -4,6 +4,8 @@
 
 #### 预览地址
 [http://auauz.net](http://auauz.net)
+- 用户名： admin
+- 密码： 123456
 
 #### 系统功能模块
 
