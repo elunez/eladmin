@@ -62,10 +62,13 @@ public class MenuServiceImpl implements MenuService {
         }
 
         menu.setName(resources.getName());
+        menu.setComponent(resources.getComponent());
+        menu.setPath(resources.getPath());
         menu.setIcon(resources.getIcon());
         menu.setIFrame(resources.getIFrame());
         menu.setPid(resources.getPid());
         menu.setSoft(resources.getSoft());
+        menu.setRoles(resources.getRoles());
         menuRepository.save(menu);
     }
 
