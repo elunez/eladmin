@@ -1,5 +1,6 @@
 package me.zhengjie.system.service.impl;
 
+import me.zhengjie.common.exception.BadRequestException;
 import me.zhengjie.common.exception.EntityExistException;
 import me.zhengjie.common.utils.ValidationUtil;
 import me.zhengjie.system.domain.Permission;
@@ -50,6 +51,14 @@ public class PermissionServiceImpl implements PermissionService {
         ValidationUtil.isNull(optionalPermission,"Permission","id",resources.getId());
 
         Permission permission = optionalPermission.get();
+
+        /**
+         * 根据实际需求修改
+         */
+        if(permission.getId().equals(1L)){
+            throw new BadRequestException("该权限不能被修改");
+        }
+
         Permission permission1 = permissionRepository.findByName(resources.getName());
 
         if(permission1 != null && !permission1.getId().equals(permission.getId())){
@@ -65,6 +74,12 @@ public class PermissionServiceImpl implements PermissionService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void delete(Long id) {
+        /**
+         * 根据实际需求修改
+         */
+        if(id.equals(1L)){
+            throw new BadRequestException("该权限不能被删除");
+        }
         List<Permission> permissionList = permissionRepository.findByPid(id);
         for (Permission permission : permissionList) {
             permissionRepository.delete(permission);

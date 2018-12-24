@@ -5,6 +5,7 @@ import me.zhengjie.common.exception.EntityExistException;
 import me.zhengjie.common.exception.EntityNotFoundException;
 import me.zhengjie.common.utils.ValidationUtil;
 import me.zhengjie.core.utils.EncryptUtils;
+import me.zhengjie.core.utils.JwtTokenUtil;
 import me.zhengjie.system.domain.User;
 import me.zhengjie.system.repository.UserRepository;
 import me.zhengjie.system.service.UserService;
@@ -29,6 +30,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
 
     @Override
     public UserDTO findById(long id) {
@@ -68,6 +72,13 @@ public class UserServiceImpl implements UserService {
 
         User user = userOptional.get();
 
+        /**
+         * 根据实际需求修改
+         */
+        if(user.getId().equals(1L)){
+            throw new BadRequestException("该账号不能被修改");
+        }
+
         User user1 = userRepository.findByUsername(user.getUsername());
         User user2 = userRepository.findByEmail(user.getEmail());
 
@@ -94,6 +105,13 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void delete(Long id) {
+
+        /**
+         * 根据实际需求修改
+         */
+        if(id.equals(1L)){
+            throw new BadRequestException("该账号不能被删除");
+        }
         userRepository.deleteById(id);
     }
 

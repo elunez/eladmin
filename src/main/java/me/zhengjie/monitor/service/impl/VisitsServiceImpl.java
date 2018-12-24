@@ -1,5 +1,6 @@
 package me.zhengjie.monitor.service.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import me.zhengjie.common.utils.IpUtil;
 import me.zhengjie.common.utils.RequestHolder;
 import me.zhengjie.common.utils.TimeUtil;
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
  * @author jie
  * @date 2018-12-13
  */
+@Slf4j
 @Service
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class VisitsServiceImpl implements VisitsService {
@@ -58,7 +60,11 @@ public class VisitsServiceImpl implements VisitsService {
         LocalDate localDate = LocalDate.now();
         Visits visits = visitsRepository.findByDate(localDate.toString());
         if(visits == null){
-            save(RequestHolder.getHttpServletRequest());
+            try {
+                save(RequestHolder.getHttpServletRequest());
+            } catch (Exception e) {
+                log.error(e.getMessage());
+            }
         }
         List<Visits> list = visitsRepository.findAllVisits(localDate.minusDays(6).toString(),localDate.plusDays(1).toString());
 

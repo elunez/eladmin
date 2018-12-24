@@ -1,5 +1,6 @@
 package me.zhengjie.system.service.impl;
 
+import me.zhengjie.common.exception.BadRequestException;
 import me.zhengjie.common.exception.EntityExistException;
 import me.zhengjie.common.utils.ValidationUtil;
 import me.zhengjie.system.domain.Role;
@@ -51,6 +52,14 @@ public class RoleServiceImpl implements RoleService {
         ValidationUtil.isNull(optionalRole,"Role","id",resources.getId());
 
         Role role = optionalRole.get();
+
+        /**
+         * 根据实际需求修改
+         */
+        if(role.getId().equals(1L)){
+            throw new BadRequestException("该角色不能被修改");
+        }
+
         Role role1 = roleRepository.findByName(resources.getName());
 
         if(role1 != null && !role1.getId().equals(role.getId())){
@@ -66,6 +75,13 @@ public class RoleServiceImpl implements RoleService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void delete(Long id) {
+
+        /**
+         * 根据实际需求修改
+         */
+        if(id.equals(1L)){
+            throw new BadRequestException("该角色不能被删除");
+        }
         roleRepository.deleteById(id);
     }
 
