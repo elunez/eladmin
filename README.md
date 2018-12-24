@@ -6,6 +6,12 @@
 - 码云：[https://gitee.com/elunez/eladmin-qt](https://gitee.com/elunez/eladmin-qt)
 - github：[https://github.com/elunez/eladmin-qd](https://github.com/elunez/eladmin-qd)
 
+#### 前端初始模板
+基于PanJiaChen的：[https://github.com/PanJiaChen/vue-admin-template](https://github.com/PanJiaChen/vue-admin-template)
+
+#### 前端参考文档
+[https://panjiachen.github.io/vue-element-admin-site/zh/guide/](https://panjiachen.github.io/vue-element-admin-site/zh/guide/)
+
 #### 预览地址
 [http://auauz.net](http://auauz.net)
 - 用户名： admin
@@ -32,8 +38,8 @@
 - 其他：fastjson，aop，MapStruct等。
 
 #### 前端技术栈
-
-- Vue
+- node
+- vue
 - vue-router
 - axios
 - element ui
