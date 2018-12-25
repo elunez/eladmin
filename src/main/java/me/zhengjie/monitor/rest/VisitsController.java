@@ -23,7 +23,7 @@ public class VisitsController {
 
     @PostMapping(value = "/visits")
     public ResponseEntity create(){
-        visitsService.save(RequestHolder.getHttpServletRequest());
+        visitsService.count(RequestHolder.getHttpServletRequest());
         return new ResponseEntity(HttpStatus.CREATED);
     }
 

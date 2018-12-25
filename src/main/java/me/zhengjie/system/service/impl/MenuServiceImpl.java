@@ -37,7 +37,7 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public List<MenuDTO> findByRoles(Set<Role> roles) {
-        Set<Menu> menus = menuRepository.findByRoles(roles);
+        Set<Menu> menus = menuRepository.findByRolesOrderBySoft(roles);
         return menus.stream().map(menuMapper::toDto).collect(Collectors.toList());
     }
 
@@ -141,6 +141,7 @@ public class MenuServiceImpl implements MenuService {
                     if(menuDTO.getPid().equals(0L)){
                         //一级目录需要加斜杠，不然访问不了
                         menuVo.setPath("/" + menuDTO.getPath());
+                        menuVo.setName(null);
                     }
                     menuVo.setComponent(StrUtil.isEmpty(menuDTO.getComponent())?"Layout":menuDTO.getComponent());
                 }

@@ -1,10 +1,7 @@
 package me.zhengjie.monitor.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import me.zhengjie.common.utils.IpUtil;
-import me.zhengjie.common.utils.RequestHolder;
 import me.zhengjie.common.utils.TimeUtil;
-import me.zhengjie.monitor.domain.Logging;
 import me.zhengjie.monitor.domain.Visits;
 import me.zhengjie.monitor.repository.LoggingRepository;
 import me.zhengjie.monitor.repository.VisitsRepository;
@@ -15,7 +12,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,20 +33,28 @@ public class VisitsServiceImpl implements VisitsService {
     private LoggingRepository loggingRepository;
 
     @Override
-    public void save(HttpServletRequest request) {
+    public void save() {
         LocalDate localDate = LocalDate.now();
         Visits visits = visitsRepository.findByDate(localDate.toString());
-        if(visits != null){
-            visits.setPvCounts(visits.getPvCounts()+1);
-            long ipCounts = loggingRepository.findIp(localDate.toString(), localDate.plusDays(1).toString());
-            visits.setIpCounts(ipCounts);
-        }else {
+        if(visits == null){
             visits = new Visits();
             visits.setWeekDay(TimeUtil.getWeekDay());
             visits.setPvCounts(1L);
             visits.setIpCounts(1L);
             visits.setDate(localDate.toString());
         }
+    }
+
+    @Override
+    public void count(HttpServletRequest request) {
+
+        // 部署到线上后，可将save()删除
+        save();
+        LocalDate localDate = LocalDate.now();
+        Visits visits = visitsRepository.findByDate(localDate.toString());
+        visits.setPvCounts(visits.getPvCounts()+1);
+        long ipCounts = loggingRepository.findIp(localDate.toString(), localDate.plusDays(1).toString());
+        visits.setIpCounts(ipCounts);
         visitsRepository.save(visits);
     }
 
@@ -59,13 +63,6 @@ public class VisitsServiceImpl implements VisitsService {
         Map map = new HashMap();
         LocalDate localDate = LocalDate.now();
         Visits visits = visitsRepository.findByDate(localDate.toString());
-        if(visits == null){
-            try {
-                save(RequestHolder.getHttpServletRequest());
-            } catch (Exception e) {
-                log.error(e.getMessage());
-            }
-        }
         List<Visits> list = visitsRepository.findAllVisits(localDate.minusDays(6).toString(),localDate.plusDays(1).toString());
 
         long recentVisits = 0, recentIp = 0;

@@ -11,11 +11,16 @@ import javax.servlet.http.HttpServletRequest;
 public interface VisitsService {
 
     /**
+     * 提供给定时任务，每天0点执行
+     */
+    void save();
+
+    /**
      * 新增记录
      * @param request
      */
     @Async
-    void save(HttpServletRequest request);
+    void count(HttpServletRequest request);
 
     /**
      * 获取数据

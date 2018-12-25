@@ -53,7 +53,6 @@ public class MenuController {
     @GetMapping(value = "/menus/build")
     public ResponseEntity buildMenus(HttpServletRequest request){
         User user = userService.findByName(jwtTokenUtil.getUserName(request));
-
         List<MenuDTO> menuDTOList = menuService.findByRoles(user.getRoles());
         return new ResponseEntity(menuService.buildMenus((List<MenuDTO>)menuService.buildTree(menuDTOList).get("content")),HttpStatus.OK);
     }

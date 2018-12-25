@@ -77,6 +77,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .authorizeRequests()
 
             .antMatchers("/auth/**").permitAll()
+            .antMatchers("/websocket/**").anonymous()
 
             .antMatchers("/druid/**").anonymous()
             // swagger start

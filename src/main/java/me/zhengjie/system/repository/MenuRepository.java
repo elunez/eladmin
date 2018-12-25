@@ -25,7 +25,7 @@ public interface MenuRepository extends JpaRepository<Menu, Long>, JpaSpecificat
      * @param roleSet
      * @return
      */
-    Set<Menu> findByRoles(Set<Role> roleSet);
+    Set<Menu> findByRolesOrderBySoft(Set<Role> roleSet);
 
     /**
      * findByPid
