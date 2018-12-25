@@ -17,6 +17,8 @@ public class MenuVo {
 
     private String path;
 
+    private String redirect;
+
     private String component;
 
     private Boolean alwaysShow;
