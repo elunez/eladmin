@@ -42,6 +42,7 @@ public class VisitsServiceImpl implements VisitsService {
             visits.setPvCounts(1L);
             visits.setIpCounts(1L);
             visits.setDate(localDate.toString());
+            visitsRepository.save(visits);
         }
     }
 
