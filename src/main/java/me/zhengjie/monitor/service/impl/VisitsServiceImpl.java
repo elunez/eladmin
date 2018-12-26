@@ -48,9 +48,6 @@ public class VisitsServiceImpl implements VisitsService {
 
     @Override
     public void count(HttpServletRequest request) {
-
-        // 部署到线上后，可将save()删除
-        save();
         LocalDate localDate = LocalDate.now();
         Visits visits = visitsRepository.findByDate(localDate.toString());
         visits.setPvCounts(visits.getPvCounts()+1);

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scan="true" scanPeriod="60 seconds" debug="false">
-    <contextName>elune</contextName>
-    <property name="log.path" value="log" />
+    <contextName>elAdmin</contextName>
 
     <!--输出到控制台-->
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
@@ -14,22 +13,9 @@
         <filter class="me.zhengjie.monitor.config.LogFilter"></filter>
     </appender>
 
-    <!--输出到文件-->
-    <!--<appender name="file" class="ch.qos.logback.system.rolling.RollingFileAppender">-->
-        <!--<rollingPolicy class="ch.qos.logback.system.rolling.TimeBasedRollingPolicy">-->
-            <!--<fileNamePattern>${log.path}/logback.%d{yyyy-MM-dd}.log</fileNamePattern>-->
-        <!--</rollingPolicy>-->
-        <!--<encoder>-->
-            <!--<pattern>%d{HH:mm:ss.SSS} %contextName [%thread] %-5level %logger{36} - %msg%n</pattern>-->
-        <!--</encoder>-->
-    <!--</appender>-->
-
-
-
     <!--普通日志输出到控制台-->
     <root level="info">
         <appender-ref ref="console" />
-        <!--<appender-ref ref="file" />-->
     </root>
 
     <!-- logback为java中的包 -->
