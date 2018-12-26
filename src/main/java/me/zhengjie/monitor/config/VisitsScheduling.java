@@ -18,9 +18,9 @@ public class VisitsScheduling {
     private VisitsService visitsService;
 
     /**
-     * 每天0：01运行
+     * 每天0点运行
      */
-    @Scheduled(cron = "1 0 0 * * ?")
+    @Scheduled(cron = "0 0 0 * * ?")
     public void save(){
         visitsService.save();
     }
