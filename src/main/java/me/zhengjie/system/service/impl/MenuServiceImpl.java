@@ -37,7 +37,12 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public List<MenuDTO> findByRoles(Set<Role> roles) {
-        Set<Menu> menus = menuRepository.findByRolesOrderBySoft(roles);
+        Set<Menu> menus = new LinkedHashSet<>();
+        for (Role role : roles) {
+            Set<Role> roleSet = new HashSet<>();
+            roleSet.add(role);
+            menus.addAll(menuRepository.findByRolesOrderBySort(roleSet));
+        }
         return menus.stream().map(menuMapper::toDto).collect(Collectors.toList());
     }
 
@@ -67,7 +72,7 @@ public class MenuServiceImpl implements MenuService {
         menu.setIcon(resources.getIcon());
         menu.setIFrame(resources.getIFrame());
         menu.setPid(resources.getPid());
-        menu.setSoft(resources.getSoft());
+        menu.setSort(resources.getSort());
         menu.setRoles(resources.getRoles());
         menuRepository.save(menu);
     }
@@ -137,6 +142,8 @@ public class MenuServiceImpl implements MenuService {
                 MenuVo menuVo = new MenuVo();
                 menuVo.setName(menuDTO.getName());
                 menuVo.setPath(menuDTO.getPath());
+
+                // 如果不是外链
                 if(!menuDTO.getIFrame()){
                     if(menuDTO.getPid().equals(0L)){
                         //一级目录需要加斜杠，不然访问不了
@@ -149,6 +156,24 @@ public class MenuServiceImpl implements MenuService {
                 if(menuDTOList!=null && menuDTOList.size()!=0){
                     menuVo.setAlwaysShow(true);
                     menuVo.setChildren(buildMenus(menuDTOList));
+                    // 处理是一级菜单并且没有子菜单的情况
+                } else if(menuDTO.getPid().equals(0L)){
+                    MenuVo menuVo1 = new MenuVo();
+                    menuVo1.setMeta(menuVo.getMeta());
+                    // 非外链
+                    if(!menuDTO.getIFrame()){
+                        menuVo1.setPath("index");
+                        menuVo1.setName(menuVo.getName());
+                        menuVo1.setComponent(menuVo.getComponent());
+                    } else {
+                        menuVo1.setPath(menuDTO.getPath());
+                    }
+                    menuVo.setName(null);
+                    menuVo.setMeta(null);
+                    menuVo.setComponent("Layout");
+                    List<MenuVo> list1 = new ArrayList<MenuVo>();
+                    list1.add(menuVo1);
+                    menuVo.setChildren(list1);
                 }
                 list.add(menuVo);
             }

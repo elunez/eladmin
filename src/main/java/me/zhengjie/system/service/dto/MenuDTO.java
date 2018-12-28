@@ -16,7 +16,7 @@ public class MenuDTO {
 
     private String name;
 
-    private Long soft;
+    private Long sort;
 
     private String path;
 

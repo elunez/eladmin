@@ -26,7 +26,7 @@ public class Menu {
     private String name;
 
     @Column(unique = true)
-    private Long soft;
+    private Long sort;
 
     @Column(name = "path")
     private String path;

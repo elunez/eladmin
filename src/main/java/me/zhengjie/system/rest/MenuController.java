@@ -77,7 +77,7 @@ public class MenuController {
 
     @Log(description = "新增菜单")
     @PostMapping(value = "/menus")
-    @PreAuthorize("hasAnyRole('ADMIN','PERMISSION_ALL','PERMISSION_CREATE')")
+    @PreAuthorize("hasAnyRole('ADMIN','MENU_ALL','MENU_CREATE')")
     public ResponseEntity create(@Validated @RequestBody Menu resources){
         if (resources.getId() != null) {
             throw new BadRequestException("A new "+ ENTITY_NAME +" cannot already have an ID");
@@ -87,7 +87,7 @@ public class MenuController {
 
     @Log(description = "修改菜单")
     @PutMapping(value = "/menus")
-    @PreAuthorize("hasAnyRole('ADMIN','PERMISSION_ALL','PERMISSION_EDIT')")
+    @PreAuthorize("hasAnyRole('ADMIN','MENU_ALL','MENU_EDIT')")
     public ResponseEntity update(@Validated @RequestBody Menu resources){
         if (resources.getId() == null) {
             throw new BadRequestException(ENTITY_NAME +" ID Can not be empty");
@@ -98,7 +98,7 @@ public class MenuController {
 
     @Log(description = "删除菜单")
     @DeleteMapping(value = "/menus/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN','PERMISSION_ALL','PERMISSION_DELETE')")
+    @PreAuthorize("hasAnyRole('ADMIN','MENU_ALL','MENU_DELETE')")
     public ResponseEntity delete(@PathVariable Long id){
         menuService.delete(id);
         return new ResponseEntity(HttpStatus.OK);

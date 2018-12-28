@@ -151,6 +151,13 @@
             <version>1</version>
         </dependency>
 
+        <!--邮件依赖-->
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <version>1.4.7</version>
+        </dependency>
+
     </dependencies>
 
     <repositories>
