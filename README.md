@@ -25,8 +25,11 @@
 - 菜单管理 已实现动态路由，后端可配置化
 - 系统日志 记录用户访问监控异常信息
 - 实时控制台 显示logback实时日志
-- 系统缓存管理 将redis的操作可视化，提供对redis的基本操作
-- Sql监控 采用 druid 监控数据库访问性能
+- redis管理 将redis的操作可视化，提供对redis的基本操作
+- redis限流 对系统的流量进行控制，由[https://github.com/everhopingandwaiting](everhopingandwaiting)提供
+- SQL监控 采用 druid 监控数据库访问性能
+- 三方工具： 邮件工具，sm.ms免费图床
+- 富文本编辑器
 
 #### 后端技术栈
 
