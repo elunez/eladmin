@@ -73,7 +73,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
                 // 不创建会话
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-
                 .authorizeRequests()
 
                 .antMatchers("/auth/**").permitAll()
@@ -87,7 +86,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 // swagger end
                 .antMatchers("/test/**").anonymous()
                 .antMatchers(HttpMethod.OPTIONS, "/**").anonymous()
-
                 // 所有请求都需要认证
                 .anyRequest().authenticated();
 
@@ -104,7 +102,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         HttpMethod.POST,
                         authenticationPath
                 )
-
                 // allow anonymous resource requests
                 .and()
                 .ignoring()

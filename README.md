@@ -26,7 +26,7 @@
 - 系统日志 记录用户访问监控异常信息
 - 实时控制台 显示logback实时日志
 - redis管理 将redis的操作可视化，提供对redis的基本操作
-- redis限流 对系统的流量进行控制，由[https://github.com/everhopingandwaiting](everhopingandwaiting)提供
+- redis限流 对系统的流量进行控制，由[everhopingandwaiting](https://github.com/everhopingandwaiting)提供
 - SQL监控 采用 druid 监控数据库访问性能
 - 三方工具： 邮件工具，sm.ms免费图床
 - 富文本编辑器
