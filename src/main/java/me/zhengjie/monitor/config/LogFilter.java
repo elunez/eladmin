@@ -27,7 +27,7 @@ public class LogFilter extends Filter<ILoggingEvent>{
             }
         }
         LogMessage loggerMessage = new LogMessage(
-                event.getMessage()
+                event.getFormattedMessage()   /*  repair format message*/
                 , DateFormat.getDateTimeInstance().format(new Date(event.getTimeStamp())),
                 event.getThreadName(),
                 event.getLoggerName(),

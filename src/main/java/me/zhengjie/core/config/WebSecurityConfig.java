@@ -46,8 +46,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth
-            .userDetailsService(jwtUserDetailsService)
-            .passwordEncoder(passwordEncoderBean());
+                .userDetailsService(jwtUserDetailsService)
+                .passwordEncoder(passwordEncoderBean());
     }
 
     @Bean
@@ -65,56 +65,55 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
 
-            // 禁用 CSRF
-            .csrf().disable()
+                // 禁用 CSRF
+                .csrf().disable()
 
-            // 授权异常
-            .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
+                // 授权异常
+                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
 
-            // 不创建会话
-            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+                // 不创建会话
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
 
-            .authorizeRequests()
+                .authorizeRequests()
 
-            .antMatchers("/auth/**").permitAll()
-            .antMatchers("/websocket/**").permitAll()
+                .antMatchers("/auth/**").permitAll()
+                .antMatchers("/websocket/**").permitAll()
+                .antMatchers("/druid/**").anonymous()
+                // swagger start
+                .antMatchers("/swagger-ui.html").anonymous()
+                .antMatchers("/swagger-resources/**").anonymous()
+                .antMatchers("/webjars/**").anonymous()
+                .antMatchers("/*/api-docs").anonymous()
+                // swagger end
+                .antMatchers("/test/**").anonymous()
+                .antMatchers(HttpMethod.OPTIONS, "/**").anonymous()
 
-            .antMatchers("/druid/**").anonymous()
-            // swagger start
-            .antMatchers("/swagger-ui.html").anonymous()
-            .antMatchers("/swagger-resources/**").anonymous()
-            .antMatchers("/webjars/**").anonymous()
-            .antMatchers("/*/api-docs").anonymous()
-            // swagger end
-
-            .antMatchers(HttpMethod.OPTIONS, "/**").anonymous()
-
-            // 所有请求都需要认证
-            .anyRequest().authenticated();
+                // 所有请求都需要认证
+                .anyRequest().authenticated();
 
         httpSecurity
-            .addFilterBefore(authenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(authenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
     @Override
     public void configure(WebSecurity web) throws Exception {
         // AuthenticationTokenFilter will ignore the below paths
         web
-            .ignoring()
-            .antMatchers(
-                HttpMethod.POST,
-                authenticationPath
-            )
+                .ignoring()
+                .antMatchers(
+                        HttpMethod.POST,
+                        authenticationPath
+                )
 
-            // allow anonymous resource requests
-            .and()
-            .ignoring()
-            .antMatchers(
-                HttpMethod.GET,
-                "/*.html",
-                "/**/*.html",
-                "/**/*.css",
-                "/**/*.js"
-            );
+                // allow anonymous resource requests
+                .and()
+                .ignoring()
+                .antMatchers(
+                        HttpMethod.GET,
+                        "/*.html",
+                        "/**/*.html",
+                        "/**/*.css",
+                        "/**/*.js"
+                );
     }
 }
