@@ -78,12 +78,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/auth/**").permitAll()
                 .antMatchers("/websocket/**").permitAll()
                 .antMatchers("/druid/**").anonymous()
+
+                // 支付宝回调
+                .antMatchers("/api/aliPay/return").anonymous()
+                .antMatchers("/api/aliPay/notify").anonymous()
+
                 // swagger start
                 .antMatchers("/swagger-ui.html").anonymous()
                 .antMatchers("/swagger-resources/**").anonymous()
                 .antMatchers("/webjars/**").anonymous()
                 .antMatchers("/*/api-docs").anonymous()
                 // swagger end
+
                 .antMatchers("/test/**").anonymous()
                 .antMatchers(HttpMethod.OPTIONS, "/**").anonymous()
                 // 所有请求都需要认证
@@ -96,21 +102,21 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception {
         // AuthenticationTokenFilter will ignore the below paths
-        web
-                .ignoring()
-                .antMatchers(
-                        HttpMethod.POST,
-                        authenticationPath
-                )
-                // allow anonymous resource requests
-                .and()
-                .ignoring()
-                .antMatchers(
-                        HttpMethod.GET,
-                        "/*.html",
-                        "/**/*.html",
-                        "/**/*.css",
-                        "/**/*.js"
-                );
+        web.ignoring()
+            .antMatchers(
+                    HttpMethod.POST,
+                    authenticationPath
+            )
+
+            // allow anonymous resource requests
+            .and()
+            .ignoring()
+            .antMatchers(
+                    HttpMethod.GET,
+                    "/*.html",
+                    "/**/*.html",
+                    "/**/*.css",
+                    "/**/*.js"
+            );
     }
 }

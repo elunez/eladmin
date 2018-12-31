@@ -1,5 +1,6 @@
 package me.zhengjie.system.service;
 
+import me.zhengjie.core.security.JwtUser;
 import me.zhengjie.system.domain.User;
 import me.zhengjie.system.service.dto.UserDTO;
 import org.springframework.cache.annotation.CacheConfig;
@@ -50,4 +51,25 @@ public interface UserService {
      */
     @Cacheable(key = "'findByName'+#p0")
     User findByName(String userName);
+
+    /**
+     * 修改密码
+     * @param jwtUser
+     * @param encryptPassword
+     */
+    void updatePass(JwtUser jwtUser, String encryptPassword);
+
+    /**
+     * 修改头像
+     * @param jwtUser
+     * @param url
+     */
+    void updateAvatar(JwtUser jwtUser, String url);
+
+    /**
+     * 修改邮箱
+     * @param jwtUser
+     * @param email
+     */
+    void updateEmail(JwtUser jwtUser, String email);
 }

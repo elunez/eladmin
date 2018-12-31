@@ -64,6 +64,7 @@ public class JwtUserDetailsService implements UserDetailsService {
                 user.getEmail(),
                 mapToGrantedAuthorities(user.getRoles(),permissionRepository),
                 user.getEnabled(),
+                user.getCreateTime(),
                 user.getLastPasswordResetTime()
         );
     }

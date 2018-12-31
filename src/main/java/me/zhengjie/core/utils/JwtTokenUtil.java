@@ -5,12 +5,10 @@ import io.jsonwebtoken.impl.DefaultClock;
 import me.zhengjie.common.exception.BadRequestException;
 import me.zhengjie.core.security.JwtUser;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AccountExpiredException;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-
 import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 import java.util.Date;
@@ -18,13 +16,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-import static org.springframework.http.HttpStatus.UNAUTHORIZED;
-
 @Component
 public class JwtTokenUtil implements Serializable {
 
-    static final String CLAIM_KEY_USERNAME = "sub";
-    static final String CLAIM_KEY_CREATED = "iat";
     private static final long serialVersionUID = -3301605591108950415L;
     private Clock clock = DefaultClock.INSTANCE;
 
@@ -129,7 +123,7 @@ public class JwtTokenUtil implements Serializable {
         String authToken = request.getHeader(tokenHeader);
 
         if(StringUtils.isEmpty(authToken)||authToken.length()<7){
-            throw new AccountExpiredException("令牌已过期或无效");
+            throw new BadRequestException(HttpStatus.FORBIDDEN,"Token令牌无效");
         }
 
         final String token = authToken.substring(7);
@@ -137,11 +131,7 @@ public class JwtTokenUtil implements Serializable {
         try {
             username = getUsernameFromToken(token);
         } catch (ExpiredJwtException e){
-            throw new AccountExpiredException("令牌已过期或无效");
-        }
-
-        if(StringUtils.isEmpty(username)){
-            throw new AccountExpiredException("令牌已过期或无效");
+            throw new BadRequestException(HttpStatus.UNAUTHORIZED,"Token令牌已过期");
         }
 
         return username;

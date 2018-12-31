@@ -2,17 +2,31 @@ package me.zhengjie.system.rest;
 
 import me.zhengjie.common.aop.log.Log;
 import me.zhengjie.common.exception.BadRequestException;
+import me.zhengjie.common.utils.ElAdminConstant;
+import me.zhengjie.common.utils.RequestHolder;
+import me.zhengjie.core.security.JwtUser;
+import me.zhengjie.core.utils.EncryptUtils;
+import me.zhengjie.core.utils.JwtTokenUtil;
 import me.zhengjie.system.domain.User;
+import me.zhengjie.system.domain.VerificationCode;
 import me.zhengjie.system.service.UserService;
+import me.zhengjie.system.service.VerificationCodeService;
 import me.zhengjie.system.service.dto.UserDTO;
 import me.zhengjie.system.service.query.UserQueryService;
+import me.zhengjie.tools.domain.Picture;
+import me.zhengjie.tools.service.PictureService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author jie
@@ -27,6 +41,20 @@ public class UserController {
 
     @Autowired
     private UserQueryService userQueryService;
+
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
+
+    @Autowired
+    @Qualifier("jwtUserDetailsService")
+    private UserDetailsService userDetailsService;
+
+    @Autowired
+    private PictureService pictureService;
+
+    @Autowired
+    private VerificationCodeService verificationCodeService;
+
 
     private static final String ENTITY_NAME = "user";
 
@@ -69,6 +97,68 @@ public class UserController {
     @PreAuthorize("hasAnyRole('ADMIN','USER_ALL','USER_DELETE')")
     public ResponseEntity delete(@PathVariable Long id){
         userService.delete(id);
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    /**
+     * 验证密码
+     * @param pass
+     * @return
+     */
+    @GetMapping(value = "/users/validPass/{pass}")
+    public ResponseEntity validPass(@PathVariable String pass){
+        JwtUser jwtUser = (JwtUser)userDetailsService.loadUserByUsername(jwtTokenUtil.getUserName(RequestHolder.getHttpServletRequest()));
+        Map map = new HashMap();
+        map.put("status",200);
+        if(!jwtUser.getPassword().equals(EncryptUtils.encryptPassword(pass))){
+           map.put("status",400);
+        }
+        return new ResponseEntity(map,HttpStatus.OK);
+    }
+
+    /**
+     * 修改密码
+     * @param pass
+     * @return
+     */
+    @GetMapping(value = "/users/updatePass/{pass}")
+    public ResponseEntity updatePass(@PathVariable String pass){
+        JwtUser jwtUser = (JwtUser)userDetailsService.loadUserByUsername(jwtTokenUtil.getUserName(RequestHolder.getHttpServletRequest()));
+        if(jwtUser.getPassword().equals(EncryptUtils.encryptPassword(pass))){
+            throw new BadRequestException("新密码不能与旧密码相同");
+        }
+        userService.updatePass(jwtUser,EncryptUtils.encryptPassword(pass));
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    /**
+     * 修改头像
+     * @param file
+     * @return
+     */
+    @PostMapping(value = "/users/updateAvatar")
+    public ResponseEntity updateAvatar(@RequestParam MultipartFile file){
+        JwtUser jwtUser = (JwtUser)userDetailsService.loadUserByUsername(jwtTokenUtil.getUserName(RequestHolder.getHttpServletRequest()));
+        Picture picture = pictureService.upload(file,jwtUser.getUsername());
+        userService.updateAvatar(jwtUser,picture.getUrl());
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    /**
+     * 修改邮箱
+     * @param user
+     * @param user
+     * @return
+     */
+    @PostMapping(value = "/users/updateEmail/{code}")
+    public ResponseEntity updateEmail(@PathVariable String code,@RequestBody User user){
+        JwtUser jwtUser = (JwtUser)userDetailsService.loadUserByUsername(jwtTokenUtil.getUserName(RequestHolder.getHttpServletRequest()));
+        if(!jwtUser.getPassword().equals(EncryptUtils.encryptPassword(user.getPassword()))){
+            throw new BadRequestException("密码错误");
+        }
+        VerificationCode verificationCode = new VerificationCode(code, ElAdminConstant.RESET_MAIL,"email",user.getEmail());
+        verificationCodeService.validated(verificationCode);
+        userService.updateEmail(jwtUser,user.getEmail());
         return new ResponseEntity(HttpStatus.OK);
     }
 }

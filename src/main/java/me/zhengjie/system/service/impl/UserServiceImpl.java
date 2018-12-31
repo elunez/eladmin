@@ -4,6 +4,7 @@ import me.zhengjie.common.exception.BadRequestException;
 import me.zhengjie.common.exception.EntityExistException;
 import me.zhengjie.common.exception.EntityNotFoundException;
 import me.zhengjie.common.utils.ValidationUtil;
+import me.zhengjie.core.security.JwtUser;
 import me.zhengjie.core.utils.EncryptUtils;
 import me.zhengjie.core.utils.JwtTokenUtil;
 import me.zhengjie.system.domain.User;
@@ -129,5 +130,23 @@ public class UserServiceImpl implements UserService {
         } else {
             return user;
         }
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void updatePass(JwtUser jwtUser, String pass) {
+        userRepository.updatePass(jwtUser.getId(),pass);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void updateAvatar(JwtUser jwtUser, String url) {
+        userRepository.updateAvatar(jwtUser.getId(),url);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void updateEmail(JwtUser jwtUser, String email) {
+        userRepository.updateEmail(jwtUser.getId(),email);
     }
 }

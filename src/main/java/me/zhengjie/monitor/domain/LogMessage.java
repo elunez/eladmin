@@ -16,5 +16,4 @@ public class LogMessage {
     private String threadName;
     private String className;
     private String level;
-    private String exception;
 }

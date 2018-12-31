@@ -1,6 +1,7 @@
 package me.zhengjie.system.service;
 
 import me.zhengjie.system.domain.VerificationCode;
+import me.zhengjie.tools.domain.vo.EmailVo;
 
 /**
  * @author jie
@@ -12,7 +13,7 @@ public interface VerificationCodeService {
      * 发送邮件验证码
      * @param code
      */
-    void sendEmail(VerificationCode code);
+    EmailVo sendEmail(VerificationCode code);
 
     /**
      * 验证

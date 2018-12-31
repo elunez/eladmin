@@ -38,6 +38,7 @@ public class Logging {
     /**
      * 参数
      */
+    @Column(length = 1500)
     private String params;
 
     /**
@@ -58,6 +59,7 @@ public class Logging {
     /**
      * 异常详细
      */
+    @Column(length = 1500)
     private String exceptionDetail;
 
     /**

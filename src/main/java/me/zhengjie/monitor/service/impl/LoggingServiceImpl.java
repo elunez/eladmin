@@ -83,7 +83,9 @@ public class LoggingServiceImpl implements LoggingService {
             username = user.getUsername();
 
         }
-        logging.setMethod(methodName);
+        if (params.length() > 1000){
+            params = params.substring(0,999);
+        }
         logging.setUsername(username);
         logging.setParams(params + " }");
         loggingRepository.save(logging);

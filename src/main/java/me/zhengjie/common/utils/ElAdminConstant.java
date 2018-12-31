@@ -7,21 +7,13 @@ package me.zhengjie.common.utils;
  */
 public class ElAdminConstant {
 
-    /**
-     * 用于七牛云zone与机房对应关系
-     */
-    public static class QiNiu{
+    public static final String RESET_PASS = "重置密码";
 
-        public static final String HUAD = "华东";
+    public static final String RESET_MAIL = "重置邮箱";
 
-        public static final String HUAB = "华北";
+    public static final String EMAIL_CODE = "<p>你的验证码为：";
 
-        public static final String HUAN = "华南";
-
-        public static final String BEIM = "北美";
-
-        public static final String DNY = "东南亚";
-    }
+    public static final String EMAIL_CONTENT = "<p style='text-align: right;'>----- 邮件来自<span style='color: rgb(194, 79, 74);'>&nbsp;<a href='http://auauz.net' target='_blank'>eladmin</a></span>&nbsp;后台管理系统，系统邮件请勿回复</p>";
 
     /**
      * 常用接口

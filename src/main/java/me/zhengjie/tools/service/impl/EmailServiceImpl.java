@@ -3,6 +3,7 @@ package me.zhengjie.tools.service.impl;
 import cn.hutool.extra.mail.MailAccount;
 import cn.hutool.extra.mail.MailUtil;
 import me.zhengjie.common.exception.BadRequestException;
+import me.zhengjie.common.utils.ElAdminConstant;
 import me.zhengjie.core.utils.EncryptUtils;
 import me.zhengjie.tools.domain.EmailConfig;
 import me.zhengjie.tools.domain.vo.EmailVo;
@@ -72,7 +73,7 @@ public class EmailServiceImpl implements EmailService {
         account.setFrom(emailConfig.getUser()+"<"+emailConfig.getFromUser()+">");
         //ssl方式发送
         account.setStartttlsEnable(true);
-        String content = emailVo.getContent()+ "<p style='text-align: right;'>----- 邮件来自<span style='color: rgb(194, 79, 74);'>&nbsp;<a href='http://auauz.net' target='_blank'>eladmin</a></span>&nbsp;后台管理系统</p>";
+        String content = emailVo.getContent()+ ElAdminConstant.EMAIL_CONTENT;
         /**
          * 发送
          */

@@ -1,6 +1,7 @@
 package me.zhengjie.system.service.impl;
 
 import cn.hutool.core.util.StrUtil;
+import me.zhengjie.common.exception.BadRequestException;
 import me.zhengjie.common.exception.EntityExistException;
 import me.zhengjie.common.utils.ValidationUtil;
 import me.zhengjie.system.domain.Menu;
@@ -51,6 +52,11 @@ public class MenuServiceImpl implements MenuService {
         if(menuRepository.findByName(resources.getName()) != null){
             throw new EntityExistException(Menu.class,"name",resources.getName());
         }
+        if(resources.getIFrame()){
+            if (!(resources.getPath().toLowerCase().startsWith("http://")||resources.getPath().toLowerCase().startsWith("https://"))) {
+                throw new BadRequestException("外链必须以http://或者https://开头");
+            }
+        }
         return menuMapper.toDto(menuRepository.save(resources));
     }
 
@@ -59,13 +65,17 @@ public class MenuServiceImpl implements MenuService {
         Optional<Menu> optionalPermission = menuRepository.findById(resources.getId());
         ValidationUtil.isNull(optionalPermission,"Permission","id",resources.getId());
 
+        if(resources.getIFrame()){
+            if (!(resources.getPath().toLowerCase().startsWith("http://")||resources.getPath().toLowerCase().startsWith("https://"))) {
+                throw new BadRequestException("外链必须以http://或者https://开头");
+            }
+        }
         Menu menu = optionalPermission.get();
         Menu menu1 = menuRepository.findByName(resources.getName());
 
         if(menu1 != null && !menu1.getId().equals(menu.getId())){
             throw new EntityExistException(Menu.class,"name",resources.getName());
         }
-
         menu.setName(resources.getName());
         menu.setComponent(resources.getComponent());
         menu.setPath(resources.getPath());

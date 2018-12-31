@@ -25,13 +25,11 @@ public class EmailController {
     @Autowired
     private EmailService emailService;
 
-    @PreAuthorize("hasAnyRole('ADMIN')")
     @GetMapping(value = "/email")
     public ResponseEntity get(){
         return new ResponseEntity(emailService.find(),HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN')")
     @Log(description = "配置邮件")
     @PutMapping(value = "/email")
     public ResponseEntity emailConfig(@Validated @RequestBody EmailConfig emailConfig){
@@ -39,7 +37,6 @@ public class EmailController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN')")
     @Log(description = "发送邮件")
     @PostMapping(value = "/email")
     public ResponseEntity send(@Validated @RequestBody EmailVo emailVo) throws Exception {
