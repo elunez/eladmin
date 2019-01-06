@@ -6,8 +6,6 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 /**
  * @author jie
  * @date 2018-11-24
@@ -21,6 +19,6 @@ public interface LoggingRepository extends JpaRepository<Logging,Long>, JpaSpeci
      * @param date2
      * @return
      */
-    @Query(value = "select count(*) FROM (select * FROM log where createTime between ?1 and ?2 GROUP BY requestIp) as s",nativeQuery = true)
+    @Query(value = "select count(*) FROM (select requestIp FROM log where createTime between ?1 and ?2 GROUP BY requestIp) as s",nativeQuery = true)
     Long findIp(String date1, String date2);
 }

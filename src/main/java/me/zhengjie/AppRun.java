@@ -11,7 +11,6 @@ import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBr
  * @date 2018/11/15 9:20:19
  */
 @SpringBootApplication
-//开启定时任务
 @EnableScheduling
 @EnableTransactionManagement
 @EnableWebSocketMessageBroker

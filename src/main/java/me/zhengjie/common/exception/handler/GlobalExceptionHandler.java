@@ -4,14 +4,13 @@ import lombok.extern.slf4j.Slf4j;
 import me.zhengjie.common.exception.BadRequestException;
 import me.zhengjie.common.exception.EntityExistException;
 import me.zhengjie.common.exception.EntityNotFoundException;
+import me.zhengjie.common.utils.ThrowableUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -32,7 +31,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity handleException(Exception e){
         // 打印堆栈信息
-        log.error(getStackTrace(e));
+        log.error(ThrowableUtil.getStackTrace(e));
         ApiError apiError = new ApiError(BAD_REQUEST.value(),e.getMessage());
         return buildResponseEntity(apiError);
     }
@@ -45,7 +44,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity handleAccessDeniedException(AccessDeniedException e){
         // 打印堆栈信息
-        log.error(getStackTrace(e));
+        log.error(ThrowableUtil.getStackTrace(e));
         ApiError apiError = new ApiError(FORBIDDEN.value(),e.getMessage());
         return buildResponseEntity(apiError);
     }
@@ -58,7 +57,7 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(value = BadRequestException.class)
 	public ResponseEntity<ApiError> badRequestException(BadRequestException e) {
         // 打印堆栈信息
-        log.error(getStackTrace(e));
+        log.error(ThrowableUtil.getStackTrace(e));
         ApiError apiError = new ApiError(e.getStatus(),e.getMessage());
         return buildResponseEntity(apiError);
 	}
@@ -71,7 +70,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = EntityExistException.class)
     public ResponseEntity<ApiError> entityExistException(EntityExistException e) {
         // 打印堆栈信息
-        log.error(getStackTrace(e));
+        log.error(ThrowableUtil.getStackTrace(e));
         ApiError apiError = new ApiError(BAD_REQUEST.value(),e.getMessage());
         return buildResponseEntity(apiError);
     }
@@ -84,7 +83,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = EntityNotFoundException.class)
     public ResponseEntity<ApiError> entityNotFoundException(EntityNotFoundException e) {
         // 打印堆栈信息
-        log.error(getStackTrace(e));
+        log.error(ThrowableUtil.getStackTrace(e));
         ApiError apiError = new ApiError(NOT_FOUND.value(),e.getMessage());
         return buildResponseEntity(apiError);
     }
@@ -97,7 +96,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiError> handleMethodArgumentNotValidException(MethodArgumentNotValidException e){
         // 打印堆栈信息
-        log.error(getStackTrace(e));
+        log.error(ThrowableUtil.getStackTrace(e));
         String[] str = e.getBindingResult().getAllErrors().get(0).getCodes()[1].split("\\.");
         StringBuffer msg = new StringBuffer(str[1]+":");
         msg.append(e.getBindingResult().getAllErrors().get(0).getDefaultMessage());
@@ -112,22 +111,5 @@ public class GlobalExceptionHandler {
      */
     private ResponseEntity<ApiError> buildResponseEntity(ApiError apiError) {
         return new ResponseEntity(apiError, HttpStatus.valueOf(apiError.getStatus()));
-    }
-
-    /**
-     * 获取堆栈信息
-     * @param throwable
-     * @return
-     */
-    private String getStackTrace(Throwable throwable)
-    {
-        StringWriter sw = new StringWriter();
-        PrintWriter pw = new PrintWriter(sw);
-        try {
-            throwable.printStackTrace(pw);
-            return "\n"+sw.toString();
-        } finally {
-            pw.close();
-        }
     }
 }

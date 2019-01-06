@@ -101,9 +101,13 @@ public class MenuServiceImpl implements MenuService {
         List<Map<String,Object>> list = new LinkedList<>();
         menus.forEach(menu -> {
                     if (menu!=null){
+                        List<Menu> menuList = menuRepository.findByPid(menu.getId());
                         Map<String,Object> map = new HashMap<>();
                         map.put("id",menu.getId());
                         map.put("label",menu.getName());
+                        if(menuList!=null && menuList.size()!=0){
+                            map.put("children",getMenuTree(menuList));
+                        }
                         list.add(map);
                     }
                 }
