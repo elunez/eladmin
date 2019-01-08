@@ -26,7 +26,12 @@ import java.util.List;
 
 @Configuration
 @EnableSwagger2
-@ComponentScan(basePackages = {"me.zhengjie.core.rest","me.zhengjie.system.rest","me.zhengjie.system.monitor"})
+@ComponentScan(basePackages = {
+        "me.zhengjie.core.rest",
+        "me.zhengjie.system.rest",
+        "me.zhengjie.monitor.rest",
+        "me.zhengjie.quartz.rest",
+        "me.zhengjie.tools.rest",})
 public class SwaggerConfig {
 
     @Bean

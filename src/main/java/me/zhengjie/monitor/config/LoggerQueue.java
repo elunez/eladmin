@@ -27,7 +27,6 @@ public class LoggerQueue {
 
     /**
      * 消息入队
-     *
      * @param log
      * @return
      */

@@ -76,7 +76,7 @@ public class RedisConfig extends CachingConfigurerSupport {
     public RedisCacheConfiguration redisCacheConfiguration(){
         FastJsonRedisSerializer<Object> fastJsonRedisSerializer = new FastJsonRedisSerializer<>(Object.class);
         RedisCacheConfiguration configuration = RedisCacheConfiguration.defaultCacheConfig();
-        configuration = configuration.serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(fastJsonRedisSerializer)).entryTtl(Duration.ofDays(30));
+        configuration = configuration.serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(fastJsonRedisSerializer)).entryTtl(Duration.ofHours(2));
         return configuration;
     }
 
@@ -95,6 +95,7 @@ public class RedisConfig extends CachingConfigurerSupport {
         ParserConfig.getGlobalInstance().addAccept("me.zhengjie.system.service.dto");
         ParserConfig.getGlobalInstance().addAccept("me.zhengjie.system.domain");
         ParserConfig.getGlobalInstance().addAccept("me.zhengjie.tools.domain");
+        ParserConfig.getGlobalInstance().addAccept("me.zhengjie.quartz.domain");
         // key的序列化采用StringRedisSerializer
         template.setKeySerializer(new StringRedisSerializer());
         template.setHashKeySerializer(new StringRedisSerializer());

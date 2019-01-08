@@ -1,9 +1,7 @@
-package me.zhengjie.monitor.config;
+package me.zhengjie.quartz.task;
 
 import me.zhengjie.monitor.service.VisitsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 /**
@@ -11,17 +9,12 @@ import org.springframework.stereotype.Component;
  * @date 2018-12-25
  */
 @Component
-@Async
-public class VisitsScheduling {
+public class VisitsTask {
 
     @Autowired
     private VisitsService visitsService;
 
-    /**
-     * 每天0点运行
-     */
-    @Scheduled(cron = "0 0 0 * * ?")
-    public void save(){
+    public void run(){
         visitsService.save();
     }
 }

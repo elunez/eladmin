@@ -162,13 +162,15 @@ public class MenuServiceImpl implements MenuService {
                     if(menuDTO.getPid().equals(0L)){
                         //一级目录需要加斜杠，不然访问不了
                         menuVo.setPath("/" + menuDTO.getPath());
-                        menuVo.setRedirect("noredirect");
+                        menuVo.setComponent(StrUtil.isEmpty(menuDTO.getComponent())?"Layout":menuDTO.getComponent());
+                    }else if(!StrUtil.isEmpty(menuDTO.getComponent())){
+                        menuVo.setComponent(menuDTO.getComponent());
                     }
-                    menuVo.setComponent(StrUtil.isEmpty(menuDTO.getComponent())?"Layout":menuDTO.getComponent());
                 }
                 menuVo.setMeta(new MenuMetaVo(menuDTO.getName(),menuDTO.getIcon()));
                 if(menuDTOList!=null && menuDTOList.size()!=0){
                     menuVo.setAlwaysShow(true);
+                    menuVo.setRedirect("noredirect");
                     menuVo.setChildren(buildMenus(menuDTOList));
                     // 处理是一级菜单并且没有子菜单的情况
                 } else if(menuDTO.getPid().equals(0L)){

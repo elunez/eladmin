@@ -46,10 +46,10 @@ public class RedisController {
     }
 
     @Log(description = "删除Redis缓存")
-    @DeleteMapping(value = "/redis/{key}")
+    @DeleteMapping(value = "/redis")
     @PreAuthorize("hasAnyRole('ADMIN','REDIS_ALL','REDIS_DELETE')")
-    public ResponseEntity delete(@PathVariable String key){
-        redisService.delete(key);
+    public ResponseEntity delete(@RequestBody RedisVo resources){
+        redisService.delete(resources.getKey());
         return new ResponseEntity(HttpStatus.OK);
     }
 

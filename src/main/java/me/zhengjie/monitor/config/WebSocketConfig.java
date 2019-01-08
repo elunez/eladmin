@@ -1,6 +1,7 @@
 package me.zhengjie.monitor.config;
 
 
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import lombok.extern.slf4j.Slf4j;
 import me.zhengjie.monitor.domain.LogMessage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +10,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 import javax.annotation.PostConstruct;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
 
 /**
  * 配置WebSocket消息代理端点，即stomp服务端
@@ -24,6 +24,9 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
+    @Autowired
+    private ExecutorService executorService;
+
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/websocket")
@@ -36,9 +39,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
      */
     @PostConstruct
     public void pushLogger(){
-        ExecutorService executorService= Executors.newFixedThreadPool(2);
         Runnable runnable=new Runnable() {
-
             @Override
             public void run() {
                 while (true) {
@@ -62,7 +63,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                 }
             }
         };
-        executorService.submit(runnable);
         executorService.submit(runnable);
     }
 }

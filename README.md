@@ -24,6 +24,18 @@
 
 - 密码： 123456
 
+#### 开发环境
+
+- JDK：8
+
+- IDE：IntelliJ IDEA (后端)
+
+- IDE：JetBrains WebStorm  （前端）
+
+- 依赖管理：Maven
+
+- 数据库：MySQL 5.5.59
+
 #### 系统功能模块
 
 - 用户管理 提供用户的相关配置
@@ -36,6 +48,7 @@
 - redis管理 将redis的操作可视化，提供对redis的基本操作
 - redis限流 对系统的流量进行控制，由[everhopingandwaiting](https://github.com/everhopingandwaiting)提供
 - SQL监控 采用 druid 监控数据库访问性能
+- 定时任务管理 整合quartz做定时任务
 - 三方工具： 邮件工具，sm.ms免费图床，支付宝支付，七牛云存储
 - 富文本编辑器
 

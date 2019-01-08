@@ -11,7 +11,7 @@
  Target Server Version : 50559
  File Encoding         : 65001
 
- Date: 06/01/2019 13:09:59
+ Date: 08/01/2019 16:17:02
 */
 
 SET NAMES utf8mb4;
@@ -71,7 +71,7 @@ CREATE TABLE `log`  (
   `time` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `username` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4553 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 5066 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for menu
@@ -88,7 +88,7 @@ CREATE TABLE `menu`  (
   `icon` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `path` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 25 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 29 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of menu
@@ -105,17 +105,19 @@ INSERT INTO `menu` VALUES (9, '2018-12-18 15:19:34', b'1', 'SQL监控', NULL, 6,
 INSERT INTO `menu` VALUES (10, '2018-12-19 13:38:16', b'0', '组件管理', NULL, 0, 50, 'zujian', 'components');
 INSERT INTO `menu` VALUES (11, '2018-12-19 13:38:49', b'0', '图标库', 'components/IconSelect', 10, 51, 'icon', 'icon');
 INSERT INTO `menu` VALUES (12, '2018-12-24 20:37:35', b'0', '实时控制台', 'monitor/log/msg', 6, 13, 'codeConsole', 'msg');
-INSERT INTO `menu` VALUES (13, '2018-12-27 10:11:26', b'0', '三方工具', '', 0, 20, 'tools', 'tools');
-INSERT INTO `menu` VALUES (14, '2018-12-27 10:13:09', b'0', '邮件工具', 'tools/email/index', 13, 21, 'email', 'email');
+INSERT INTO `menu` VALUES (13, '2018-12-27 10:11:26', b'0', '三方工具', '', 0, 30, 'tools', 'tools');
+INSERT INTO `menu` VALUES (14, '2018-12-27 10:13:09', b'0', '邮件工具', 'tools/email/index', 13, 31, 'email', 'email');
 INSERT INTO `menu` VALUES (15, '2018-12-27 11:58:25', b'0', '富文本', 'components/Editor', 10, 52, 'fwb', 'tinymce');
-INSERT INTO `menu` VALUES (16, '2018-12-28 09:36:53', b'0', 'SM.MS图床', 'tools/picture/index', 13, 22, 'image', 'pictures');
+INSERT INTO `menu` VALUES (16, '2018-12-28 09:36:53', b'0', 'SM.MS图床', 'tools/picture/index', 13, 32, 'image', 'pictures');
 INSERT INTO `menu` VALUES (17, '2018-12-28 15:09:49', b'1', '项目地址', '', 0, 0, 'github', 'https://github.com/elunez/eladmin');
-INSERT INTO `menu` VALUES (18, '2018-12-31 11:12:15', b'0', '七牛云存储', 'tools/qiniu/index', 13, 23, 'qiniu', 'qiniu');
-INSERT INTO `menu` VALUES (19, '2018-12-31 14:52:38', b'0', '支付宝工具', 'tools/aliPay/index', 13, 24, 'alipay', 'aliPay');
-INSERT INTO `menu` VALUES (21, '2019-01-04 16:22:03', b'0', '多级菜单', '', 0, 900, 'menu', 'menu1');
-INSERT INTO `menu` VALUES (22, '2019-01-04 16:23:29', b'0', '二级菜单1', '', 21, 999, 'menu', 'menu1-1');
-INSERT INTO `menu` VALUES (23, '2019-01-04 16:23:57', b'0', '二级菜单2', '', 21, 999, 'menu', 'menu1-2');
-INSERT INTO `menu` VALUES (24, '2019-01-04 16:24:48', b'1', '三级菜单', '', 22, 999, 'chain', 'https://github.com/elunez/eladmin');
+INSERT INTO `menu` VALUES (18, '2018-12-31 11:12:15', b'0', '七牛云存储', 'tools/qiniu/index', 13, 33, 'qiniu', 'qiniu');
+INSERT INTO `menu` VALUES (19, '2018-12-31 14:52:38', b'0', '支付宝工具', 'tools/aliPay/index', 13, 34, 'alipay', 'aliPay');
+INSERT INTO `menu` VALUES (21, '2019-01-04 16:22:03', b'0', '多级菜单', '', 0, 900, 'menu', 'nested');
+INSERT INTO `menu` VALUES (22, '2019-01-04 16:23:29', b'0', '二级菜单1', 'nested/menu1/index', 21, 999, 'menu', 'menu1');
+INSERT INTO `menu` VALUES (23, '2019-01-04 16:23:57', b'0', '二级菜单2', 'nested/menu2/index', 21, 999, 'menu', 'menu2');
+INSERT INTO `menu` VALUES (24, '2019-01-04 16:24:48', b'0', '三级菜单1', 'nested/menu1/menu1-1', 22, 999, 'menu', 'menu1-1');
+INSERT INTO `menu` VALUES (27, '2019-01-07 17:27:32', b'0', '三级菜单2', 'nested/menu1/menu1-2', 22, 999, 'menu', 'menu1-2');
+INSERT INTO `menu` VALUES (28, '2019-01-07 20:34:40', b'0', '定时任务', 'system/timing/index', 1, 6, 'timing', 'timing');
 
 -- ----------------------------
 -- Table structure for menus_roles
@@ -156,6 +158,8 @@ INSERT INTO `menus_roles` VALUES (21, 1);
 INSERT INTO `menus_roles` VALUES (22, 1);
 INSERT INTO `menus_roles` VALUES (23, 1);
 INSERT INTO `menus_roles` VALUES (24, 1);
+INSERT INTO `menus_roles` VALUES (27, 1);
+INSERT INTO `menus_roles` VALUES (28, 1);
 INSERT INTO `menus_roles` VALUES (1, 2);
 INSERT INTO `menus_roles` VALUES (2, 2);
 INSERT INTO `menus_roles` VALUES (3, 2);
@@ -174,6 +178,8 @@ INSERT INTO `menus_roles` VALUES (21, 2);
 INSERT INTO `menus_roles` VALUES (22, 2);
 INSERT INTO `menus_roles` VALUES (23, 2);
 INSERT INTO `menus_roles` VALUES (24, 2);
+INSERT INTO `menus_roles` VALUES (27, 2);
+INSERT INTO `menus_roles` VALUES (28, 2);
 
 -- ----------------------------
 -- Table structure for permission
@@ -186,7 +192,7 @@ CREATE TABLE `permission`  (
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `pid` int(11) NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 35 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 40 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of permission
@@ -221,6 +227,11 @@ INSERT INTO `permission` VALUES (30, '菜单查询', '2018-12-28 17:34:41', 'MEN
 INSERT INTO `permission` VALUES (31, '菜单创建', '2018-12-28 17:34:52', 'MENU_CREATE', 29);
 INSERT INTO `permission` VALUES (32, '菜单编辑', '2018-12-28 17:35:20', 'MENU_EDIT', 29);
 INSERT INTO `permission` VALUES (33, '菜单删除', '2018-12-28 17:35:29', 'MENU_DELETE', 29);
+INSERT INTO `permission` VALUES (35, '定时任务管理', '2019-01-08 14:59:57', 'JOB_ALL', 0);
+INSERT INTO `permission` VALUES (36, '任务查询', '2019-01-08 15:00:09', 'JOB_SELECT', 35);
+INSERT INTO `permission` VALUES (37, '任务创建', '2019-01-08 15:00:20', 'JOB_CREATE', 35);
+INSERT INTO `permission` VALUES (38, '任务编辑', '2019-01-08 15:00:33', 'JOB_EDIT', 35);
+INSERT INTO `permission` VALUES (39, '任务删除', '2019-01-08 15:01:13', 'JOB_DELETE', 35);
 
 -- ----------------------------
 -- Table structure for picture
@@ -270,6 +281,48 @@ CREATE TABLE `qiniu_content`  (
 ) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
+-- Table structure for quartz_job
+-- ----------------------------
+DROP TABLE IF EXISTS `quartz_job`;
+CREATE TABLE `quartz_job`  (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `bean_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `cron_expression` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `is_pause` bit(1) NULL DEFAULT NULL,
+  `jobName` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `method_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `params` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `remark` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `updateTime` datetime NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Records of quartz_job
+-- ----------------------------
+INSERT INTO `quartz_job` VALUES (1, 'visitsTask', '0 0 0 * * ?', b'0', '更新访客记录', 'run', NULL, '每日0点创建新的访客记录', '2019-01-08 14:53:31');
+INSERT INTO `quartz_job` VALUES (2, 'testTask', '0/5 * * * * ?', b'1', '测试1', 'run1', 'test', '带参测试，多参使用json', '2019-01-08 14:53:25');
+INSERT INTO `quartz_job` VALUES (3, 'testTask', '0/5 * * * * ?', b'1', '测试', 'run', '', '不带参测试', '2019-01-08 15:56:54');
+
+-- ----------------------------
+-- Table structure for quartz_log
+-- ----------------------------
+DROP TABLE IF EXISTS `quartz_log`;
+CREATE TABLE `quartz_log`  (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `baen_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `createTime` datetime NULL DEFAULT NULL,
+  `cron_expression` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `exceptionDetail` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL,
+  `is_success` bit(1) NULL DEFAULT NULL,
+  `job_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `method_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `params` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `time` bigint(20) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 90 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+
+-- ----------------------------
 -- Table structure for role
 -- ----------------------------
 DROP TABLE IF EXISTS `role`;
@@ -310,6 +363,7 @@ INSERT INTO `roles_permissions` VALUES (2, 14);
 INSERT INTO `roles_permissions` VALUES (2, 19);
 INSERT INTO `roles_permissions` VALUES (2, 23);
 INSERT INTO `roles_permissions` VALUES (2, 30);
+INSERT INTO `roles_permissions` VALUES (2, 36);
 
 -- ----------------------------
 -- Table structure for user
@@ -332,7 +386,7 @@ CREATE TABLE `user`  (
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES (1, 'https://i.loli.net/2018/12/31/5c297270b20e2.jpg', '2018-08-23 09:11:56', 'admin@qq.com', 1, '14e1b600b1fd579f47433b88e8d85291', 'admin', '2018-11-23 10:12:36');
+INSERT INTO `user` VALUES (1, 'https://i.loli.net/2018/12/31/5c297270b20e2.jpg', '2018-08-23 09:11:56', 'zhengjie@tom.com', 1, '14e1b600b1fd579f47433b88e8d85291', 'admin', '2018-11-23 10:12:36');
 INSERT INTO `user` VALUES (3, 'https://i.loli.net/2018/12/30/5c2871d6aa101.jpg', '2018-12-27 20:05:26', 'test@qq.com', 1, '14e1b600b1fd579f47433b88e8d85291', 'test', NULL);
 
 -- ----------------------------
@@ -367,7 +421,7 @@ CREATE TABLE `verification_code`  (
   `value` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `scenes` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 33 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 34 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for visits
@@ -381,6 +435,6 @@ CREATE TABLE `visits`  (
   `weekDay` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `createTime` datetime NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 51 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 54 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 SET FOREIGN_KEY_CHECKS = 1;
