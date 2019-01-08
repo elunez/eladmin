@@ -20,20 +20,16 @@
 - 管理员： admin
 - 测试用户： test
 
-#####　默认密码
+##### 默认密码
 
 - 密码： 123456
 
 #### 开发环境
 
 - JDK：8
-
-- IDE：IntelliJ IDEA (后端)
-
+- IDE：IntelliJ IDEA （后端）
 - IDE：JetBrains WebStorm  （前端）
-
 - 依赖管理：Maven
-
 - 数据库：MySQL 5.5.59
 
 #### 系统功能模块
@@ -60,7 +56,7 @@
 - 缓存框架：Redis
 - 日志打印：logback+log4jdbc
 - 接口文档 swagger2
-- 其他：fastjson，aop，MapStruct等。
+- 其他：fastjson、aop、MapStruct等
 
 #### 前端技术栈
 - node
