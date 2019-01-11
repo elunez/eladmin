@@ -48,12 +48,11 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQL5InnoDBDialect
     hibernate:
-
+      # 生产环境设置成 none，避免程序运行时自动更新数据库结构
       ddl-auto: update
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     open-in-view: true
-  application.yml:51
   jackson:
     time-zone: GMT+8
 
