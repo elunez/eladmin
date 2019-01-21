@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AccountExpiredException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -44,7 +45,7 @@ public class AuthenticationController {
      */
     @Log("用户登录")
     @PostMapping(value = "${jwt.auth.path}")
-    public ResponseEntity<?> login(@RequestBody AuthorizationUser authorizationUser){
+    public ResponseEntity login(@Validated @RequestBody AuthorizationUser authorizationUser){
 
         final UserDetails userDetails = userDetailsService.loadUserByUsername(authorizationUser.getUsername());
 

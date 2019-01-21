@@ -2,7 +2,6 @@ package me.zhengjie.modules.system.service.query;
 
 import me.zhengjie.modules.system.domain.Role;
 import me.zhengjie.modules.system.repository.RoleRepository;
-import me.zhengjie.modules.system.service.dto.RoleDTO;
 import me.zhengjie.modules.system.service.mapper.RoleMapper;
 import me.zhengjie.utils.PageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,25 +40,17 @@ public class RoleQueryService {
      * 分页
      */
     @Cacheable(keyGenerator = "keyGenerator")
-    public Object queryAll(RoleDTO role, Pageable pageable){
-        Page<Role> page = roleRepository.findAll(new Spec(role),pageable);
+    public Object queryAll(String name, Pageable pageable){
+        Page<Role> page = roleRepository.findAll(new Spec(name),pageable);
         return PageUtil.toPage(page.map(roleMapper::toDto));
-    }
-
-    /**
-     * 不分页
-     */
-    @Cacheable(keyGenerator = "keyGenerator")
-    public Object queryAll(RoleDTO role){
-        return roleMapper.toDto(roleRepository.findAll(new Spec(role)));
     }
 
     class Spec implements Specification<Role> {
 
-        private RoleDTO role;
+        private String name;
 
-        public Spec(RoleDTO role){
-            this.role = role;
+        public Spec(String name){
+            this.name = name;
         }
 
         @Override
@@ -67,11 +58,11 @@ public class RoleQueryService {
 
             List<Predicate> list = new ArrayList<Predicate>();
 
-            if(!ObjectUtils.isEmpty(role.getName())){
+            if(!ObjectUtils.isEmpty(name)){
                 /**
                  * 模糊
                  */
-                list.add(cb.like(root.get("name").as(String.class),"%"+role.getName()+"%"));
+                list.add(cb.like(root.get("name").as(String.class),"%"+name+"%"));
             }
 
             Predicate[] p = new Predicate[list.size()];

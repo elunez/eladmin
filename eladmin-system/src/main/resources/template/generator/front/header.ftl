@@ -35,13 +35,11 @@ export default {
   },
   data() {
     return {
-      downloadLoading: false<#if hasQuery>,
+     <#if hasQuery>
       queryTypeOptions: [
-    <#if columns??>
-      <#list columns as column>
-      <#if column.columnQuery??>
+    <#if queryColumns??>
+      <#list queryColumns as column>
         { key: '${column.changeColumnName}', display_name: '<#if column.columnComment != ''>${column.columnComment}<#else>${column.changeColumnName}</#if>' }<#if column_has_next>,</#if>
-      </#if>
       </#list>
     </#if>
       ]

@@ -67,9 +67,8 @@ public class ${className}QueryService {
 
             List<Predicate> list = new ArrayList<Predicate>();
 
-    <#if columns??>
-        <#list columns as column>
-            <#if column.columnQuery??>
+    <#if queryColumns??>
+        <#list queryColumns as column>
                 if(!ObjectUtils.isEmpty(${changeClassName}.get${column.capitalColumnName}())){
                 <#if column.columnQuery = '1'>
                     /**
@@ -84,7 +83,6 @@ public class ${className}QueryService {
                     list.add(cb.equal(root.get("${column.columnName}").as(${column.columnType}.class),${changeClassName}.get${column.capitalColumnName}()));
                 </#if>
                 }
-            </#if>
         </#list>
     </#if>
                 Predicate[] p = new Predicate[list.size()];

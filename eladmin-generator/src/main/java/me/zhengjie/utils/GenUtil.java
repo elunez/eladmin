@@ -79,7 +79,8 @@ public class GenUtil {
         map.put("hasBigDecimal",false);
         map.put("hasQuery",false);
 
-        List<Map<String,Object>> list = new ArrayList<>();
+        List<Map<String,Object>> columns = new ArrayList<>();
+        List<Map<String,Object>> queryColumns = new ArrayList<>();
         for (ColumnInfo column : columnInfos) {
             Map<String,Object> listMap = new HashMap();
             listMap.put("columnComment",column.getColumnComment());
@@ -98,17 +99,19 @@ public class GenUtil {
             listMap.put("columnType",colType);
             listMap.put("columnName",column.getColumnName());
             listMap.put("isNullable",column.getIsNullable());
-            listMap.put("columnQuery",column.getColumnQuery());
-
-            if(!ObjectUtils.isEmpty(column.getColumnQuery())){
-                map.put("hasQuery",true);
-            }
             listMap.put("columnShow",column.getColumnShow());
             listMap.put("changeColumnName",StringUtils.toCamelCase(column.getColumnName().toString()));
             listMap.put("capitalColumnName",StringUtils.toCapitalizeCamelCase(column.getColumnName().toString()));
-            list.add(listMap);
+
+            if(!StringUtils.isBlank(column.getColumnQuery())){
+                listMap.put("columnQuery",column.getColumnQuery());
+                map.put("hasQuery",true);
+                queryColumns.add(listMap);
+            }
+            columns.add(listMap);
         }
-        map.put("columns",list);
+        map.put("columns",columns);
+        map.put("queryColumns",queryColumns);
         TemplateEngine engine = TemplateUtil.createEngine(new TemplateConfig("template", TemplateConfig.ResourceMode.CLASSPATH));
 
         // 生成后端代码
