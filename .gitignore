@@ -1,3 +1,5 @@
 ### IntelliJ IDEA ###
 .idea/*
+*.iml
 */target/*
+*/*.iml
