@@ -25,6 +25,7 @@ public class User implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @NotNull(groups = Update.class)
     private Long id;
 
     @NotBlank
@@ -65,4 +66,6 @@ public class User implements Serializable {
                 ", lastPasswordResetTime=" + lastPasswordResetTime +
                 '}';
     }
+
+    public @interface Update {}
 }

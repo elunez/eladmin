@@ -41,7 +41,7 @@ public class RoleController {
      * @return
      */
     @GetMapping(value = "/roles/tree")
-    @PreAuthorize("hasAnyRole('ADMIN','MENU_ALL','MENU_SELECT','ROLES_ALL','USER_ALL','USER_SELECT')")
+    @PreAuthorize("hasAnyRole('ADMIN','ROLES_ALL','USER_ALL','USER_SELECT')")
     public ResponseEntity getRoleTree(){
         return new ResponseEntity(roleService.getRoleTree(),HttpStatus.OK);
     }
@@ -66,11 +66,24 @@ public class RoleController {
     @Log("修改角色")
     @PutMapping(value = "/roles")
     @PreAuthorize("hasAnyRole('ADMIN','ROLES_ALL','ROLES_EDIT')")
-    public ResponseEntity update(@Validated @RequestBody Role resources){
-        if (resources.getId() == null) {
-            throw new BadRequestException(ENTITY_NAME +" ID Can not be empty");
-        }
+    public ResponseEntity update(@Validated(Role.Update.class) @RequestBody Role resources){
         roleService.update(resources);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
+
+    @Log("修改角色权限")
+    @PutMapping(value = "/roles/permission")
+    @PreAuthorize("hasAnyRole('ADMIN','ROLES_ALL','ROLES_EDIT')")
+    public ResponseEntity updatePermission(@RequestBody Role resources){
+        roleService.updatePermission(resources,roleService.findById(resources.getId()));
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
+
+    @Log("修改角色菜单")
+    @PutMapping(value = "/roles/menu")
+    @PreAuthorize("hasAnyRole('ADMIN','ROLES_ALL','ROLES_EDIT')")
+    public ResponseEntity updateMenu(@RequestBody Role resources){
+        roleService.updateMenu(resources,roleService.findById(resources.getId()));
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 

@@ -67,7 +67,6 @@ public interface MenuService {
      * @param menuDTOS
      * @return
      */
-    @Cacheable(keyGenerator = "keyGenerator")
     Map buildTree(List<MenuDTO> menuDTOS);
 
     /**
@@ -82,6 +81,5 @@ public interface MenuService {
      * @param byRoles
      * @return
      */
-    @Cacheable(keyGenerator = "keyGenerator")
     Object buildMenus(List<MenuDTO> byRoles);
 }

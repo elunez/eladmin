@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.Date;
 import java.util.Optional;
 
@@ -59,7 +58,7 @@ public class UserServiceImpl implements UserService {
             throw new BadRequestException("角色不能为空");
         }
 
-        // 默认密码 123456
+        // 默认密码 123456，此密码是 MD5加密后的字符
         resources.setPassword("14e1b600b1fd579f47433b88e8d85291");
         resources.setAvatar("https://i.loli.net/2018/12/06/5c08894d8de21.jpg");
         return userMapper.toDto(userRepository.save(resources));
@@ -69,17 +68,17 @@ public class UserServiceImpl implements UserService {
     @Transactional(rollbackFor = Exception.class)
     public void update(User resources) {
 
+        /**
+         * 根据实际需求修改
+         */
+        if(resources.getId().equals(1L)){
+            throw new BadRequestException("该账号不能被修改");
+        }
+
         Optional<User> userOptional = userRepository.findById(resources.getId());
         ValidationUtil.isNull(userOptional,"User","id",resources.getId());
 
         User user = userOptional.get();
-
-        /**
-         * 根据实际需求修改
-         */
-        if(user.getId().equals(1L)){
-            throw new BadRequestException("该账号不能被修改");
-        }
 
         User user1 = userRepository.findByUsername(user.getUsername());
         User user2 = userRepository.findByEmail(user.getEmail());
@@ -107,7 +106,6 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void delete(Long id) {
-
         /**
          * 根据实际需求修改
          */

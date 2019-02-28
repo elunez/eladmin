@@ -6,6 +6,8 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 
+import java.util.Set;
+
 /**
  * @author jie
  * @date 2018-12-03
@@ -49,4 +51,27 @@ public interface RoleService {
      */
     @Cacheable(key = "'tree'")
     Object getRoleTree();
+
+    /**
+     * findByUsers_Id
+     * @param id
+     * @return
+     */
+    Set<Role> findByUsers_Id(Long id);
+
+    /**
+     * updatePermission
+     * @param resources
+     * @param roleDTO
+     */
+    @CacheEvict(allEntries = true)
+    void updatePermission(Role resources, RoleDTO roleDTO);
+
+    /**
+     * updateMenu
+     * @param resources
+     * @param roleDTO
+     */
+    @CacheEvict(allEntries = true)
+    void updateMenu(Role resources, RoleDTO roleDTO);
 }

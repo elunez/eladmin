@@ -31,12 +31,6 @@ public class PermissionController {
 
     private static final String ENTITY_NAME = "permission";
 
-    @GetMapping(value = "/permissions/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN','PERMISSION_ALL','PERMISSION_SELECT')")
-    public ResponseEntity getPermissions(@PathVariable Long id){
-        return new ResponseEntity(permissionService.findById(id), HttpStatus.OK);
-    }
-
     /**
      * 返回全部的权限，新增角色时下拉选择
      * @return
@@ -68,10 +62,7 @@ public class PermissionController {
     @Log("修改权限")
     @PutMapping(value = "/permissions")
     @PreAuthorize("hasAnyRole('ADMIN','PERMISSION_ALL','PERMISSION_EDIT')")
-    public ResponseEntity update(@Validated @RequestBody Permission resources){
-        if (resources.getId() == null) {
-            throw new BadRequestException(ENTITY_NAME +" ID Can not be empty");
-        }
+    public ResponseEntity update(@Validated(Permission.Update.class) @RequestBody Permission resources){
         permissionService.update(resources);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }

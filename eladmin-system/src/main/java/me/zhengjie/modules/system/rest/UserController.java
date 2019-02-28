@@ -59,12 +59,6 @@ public class UserController {
 
     private static final String ENTITY_NAME = "user";
 
-    @GetMapping(value = "/users/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN','USER_ALL','USER_SELECT')")
-    public ResponseEntity getUser(@PathVariable Long id){
-        return new ResponseEntity(userService.findById(id), HttpStatus.OK);
-    }
-
     @Log("查询用户")
     @GetMapping(value = "/users")
     @PreAuthorize("hasAnyRole('ADMIN','USER_ALL','USER_SELECT')")
@@ -85,10 +79,7 @@ public class UserController {
     @Log("修改用户")
     @PutMapping(value = "/users")
     @PreAuthorize("hasAnyRole('ADMIN','USER_ALL','USER_EDIT')")
-    public ResponseEntity update(@Validated @RequestBody User resources){
-        if (resources.getId() == null) {
-            throw new BadRequestException(ENTITY_NAME +" ID Can not be empty");
-        }
+    public ResponseEntity update(@Validated(User.Update.class) @RequestBody User resources){
         userService.update(resources);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }

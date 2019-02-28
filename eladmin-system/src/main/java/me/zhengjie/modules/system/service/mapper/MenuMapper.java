@@ -10,7 +10,7 @@ import org.mapstruct.ReportingPolicy;
  * @author jie
  * @date 2018-12-17
  */
-@Mapper(componentModel = "spring",uses = {RoleMapper.class},unmappedTargetPolicy = ReportingPolicy.IGNORE)
+@Mapper(componentModel = "spring",uses = {},unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface MenuMapper extends EntityMapper<MenuDTO, Menu> {
 
 }

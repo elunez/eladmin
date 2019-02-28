@@ -68,10 +68,7 @@ public class QuartzJobController {
     @Log("修改定时任务")
     @PutMapping(value = "/jobs")
     @PreAuthorize("hasAnyRole('ADMIN','JOB_ALL','JOB_EDIT')")
-    public ResponseEntity update(@Validated @RequestBody QuartzJob resources){
-        if (resources.getId() == null) {
-            throw new BadRequestException(ENTITY_NAME +" ID Can not be empty");
-        }
+    public ResponseEntity update(@Validated(QuartzJob.Update.class) @RequestBody QuartzJob resources){
         quartzJobService.update(resources);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }

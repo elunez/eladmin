@@ -29,8 +29,6 @@ public class MenuDTO {
 
     private String icon;
 
-    private Set<RoleDTO> roles;
-
     private List<MenuDTO> children;
 
     private Timestamp createTime;

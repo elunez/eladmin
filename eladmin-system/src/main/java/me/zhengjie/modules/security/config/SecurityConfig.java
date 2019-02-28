@@ -41,7 +41,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private String tokenHeader;
 
     @Value("${jwt.auth.path}")
-    private String authenticationPath;
+    private String loginPath;
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
@@ -74,9 +74,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 // 不创建会话
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                .authorizeRequests()
 
-                .antMatchers("/auth/**").permitAll()
+                // 过滤请求
+                .authorizeRequests()
+                .antMatchers(
+                        HttpMethod.GET,
+                        "/*.html",
+                        "/**/*.html",
+                        "/**/*.css",
+                        "/**/*.js"
+                ).permitAll()
+
+                .antMatchers( HttpMethod.POST,"/auth/"+loginPath).permitAll()
                 .antMatchers("/websocket/**").permitAll()
                 .antMatchers("/druid/**").anonymous()
 
@@ -91,33 +100,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/*/api-docs").anonymous()
                 // swagger end
 
+                // 接口限流测试
                 .antMatchers("/test/**").anonymous()
                 .antMatchers(HttpMethod.OPTIONS, "/**").anonymous()
+
                 // 所有请求都需要认证
                 .anyRequest().authenticated();
 
         httpSecurity
                 .addFilterBefore(authenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
-    }
-
-    @Override
-    public void configure(WebSecurity web) throws Exception {
-        // AuthenticationTokenFilter will ignore the below paths
-        web.ignoring()
-            .antMatchers(
-                    HttpMethod.POST,
-                    authenticationPath
-            )
-
-            // allow anonymous resource requests
-            .and()
-            .ignoring()
-            .antMatchers(
-                    HttpMethod.GET,
-                    "/*.html",
-                    "/**/*.html",
-                    "/**/*.css",
-                    "/**/*.js"
-            );
     }
 }

@@ -109,7 +109,7 @@ eladmin-qt和eladmin-qd只是命名方式的区别，无其他区别
         <td><img src="https://i.loli.net/2018/12/22/5c1e10c7890ab.png"/></td>
     </tr>
     <tr>
-        <td><img src="https://i.loli.net/2018/12/22/5c1e10c782a05.png"/></td>
+        <td><img src="https://i.loli.net/2019/02/28/5c7795b707347.png"/></td>
         <td><img src="https://i.loli.net/2018/12/22/5c1e10c7b089b.png"/></td>
     </tr>
     <tr>

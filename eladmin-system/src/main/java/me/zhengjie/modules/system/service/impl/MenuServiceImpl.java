@@ -11,7 +11,6 @@ import me.zhengjie.modules.system.repository.MenuRepository;
 import me.zhengjie.modules.system.service.MenuService;
 import me.zhengjie.modules.system.service.dto.MenuDTO;
 import me.zhengjie.modules.system.service.mapper.MenuMapper;
-import me.zhengjie.utils.ListSortUtil;
 import me.zhengjie.utils.ValidationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,9 +40,7 @@ public class MenuServiceImpl implements MenuService {
     public List<MenuDTO> findByRoles(Set<Role> roles) {
         Set<Menu> menus = new LinkedHashSet<>();
         for (Role role : roles) {
-            ListSortUtil<Menu> sortList = new ListSortUtil<Menu>();
-            List<Menu> menus1 = role.getMenus().stream().collect(Collectors.toList());
-            sortList.sort(menus1, "sort", "asc");
+            List<Menu> menus1 = menuRepository.findByRoles_IdOrderBySortAsc(role.getId()).stream().collect(Collectors.toList());
             menus.addAll(menus1);
         }
         return menus.stream().map(menuMapper::toDto).collect(Collectors.toList());
@@ -85,7 +82,6 @@ public class MenuServiceImpl implements MenuService {
         menu.setIFrame(resources.getIFrame());
         menu.setPid(resources.getPid());
         menu.setSort(resources.getSort());
-        menu.setRoles(resources.getRoles());
         menuRepository.save(menu);
     }
 
@@ -141,11 +137,9 @@ public class MenuServiceImpl implements MenuService {
                 }
             }
         }
-
-        Integer totalElements = menuDTOS!=null?menuDTOS.size():0;
         Map map = new HashMap();
         map.put("content",trees.size() == 0?menuDTOS:trees);
-        map.put("totalElements",totalElements);
+        map.put("totalElements",menuDTOS!=null?menuDTOS.size():0);
         return map;
     }
 

@@ -3,7 +3,6 @@ package me.zhengjie.config;
 import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
 import javax.servlet.MultipartConfigElement;
 import java.io.File;
 
@@ -20,7 +19,7 @@ public class MultipartConfig {
     @Bean
     MultipartConfigElement multipartConfigElement() {
         MultipartConfigFactory factory = new MultipartConfigFactory();
-        String location = System.getProperty("user.dir") + "target/file/tmp";
+        String location = System.getProperty("user.home") + "/.eladmin/file/tmp";
         File tmpFile = new File(location);
         if (!tmpFile.exists()) {
             tmpFile.mkdirs();

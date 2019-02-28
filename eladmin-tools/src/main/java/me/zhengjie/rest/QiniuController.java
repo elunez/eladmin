@@ -60,8 +60,8 @@ public class QiniuController {
     public ResponseEntity upload(@RequestParam MultipartFile file){
         QiniuContent qiniuContent = qiNiuService.upload(file,qiNiuService.find());
         Map map = new HashMap();
-        map.put("errno",0);
         map.put("id",qiniuContent.getId());
+        map.put("errno",0);
         map.put("data",new String[]{qiniuContent.getUrl()});
         return new ResponseEntity(map,HttpStatus.OK);
     }

@@ -1,17 +1,17 @@
 /*
- Navicat MySQL Data Transfer
+ Navicat Premium Data Transfer
 
- Source Server         : 本地
+ Source Server         : localhost
  Source Server Type    : MySQL
- Source Server Version : 50559
+ Source Server Version : 50562
  Source Host           : localhost:3306
  Source Schema         : eladmin
 
  Target Server Type    : MySQL
- Target Server Version : 50559
+ Target Server Version : 50562
  File Encoding         : 65001
 
- Date: 20/01/2019 19:17:08
+ Date: 27/02/2019 13:15:23
 */
 
 SET NAMES utf8mb4;
@@ -39,7 +39,7 @@ CREATE TABLE `alipay_config`  (
 -- ----------------------------
 -- Records of alipay_config
 -- ----------------------------
-INSERT INTO `alipay_config` VALUES (1, '2016091700532697', 'utf-8', 'JSON', 'https://openapi.alipaydev.com/gateway.do', 'http://api.auauz.net/api/aliPay/notify', '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', 'http://api.auauz.ne/api/aliPay/return', 'RSA2', '2088102176044281');
+INSERT INTO `alipay_config` VALUES (1, '2016091700532697', 'utf-8', 'JSON', 'https://openapi.alipaydev.com/gateway.do', 'http://api.auauz.net/api/aliPay/notify', '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', 'http://api.auauz.net/api/aliPay/return', 'RSA2', '2088102176044281');
 
 -- ----------------------------
 -- Table structure for email_config
@@ -73,25 +73,7 @@ CREATE TABLE `gen_config`  (
 -- ----------------------------
 -- Records of gen_config
 -- ----------------------------
-INSERT INTO `gen_config` VALUES (1, 'jie', b'0', 'eladmin-system', 'me.zhengjie.modules.test', 'E:\\workspace\\my-workspace\\eladmin-qt\\src\\views\\system\\test', 'E:\\workspace\\my-workspace\\eladmin-qt\\src\\api');
-
--- ----------------------------
--- Table structure for log
--- ----------------------------
-DROP TABLE IF EXISTS `log`;
-CREATE TABLE `log`  (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'ID',
-  `create_time` datetime NULL DEFAULT NULL COMMENT '创建日期',
-  `description` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '描述',
-  `exception_detail` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '异常详情',
-  `log_type` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '日志类型',
-  `method` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '方法名称',
-  `params` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '参数',
-  `request_ip` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '请求ip',
-  `time` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '耗时',
-  `username` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '操作用户',
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 6327 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+INSERT INTO `gen_config` VALUES (1, 'jie', '0', 'eladmin-system', 'me.zhengjie.modules.test', 'E:\\workspace\\my-workspace\\eladmin-qt\\src\\views\\system\\test', 'E:\\workspace\\my-workspace\\eladmin-qt\\src\\api');
 
 -- ----------------------------
 -- Table structure for menu
@@ -100,121 +82,46 @@ DROP TABLE IF EXISTS `menu`;
 CREATE TABLE `menu`  (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'ID',
   `create_time` datetime NULL DEFAULT NULL COMMENT '创建日期',
+  `i_frame` bit(1) NULL DEFAULT NULL COMMENT '是否外链',
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '菜单名称',
   `component` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '组件',
   `pid` bigint(20) NOT NULL COMMENT '上级菜单ID',
   `sort` bigint(20) NOT NULL COMMENT '排序',
   `icon` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '图标',
   `path` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '链接地址',
-  `i_frame` bit(1) NULL DEFAULT NULL COMMENT '是否外链',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 36 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 33 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of menu
 -- ----------------------------
-INSERT INTO `menu` VALUES (1, '2018-12-18 15:11:29', '系统管理', NULL, 0, 1, 'system', 'system', b'0');
-INSERT INTO `menu` VALUES (2, '2018-12-18 15:14:44', '用户管理', 'system/user/index', 1, 2, 'peoples', 'user', b'0');
-INSERT INTO `menu` VALUES (3, '2018-12-18 15:16:07', '角色管理', 'system/role/index', 1, 3, 'role', 'role', b'0');
-INSERT INTO `menu` VALUES (4, '2018-12-18 15:16:45', '权限管理', 'system/permission/index', 1, 4, 'permission', 'permission', b'0');
-INSERT INTO `menu` VALUES (5, '2018-12-18 15:17:28', '菜单管理', 'system/menu/index', 1, 5, 'menu', 'menu', b'0');
-INSERT INTO `menu` VALUES (6, '2018-12-18 15:17:48', '系统监控', NULL, 0, 10, 'monitor', 'monitor', b'0');
-INSERT INTO `menu` VALUES (7, '2018-12-18 15:18:26', '操作日志', 'monitor/log/index', 6, 11, 'log', 'logs', b'0');
-INSERT INTO `menu` VALUES (8, '2018-12-18 15:19:01', '系统缓存', 'monitor/redis/index', 6, 13, 'redis', 'redis', b'0');
-INSERT INTO `menu` VALUES (9, '2018-12-18 15:19:34', 'SQL监控', NULL, 6, 14, 'sqlMonitor', 'http://localhost:8000/druid', b'1');
-INSERT INTO `menu` VALUES (10, '2018-12-19 13:38:16', '组件管理', NULL, 0, 50, 'zujian', 'components', b'0');
-INSERT INTO `menu` VALUES (11, '2018-12-19 13:38:49', '图标库', 'components/IconSelect', 10, 51, 'icon', 'icon', b'0');
-INSERT INTO `menu` VALUES (12, '2018-12-24 20:37:35', '实时控制台', 'monitor/log/msg', 6, 15, 'codeConsole', 'msg', b'0');
-INSERT INTO `menu` VALUES (13, '2018-12-27 10:11:26', '三方工具', '', 0, 30, 'tools', 'tools', b'0');
-INSERT INTO `menu` VALUES (14, '2018-12-27 10:13:09', '邮件工具', 'tools/email/index', 13, 31, 'email', 'email', b'0');
-INSERT INTO `menu` VALUES (15, '2018-12-27 11:58:25', '富文本', 'components/Editor', 10, 52, 'fwb', 'tinymce', b'0');
-INSERT INTO `menu` VALUES (16, '2018-12-28 09:36:53', 'SM.MS图床', 'tools/picture/index', 13, 32, 'image', 'pictures', b'0');
-INSERT INTO `menu` VALUES (17, '2018-12-28 15:09:49', '项目地址', '', 0, 0, 'github', 'https://github.com/elunez/eladmin', b'1');
-INSERT INTO `menu` VALUES (18, '2018-12-31 11:12:15', '七牛云存储', 'tools/qiniu/index', 13, 33, 'qiniu', 'qiniu', b'0');
-INSERT INTO `menu` VALUES (19, '2018-12-31 14:52:38', '支付宝工具', 'tools/aliPay/index', 13, 34, 'alipay', 'aliPay', b'0');
-INSERT INTO `menu` VALUES (21, '2019-01-04 16:22:03', '多级菜单', '', 0, 900, 'menu', 'nested', b'0');
-INSERT INTO `menu` VALUES (22, '2019-01-04 16:23:29', '二级菜单1', 'nested/menu1/index', 21, 999, 'menu', 'menu1', b'0');
-INSERT INTO `menu` VALUES (23, '2019-01-04 16:23:57', '二级菜单2', 'nested/menu2/index', 21, 999, 'menu', 'menu2', b'0');
-INSERT INTO `menu` VALUES (24, '2019-01-04 16:24:48', '三级菜单1', 'nested/menu1/menu1-1', 22, 999, 'menu', 'menu1-1', b'0');
-INSERT INTO `menu` VALUES (27, '2019-01-07 17:27:32', '三级菜单2', 'nested/menu1/menu1-2', 22, 999, 'menu', 'menu1-2', b'0');
-INSERT INTO `menu` VALUES (28, '2019-01-07 20:34:40', '定时任务', 'system/timing/index', 1, 6, 'timing', 'timing', b'0');
-INSERT INTO `menu` VALUES (30, '2019-01-11 15:45:55', '代码生成', 'generator/index', 1, 8, 'dev', 'generator', b'0');
-INSERT INTO `menu` VALUES (32, '2019-01-13 13:49:03', '异常日志', 'monitor/log/errorLog', 6, 12, 'error', 'errorLog', b'0');
-
--- ----------------------------
--- Table structure for menus_roles
--- ----------------------------
-DROP TABLE IF EXISTS `menus_roles`;
-CREATE TABLE `menus_roles`  (
-  `menu_id` bigint(20) NOT NULL COMMENT '菜单ID',
-  `role_id` bigint(20) NOT NULL COMMENT '角色ID',
-  PRIMARY KEY (`menu_id`, `role_id`) USING BTREE,
-  INDEX `FKcngg2qadojhi3a651a5adkvbq`(`role_id`) USING BTREE,
-  CONSTRAINT `FKcngg2qadojhi3a651a5adkvbq` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  CONSTRAINT `FKq1knxf8ykt26we8k331naabjx` FOREIGN KEY (`menu_id`) REFERENCES `menu` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
-
--- ----------------------------
--- Records of menus_roles
--- ----------------------------
-INSERT INTO `menus_roles` VALUES (1, 1);
-INSERT INTO `menus_roles` VALUES (2, 1);
-INSERT INTO `menus_roles` VALUES (3, 1);
-INSERT INTO `menus_roles` VALUES (4, 1);
-INSERT INTO `menus_roles` VALUES (5, 1);
-INSERT INTO `menus_roles` VALUES (6, 1);
-INSERT INTO `menus_roles` VALUES (7, 1);
-INSERT INTO `menus_roles` VALUES (8, 1);
-INSERT INTO `menus_roles` VALUES (9, 1);
-INSERT INTO `menus_roles` VALUES (10, 1);
-INSERT INTO `menus_roles` VALUES (11, 1);
-INSERT INTO `menus_roles` VALUES (12, 1);
-INSERT INTO `menus_roles` VALUES (13, 1);
-INSERT INTO `menus_roles` VALUES (14, 1);
-INSERT INTO `menus_roles` VALUES (15, 1);
-INSERT INTO `menus_roles` VALUES (16, 1);
-INSERT INTO `menus_roles` VALUES (17, 1);
-INSERT INTO `menus_roles` VALUES (18, 1);
-INSERT INTO `menus_roles` VALUES (19, 1);
-INSERT INTO `menus_roles` VALUES (21, 1);
-INSERT INTO `menus_roles` VALUES (22, 1);
-INSERT INTO `menus_roles` VALUES (23, 1);
-INSERT INTO `menus_roles` VALUES (24, 1);
-INSERT INTO `menus_roles` VALUES (27, 1);
-INSERT INTO `menus_roles` VALUES (28, 1);
-INSERT INTO `menus_roles` VALUES (30, 1);
-INSERT INTO `menus_roles` VALUES (32, 1);
-INSERT INTO `menus_roles` VALUES (1, 2);
-INSERT INTO `menus_roles` VALUES (2, 2);
-INSERT INTO `menus_roles` VALUES (3, 2);
-INSERT INTO `menus_roles` VALUES (4, 2);
-INSERT INTO `menus_roles` VALUES (5, 2);
-INSERT INTO `menus_roles` VALUES (6, 2);
-INSERT INTO `menus_roles` VALUES (9, 2);
-INSERT INTO `menus_roles` VALUES (12, 2);
-INSERT INTO `menus_roles` VALUES (13, 2);
-INSERT INTO `menus_roles` VALUES (14, 2);
-INSERT INTO `menus_roles` VALUES (16, 2);
-INSERT INTO `menus_roles` VALUES (17, 2);
-INSERT INTO `menus_roles` VALUES (18, 2);
-INSERT INTO `menus_roles` VALUES (19, 2);
-INSERT INTO `menus_roles` VALUES (21, 2);
-INSERT INTO `menus_roles` VALUES (22, 2);
-INSERT INTO `menus_roles` VALUES (23, 2);
-INSERT INTO `menus_roles` VALUES (24, 2);
-INSERT INTO `menus_roles` VALUES (27, 2);
-INSERT INTO `menus_roles` VALUES (28, 2);
-
--- ----------------------------
--- Table structure for my_test
--- ----------------------------
-DROP TABLE IF EXISTS `my_test`;
-CREATE TABLE `my_test`  (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'ID',
-  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '名称',
-  `remark` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '备注',
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+INSERT INTO `menu` VALUES (1, '2018-12-18 15:11:29', b'0', '系统管理', NULL, 0, 1, 'system', 'system');
+INSERT INTO `menu` VALUES (2, '2018-12-18 15:14:44', b'0', '用户管理', 'system/user/index', 1, 2, 'peoples', 'user');
+INSERT INTO `menu` VALUES (3, '2018-12-18 15:16:07', b'0', '角色管理', 'system/role/index', 1, 3, 'role', 'role');
+INSERT INTO `menu` VALUES (4, '2018-12-18 15:16:45', b'0', '权限管理', 'system/permission/index', 1, 4, 'permission', 'permission');
+INSERT INTO `menu` VALUES (5, '2018-12-18 15:17:28', b'0', '菜单管理', 'system/menu/index', 1, 5, 'menu', 'menu');
+INSERT INTO `menu` VALUES (6, '2018-12-18 15:17:48', b'0', '系统监控', NULL, 0, 10, 'monitor', 'monitor');
+INSERT INTO `menu` VALUES (7, '2018-12-18 15:18:26', b'0', '操作日志', 'monitor/log/index', 6, 11, 'log', 'logs');
+INSERT INTO `menu` VALUES (8, '2018-12-18 15:19:01', b'0', '系统缓存', 'monitor/redis/index', 6, 13, 'redis', 'redis');
+INSERT INTO `menu` VALUES (9, '2018-12-18 15:19:34', b'1', 'SQL监控', NULL, 6, 14, 'sqlMonitor', 'http://api.auauz.net/druid');
+INSERT INTO `menu` VALUES (10, '2018-12-19 13:38:16', b'0', '组件管理', NULL, 0, 50, 'zujian', 'components');
+INSERT INTO `menu` VALUES (11, '2018-12-19 13:38:49', b'0', '图标库', 'components/IconSelect', 10, 51, 'icon', 'icon');
+INSERT INTO `menu` VALUES (12, '2018-12-24 20:37:35', b'0', '实时控制台', 'monitor/log/msg', 6, 15, 'codeConsole', 'msg');
+INSERT INTO `menu` VALUES (13, '2018-12-27 10:11:26', b'0', '三方工具', '', 0, 30, 'tools', 'tools');
+INSERT INTO `menu` VALUES (14, '2018-12-27 10:13:09', b'0', '邮件工具', 'tools/email/index', 13, 31, 'email', 'email');
+INSERT INTO `menu` VALUES (15, '2018-12-27 11:58:25', b'0', '富文本', 'components/Editor', 10, 52, 'fwb', 'tinymce');
+INSERT INTO `menu` VALUES (16, '2018-12-28 09:36:53', b'0', 'SM.MS图床', 'tools/picture/index', 13, 32, 'image', 'pictures');
+INSERT INTO `menu` VALUES (17, '2018-12-28 15:09:49', b'1', '项目地址', '', 0, 0, 'github', 'https://github.com/elunez/eladmin');
+INSERT INTO `menu` VALUES (18, '2018-12-31 11:12:15', b'0', '七牛云存储', 'tools/qiniu/index', 13, 33, 'qiniu', 'qiniu');
+INSERT INTO `menu` VALUES (19, '2018-12-31 14:52:38', b'0', '支付宝工具', 'tools/aliPay/index', 13, 34, 'alipay', 'aliPay');
+INSERT INTO `menu` VALUES (21, '2019-01-04 16:22:03', b'0', '多级菜单', '', 0, 900, 'menu', 'nested');
+INSERT INTO `menu` VALUES (22, '2019-01-04 16:23:29', b'0', '二级菜单1', 'nested/menu1/index', 21, 999, 'menu', 'menu1');
+INSERT INTO `menu` VALUES (23, '2019-01-04 16:23:57', b'0', '二级菜单2', 'nested/menu2/index', 21, 999, 'menu', 'menu2');
+INSERT INTO `menu` VALUES (24, '2019-01-04 16:24:48', b'0', '三级菜单1', 'nested/menu1/menu1-1', 22, 999, 'menu', 'menu1-1');
+INSERT INTO `menu` VALUES (27, '2019-01-07 17:27:32', b'0', '三级菜单2', 'nested/menu1/menu1-2', 22, 999, 'menu', 'menu1-2');
+INSERT INTO `menu` VALUES (28, '2019-01-07 20:34:40', b'0', '定时任务', 'system/timing/index', 1, 6, 'timing', 'timing');
+INSERT INTO `menu` VALUES (30, '2019-01-11 15:45:55', b'0', '代码生成', 'generator/index', 1, 8, 'dev', 'generator');
+INSERT INTO `menu` VALUES (32, '2019-01-13 13:49:03', b'0', '异常日志', 'monitor/log/errorLog', 6, 12, 'error', 'errorLog');
 
 -- ----------------------------
 -- Table structure for permission
@@ -283,9 +190,8 @@ CREATE TABLE `picture`  (
   `username` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '用户名称',
   `width` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '图片宽度',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 54 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 50 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
--- ----------------------------
 -- Table structure for qiniu_config
 -- ----------------------------
 DROP TABLE IF EXISTS `qiniu_config`;
@@ -313,7 +219,7 @@ CREATE TABLE `qiniu_content`  (
   `update_time` datetime NULL DEFAULT NULL COMMENT '上传或同步的时间',
   `url` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '文件url',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for quartz_job
@@ -344,18 +250,18 @@ INSERT INTO `quartz_job` VALUES (3, 'testTask', '0/5 * * * * ?', b'1', '测试',
 -- ----------------------------
 DROP TABLE IF EXISTS `quartz_log`;
 CREATE TABLE `quartz_log`  (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'ID',
-  `baen_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'Spring Bean名称',
-  `create_time` datetime NULL DEFAULT NULL COMMENT '创建日期',
-  `cron_expression` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'cron 表达式',
-  `exception_detail` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '异常详情',
-  `is_success` bit(1) NULL DEFAULT NULL COMMENT '运行状态：1成功，0异常',
-  `job_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '任务名称',
-  `method_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '方法名称',
-  `params` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '参数',
-  `time` bigint(20) NULL DEFAULT NULL COMMENT '耗时',
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `baen_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `create_time` datetime NULL DEFAULT NULL,
+  `cron_expression` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `exception_detail` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL,
+  `is_success` bit(1) NULL DEFAULT NULL,
+  `job_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `method_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `params` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `time` bigint(20) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for role
@@ -367,13 +273,72 @@ CREATE TABLE `role`  (
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '名称',
   `remark` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of role
 -- ----------------------------
-INSERT INTO `role` VALUES (1, '2018-11-23 11:04:37', '超级管理员', '超级管理员');
-INSERT INTO `role` VALUES (2, '2018-11-23 13:09:06', '普通用户', '普通用户');
+INSERT INTO `role` VALUES (1, '2018-11-23 11:04:37', '管理员', '系统所有权');
+INSERT INTO `role` VALUES (2, '2018-11-23 13:09:06', '普通用户', '用于测试菜单与权限');
+
+-- ----------------------------
+-- Table structure for roles_menus
+-- ----------------------------
+DROP TABLE IF EXISTS `roles_menus`;
+CREATE TABLE `roles_menus`  (
+  `role_id` bigint(20) NOT NULL COMMENT '角色ID',
+  `menu_id` bigint(20) NOT NULL COMMENT '菜单ID',
+  PRIMARY KEY (`menu_id`, `role_id`) USING BTREE,
+  INDEX `FKcngg2qadojhi3a651a5adkvbq`(`role_id`) USING BTREE,
+  CONSTRAINT `FKcngg2qadojhi3a651a5adkvbq` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `FKq1knxf8ykt26we8k331naabjx` FOREIGN KEY (`menu_id`) REFERENCES `menu` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Records of roles_menus
+-- ----------------------------
+INSERT INTO `roles_menus` VALUES (1, 1);
+INSERT INTO `roles_menus` VALUES (1, 2);
+INSERT INTO `roles_menus` VALUES (1, 3);
+INSERT INTO `roles_menus` VALUES (1, 4);
+INSERT INTO `roles_menus` VALUES (1, 5);
+INSERT INTO `roles_menus` VALUES (1, 6);
+INSERT INTO `roles_menus` VALUES (1, 7);
+INSERT INTO `roles_menus` VALUES (1, 8);
+INSERT INTO `roles_menus` VALUES (1, 9);
+INSERT INTO `roles_menus` VALUES (1, 10);
+INSERT INTO `roles_menus` VALUES (1, 11);
+INSERT INTO `roles_menus` VALUES (1, 12);
+INSERT INTO `roles_menus` VALUES (1, 13);
+INSERT INTO `roles_menus` VALUES (1, 14);
+INSERT INTO `roles_menus` VALUES (1, 15);
+INSERT INTO `roles_menus` VALUES (1, 16);
+INSERT INTO `roles_menus` VALUES (1, 17);
+INSERT INTO `roles_menus` VALUES (1, 18);
+INSERT INTO `roles_menus` VALUES (1, 19);
+INSERT INTO `roles_menus` VALUES (1, 21);
+INSERT INTO `roles_menus` VALUES (1, 22);
+INSERT INTO `roles_menus` VALUES (1, 23);
+INSERT INTO `roles_menus` VALUES (1, 24);
+INSERT INTO `roles_menus` VALUES (1, 27);
+INSERT INTO `roles_menus` VALUES (1, 28);
+INSERT INTO `roles_menus` VALUES (1, 30);
+INSERT INTO `roles_menus` VALUES (1, 32);
+INSERT INTO `roles_menus` VALUES (2, 1);
+INSERT INTO `roles_menus` VALUES (2, 2);
+INSERT INTO `roles_menus` VALUES (2, 6);
+INSERT INTO `roles_menus` VALUES (2, 10);
+INSERT INTO `roles_menus` VALUES (2, 11);
+INSERT INTO `roles_menus` VALUES (2, 12);
+INSERT INTO `roles_menus` VALUES (2, 13);
+INSERT INTO `roles_menus` VALUES (2, 15);
+INSERT INTO `roles_menus` VALUES (2, 16);
+INSERT INTO `roles_menus` VALUES (2, 17);
+INSERT INTO `roles_menus` VALUES (2, 21);
+INSERT INTO `roles_menus` VALUES (2, 22);
+INSERT INTO `roles_menus` VALUES (2, 23);
+INSERT INTO `roles_menus` VALUES (2, 24);
+INSERT INTO `roles_menus` VALUES (2, 27);
 
 -- ----------------------------
 -- Table structure for roles_permissions
@@ -392,13 +357,15 @@ CREATE TABLE `roles_permissions`  (
 -- Records of roles_permissions
 -- ----------------------------
 INSERT INTO `roles_permissions` VALUES (1, 1);
+INSERT INTO `roles_permissions` VALUES (2, 2);
 INSERT INTO `roles_permissions` VALUES (2, 3);
-INSERT INTO `roles_permissions` VALUES (2, 8);
-INSERT INTO `roles_permissions` VALUES (2, 14);
-INSERT INTO `roles_permissions` VALUES (2, 19);
+INSERT INTO `roles_permissions` VALUES (2, 4);
+INSERT INTO `roles_permissions` VALUES (2, 5);
+INSERT INTO `roles_permissions` VALUES (2, 6);
 INSERT INTO `roles_permissions` VALUES (2, 23);
-INSERT INTO `roles_permissions` VALUES (2, 30);
-INSERT INTO `roles_permissions` VALUES (2, 36);
+INSERT INTO `roles_permissions` VALUES (2, 24);
+INSERT INTO `roles_permissions` VALUES (2, 25);
+INSERT INTO `roles_permissions` VALUES (2, 26);
 
 -- ----------------------------
 -- Table structure for user
@@ -456,20 +423,4 @@ CREATE TABLE `verification_code`  (
   `value` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '接收邮箱或者手机号码',
   `scenes` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '业务名称：如重置邮箱、重置密码等',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
-
--- ----------------------------
--- Table structure for visits
--- ----------------------------
-DROP TABLE IF EXISTS `visits`;
-CREATE TABLE `visits`  (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'ID',
-  `date` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '创建日期：只存储年月日',
-  `ip_counts` bigint(20) NULL DEFAULT NULL COMMENT 'IP数',
-  `pv_counts` bigint(20) NULL DEFAULT NULL COMMENT '浏览量',
-  `week_day` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '星期',
-  `create_time` datetime NULL DEFAULT NULL COMMENT '创建日期',
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 65 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
-
-SET FOREIGN_KEY_CHECKS = 1;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;

@@ -7,6 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Set;
@@ -24,6 +25,7 @@ public class Role implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @NotNull(groups = {Update.class})
     private Long id;
 
     @Column(nullable = false)
@@ -41,8 +43,8 @@ public class Role implements Serializable {
     @JoinTable(name = "roles_permissions", joinColumns = {@JoinColumn(name = "role_id",referencedColumnName = "id")}, inverseJoinColumns = {@JoinColumn(name = "permission_id",referencedColumnName = "id")})
     private Set<Permission> permissions;
 
-    @JsonIgnore
-    @ManyToMany(mappedBy = "roles")
+    @ManyToMany
+    @JoinTable(name = "roles_menus", joinColumns = {@JoinColumn(name = "role_id",referencedColumnName = "id")}, inverseJoinColumns = {@JoinColumn(name = "menu_id",referencedColumnName = "id")})
     private Set<Menu> menus;
 
     @CreationTimestamp
@@ -58,4 +60,6 @@ public class Role implements Serializable {
                 ", createDateTime=" + createTime +
                 '}';
     }
+
+    public interface Update{}
 }

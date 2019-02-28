@@ -30,12 +30,6 @@ public class ${className}Controller {
 
     private static final String ENTITY_NAME = "${changeClassName}";
 
-    @GetMapping(value = "/${changeClassName}/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN')")
-    public ResponseEntity get${className}(@PathVariable ${pkColumnType} id){
-        return new ResponseEntity(${changeClassName}Service.findById(id), HttpStatus.OK);
-    }
-
     @Log("查询${className}")
     @GetMapping(value = "/${changeClassName}")
     @PreAuthorize("hasAnyRole('ADMIN')")

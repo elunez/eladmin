@@ -5,6 +5,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
@@ -21,6 +22,7 @@ public class QuartzJob implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @NotNull(groups = {Update.class})
     private Long id;
 
     /**
@@ -75,4 +77,6 @@ public class QuartzJob implements Serializable {
     @UpdateTimestamp
     @Column(name = "update_time")
     private Timestamp updateTime;
+
+    public interface Update{}
 }

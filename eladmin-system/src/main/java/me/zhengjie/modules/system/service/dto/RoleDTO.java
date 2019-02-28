@@ -20,5 +20,7 @@ public class RoleDTO implements Serializable {
 
     private Set<PermissionDTO> permissions;
 
+    private Set<MenuDTO> menus;
+
     private Timestamp createTime;
 }

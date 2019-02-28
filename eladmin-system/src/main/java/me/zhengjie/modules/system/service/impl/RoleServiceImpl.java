@@ -47,17 +47,19 @@ public class RoleServiceImpl implements RoleService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void update(Role resources) {
-        Optional<Role> optionalRole = roleRepository.findById(resources.getId());
-        ValidationUtil.isNull(optionalRole,"Role","id",resources.getId());
-
-        Role role = optionalRole.get();
 
         /**
          * 根据实际需求修改
          */
-        if(role.getId().equals(1L)){
+        if(resources.getId().equals(1L)){
             throw new BadRequestException("该角色不能被修改");
         }
+
+
+        Optional<Role> optionalRole = roleRepository.findById(resources.getId());
+        ValidationUtil.isNull(optionalRole,"Role","id",resources.getId());
+
+        Role role = optionalRole.get();
 
         Role role1 = roleRepository.findByName(resources.getName());
 
@@ -67,14 +69,38 @@ public class RoleServiceImpl implements RoleService {
 
         role.setName(resources.getName());
         role.setRemark(resources.getRemark());
+        roleRepository.save(role);
+    }
+
+    @Override
+    public void updatePermission(Role resources, RoleDTO roleDTO) {
+        /**
+         * 根据实际需求修改
+         */
+        if(resources.getId().equals(1L)){
+            throw new BadRequestException("该角色不可操作");
+        }
+        Role role = roleMapper.toEntity(roleDTO);
         role.setPermissions(resources.getPermissions());
+        roleRepository.save(role);
+    }
+
+    @Override
+    public void updateMenu(Role resources, RoleDTO roleDTO) {
+        /**
+         * 根据实际需求修改
+         */
+        if(resources.getId().equals(1L)){
+            throw new BadRequestException("该角色不可操作");
+        }
+        Role role = roleMapper.toEntity(roleDTO);
+        role.setMenus(resources.getMenus());
         roleRepository.save(role);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void delete(Long id) {
-
         /**
          * 根据实际需求修改
          */
@@ -97,5 +123,10 @@ public class RoleServiceImpl implements RoleService {
             list.add(map);
         }
         return list;
+    }
+
+    @Override
+    public Set<Role> findByUsers_Id(Long id) {
+        return roleRepository.findByUsers_Id(id);
     }
 }

@@ -49,6 +49,7 @@ public interface UserService {
      * @param userName
      * @return
      */
+    @Cacheable(keyGenerator = "keyGenerator")
     User findByName(String userName);
 
     /**

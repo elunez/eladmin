@@ -1,5 +1,6 @@
 package me.zhengjie.service.impl;
 
+import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson.JSON;
@@ -12,17 +13,12 @@ import me.zhengjie.utils.ElAdminConstant;
 import me.zhengjie.utils.FileUtil;
 import me.zhengjie.utils.ValidationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Optional;
 
 /**
@@ -47,25 +43,16 @@ public class PictureServiceImpl implements PictureService {
     @Transactional(rollbackFor = Throwable.class)
     public Picture upload(MultipartFile multipartFile, String username) {
         File file = FileUtil.toFile(multipartFile);
-        //将参数合成一个请求
-        RestTemplate rest = new RestTemplate();
 
-        FileSystemResource resource = new FileSystemResource(file);
-        MultiValueMap<String, Object> param = new LinkedMultiValueMap<>();
-        param.add("smfile", resource);
+        HashMap<String, Object> paramMap = new HashMap<>();
 
-        //设置头部，必须
-        HttpHeaders headers = new HttpHeaders();
-        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-        headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
+        paramMap.put("smfile", file);
+        String result= HttpUtil.post(ElAdminConstant.Url.SM_MS_URL, paramMap);
 
-        HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<MultiValueMap<String, Object>>(param,headers);
-        ResponseEntity<String> responseEntity = rest.exchange(ElAdminConstant.Url.SM_MS_URL, HttpMethod.POST, httpEntity, String.class);
-
-        JSONObject jsonObject = JSONUtil.parseObj(responseEntity.getBody());
+        JSONObject jsonObject = JSONUtil.parseObj(result);
         Picture picture = null;
         if(!jsonObject.get(CODE).toString().equals(SUCCESS)){
-           throw new BadRequestException(jsonObject.get(MSG).toString());
+            throw new BadRequestException(jsonObject.get(MSG).toString());
         }
         //转成实体类
         picture = JSON.parseObject(jsonObject.get("data").toString(), Picture.class);
@@ -76,6 +63,7 @@ public class PictureServiceImpl implements PictureService {
         //删除临时文件
         FileUtil.deleteFile(file);
         return picture;
+
     }
 
     @Override
@@ -88,13 +76,9 @@ public class PictureServiceImpl implements PictureService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void delete(Picture picture) {
-        RestTemplate rest = new RestTemplate();
         try {
-            ResponseEntity<String> str = rest.getForEntity(picture.getDelete(), String.class);
-            if(str.getStatusCode().is2xxSuccessful()){
-                pictureRepository.delete(picture);
-            }
-        //如果删除的地址出错，直接删除数据库数据
+            String result= HttpUtil.get(picture.getDelete());
+            pictureRepository.delete(picture);
         } catch(Exception e){
             pictureRepository.delete(picture);
         }

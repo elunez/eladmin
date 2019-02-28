@@ -2,7 +2,7 @@ package me.zhengjie.modules.security.rest;
 
 import lombok.extern.slf4j.Slf4j;
 import me.zhengjie.aop.log.Log;
-import me.zhengjie.modules.security.security.AuthenticationToken;
+import me.zhengjie.modules.security.security.AuthenticationInfo;
 import me.zhengjie.modules.security.security.AuthorizationUser;
 import me.zhengjie.modules.security.security.JwtUser;
 import me.zhengjie.utils.EncryptUtils;
@@ -47,21 +47,21 @@ public class AuthenticationController {
     @PostMapping(value = "${jwt.auth.path}")
     public ResponseEntity login(@Validated @RequestBody AuthorizationUser authorizationUser){
 
-        final UserDetails userDetails = userDetailsService.loadUserByUsername(authorizationUser.getUsername());
+        final JwtUser jwtUser = (JwtUser) userDetailsService.loadUserByUsername(authorizationUser.getUsername());
 
-        if(!userDetails.getPassword().equals(EncryptUtils.encryptPassword(authorizationUser.getPassword()))){
+        if(!jwtUser.getPassword().equals(EncryptUtils.encryptPassword(authorizationUser.getPassword()))){
             throw new AccountExpiredException("密码错误");
         }
 
-        if(!userDetails.isEnabled()){
+        if(!jwtUser.isEnabled()){
             throw new AccountExpiredException("账号已停用，请联系管理员");
         }
 
         // 生成令牌
-        final String token = jwtTokenUtil.generateToken(userDetails);
+        final String token = jwtTokenUtil.generateToken(jwtUser);
 
         // 返回 token
-        return ResponseEntity.ok(new AuthenticationToken(token));
+        return ResponseEntity.ok(new AuthenticationInfo(token,jwtUser));
     }
 
     /**
