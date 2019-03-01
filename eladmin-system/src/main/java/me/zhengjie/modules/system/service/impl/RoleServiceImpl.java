@@ -48,14 +48,6 @@ public class RoleServiceImpl implements RoleService {
     @Transactional(rollbackFor = Exception.class)
     public void update(Role resources) {
 
-        /**
-         * 根据实际需求修改
-         */
-        if(resources.getId().equals(1L)){
-            throw new BadRequestException("该角色不能被修改");
-        }
-
-
         Optional<Role> optionalRole = roleRepository.findById(resources.getId());
         ValidationUtil.isNull(optionalRole,"Role","id",resources.getId());
 
@@ -74,12 +66,6 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public void updatePermission(Role resources, RoleDTO roleDTO) {
-        /**
-         * 根据实际需求修改
-         */
-        if(resources.getId().equals(1L)){
-            throw new BadRequestException("该角色不可操作");
-        }
         Role role = roleMapper.toEntity(roleDTO);
         role.setPermissions(resources.getPermissions());
         roleRepository.save(role);
@@ -87,12 +73,6 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public void updateMenu(Role resources, RoleDTO roleDTO) {
-        /**
-         * 根据实际需求修改
-         */
-        if(resources.getId().equals(1L)){
-            throw new BadRequestException("该角色不可操作");
-        }
         Role role = roleMapper.toEntity(roleDTO);
         role.setMenus(resources.getMenus());
         roleRepository.save(role);
@@ -101,12 +81,6 @@ public class RoleServiceImpl implements RoleService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void delete(Long id) {
-        /**
-         * 根据实际需求修改
-         */
-        if(id.equals(1L)){
-            throw new BadRequestException("该角色不能被删除");
-        }
         roleRepository.deleteById(id);
     }
 

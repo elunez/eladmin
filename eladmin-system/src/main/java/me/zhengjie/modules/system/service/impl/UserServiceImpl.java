@@ -68,13 +68,6 @@ public class UserServiceImpl implements UserService {
     @Transactional(rollbackFor = Exception.class)
     public void update(User resources) {
 
-        /**
-         * 根据实际需求修改
-         */
-        if(resources.getId().equals(1L)){
-            throw new BadRequestException("该账号不能被修改");
-        }
-
         Optional<User> userOptional = userRepository.findById(resources.getId());
         ValidationUtil.isNull(userOptional,"User","id",resources.getId());
 
@@ -106,12 +99,6 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void delete(Long id) {
-        /**
-         * 根据实际需求修改
-         */
-        if(id.equals(1L)){
-            throw new BadRequestException("该账号不能被删除");
-        }
         userRepository.deleteById(id);
     }
 
