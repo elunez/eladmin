@@ -5,12 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Date;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author jie
@@ -71,15 +69,7 @@ public class JwtUser implements UserDetails {
         return enabled;
     }
 
-    /**
-     * 在我们保存权限的时候加上了前缀ROLE_，因此在这里需要处理下数据
-     * @return
-     */
     public Collection getRoles() {
-        Set<String> roles = new LinkedHashSet<>();
-        for (GrantedAuthority authority : authorities) {
-            roles.add(authority.getAuthority().substring(5));
-        }
-        return roles;
+        return authorities.stream().map(GrantedAuthority::getAuthority).collect(Collectors.toSet());
     }
 }

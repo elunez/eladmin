@@ -80,7 +80,7 @@ public class JwtUserDetailsService implements UserDetailsService {
         }
 
         return permissions.stream()
-                .map(permission -> new SimpleGrantedAuthority("ROLE_"+permission.getName()))
+                .map(permission -> new SimpleGrantedAuthority(permission.getName()))
                 .collect(Collectors.toList());
     }
 }
