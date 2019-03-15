@@ -11,7 +11,7 @@
  Target Server Version : 50562
  File Encoding         : 65001
 
- Date: 27/02/2019 13:15:23
+ Date: 15/03/2019 14:54:39
 */
 
 SET NAMES utf8mb4;
@@ -55,6 +55,7 @@ CREATE TABLE `email_config`  (
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
+
 -- ----------------------------
 -- Table structure for gen_config
 -- ----------------------------
@@ -76,6 +77,24 @@ CREATE TABLE `gen_config`  (
 INSERT INTO `gen_config` VALUES (1, 'jie', b'0', 'eladmin-system', 'me.zhengjie.modules.test', 'E:\\workspace\\my-workspace\\eladmin-qt\\src\\views\\system\\test', 'E:\\workspace\\my-workspace\\eladmin-qt\\src\\api');
 
 -- ----------------------------
+-- Table structure for log
+-- ----------------------------
+DROP TABLE IF EXISTS `log`;
+CREATE TABLE `log`  (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `create_time` datetime NULL DEFAULT NULL,
+  `description` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `exception_detail` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL,
+  `log_type` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `method` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `params` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL,
+  `request_ip` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `time` bigint(20) NULL DEFAULT NULL,
+  `username` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+
+-- ----------------------------
 -- Table structure for menu
 -- ----------------------------
 DROP TABLE IF EXISTS `menu`;
@@ -90,7 +109,7 @@ CREATE TABLE `menu`  (
   `icon` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '图标',
   `path` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '链接地址',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 33 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 35 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of menu
@@ -122,6 +141,8 @@ INSERT INTO `menu` VALUES (27, '2019-01-07 17:27:32', b'0', '三级菜单2', 'ne
 INSERT INTO `menu` VALUES (28, '2019-01-07 20:34:40', b'0', '定时任务', 'system/timing/index', 1, 6, 'timing', 'timing');
 INSERT INTO `menu` VALUES (30, '2019-01-11 15:45:55', b'0', '代码生成', 'generator/index', 1, 8, 'dev', 'generator');
 INSERT INTO `menu` VALUES (32, '2019-01-13 13:49:03', b'0', '异常日志', 'monitor/log/errorLog', 6, 12, 'error', 'errorLog');
+INSERT INTO `menu` VALUES (33, '2019-03-08 13:46:44', b'0', 'Markdown', 'components/MarkDown', 10, 53, 'markdown', 'markdown');
+INSERT INTO `menu` VALUES (34, '2019-03-08 15:49:40', b'0', 'Yaml编辑器', 'components/YamlEdit', 10, 54, 'dev', 'yaml');
 
 -- ----------------------------
 -- Table structure for permission
@@ -190,8 +211,9 @@ CREATE TABLE `picture`  (
   `username` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '用户名称',
   `width` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '图片宽度',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 50 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 47 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
+-- ----------------------------
 -- Table structure for qiniu_config
 -- ----------------------------
 DROP TABLE IF EXISTS `qiniu_config`;
@@ -243,7 +265,7 @@ CREATE TABLE `quartz_job`  (
 -- ----------------------------
 INSERT INTO `quartz_job` VALUES (1, 'visitsTask', '0 0 0 * * ?', b'0', '更新访客记录', 'run', NULL, '每日0点创建新的访客记录', '2019-01-08 14:53:31');
 INSERT INTO `quartz_job` VALUES (2, 'testTask', '0/5 * * * * ?', b'1', '测试1', 'run1', 'test', '带参测试，多参使用json', '2019-01-13 14:20:50');
-INSERT INTO `quartz_job` VALUES (3, 'testTask', '0/5 * * * * ?', b'1', '测试', 'run', '', '不带参测试', '2019-01-14 09:59:19');
+INSERT INTO `quartz_job` VALUES (3, 'testTask', '0/5 * * * * ?', b'1', '测试', 'run', '', '不带参测试', '2019-03-04 15:22:55');
 
 -- ----------------------------
 -- Table structure for quartz_log
@@ -273,7 +295,7 @@ CREATE TABLE `role`  (
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '名称',
   `remark` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of role
@@ -286,8 +308,8 @@ INSERT INTO `role` VALUES (2, '2018-11-23 13:09:06', '普通用户', '用于测�
 -- ----------------------------
 DROP TABLE IF EXISTS `roles_menus`;
 CREATE TABLE `roles_menus`  (
-  `role_id` bigint(20) NOT NULL COMMENT '角色ID',
   `menu_id` bigint(20) NOT NULL COMMENT '菜单ID',
+  `role_id` bigint(20) NOT NULL COMMENT '角色ID',
   PRIMARY KEY (`menu_id`, `role_id`) USING BTREE,
   INDEX `FKcngg2qadojhi3a651a5adkvbq`(`role_id`) USING BTREE,
   CONSTRAINT `FKcngg2qadojhi3a651a5adkvbq` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
@@ -298,47 +320,58 @@ CREATE TABLE `roles_menus`  (
 -- Records of roles_menus
 -- ----------------------------
 INSERT INTO `roles_menus` VALUES (1, 1);
-INSERT INTO `roles_menus` VALUES (1, 2);
-INSERT INTO `roles_menus` VALUES (1, 3);
-INSERT INTO `roles_menus` VALUES (1, 4);
-INSERT INTO `roles_menus` VALUES (1, 5);
-INSERT INTO `roles_menus` VALUES (1, 6);
-INSERT INTO `roles_menus` VALUES (1, 7);
-INSERT INTO `roles_menus` VALUES (1, 8);
-INSERT INTO `roles_menus` VALUES (1, 9);
-INSERT INTO `roles_menus` VALUES (1, 10);
-INSERT INTO `roles_menus` VALUES (1, 11);
-INSERT INTO `roles_menus` VALUES (1, 12);
-INSERT INTO `roles_menus` VALUES (1, 13);
-INSERT INTO `roles_menus` VALUES (1, 14);
-INSERT INTO `roles_menus` VALUES (1, 15);
-INSERT INTO `roles_menus` VALUES (1, 16);
-INSERT INTO `roles_menus` VALUES (1, 17);
-INSERT INTO `roles_menus` VALUES (1, 18);
-INSERT INTO `roles_menus` VALUES (1, 19);
-INSERT INTO `roles_menus` VALUES (1, 21);
-INSERT INTO `roles_menus` VALUES (1, 22);
-INSERT INTO `roles_menus` VALUES (1, 23);
-INSERT INTO `roles_menus` VALUES (1, 24);
-INSERT INTO `roles_menus` VALUES (1, 27);
-INSERT INTO `roles_menus` VALUES (1, 28);
-INSERT INTO `roles_menus` VALUES (1, 30);
-INSERT INTO `roles_menus` VALUES (1, 32);
 INSERT INTO `roles_menus` VALUES (2, 1);
+INSERT INTO `roles_menus` VALUES (3, 1);
+INSERT INTO `roles_menus` VALUES (4, 1);
+INSERT INTO `roles_menus` VALUES (5, 1);
+INSERT INTO `roles_menus` VALUES (6, 1);
+INSERT INTO `roles_menus` VALUES (7, 1);
+INSERT INTO `roles_menus` VALUES (8, 1);
+INSERT INTO `roles_menus` VALUES (9, 1);
+INSERT INTO `roles_menus` VALUES (10, 1);
+INSERT INTO `roles_menus` VALUES (11, 1);
+INSERT INTO `roles_menus` VALUES (12, 1);
+INSERT INTO `roles_menus` VALUES (13, 1);
+INSERT INTO `roles_menus` VALUES (14, 1);
+INSERT INTO `roles_menus` VALUES (15, 1);
+INSERT INTO `roles_menus` VALUES (16, 1);
+INSERT INTO `roles_menus` VALUES (17, 1);
+INSERT INTO `roles_menus` VALUES (18, 1);
+INSERT INTO `roles_menus` VALUES (19, 1);
+INSERT INTO `roles_menus` VALUES (21, 1);
+INSERT INTO `roles_menus` VALUES (22, 1);
+INSERT INTO `roles_menus` VALUES (23, 1);
+INSERT INTO `roles_menus` VALUES (24, 1);
+INSERT INTO `roles_menus` VALUES (27, 1);
+INSERT INTO `roles_menus` VALUES (28, 1);
+INSERT INTO `roles_menus` VALUES (30, 1);
+INSERT INTO `roles_menus` VALUES (32, 1);
+INSERT INTO `roles_menus` VALUES (33, 1);
+INSERT INTO `roles_menus` VALUES (34, 1);
+INSERT INTO `roles_menus` VALUES (1, 2);
 INSERT INTO `roles_menus` VALUES (2, 2);
-INSERT INTO `roles_menus` VALUES (2, 6);
-INSERT INTO `roles_menus` VALUES (2, 10);
-INSERT INTO `roles_menus` VALUES (2, 11);
-INSERT INTO `roles_menus` VALUES (2, 12);
-INSERT INTO `roles_menus` VALUES (2, 13);
-INSERT INTO `roles_menus` VALUES (2, 15);
-INSERT INTO `roles_menus` VALUES (2, 16);
-INSERT INTO `roles_menus` VALUES (2, 17);
-INSERT INTO `roles_menus` VALUES (2, 21);
-INSERT INTO `roles_menus` VALUES (2, 22);
-INSERT INTO `roles_menus` VALUES (2, 23);
-INSERT INTO `roles_menus` VALUES (2, 24);
-INSERT INTO `roles_menus` VALUES (2, 27);
+INSERT INTO `roles_menus` VALUES (3, 2);
+INSERT INTO `roles_menus` VALUES (4, 2);
+INSERT INTO `roles_menus` VALUES (5, 2);
+INSERT INTO `roles_menus` VALUES (6, 2);
+INSERT INTO `roles_menus` VALUES (8, 2);
+INSERT INTO `roles_menus` VALUES (10, 2);
+INSERT INTO `roles_menus` VALUES (11, 2);
+INSERT INTO `roles_menus` VALUES (12, 2);
+INSERT INTO `roles_menus` VALUES (13, 2);
+INSERT INTO `roles_menus` VALUES (14, 2);
+INSERT INTO `roles_menus` VALUES (15, 2);
+INSERT INTO `roles_menus` VALUES (16, 2);
+INSERT INTO `roles_menus` VALUES (17, 2);
+INSERT INTO `roles_menus` VALUES (19, 2);
+INSERT INTO `roles_menus` VALUES (21, 2);
+INSERT INTO `roles_menus` VALUES (22, 2);
+INSERT INTO `roles_menus` VALUES (23, 2);
+INSERT INTO `roles_menus` VALUES (24, 2);
+INSERT INTO `roles_menus` VALUES (27, 2);
+INSERT INTO `roles_menus` VALUES (28, 2);
+INSERT INTO `roles_menus` VALUES (33, 2);
+INSERT INTO `roles_menus` VALUES (34, 2);
 
 -- ----------------------------
 -- Table structure for roles_permissions
@@ -357,15 +390,16 @@ CREATE TABLE `roles_permissions`  (
 -- Records of roles_permissions
 -- ----------------------------
 INSERT INTO `roles_permissions` VALUES (1, 1);
-INSERT INTO `roles_permissions` VALUES (2, 2);
 INSERT INTO `roles_permissions` VALUES (2, 3);
-INSERT INTO `roles_permissions` VALUES (2, 4);
-INSERT INTO `roles_permissions` VALUES (2, 5);
-INSERT INTO `roles_permissions` VALUES (2, 6);
+INSERT INTO `roles_permissions` VALUES (2, 8);
+INSERT INTO `roles_permissions` VALUES (2, 14);
+INSERT INTO `roles_permissions` VALUES (2, 20);
 INSERT INTO `roles_permissions` VALUES (2, 23);
 INSERT INTO `roles_permissions` VALUES (2, 24);
 INSERT INTO `roles_permissions` VALUES (2, 25);
 INSERT INTO `roles_permissions` VALUES (2, 26);
+INSERT INTO `roles_permissions` VALUES (2, 30);
+INSERT INTO `roles_permissions` VALUES (2, 36);
 
 -- ----------------------------
 -- Table structure for user
@@ -388,8 +422,8 @@ CREATE TABLE `user`  (
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES (1, 'https://i.loli.net/2019/01/16/5c3ed609e6f99.jpg', '2018-08-23 09:11:56', 'zhengjie@tom.com', 1, '14e1b600b1fd579f47433b88e8d85291', 'admin', '2019-01-17 09:53:21');
-INSERT INTO `user` VALUES (3, 'https://i.loli.net/2018/12/30/5c2871d6aa101.jpg', '2018-12-27 20:05:26', 'test@qq.com', 1, '14e1b600b1fd579f47433b88e8d85291', 'test', NULL);
+INSERT INTO `user` VALUES (1, 'https://i.loli.net/2019/03/12/5c87788a4ffca.jpg', '2018-08-23 09:11:56', 'zhengjie@tom.com', 1, '14e1b600b1fd579f47433b88e8d85291', 'admin', '2019-01-17 09:53:21');
+INSERT INTO `user` VALUES (3, 'https://i.loli.net/2019/03/12/5c87788a4ffca.jpg', '2018-12-27 20:05:26', 'test@qq.com', 1, '14e1b600b1fd579f47433b88e8d85291', 'test', NULL);
 
 -- ----------------------------
 -- Table structure for users_roles
@@ -424,3 +458,20 @@ CREATE TABLE `verification_code`  (
   `scenes` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '业务名称：如重置邮箱、重置密码等',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Table structure for visits
+-- ----------------------------
+DROP TABLE IF EXISTS `visits`;
+CREATE TABLE `visits`  (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `create_time` datetime NULL DEFAULT NULL,
+  `date` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `ip_counts` bigint(20) NULL DEFAULT NULL,
+  `pv_counts` bigint(20) NULL DEFAULT NULL,
+  `week_day` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `UK_11aksgq87euk9bcyeesfs4vtp`(`date`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+
+SET FOREIGN_KEY_CHECKS = 1;

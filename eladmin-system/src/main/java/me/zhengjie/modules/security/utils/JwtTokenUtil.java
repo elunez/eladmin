@@ -2,14 +2,10 @@ package me.zhengjie.modules.security.utils;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.impl.DefaultClock;
-import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.modules.security.security.JwtUser;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
-import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;

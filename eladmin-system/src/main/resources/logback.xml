@@ -18,9 +18,6 @@
         <appender-ref ref="console" />
     </root>
 
-    <!-- logback为java中的包 -->
-    <logger name="me.aurora.rest" level="WARN" additivity="false"/>
-
     <!--监控sql日志输出 -->
     <logger name="jdbc.sqlonly" level="INFO" additivity="false">
         <appender-ref ref="console" />

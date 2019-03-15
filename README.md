@@ -125,8 +125,16 @@ eladmin-qt和eladmin-qd只是命名方式的区别，无其他区别
     </tr>
 </table>
 
+#### 项目捐赠
+
+> Donate
+> 
+> 项目的发展离不开你的支持，请作者喝杯咖啡吧☕！
+
+|   微信  |   支付宝  |
+|--- | --- |
+|  ![](https://i.imgur.com/QJ2pqyg.png)   |  ![](https://i.imgur.com/eO95P7Q.png)  |
+
 #### 反馈交流
 
 - QQ交流群：891137268
-
-- 作者邮箱：elunez@qq.com
