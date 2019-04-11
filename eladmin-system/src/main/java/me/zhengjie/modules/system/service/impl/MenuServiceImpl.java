@@ -37,7 +37,7 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
-    public List<MenuDTO> findByRoles(Set<Role> roles) {
+    public List<MenuDTO> findByRoles(List<Role> roles) {
         Set<Menu> menus = new LinkedHashSet<>();
         for (Role role : roles) {
             List<Menu> menus1 = menuRepository.findByRoles_IdOrderBySortAsc(role.getId()).stream().collect(Collectors.toList());
@@ -61,6 +61,9 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public void update(Menu resources) {
+        if(resources.getId().equals(resources.getPid())) {
+            throw new BadRequestException("上级不能为自己");
+        }
         Optional<Menu> optionalPermission = menuRepository.findById(resources.getId());
         ValidationUtil.isNull(optionalPermission,"Permission","id",resources.getId());
 
@@ -87,10 +90,6 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public void delete(Long id) {
-        List<Menu> menuList = menuRepository.findByPid(id);
-        for (Menu menu : menuList) {
-            menuRepository.delete(menu);
-        }
         menuRepository.deleteById(id);
     }
 
@@ -192,5 +191,12 @@ public class MenuServiceImpl implements MenuService {
         }
         );
         return list;
+    }
+
+    @Override
+    public Menu findOne(Long id) {
+        Optional<Menu> menu = menuRepository.findById(id);
+        ValidationUtil.isNull(menu,"Menu","id",id);
+        return menu.get();
     }
 }

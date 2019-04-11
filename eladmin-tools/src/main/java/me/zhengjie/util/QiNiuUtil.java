@@ -52,6 +52,7 @@ public class QiNiuUtil {
         StringBuffer key = new StringBuffer(FileUtil.getFileNameNoEx(file));
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
         Date date = new Date();
+        key.append("-");
         key.append(sdf.format(date));
         key.append(".");
         key.append(FileUtil.getExtensionName(file));

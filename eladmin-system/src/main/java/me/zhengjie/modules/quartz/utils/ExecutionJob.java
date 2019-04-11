@@ -7,14 +7,12 @@ import me.zhengjie.modules.quartz.service.QuartzJobService;
 import me.zhengjie.utils.SpringContextHolder;
 import me.zhengjie.utils.ThrowableUtil;
 import org.quartz.JobExecutionContext;
-import org.quartz.Scheduler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.quartz.QuartzJobBean;
-import javax.annotation.Resource;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 /**
@@ -25,13 +23,9 @@ import java.util.concurrent.Future;
 @Async
 public class ExecutionJob extends QuartzJobBean {
 
-    @Resource(name = "scheduler")
-    private Scheduler scheduler;
-
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired
-    private ExecutorService executorService;
+    private ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     @Override
     protected void executeInternal(JobExecutionContext context) {

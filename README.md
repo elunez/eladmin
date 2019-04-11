@@ -1,17 +1,18 @@
 # eladmin
 
-项目基于 Spring Boot 2.1.0 、 Spring boot Jpa、 Spring Security、redis、Vue的前后端分离的权限管理系统，项目采用分模块开发方式， 权限控制采用 RBAC（Role-Based Access Control，基于角色的访问控制），前端菜单支持动态路由
+项目基于 Spring Boot 2.1.0 、 Spring boot Jpa、 Spring Security、redis、Vue的前后端分离的权限管理系统，项目采用分模块开发方式， 权限控制采用 RBAC（Role-Based Access Control，基于角色的访问控制），支持数据字典、数据权限管理、前端菜单支持动态路由
 
-#### 前端源码
-eladmin-qt和eladmin-qd只是命名方式的区别，无其他区别
-- 码云：[https://gitee.com/elunez/eladmin-qt](https://gitee.com/elunez/eladmin-qt)
-- github：[https://github.com/elunez/eladmin-qd](https://github.com/elunez/eladmin-qd)
+#### 项目源码
 
-#### eladmin开发文档
-[http://docs.auauz.net/#/](http://docs.auauz.net/#/)
+|     |   后端源码  |   前端源码  |
+|---  |--- | --- |
+|  github   |  https://github.com/elunez/eladmin   |  https://github.com/elunez/eladmin-qd   |
+|  码云   |  https://github.com/elunez/eladmin   |  https://gitee.com/elunez/eladmin-qt   |
+#### 开发文档
+[https://docs.auauz.net/#/](https://docs.auauz.net/#/)
 
 #### 预览地址
-[http://auauz.net](http://auauz.net)
+[https://auauz.net](https://auauz.net)
 
 ##### 用户账号密码
 
@@ -23,7 +24,7 @@ eladmin-qt和eladmin-qd只是命名方式的区别，无其他区别
 
 - JDK：8
 - IDE：IntelliJ IDEA （后端）
-- IDE：JetBrains WebStorm  （前端）
+- IDE：JetBrains WebStorm（前端）
 - 依赖管理：Maven
 - 数据库：MySQL 5.5.59
 
@@ -31,19 +32,21 @@ eladmin-qt和eladmin-qd只是命名方式的区别，无其他区别
 ```
 - 系统管理
     - 用户管理 提供用户的相关配置
-    - 角色管理 角色菜单进行权限的分配
-    - Swagger文档 localhost:8000/swagger-ui.html
+    - 角色管理 对权限与菜单进行分配
     - 权限管理 权限细化到接口
     - 菜单管理 已实现菜单动态路由，后端可配置化，支持多级菜单
-    - 定时任务 整合Quartz做定时任务，加入任务日志，任务运行情况一目了然
-    - 代码生成 高灵活度一键生成前后端代码，减少百分之80左右的工作任务
+    - 部门管理与岗位管理
+    - 字典管理 应广大码友的要求加入字典管理
 - 系统监控
     - 操作日志 使用apo记录用户操作日志
     - 异常日志 记录操作过程中的异常，并且提供查看异常的堆栈信息
     - 系统缓存 使用jedis将缓存操作可视化，并提供对redis的基本操作，可根据需求自行扩展
     - 实时控制台 实时打印logback日志，来自微强迫症患者的精心配色，更好的监控系统的运行状态
     - SQL监控 采用druid 监控数据库访问性能，默认用户名admin，密码123456
-- 三方工具
+- 系统工具
+ - 定时任务 整合Quartz做定时任务，加入任务日志，任务运行情况一目了然
+    - 代码生成 高灵活度一键生成前后端代码，减少百分之80左右的工作任务
+    - 接口文档 使用的是 swagger-ui 
     - 邮件工具 配合富文本，发送html格式的邮件
     - SM.MS免费图床 挺好用的一个图床，作为公共图片上传使用
     - 七牛云存储 这个就不多说了
@@ -51,6 +54,7 @@ eladmin-qt和eladmin-qd只是命名方式的区别，无其他区别
 - 组件管理
     - 图标库 系统图标来自 https://www.iconfont.cn/
     - 富文本 集成wangEditor富文本
+    - Markdown编辑器与Yaml编辑器
 ```
 #### 项目结构
 ```
@@ -133,8 +137,7 @@ eladmin-qt和eladmin-qd只是命名方式的区别，无其他区别
 
 |   微信  |   支付宝  |
 |--- | --- |
-|  ![](https://i.imgur.com/QJ2pqyg.png)   |  ![](https://i.imgur.com/eO95P7Q.png)  |
-
+|  ![](https://i.loli.net/2019/03/28/5c9c951c61a9a.png)   |  ![](https://i.loli.net/2019/03/28/5c9c95355fecb.png)  |
 #### 反馈交流
 
 - QQ交流群：891137268

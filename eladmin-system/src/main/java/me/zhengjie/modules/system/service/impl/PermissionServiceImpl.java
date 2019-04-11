@@ -47,8 +47,10 @@ public class PermissionServiceImpl implements PermissionService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void update(Permission resources) {
-
         Optional<Permission> optionalPermission = permissionRepository.findById(resources.getId());
+        if(resources.getId().equals(resources.getPid())) {
+            throw new BadRequestException("上级不能为自己");
+        }
         ValidationUtil.isNull(optionalPermission,"Permission","id",resources.getId());
 
         Permission permission = optionalPermission.get();

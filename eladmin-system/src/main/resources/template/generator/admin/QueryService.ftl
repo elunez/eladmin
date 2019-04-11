@@ -67,24 +67,24 @@ public class ${className}QueryService {
 
             List<Predicate> list = new ArrayList<Predicate>();
 
-    <#if queryColumns??>
-        <#list queryColumns as column>
-                if(!ObjectUtils.isEmpty(${changeClassName}.get${column.capitalColumnName}())){
-                <#if column.columnQuery = '1'>
-                    /**
-                    * 模糊
-                    */
-                    list.add(cb.like(root.get("${column.columnName}").as(${column.columnType}.class),"%"+${changeClassName}.get${column.capitalColumnName}()+"%"));
-                </#if>
-                <#if column.columnQuery = '2'>
-                    /**
-                    * 精确
-                    */
-                    list.add(cb.equal(root.get("${column.columnName}").as(${column.columnType}.class),${changeClassName}.get${column.capitalColumnName}()));
-                </#if>
-                }
-        </#list>
-    </#if>
+<#if queryColumns??>
+    <#list queryColumns as column>
+            if(!ObjectUtils.isEmpty(${changeClassName}.get${column.capitalColumnName}())){
+            <#if column.columnQuery = '1'>
+                /**
+                * 模糊
+                */
+                list.add(cb.like(root.get("${column.columnName}").as(${column.columnType}.class),"%"+${changeClassName}.get${column.capitalColumnName}()+"%"));
+            </#if>
+            <#if column.columnQuery = '2'>
+                /**
+                * 精确
+                */
+                list.add(cb.equal(root.get("${column.columnName}").as(${column.columnType}.class),${changeClassName}.get${column.capitalColumnName}()));
+            </#if>
+            }
+    </#list>
+</#if>
                 Predicate[] p = new Predicate[list.size()];
                 return cb.and(list.toArray(p));
         }

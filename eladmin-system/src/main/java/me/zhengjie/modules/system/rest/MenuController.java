@@ -8,6 +8,7 @@ import me.zhengjie.modules.system.service.MenuService;
 import me.zhengjie.modules.system.service.RoleService;
 import me.zhengjie.modules.system.service.UserService;
 import me.zhengjie.modules.system.service.dto.MenuDTO;
+import me.zhengjie.modules.system.service.mapper.MenuMapper;
 import me.zhengjie.modules.system.service.query.MenuQueryService;
 import me.zhengjie.utils.SecurityContextHolder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,9 @@ public class MenuController {
     @Autowired
     private RoleService roleService;
 
+    @Autowired
+    private MenuMapper menuMapper;
+
     private static final String ENTITY_NAME = "menu";
 
     /**
@@ -59,7 +63,7 @@ public class MenuController {
      * @return
      */
     @GetMapping(value = "/menus/tree")
-    @PreAuthorize("hasAnyRole('ADMIN','MENU_ALL','MENU_SELECT','ROLES_SELECT','ROLES_ALL')")
+    @PreAuthorize("hasAnyRole('ADMIN','MENU_ALL','MENU_CREATE','MENU_EDIT','ROLES_SELECT','ROLES_ALL')")
     public ResponseEntity getMenuTree(){
         return new ResponseEntity(menuService.getMenuTree(menuService.findByPid(0L)),HttpStatus.OK);
     }
@@ -94,6 +98,14 @@ public class MenuController {
     @DeleteMapping(value = "/menus/{id}")
     @PreAuthorize("hasAnyRole('ADMIN','MENU_ALL','MENU_DELETE')")
     public ResponseEntity delete(@PathVariable Long id){
+        List<Menu> menuList = menuService.findByPid(id);
+
+        // 特殊情况，对级联删除进行处理
+        for (Menu menu : menuList) {
+            roleService.untiedMenu(menu);
+            menuService.delete(menu.getId());
+        }
+        roleService.untiedMenu(menuService.findOne(id));
         menuService.delete(id);
         return new ResponseEntity(HttpStatus.OK);
     }

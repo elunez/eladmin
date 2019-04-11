@@ -8,11 +8,15 @@ import me.zhengjie.service.QiNiuService;
 import me.zhengjie.service.query.QiNiuQueryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -87,7 +91,9 @@ public class QiniuController {
     @Log("下载文件")
     @GetMapping(value = "/qiNiuContent/download/{id}")
     public ResponseEntity download(@PathVariable Long id){
-        return new ResponseEntity(qiNiuService.download(qiNiuService.findByContentId(id),qiNiuService.find()),HttpStatus.OK);
+        Map map = new HashMap();
+        map.put("url", qiNiuService.download(qiNiuService.findByContentId(id),qiNiuService.find()));
+        return new ResponseEntity(map,HttpStatus.OK);
     }
 
     /**

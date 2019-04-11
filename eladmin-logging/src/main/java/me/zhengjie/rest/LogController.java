@@ -2,6 +2,7 @@ package me.zhengjie.rest;
 
 import me.zhengjie.domain.Log;
 import me.zhengjie.service.query.LogQueryService;
+import me.zhengjie.utils.SecurityContextHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -26,6 +27,13 @@ public class LogController {
     @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity getLogs(Log log, Pageable pageable){
         log.setLogType("INFO");
+        return new ResponseEntity(logQueryService.queryAll(log,pageable), HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/logs/user")
+    public ResponseEntity getUserLogs(Log log, Pageable pageable){
+        log.setLogType("INFO");
+        log.setUsername(SecurityContextHolder.getUserDetails().getUsername());
         return new ResponseEntity(logQueryService.queryAll(log,pageable), HttpStatus.OK);
     }
 

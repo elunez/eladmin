@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Aspect
 @Slf4j
-public class LogAspect {
+public class DataScopeAspect {
 
     @Autowired
     private LogService logService;

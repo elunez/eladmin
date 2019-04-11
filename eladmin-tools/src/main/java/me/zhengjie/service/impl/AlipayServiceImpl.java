@@ -39,9 +39,6 @@ public class AlipayServiceImpl implements AlipayService {
         AlipayClient alipayClient = new DefaultAlipayClient(alipay.getGatewayUrl(), alipay.getAppID(), alipay.getPrivateKey(), alipay.getFormat(), alipay.getCharset(), alipay.getPublicKey(), alipay.getSignType());
 
         double money = Double.parseDouble(trade.getTotalAmount());
-        if(money <= 0 || money>=5000){
-            throw new BadRequestException("测试金额过大");
-        }
 
         /**
          * 创建API对应的request(电脑网页版)

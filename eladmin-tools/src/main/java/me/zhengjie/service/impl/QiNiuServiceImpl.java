@@ -24,6 +24,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.time.LocalDate;
 import java.util.Optional;
 
 /**
@@ -84,7 +86,11 @@ public class QiNiuServiceImpl implements QiNiuService {
         Auth auth = Auth.create(qiniuConfig.getAccessKey(), qiniuConfig.getSecretKey());
         String upToken = auth.uploadToken(qiniuConfig.getBucket());
         try {
-            Response response = uploadManager.put(file.getBytes(), QiNiuUtil.getKey(file.getOriginalFilename()), upToken);
+            String key = file.getOriginalFilename();
+            if(qiniuContentRepository.findByKey(key) != null) {
+                key = QiNiuUtil.getKey(key);
+            }
+            Response response = uploadManager.put(file.getBytes(), key, upToken);
             //解析上传成功的结果
             DefaultPutRet putRet = new Gson().fromJson(response.bodyString(), DefaultPutRet.class);
             //存入数据库
@@ -134,8 +140,7 @@ public class QiNiuServiceImpl implements QiNiuService {
             bucketManager.delete(content.getBucket(), content.getKey());
             qiniuContentRepository.delete(content);
         } catch (QiniuException ex) {
-            System.err.println(ex.code());
-            System.err.println(ex.response.toString());
+            qiniuContentRepository.delete(content);
         }
     }
 

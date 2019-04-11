@@ -1,5 +1,6 @@
 package me.zhengjie.modules.system.service.impl;
 
+import me.zhengjie.modules.system.domain.Menu;
 import me.zhengjie.modules.system.domain.Role;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.exception.EntityExistException;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author jie
@@ -61,6 +63,8 @@ public class RoleServiceImpl implements RoleService {
 
         role.setName(resources.getName());
         role.setRemark(resources.getRemark());
+        role.setDataScope(resources.getDataScope());
+        role.setDepts(resources.getDepts());
         roleRepository.save(role);
     }
 
@@ -79,28 +83,23 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    public void untiedMenu(Menu menu) {
+        Set<Role> roles = roleRepository.findByMenus_Id(menu.getId());
+        for (Role role : roles) {
+            menu.getRoles().remove(role);
+            role.getMenus().remove(menu);
+            roleRepository.save(role);
+        }
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public void delete(Long id) {
         roleRepository.deleteById(id);
     }
 
     @Override
-    public Object getRoleTree() {
-
-        List<Role> roleList = roleRepository.findAll();
-
-        List<Map<String, Object>> list = new ArrayList<>();
-        for (Role role : roleList) {
-            Map<String, Object> map = new HashMap<>();
-            map.put("id",role.getId());
-            map.put("label",role.getName());
-            list.add(map);
-        }
-        return list;
-    }
-
-    @Override
-    public Set<Role> findByUsers_Id(Long id) {
-        return roleRepository.findByUsers_Id(id);
+    public List<Role> findByUsers_Id(Long id) {
+        return roleRepository.findByUsers_Id(id).stream().collect(Collectors.toList());
     }
 }

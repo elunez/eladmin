@@ -32,6 +32,10 @@ public class Role implements Serializable {
     @NotBlank
     private String name;
 
+    // 数据权限类型 全部 、 本级 、 自定义
+    @Column(name = "data_scope")
+    private String dataScope = "本级";
+
     @Column
     private String remark;
 
@@ -46,6 +50,10 @@ public class Role implements Serializable {
     @ManyToMany
     @JoinTable(name = "roles_menus", joinColumns = {@JoinColumn(name = "role_id",referencedColumnName = "id")}, inverseJoinColumns = {@JoinColumn(name = "menu_id",referencedColumnName = "id")})
     private Set<Menu> menus;
+
+    @ManyToMany
+    @JoinTable(name = "roles_depts", joinColumns = {@JoinColumn(name = "role_id",referencedColumnName = "id")}, inverseJoinColumns = {@JoinColumn(name = "dept_id",referencedColumnName = "id")})
+    private Set<Dept> depts;
 
     @CreationTimestamp
     @Column(name = "create_time")

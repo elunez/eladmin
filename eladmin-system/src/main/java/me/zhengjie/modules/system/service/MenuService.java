@@ -74,7 +74,7 @@ public interface MenuService {
      * @param roles
      * @return
      */
-    List<MenuDTO> findByRoles(Set<Role> roles);
+    List<MenuDTO> findByRoles(List<Role> roles);
 
     /**
      * buildMenus
@@ -82,4 +82,6 @@ public interface MenuService {
      * @return
      */
     Object buildMenus(List<MenuDTO> byRoles);
+
+    Menu findOne(Long id);
 }

@@ -3,7 +3,7 @@
   <div class="app-container">
     <eHeader :query="query"/>
     <!--表格渲染-->
-    <el-table v-loading="loading" :data="data" size="small" border style="width: 100%;">
+    <el-table v-loading="loading" :data="data" size="small" style="width: 100%;">
       <#if columns??>
           <#list columns as column>
           <#if column.columnShow = 'true'>

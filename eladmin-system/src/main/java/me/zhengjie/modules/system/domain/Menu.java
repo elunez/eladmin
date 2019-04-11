@@ -30,6 +30,7 @@ public class Menu implements Serializable {
     private String name;
 
     @Column(unique = true)
+    @NotNull
     private Long sort;
 
     @Column(name = "path")

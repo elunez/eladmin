@@ -10,7 +10,6 @@ import me.zhengjie.utils.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -28,9 +27,6 @@ public class LogServiceImpl implements LogService {
 
     @Autowired
     private LogRepository logRepository;
-
-    @Value("${jwt.header}")
-    private String tokenHeader;
 
     private final String LOGINPATH = "login";
 

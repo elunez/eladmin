@@ -36,8 +36,8 @@ public class PermissionController {
      * @return
      */
     @GetMapping(value = "/permissions/tree")
-    @PreAuthorize("hasAnyRole('ADMIN','PERMISSION_ALL','PERMISSION_SELECT','ROLES_SELECT','ROLES_ALL')")
-    public ResponseEntity getRoleTree(){
+    @PreAuthorize("hasAnyRole('ADMIN','PERMISSION_ALL','PERMISSION_CREATE','PERMISSION_EDIT','ROLES_SELECT','ROLES_ALL')")
+    public ResponseEntity getTree(){
         return new ResponseEntity(permissionService.getPermissionTree(permissionService.findByPid(0L)),HttpStatus.OK);
     }
 

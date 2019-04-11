@@ -45,6 +45,15 @@ public class RoleQueryService {
         return PageUtil.toPage(page.map(roleMapper::toDto));
     }
 
+    /**
+     * 分页
+     */
+    @Cacheable(keyGenerator = "keyGenerator")
+    public Object queryAll(){
+        List<Role> roles = roleRepository.findAll(new Spec(null));
+        return roleMapper.toDto(roles);
+    }
+
     class Spec implements Specification<Role> {
 
         private String name;

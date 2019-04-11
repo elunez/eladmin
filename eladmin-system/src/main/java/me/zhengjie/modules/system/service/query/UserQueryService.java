@@ -1,5 +1,6 @@
 package me.zhengjie.modules.system.service.query;
 
+import me.zhengjie.modules.system.domain.Dept;
 import me.zhengjie.modules.system.domain.User;
 import me.zhengjie.modules.system.repository.UserRepository;
 import me.zhengjie.modules.system.service.dto.UserDTO;
@@ -14,13 +15,13 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+
+import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author jie
@@ -41,24 +42,20 @@ public class UserQueryService {
      * 分页
      */
     @Cacheable(keyGenerator = "keyGenerator")
-    public Object queryAll(UserDTO user, Pageable pageable){
-        Page<User> page = userRepo.findAll(new Spec(user),pageable);
+    public Object queryAll(UserDTO user, Set<Long> deptIds,Pageable pageable){
+        Page<User> page = userRepo.findAll(new Spec(user,deptIds),pageable);
         return PageUtil.toPage(page.map(userMapper::toDto));
     }
 
-    /**
-     * 不分页
-     */
-    @Cacheable(keyGenerator = "keyGenerator")
-    public Object queryAll(UserDTO user){
-        return userMapper.toDto(userRepo.findAll(new Spec(user)));
-    }
 
     class Spec implements Specification<User> {
 
         private UserDTO user;
 
-        public Spec(UserDTO user){
+        private Set<Long> deptIds;
+
+        public Spec(UserDTO user, Set<Long> deptIds){
+            this.deptIds = deptIds;
             this.user = user;
         }
 
@@ -66,6 +63,12 @@ public class UserQueryService {
         public Predicate toPredicate(Root<User> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder cb) {
 
             List<Predicate> list = new ArrayList<Predicate>();
+
+            // 数据权限， 关联查询
+            Join<Dept,User> join = root.join("dept",JoinType.LEFT);
+            if (!CollectionUtils.isEmpty(deptIds)) {
+                list.add(join.get("id").in(deptIds));
+            }
 
             if(!ObjectUtils.isEmpty(user.getId())){
                 /**

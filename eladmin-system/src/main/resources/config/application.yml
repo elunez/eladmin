@@ -41,7 +41,7 @@ spring:
 #七牛云
 qiniu:
   # 文件大小 /M
-  max-size: 5
+  max-size: 15
 
 #验证码有效时间/分钟
 code:

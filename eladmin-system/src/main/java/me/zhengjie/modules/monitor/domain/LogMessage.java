@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
- * @author 郑杰
+ * @author https://cloud.tencent.com/developer/article/1096792
  * @date 2018-12-24
  */
 @Data

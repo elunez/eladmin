@@ -9,10 +9,12 @@ import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 import javax.annotation.PostConstruct;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * 配置WebSocket消息代理端点，即stomp服务端
  * @author jie
+ * @reference https://cloud.tencent.com/developer/article/1096792
  * @date 2018-12-24
  */
 @Slf4j
@@ -22,8 +24,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
-    @Autowired
-    private ExecutorService executorService;
+    private ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {

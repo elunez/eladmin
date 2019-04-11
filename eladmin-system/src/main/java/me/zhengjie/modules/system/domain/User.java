@@ -29,6 +29,7 @@ public class User implements Serializable {
     private Long id;
 
     @NotBlank
+    @Column(unique = true)
     private String username;
 
     private String avatar;
@@ -36,6 +37,9 @@ public class User implements Serializable {
     @NotBlank
     @Pattern(regexp = "([a-z0-9A-Z]+[-|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}",message = "格式错误")
     private String email;
+
+    @NotBlank
+    private String phone;
 
     @NotNull
     private Boolean enabled;
@@ -52,6 +56,14 @@ public class User implements Serializable {
     @ManyToMany
     @JoinTable(name = "users_roles", joinColumns = {@JoinColumn(name = "user_id",referencedColumnName = "id")}, inverseJoinColumns = {@JoinColumn(name = "role_id",referencedColumnName = "id")})
     private Set<Role> roles;
+
+    @OneToOne
+    @JoinColumn(name = "job_id")
+    private Job job;
+
+    @OneToOne
+    @JoinColumn(name = "dept_id")
+    private Dept dept;
 
     @Override
     public String toString() {

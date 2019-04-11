@@ -40,10 +40,10 @@ public class RoleController {
      * 返回全部的角色，新增用户时下拉选择
      * @return
      */
-    @GetMapping(value = "/roles/tree")
-    @PreAuthorize("hasAnyRole('ADMIN','ROLES_ALL','USER_ALL','USER_SELECT')")
-    public ResponseEntity getRoleTree(){
-        return new ResponseEntity(roleService.getRoleTree(),HttpStatus.OK);
+    @GetMapping(value = "/roles/all")
+    @PreAuthorize("hasAnyRole('ADMIN','ROLES_ALL','USER_ALL','USER_CREATE','USER_EDIT')")
+    public ResponseEntity getAll(){
+        return new ResponseEntity(roleQueryService.queryAll(),HttpStatus.OK);
     }
 
     @Log("查询角色")
