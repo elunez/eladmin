@@ -72,6 +72,7 @@ public class QuartzManage {
             trigger = trigger.getTriggerBuilder().withIdentity(triggerKey).withSchedule(scheduleBuilder).build();
             //重置启动时间
             ((CronTriggerImpl)trigger).setStartTime(new Date());
+            trigger.getJobDataMap().put(QuartzJob.JOB_KEY,quartzJob);
 
             scheduler.rescheduleJob(triggerKey, trigger);
             // 暂停任务
