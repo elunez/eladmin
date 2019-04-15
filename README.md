@@ -7,7 +7,7 @@
 |     |   后端源码  |   前端源码  |
 |---  |--- | --- |
 |  github   |  https://github.com/elunez/eladmin   |  https://github.com/elunez/eladmin-qd   |
-|  码云   |  https://github.com/elunez/eladmin   |  https://gitee.com/elunez/eladmin-qt   |
+|  码云   |  https://gitee.com/elunez/eladmin   |  https://gitee.com/elunez/eladmin-qt   |
 #### 开发文档
 [https://docs.auauz.net/#/](https://docs.auauz.net/#/)
 
