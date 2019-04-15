@@ -34,11 +34,8 @@ public class JwtPermissionService {
         Set<Role> roles = roleRepository.findByUsers_Id(user.getId());
 
         Set<Permission> permissions = new HashSet<>();
-        for (Role role : roles) {
-            Set<Role> roleSet = new HashSet<>();
-            roleSet.add(role);
-            permissions.addAll(permissionRepository.findByRoles_Id(role.getId()));
-        }
+
+        permissions.addAll(permissionRepository.findByRoles(roles));
 
         return permissions.stream()
                 .map(permission -> new SimpleGrantedAuthority(permission.getName()))
