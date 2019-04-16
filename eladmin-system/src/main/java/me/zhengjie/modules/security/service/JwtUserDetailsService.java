@@ -1,8 +1,6 @@
 package me.zhengjie.modules.security.service;
 
-import me.zhengjie.modules.system.domain.Permission;
-import me.zhengjie.modules.system.domain.Role;
-import me.zhengjie.modules.system.domain.User;
+import me.zhengjie.modules.system.domain.*;
 import me.zhengjie.exception.EntityNotFoundException;
 import me.zhengjie.modules.system.repository.PermissionRepository;
 import me.zhengjie.modules.system.repository.RoleRepository;
@@ -19,6 +17,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -55,8 +54,8 @@ public class JwtUserDetailsService implements UserDetailsService {
                 user.getAvatar(),
                 user.getEmail(),
                 user.getPhone(),
-                user.getDept().getName(),
-                user.getJob().getName(),
+                Optional.ofNullable(user.getDept()).map(Dept::getName).orElse(null),
+                Optional.ofNullable(user.getJob()).map(Job::getName).orElse(null),
                 permissionService.mapToGrantedAuthorities(user),
                 user.getEnabled(),
                 user.getCreateTime(),
