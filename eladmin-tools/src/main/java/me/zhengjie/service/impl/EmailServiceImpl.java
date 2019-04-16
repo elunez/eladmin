@@ -37,8 +37,7 @@ public class EmailServiceImpl implements EmailService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        emailRepository.saveAndFlush(emailConfig);
-        return emailConfig;
+        return emailRepository.save(emailConfig);
     }
 
     @Override

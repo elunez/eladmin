@@ -126,6 +126,6 @@ public class AlipayServiceImpl implements AlipayService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public AlipayConfig update(AlipayConfig alipayConfig) {
-        return alipayRepository.saveAndFlush(alipayConfig);
+        return alipayRepository.save(alipayConfig);
     }
 }

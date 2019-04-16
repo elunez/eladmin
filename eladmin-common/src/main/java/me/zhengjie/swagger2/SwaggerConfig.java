@@ -1,6 +1,7 @@
 package me.zhengjie.swagger2;
 
 import com.google.common.base.Predicates;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.ApiInfoBuilder;
@@ -25,11 +26,14 @@ import java.util.List;
 @EnableSwagger2
 public class SwaggerConfig {
 
+    @Value("${jwt.header}")
+    private String tokenHeader;
+
     @Bean
     public Docket createRestApi() {
         ParameterBuilder ticketPar = new ParameterBuilder();
         List<Parameter> pars = new ArrayList<Parameter>();
-        ticketPar.name("Authorization").description("token")
+        ticketPar.name(tokenHeader).description("token")
                 .modelRef(new ModelRef("string"))
                 .parameterType("header")
                 .defaultValue("Bearer ")
