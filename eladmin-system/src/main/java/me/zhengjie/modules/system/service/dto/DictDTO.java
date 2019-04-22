@@ -1,7 +1,6 @@
 package me.zhengjie.modules.system.service.dto;
 
 import lombok.Data;
-import java.sql.Timestamp;
 import java.io.Serializable;
 
 /**
