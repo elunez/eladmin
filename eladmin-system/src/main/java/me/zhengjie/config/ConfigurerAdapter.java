@@ -35,7 +35,7 @@ public class ConfigurerAdapter implements WebMvcConfigurer {
 
     }
 
-// 可解决Long 类型在 前端精度丢失的问题， 如不想全局 直接添加注解 @JsonSerialize(using= ToStringSerializer.class) 到相应的字段上
+// 可解决Long 类型在 前端精度丢失的问题， 如不想全局 直接添加注解 @JsonSerialize(using= ToStringSerializer.class) 到相应的字段
 
 //    @Override
 //    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
