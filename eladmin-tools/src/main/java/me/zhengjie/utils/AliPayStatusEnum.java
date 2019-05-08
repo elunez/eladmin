@@ -1,4 +1,4 @@
-package me.zhengjie.util;
+package me.zhengjie.utils;
 
 /**
  * 支付状态

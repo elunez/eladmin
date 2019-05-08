@@ -1,4 +1,4 @@
-package me.zhengjie.util;
+package me.zhengjie.utils;
 
 import cn.hutool.core.util.StrUtil;
 import com.alipay.api.AlipayApiException;

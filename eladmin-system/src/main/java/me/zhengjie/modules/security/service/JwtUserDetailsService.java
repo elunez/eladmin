@@ -1,5 +1,6 @@
 package me.zhengjie.modules.security.service;
 
+import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.modules.system.domain.*;
 import me.zhengjie.exception.EntityNotFoundException;
 import me.zhengjie.modules.system.repository.PermissionRepository;
@@ -40,7 +41,7 @@ public class JwtUserDetailsService implements UserDetailsService {
 
         User user = userService.findByName(username);
         if (user == null) {
-            throw new EntityNotFoundException(User.class, "name", username);
+            throw new BadRequestException("账号不存在");
         } else {
             return createJwtUser(user);
         }

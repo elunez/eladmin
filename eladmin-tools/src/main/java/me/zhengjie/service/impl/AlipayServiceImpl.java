@@ -9,7 +9,7 @@ import me.zhengjie.domain.vo.TradeVo;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.repository.AlipayRepository;
 import me.zhengjie.service.AlipayService;
-import me.zhengjie.util.AlipayUtils;
+import me.zhengjie.utils.AlipayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
