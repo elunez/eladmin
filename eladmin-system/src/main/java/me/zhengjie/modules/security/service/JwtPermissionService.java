@@ -20,6 +20,11 @@ public class JwtPermissionService {
     @Autowired
     private RoleRepository roleRepository;
 
+    /**
+     * key的名称如有修改，请同步修改 UserServiceImpl 中的 update 方法
+     * @param user
+     * @return
+     */
     @Cacheable(key = "'loadPermissionByUser:' + #p0.username")
     public Collection<GrantedAuthority> mapToGrantedAuthorities(User user) {
 
