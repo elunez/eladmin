@@ -4,13 +4,12 @@ import me.zhengjie.aop.log.Log;
 import me.zhengjie.domain.Picture;
 import me.zhengjie.service.PictureService;
 import me.zhengjie.service.query.PictureQueryService;
-import me.zhengjie.utils.SecurityContextHolder;
+import me.zhengjie.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.HashMap;
@@ -47,8 +46,7 @@ public class PictureController {
     @PreAuthorize("hasAnyRole('ADMIN','PICTURE_ALL','PICTURE_UPLOAD')")
     @PostMapping(value = "/pictures")
     public ResponseEntity upload(@RequestParam MultipartFile file){
-        UserDetails userDetails = SecurityContextHolder.getUserDetails();
-        String userName = userDetails.getUsername();
+        String userName = SecurityUtils.getUsername();
         Picture picture = pictureService.upload(file,userName);
         Map map = new HashMap();
         map.put("errno",0);

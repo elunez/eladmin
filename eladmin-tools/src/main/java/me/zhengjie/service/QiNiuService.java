@@ -19,7 +19,7 @@ public interface QiNiuService {
      * 查配置
      * @return
      */
-    @Cacheable(key = "'1'")
+    @Cacheable(cacheNames = "qiNiuConfig", key = "'1'")
     QiniuConfig find();
 
     /**
@@ -27,7 +27,7 @@ public interface QiNiuService {
      * @param qiniuConfig
      * @return
      */
-    @CachePut(key = "'1'")
+    @CachePut(cacheNames = "qiNiuConfig", key = "'1'")
     QiniuConfig update(QiniuConfig qiniuConfig);
 
     /**

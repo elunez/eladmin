@@ -239,8 +239,4 @@ public class GenUtil {
             writer.close();
         }
     }
-
-    public static void main(String[] args){
-        System.out.println(FileUtil.exist("E:\\1.5.txt"));
-    }
 }

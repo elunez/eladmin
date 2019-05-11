@@ -60,3 +60,7 @@ jwt:
 #是否允许生成代码，生产环境设置为false
 generator:
   enabled: true
+
+#是否开启 swagger-ui
+swagger:
+  enabled: true
