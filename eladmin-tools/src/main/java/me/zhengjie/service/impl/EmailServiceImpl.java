@@ -77,10 +77,9 @@ public class EmailServiceImpl implements EmailService {
         /**
          * 发送
          */
-        new MailAccount();
         try {
             Mail.create(account)
-                    .setTos(String.valueOf(emailVo.getTos()))
+                    .setTos(emailVo.getTos().toArray(new String[emailVo.getTos().size()]))
                     .setTitle(emailVo.getSubject())
                     .setContent(content)
                     .setHtml(true)
