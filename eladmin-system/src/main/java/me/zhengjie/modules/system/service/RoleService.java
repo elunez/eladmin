@@ -48,11 +48,12 @@ public interface RoleService {
     void delete(Long id);
 
     /**
+     * key的名称如有修改，请同步修改 UserServiceImpl 中的 update 方法
      * findByUsers_Id
      * @param id
      * @return
      */
-    @Cacheable(keyGenerator = "keyGenerator")
+    @Cacheable(key = "'findByUsers_Id:' + #p0")
     List<Role> findByUsers_Id(Long id);
 
     /**

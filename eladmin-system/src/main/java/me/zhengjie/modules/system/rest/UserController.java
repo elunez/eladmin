@@ -122,7 +122,7 @@ public class UserController {
      */
     @GetMapping(value = "/users/validPass/{pass}")
     public ResponseEntity validPass(@PathVariable String pass){
-        UserDetails userDetails = SecurityContextHolder.getUserDetails();
+        UserDetails userDetails = SecurityUtils.getUserDetails();
         Map map = new HashMap();
         map.put("status",200);
         if(!userDetails.getPassword().equals(EncryptUtils.encryptPassword(pass))){
@@ -138,7 +138,7 @@ public class UserController {
      */
     @GetMapping(value = "/users/updatePass/{pass}")
     public ResponseEntity updatePass(@PathVariable String pass){
-        UserDetails userDetails = SecurityContextHolder.getUserDetails();
+        UserDetails userDetails = SecurityUtils.getUserDetails();
         if(userDetails.getPassword().equals(EncryptUtils.encryptPassword(pass))){
             throw new BadRequestException("新密码不能与旧密码相同");
         }
@@ -153,9 +153,8 @@ public class UserController {
      */
     @PostMapping(value = "/users/updateAvatar")
     public ResponseEntity updateAvatar(@RequestParam MultipartFile file){
-        UserDetails userDetails = SecurityContextHolder.getUserDetails();
-        Picture picture = pictureService.upload(file,userDetails.getUsername());
-        userService.updateAvatar(userDetails.getUsername(),picture.getUrl());
+        Picture picture = pictureService.upload(file, SecurityUtils.getUsername());
+        userService.updateAvatar(SecurityUtils.getUsername(),picture.getUrl());
         return new ResponseEntity(HttpStatus.OK);
     }
 
@@ -168,7 +167,7 @@ public class UserController {
     @Log("修改邮箱")
     @PostMapping(value = "/users/updateEmail/{code}")
     public ResponseEntity updateEmail(@PathVariable String code,@RequestBody User user){
-        UserDetails userDetails = SecurityContextHolder.getUserDetails();
+        UserDetails userDetails = SecurityUtils.getUserDetails();
         if(!userDetails.getPassword().equals(EncryptUtils.encryptPassword(user.getPassword()))){
             throw new BadRequestException("密码错误");
         }

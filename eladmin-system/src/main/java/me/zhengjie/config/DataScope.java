@@ -6,9 +6,8 @@ import me.zhengjie.modules.system.domain.User;
 import me.zhengjie.modules.system.service.DeptService;
 import me.zhengjie.modules.system.service.RoleService;
 import me.zhengjie.modules.system.service.UserService;
-import me.zhengjie.utils.SecurityContextHolder;
+import me.zhengjie.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -36,7 +35,7 @@ public class DataScope {
 
     public Set<Long> getDeptIds() {
 
-        User user = userService.findByName(SecurityContextHolder.getUserDetails().getUsername());
+        User user = userService.findByName(SecurityUtils.getUsername());
 
         // 用于存储部门id
         Set<Long> deptIds = new HashSet<>();

@@ -93,8 +93,4 @@ public class EncryptUtils {
     public static String encryptPassword(String password){
         return  DigestUtils.md5DigestAsHex(password.getBytes());
     }
-
-    public static void main(String[] args) {
-        System.out.println(encryptPassword("123456"));
-    }
 }

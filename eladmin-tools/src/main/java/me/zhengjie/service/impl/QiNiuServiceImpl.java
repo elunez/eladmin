@@ -15,7 +15,7 @@ import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.repository.QiNiuConfigRepository;
 import me.zhengjie.repository.QiniuContentRepository;
 import me.zhengjie.service.QiNiuService;
-import me.zhengjie.util.QiNiuUtil;
+import me.zhengjie.utils.QiNiuUtil;
 import me.zhengjie.utils.FileUtil;
 import me.zhengjie.utils.ValidationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDate;
 import java.util.Optional;
 
 /**

@@ -7,13 +7,12 @@ import me.zhengjie.modules.security.security.AuthorizationUser;
 import me.zhengjie.modules.security.security.JwtUser;
 import me.zhengjie.utils.EncryptUtils;
 import me.zhengjie.modules.security.utils.JwtTokenUtil;
-import me.zhengjie.utils.SecurityContextHolder;
+import me.zhengjie.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AccountExpiredException;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -70,8 +69,7 @@ public class AuthenticationController {
      */
     @GetMapping(value = "${jwt.auth.account}")
     public ResponseEntity getUserInfo(){
-        UserDetails userDetails = SecurityContextHolder.getUserDetails();
-        JwtUser jwtUser = (JwtUser)userDetailsService.loadUserByUsername(userDetails.getUsername());
+        JwtUser jwtUser = (JwtUser)userDetailsService.loadUserByUsername(SecurityUtils.getUsername());
         return ResponseEntity.ok(jwtUser);
     }
 }
