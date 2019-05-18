@@ -131,15 +131,15 @@ public class UserController {
 
     /**
      * 验证密码
-     * @param pass
+     * @param user
      * @return
      */
-    @GetMapping(value = "/users/validPass/{pass}")
-    public ResponseEntity validPass(@PathVariable String pass){
+    @PostMapping(value = "/users/validPass")
+    public ResponseEntity validPass(@RequestBody User user){
         UserDetails userDetails = SecurityUtils.getUserDetails();
         Map map = new HashMap();
         map.put("status",200);
-        if(!userDetails.getPassword().equals(EncryptUtils.encryptPassword(pass))){
+        if(!userDetails.getPassword().equals(EncryptUtils.encryptPassword(user.getPassword()))){
            map.put("status",400);
         }
         return new ResponseEntity(map,HttpStatus.OK);
@@ -147,16 +147,16 @@ public class UserController {
 
     /**
      * 修改密码
-     * @param pass
+     * @param user
      * @return
      */
-    @GetMapping(value = "/users/updatePass/{pass}")
-    public ResponseEntity updatePass(@PathVariable String pass){
+    @PostMapping(value = "/users/updatePass")
+    public ResponseEntity updatePass(@RequestBody User user){
         UserDetails userDetails = SecurityUtils.getUserDetails();
-        if(userDetails.getPassword().equals(EncryptUtils.encryptPassword(pass))){
+        if(userDetails.getPassword().equals(EncryptUtils.encryptPassword(user.getPassword()))){
             throw new BadRequestException("新密码不能与旧密码相同");
         }
-        userService.updatePass(userDetails.getUsername(),EncryptUtils.encryptPassword(pass));
+        userService.updatePass(userDetails.getUsername(),EncryptUtils.encryptPassword(user.getPassword()));
         return new ResponseEntity(HttpStatus.OK);
     }
 
