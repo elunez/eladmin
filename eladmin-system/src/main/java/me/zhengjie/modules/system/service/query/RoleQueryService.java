@@ -49,8 +49,8 @@ public class RoleQueryService {
      * 分页
      */
     @Cacheable(keyGenerator = "keyGenerator")
-    public Object queryAll(){
-        List<Role> roles = roleRepository.findAll(new Spec(null));
+    public Object queryAll(Pageable pageable){
+        List<Role> roles = roleRepository.findAll(new Spec(null),pageable).getContent();
         return roleMapper.toDto(roles);
     }
 

@@ -59,6 +59,13 @@ public class PictureQueryService {
                 list.add(cb.like(root.get("filename").as(String.class),"%"+picture.getFilename()+"%"));
             }
 
+            if(!ObjectUtils.isEmpty(picture.getUsername())){
+                /**
+                 * 模糊
+                 */
+                list.add(cb.like(root.get("username").as(String.class),"%"+picture.getUsername()+"%"));
+            }
+
             Predicate[] p = new Predicate[list.size()];
             return cb.and(list.toArray(p));
         }

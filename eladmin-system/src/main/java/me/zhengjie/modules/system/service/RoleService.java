@@ -56,6 +56,9 @@ public interface RoleService {
     @Cacheable(key = "'findByUsers_Id:' + #p0")
     List<Role> findByUsers_Id(Long id);
 
+    @Cacheable(keyGenerator = "keyGenerator")
+    Integer findByRoles(Set<Role> roles);
+
     /**
      * updatePermission
      * @param resources

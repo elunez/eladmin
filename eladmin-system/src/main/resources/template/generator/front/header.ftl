@@ -6,7 +6,7 @@
     <el-select v-model="query.type" clearable placeholder="类型" class="filter-item" style="width: 130px">
       <el-option v-for="item in queryTypeOptions" :key="item.key" :label="item.display_name" :value="item.key"/>
     </el-select>
-    <el-button class="filter-item" size="mini" type="primary" icon="el-icon-search" @click="toQuery">搜索</el-button>
+    <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
 </#if>
     <!-- 新增 -->
     <div style="display: inline-block;margin: 0px 2px;">
