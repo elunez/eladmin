@@ -8,15 +8,11 @@ import me.zhengjie.service.QiNiuService;
 import me.zhengjie.service.query.QiNiuQueryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -106,6 +102,18 @@ public class QiniuController {
     @DeleteMapping(value = "/qiNiuContent/{id}")
     public ResponseEntity delete(@PathVariable Long id){
         qiNiuService.delete(qiNiuService.findByContentId(id),qiNiuService.find());
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    /**
+     * 删除多张图片
+     * @param ids
+     * @return
+     */
+    @Log("删除图片")
+    @DeleteMapping(value = "/qiNiuContent")
+    public ResponseEntity deleteAll(@RequestBody Long[] ids) {
+        qiNiuService.deleteAll(ids, qiNiuService.find());
         return new ResponseEntity(HttpStatus.OK);
     }
 }

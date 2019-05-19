@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-button size="mini" type="success" @click="to">编辑</el-button>
+    <el-button size="mini" type="primary" icon="el-icon-edit" @click="to"/>
     <eForm ref="form" :sup_this="sup_this" :is-add="false"/>
   </div>
 </template>

@@ -18,6 +18,8 @@ public class RoleDTO implements Serializable {
 
     private String dataScope;
 
+    private Integer level;
+
     private String remark;
 
     private Set<PermissionDTO> permissions;

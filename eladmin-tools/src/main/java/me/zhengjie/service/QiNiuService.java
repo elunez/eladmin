@@ -69,4 +69,12 @@ public interface QiNiuService {
      */
     @CacheEvict(allEntries = true)
     void synchronize(QiniuConfig config);
+
+    /**
+     * 删除文件
+     * @param ids
+     * @return
+     */
+    @CacheEvict(allEntries = true)
+    void deleteAll(Long[] ids, QiniuConfig config);
 }

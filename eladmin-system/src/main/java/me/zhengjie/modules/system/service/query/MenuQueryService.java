@@ -55,9 +55,6 @@ public class MenuQueryService {
             List<Predicate> list = new ArrayList<Predicate>();
 
             if(!ObjectUtils.isEmpty(name)){
-                /**
-                 * 模糊
-                 */
                 list.add(cb.like(root.get("name").as(String.class),"%"+name+"%"));
             }
 
