@@ -37,6 +37,10 @@ public class Role implements Serializable {
     @Column(name = "data_scope")
     private String dataScope = "本级";
 
+    // 数值越小，级别越大
+    @Column(name = "level")
+    private Integer level = 3;
+
     @Column
     private String remark;
 

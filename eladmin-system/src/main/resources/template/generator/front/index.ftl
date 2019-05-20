@@ -32,7 +32,7 @@
               <el-button size="mini" type="text" @click="$refs[scope.row.id].doClose()">取消</el-button>
               <el-button :loading="delLoading" type="primary" size="mini" @click="subDelete(scope.row.id)">确定</el-button>
             </div>
-            <el-button slot="reference" type="danger" size="mini">删除</el-button>
+            <el-button slot="reference" type="danger" icon="el-icon-delete" size="mini"/>
           </el-popover>
         </template>
       </el-table-column>

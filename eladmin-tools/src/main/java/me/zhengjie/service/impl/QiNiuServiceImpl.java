@@ -179,4 +179,11 @@ public class QiNiuServiceImpl implements QiNiuService {
         }
 
     }
+
+    @Override
+    public void deleteAll(Long[] ids, QiniuConfig config) {
+        for (Long id : ids) {
+            delete(findByContentId(id), config);
+        }
+    }
 }

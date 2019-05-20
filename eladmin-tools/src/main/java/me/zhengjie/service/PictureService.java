@@ -36,4 +36,11 @@ public interface PictureService {
      */
     @CacheEvict(allEntries = true)
     void delete(Picture picture);
+
+    /**
+     * 删除图片
+     * @param ids
+     */
+    @CacheEvict(allEntries = true)
+    void deleteAll(Long[] ids);
 }

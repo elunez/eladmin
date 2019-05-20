@@ -35,7 +35,7 @@ public class GeneratorServiceImpl implements GeneratorService {
         sql.append("order by table_name");
         Query query = em.createNativeQuery(sql.toString());
         query.setFirstResult(startEnd[0]);
-        query.setMaxResults(startEnd[1]);
+        query.setMaxResults(startEnd[1]-startEnd[0]);
 
         System.out.println(sql.toString());
         List<Object[]> result = query.getResultList();
