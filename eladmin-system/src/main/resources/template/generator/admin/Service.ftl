@@ -15,11 +15,11 @@ public interface ${className}Service {
 
     /**
      * findById
-     * @param id
+     * @param ${pkChangeColName}
      * @return
      */
     @Cacheable(key = "#p0")
-    ${className}DTO findById(${pkColumnType} id);
+    ${className}DTO findById(${pkColumnType} ${pkChangeColName});
 
     /**
      * create
@@ -38,8 +38,8 @@ public interface ${className}Service {
 
     /**
      * delete
-     * @param id
+     * @param ${pkChangeColName}
      */
     @CacheEvict(allEntries = true)
-    void delete(Long id);
+    void delete(${pkColumnType} ${pkChangeColName});
 }

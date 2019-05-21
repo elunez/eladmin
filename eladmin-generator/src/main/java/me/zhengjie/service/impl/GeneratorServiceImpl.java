@@ -50,7 +50,7 @@ public class GeneratorServiceImpl implements GeneratorService {
 
     @Override
     public Object getColumns(String name) {
-        StringBuilder sql = new StringBuilder("select column_name, is_nullable, data_type, column_comment, column_key from information_schema.columns where ");
+        StringBuilder sql = new StringBuilder("select column_name, is_nullable, data_type, column_comment, column_key, extra from information_schema.columns where ");
         if(!ObjectUtils.isEmpty(name)){
             sql.append("table_name = '"+name+"' ");
         }
@@ -59,7 +59,7 @@ public class GeneratorServiceImpl implements GeneratorService {
         List<Object[]> result = query.getResultList();
         List<ColumnInfo> columnInfos = new ArrayList<>();
         for (Object[] obj : result) {
-            columnInfos.add(new ColumnInfo(obj[0],obj[1],obj[2],obj[3],obj[4],null,"true"));
+            columnInfos.add(new ColumnInfo(obj[0],obj[1],obj[2],obj[3],obj[4],obj[5],null,"true"));
         }
         return PageUtil.toPage(columnInfos,columnInfos.size());
     }

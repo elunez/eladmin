@@ -49,9 +49,5 @@ public class Dept implements Serializable {
     @CreationTimestamp
     private Timestamp createTime;
 
-    @ManyToMany(mappedBy = "depts")
-    @JsonIgnore
-    private Set<Role> roles;
-
     public @interface Update {}
 }

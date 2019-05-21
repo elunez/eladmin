@@ -11,7 +11,7 @@
     <!-- 新增 -->
     <div style="display: inline-block;margin: 0px 2px;">
       <el-button
-        v-if="checkPermission(['ADMIN'])"
+        v-permission="['ADMIN','${upperCaseClassName}_ALL','${upperCaseClassName}_CREATE']"
         class="filter-item"
         size="mini"
         type="primary"
@@ -23,7 +23,6 @@
 </template>
 
 <script>
-import checkPermission from '@/utils/permission' // 权限判断函数
 import eForm from './form'
 export default {
   components: { eForm },
@@ -47,7 +46,7 @@ export default {
     }
   },
   methods: {
-    checkPermission<#if hasQuery>,
+<#if hasQuery>
     toQuery() {
       this.$parent.page = 0
       this.$parent.init()

@@ -1,7 +1,6 @@
 package ${package}.rest;
 
 import me.zhengjie.aop.log.Log;
-import me.zhengjie.exception.BadRequestException;
 import ${package}.domain.${className};
 import ${package}.service.${className}Service;
 import ${package}.service.dto.${className}DTO;
@@ -28,41 +27,33 @@ public class ${className}Controller {
     @Autowired
     private ${className}QueryService ${changeClassName}QueryService;
 
-    private static final String ENTITY_NAME = "${changeClassName}";
-
     @Log("查询${className}")
     @GetMapping(value = "/${changeClassName}")
-    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','${upperCaseClassName}_ALL','${upperCaseClassName}_SELECT')")
     public ResponseEntity get${className}s(${className}DTO resources, Pageable pageable){
         return new ResponseEntity(${changeClassName}QueryService.queryAll(resources,pageable),HttpStatus.OK);
     }
 
     @Log("新增${className}")
     @PostMapping(value = "/${changeClassName}")
-    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','${upperCaseClassName}_ALL','${upperCaseClassName}_CREATE')")
     public ResponseEntity create(@Validated @RequestBody ${className} resources){
-        if (resources.getId() != null) {
-            throw new BadRequestException("A new "+ ENTITY_NAME +" cannot already have an ID");
-        }
         return new ResponseEntity(${changeClassName}Service.create(resources),HttpStatus.CREATED);
     }
 
     @Log("修改${className}")
     @PutMapping(value = "/${changeClassName}")
-    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','${upperCaseClassName}_ALL','${upperCaseClassName}_EDIT')")
     public ResponseEntity update(@Validated @RequestBody ${className} resources){
-        if (resources.getId() == null) {
-            throw new BadRequestException(ENTITY_NAME +" ID Can not be empty");
-        }
         ${changeClassName}Service.update(resources);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
     @Log("删除${className}")
-    @DeleteMapping(value = "/${changeClassName}/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN')")
-    public ResponseEntity delete(@PathVariable Long id){
-        ${changeClassName}Service.delete(id);
+    @DeleteMapping(value = "/${changeClassName}/{${pkChangeColName}}")
+    @PreAuthorize("hasAnyRole('ADMIN','${upperCaseClassName}_ALL','${upperCaseClassName}_DELETE')")
+    public ResponseEntity delete(@PathVariable ${pkColumnType} ${pkChangeColName}){
+        ${changeClassName}Service.delete(${pkChangeColName});
         return new ResponseEntity(HttpStatus.OK);
     }
 }

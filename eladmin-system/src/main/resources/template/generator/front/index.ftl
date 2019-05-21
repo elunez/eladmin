@@ -19,18 +19,18 @@
           </#if>
           </#list>
       </#if>
-      <el-table-column label="操作" width="150px" align="center">
+      <el-table-column v-if="checkPermission(['ADMIN','${upperCaseClassName}_ALL','${upperCaseClassName}_EDIT','${upperCaseClassName}_DELETE'])" label="操作" width="150px" align="center">
         <template slot-scope="scope">
-          <edit v-if="checkPermission(['ADMIN'])" :data="scope.row" :sup_this="sup_this"/>
+          <edit v-permission="['ADMIN','${upperCaseClassName}_ALL','${upperCaseClassName}_EDIT']" :data="scope.row" :sup_this="sup_this"/>
           <el-popover
-            v-if="checkPermission(['ADMIN'])"
-            :ref="scope.row.id"
+            v-permission="['ADMIN','${upperCaseClassName}_ALL','${upperCaseClassName}_DELETE']"
+            :ref="scope.row.${pkChangeColName}"
             placement="top"
             width="180">
             <p>确定删除本条数据吗？</p>
             <div style="text-align: right; margin: 0">
-              <el-button size="mini" type="text" @click="$refs[scope.row.id].doClose()">取消</el-button>
-              <el-button :loading="delLoading" type="primary" size="mini" @click="subDelete(scope.row.id)">确定</el-button>
+              <el-button size="mini" type="text" @click="$refs[scope.row.${pkChangeColName}].doClose()">取消</el-button>
+              <el-button :loading="delLoading" type="primary" size="mini" @click="subDelete(scope.row.${pkChangeColName})">确定</el-button>
             </div>
             <el-button slot="reference" type="danger" icon="el-icon-delete" size="mini"/>
           </el-popover>
@@ -76,7 +76,7 @@ export default {
     checkPermission,
     beforeInit() {
       this.url = 'api/${changeClassName}'
-      const sort = 'id,desc'
+      const sort = '${pkChangeColName},desc'
       this.params = { page: this.page, size: this.size, sort: sort }
       <#if hasQuery>
       const query = this.query
@@ -86,11 +86,11 @@ export default {
       </#if>
       return true
     },
-    subDelete(id) {
+    subDelete(${pkChangeColName}) {
       this.delLoading = true
-      del(id).then(res => {
+      del(${pkChangeColName}).then(res => {
         this.delLoading = false
-        this.$refs[id].doClose()
+        this.$refs[${pkChangeColName}].doClose()
         this.init()
         this.$notify({
           title: '删除成功',
@@ -99,7 +99,7 @@ export default {
         })
       }).catch(err => {
         this.delLoading = false
-        this.$refs[id].doClose()
+        this.$refs[${pkChangeColName}].doClose()
         console.log(err.response.data.message)
       })
     }

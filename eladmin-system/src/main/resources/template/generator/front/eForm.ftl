@@ -3,7 +3,7 @@
     <el-form ref="form" :model="form" :rules="rules" size="small" label-width="80px">
 <#if columns??>
   <#list columns as column>
-  <#if column.changeColumnName != 'id'>
+  <#if column.changeColumnName != '${pkChangeColName}'>
       <el-form-item label="<#if column.columnComment != ''>${column.columnComment}<#else>${column.changeColumnName}</#if>">
         <el-input v-model="form.${column.changeColumnName}" style="width: 370px;"/>
       </el-form-item>
