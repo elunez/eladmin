@@ -28,7 +28,9 @@ public class ${className} implements Serializable {
     </#if>
     <#if column.columnKey = 'PRI'>
     @Id
+    <#if auto>
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    </#if>
     </#if>
     @Column(name = "${column.columnName}"<#if column.columnKey = 'UNI'>,unique = true</#if><#if column.isNullable = 'NO' && column.columnKey != 'PRI'>,nullable = false</#if>)
     private ${column.columnType} ${column.changeColumnName};

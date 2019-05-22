@@ -8,9 +8,9 @@ export function add(data) {
   })
 }
 
-export function del(id) {
+export function del(${pkChangeColName}) {
   return request({
-    url: 'api/${changeClassName}/' + id,
+    url: 'api/${changeClassName}/' + ${pkChangeColName},
     method: 'delete'
   })
 }

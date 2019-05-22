@@ -85,8 +85,8 @@ public class ${className}QueryService {
             }
     </#list>
 </#if>
-                Predicate[] p = new Predicate[list.size()];
-                return cb.and(list.toArray(p));
+            Predicate[] p = new Predicate[list.size()];
+            return cb.and(list.toArray(p));
         }
     }
 }
