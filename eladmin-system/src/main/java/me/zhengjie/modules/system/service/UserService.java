@@ -50,7 +50,7 @@ public interface UserService {
      * @return
      */
     @Cacheable(key = "'loadUserByUsername:'+#p0")
-    User findByName(String userName);
+    UserDTO findByName(String userName);
 
     /**
      * 修改密码

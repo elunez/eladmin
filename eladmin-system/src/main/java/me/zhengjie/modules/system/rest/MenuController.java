@@ -8,6 +8,7 @@ import me.zhengjie.modules.system.service.MenuService;
 import me.zhengjie.modules.system.service.RoleService;
 import me.zhengjie.modules.system.service.UserService;
 import me.zhengjie.modules.system.service.dto.MenuDTO;
+import me.zhengjie.modules.system.service.dto.UserDTO;
 import me.zhengjie.modules.system.service.mapper.MenuMapper;
 import me.zhengjie.modules.system.service.query.MenuQueryService;
 import me.zhengjie.utils.SecurityUtils;
@@ -50,7 +51,7 @@ public class MenuController {
      */
     @GetMapping(value = "/menus/build")
     public ResponseEntity buildMenus(){
-        User user = userService.findByName(SecurityUtils.getUsername());
+        UserDTO user = userService.findByName(SecurityUtils.getUsername());
         List<MenuDTO> menuDTOList = menuService.findByRoles(roleService.findByUsers_Id(user.getId()));
         List<MenuDTO> menuDTOTree = (List<MenuDTO>)menuService.buildTree(menuDTOList).get("content");
         return new ResponseEntity(menuService.buildMenus(menuDTOTree),HttpStatus.OK);

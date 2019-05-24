@@ -102,18 +102,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findByName(String userName) {
+    public UserDTO findByName(String userName) {
         User user = null;
         if(ValidationUtil.isEmail(userName)){
             user = userRepository.findByEmail(userName);
         } else {
             user = userRepository.findByUsername(userName);
         }
-
         if (user == null) {
             throw new EntityNotFoundException(User.class, "name", userName);
         } else {
-            return user;
+            return userMapper.toDto(user);
         }
     }
 

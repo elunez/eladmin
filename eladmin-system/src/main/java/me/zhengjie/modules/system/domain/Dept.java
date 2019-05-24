@@ -45,6 +45,10 @@ public class Dept implements Serializable {
     @NotNull
     private Long pid;
 
+    @JsonIgnore
+    @ManyToMany(mappedBy = "depts")
+    private Set<Role> roles;
+
     @Column(name = "create_time")
     @CreationTimestamp
     private Timestamp createTime;

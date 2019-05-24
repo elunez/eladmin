@@ -7,6 +7,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 
 import java.util.List;
+import java.util.Set;
 
 /**
 * @author jie
@@ -60,4 +61,6 @@ public interface DeptService {
      */
     @Cacheable(keyGenerator = "keyGenerator")
     List<Dept> findByPid(long pid);
+
+    Set<Dept> findByRoleIds(Long id);
 }

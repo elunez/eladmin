@@ -1,11 +1,12 @@
 package me.zhengjie.config;
 
 import me.zhengjie.modules.system.domain.Dept;
-import me.zhengjie.modules.system.domain.Role;
-import me.zhengjie.modules.system.domain.User;
 import me.zhengjie.modules.system.service.DeptService;
 import me.zhengjie.modules.system.service.RoleService;
 import me.zhengjie.modules.system.service.UserService;
+import me.zhengjie.modules.system.service.dto.DeptDTO;
+import me.zhengjie.modules.system.service.dto.RoleSmallDTO;
+import me.zhengjie.modules.system.service.dto.UserDTO;
 import me.zhengjie.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -35,15 +36,15 @@ public class DataScope {
 
     public Set<Long> getDeptIds() {
 
-        User user = userService.findByName(SecurityUtils.getUsername());
+        UserDTO user = userService.findByName(SecurityUtils.getUsername());
 
         // 用于存储部门id
         Set<Long> deptIds = new HashSet<>();
 
         // 查询用户角色
-        List<Role> roleSet = roleService.findByUsers_Id(user.getId());
+        List<RoleSmallDTO> roleSet = roleService.findByUsers_Id(user.getId());
 
-        for (Role role : roleSet) {
+        for (RoleSmallDTO role : roleSet) {
 
             if (scopeType[0].equals(role.getDataScope())) {
                 return new HashSet<>() ;
@@ -56,8 +57,8 @@ public class DataScope {
 
             // 存储自定义的数据权限
             if (scopeType[2].equals(role.getDataScope())) {
-                Set<Dept> deptList = role.getDepts();
-                for (Dept dept : deptList) {
+                Set<Dept> depts = deptService.findByRoleIds(role.getId());
+                for (Dept dept : depts) {
                     deptIds.add(dept.getId());
                     List<Dept> deptChildren = deptService.findByPid(dept.getId());
                     if (deptChildren != null && deptChildren.size() != 0) {

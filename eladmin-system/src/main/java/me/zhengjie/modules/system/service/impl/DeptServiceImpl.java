@@ -43,9 +43,15 @@ public class DeptServiceImpl implements DeptService {
     }
 
     @Override
+    public Set<Dept> findByRoleIds(Long id) {
+        return deptRepository.findByRoles_Id(id);
+    }
+
+    @Override
     public Object buildTree(List<DeptDTO> deptDTOS) {
         Set<DeptDTO> trees = new LinkedHashSet<>();
         Set<DeptDTO> depts= new LinkedHashSet<>();
+        List<String> deptNames = deptDTOS.stream().map(DeptDTO::getName).collect(Collectors.toList());
         Boolean isChild;
         for (DeptDTO deptDTO : deptDTOS) {
             isChild = false;
@@ -61,9 +67,10 @@ public class DeptServiceImpl implements DeptService {
                     deptDTO.getChildren().add(it);
                 }
             }
-            if(isChild) {
+            if(isChild)
                 depts.add(deptDTO);
-            }
+            else if(!deptNames.contains(deptRepository.findNameById(deptDTO.getPid())))
+                depts.add(deptDTO);
         }
 
         if (CollectionUtils.isEmpty(trees)) {

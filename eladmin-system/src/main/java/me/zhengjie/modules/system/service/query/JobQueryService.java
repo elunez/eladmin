@@ -1,6 +1,7 @@
 package me.zhengjie.modules.system.service.query;
 
 import me.zhengjie.modules.system.domain.Dept;
+import me.zhengjie.modules.system.repository.DeptRepository;
 import me.zhengjie.utils.PageUtil;
 import me.zhengjie.modules.system.domain.Job;
 import me.zhengjie.modules.system.service.dto.JobDTO;
@@ -35,12 +36,20 @@ public class JobQueryService {
     private JobRepository jobRepository;
 
     @Autowired
+    private DeptRepository deptRepository;
+
+    @Autowired
     private JobMapper jobMapper;
 
     @Cacheable(keyGenerator = "keyGenerator")
     public Object queryAll(String name , Boolean enabled, Set<Long> deptIds, Long deptId, Pageable pageable){
         Page<Job> page = jobRepository.findAll(new Spec(new JobDTO(name,enabled), deptIds, deptId),pageable);
-        return PageUtil.toPage(page.map(jobMapper::toDto));
+
+        List<JobDTO> jobs = new ArrayList<>();
+        for (Job job : page.getContent()) {
+            jobs.add(jobMapper.toDto(job,deptRepository.findNameById(job.getDept().getPid())));
+        }
+        return PageUtil.toPage(jobs,page.getTotalElements());
     }
 
     class Spec implements Specification<Job> {

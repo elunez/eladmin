@@ -74,13 +74,13 @@ public class ${className}QueryService {
                 /**
                 * 模糊
                 */
-                list.add(cb.like(root.get("${column.columnName}").as(${column.columnType}.class),"%"+${changeClassName}.get${column.capitalColumnName}()+"%"));
+                list.add(cb.like(root.get("${column.changeColumnName}").as(${column.columnType}.class),"%"+${changeClassName}.get${column.capitalColumnName}()+"%"));
             </#if>
             <#if column.columnQuery = '2'>
                 /**
                 * 精确
                 */
-                list.add(cb.equal(root.get("${column.columnName}").as(${column.columnType}.class),${changeClassName}.get${column.capitalColumnName}()));
+                list.add(cb.equal(root.get("${column.changeColumnName}").as(${column.columnType}.class),${changeClassName}.get${column.capitalColumnName}()));
             </#if>
             }
     </#list>
