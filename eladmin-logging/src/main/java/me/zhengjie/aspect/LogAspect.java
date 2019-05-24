@@ -42,14 +42,10 @@ public class LogAspect {
      * @param joinPoint join point for advice
      */
     @Around("logPointcut()")
-    public Object logAround(ProceedingJoinPoint joinPoint){
+    public Object logAround(ProceedingJoinPoint joinPoint) throws Throwable {
         Object result = null;
         currentTime = System.currentTimeMillis();
-        try {
-            result = joinPoint.proceed();
-        } catch (Throwable e) {
-            throw new BadRequestException(e.getMessage());
-        }
+        result = joinPoint.proceed();
         Log log = new Log("INFO",System.currentTimeMillis() - currentTime);
         logService.save(joinPoint, log);
         return result;
