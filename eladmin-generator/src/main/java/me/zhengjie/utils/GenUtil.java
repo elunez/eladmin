@@ -1,5 +1,6 @@
 package me.zhengjie.utils;
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.template.*;
 import lombok.extern.slf4j.Slf4j;
 import me.zhengjie.domain.GenConfig;
@@ -75,9 +76,16 @@ public class GenUtil {
         map.put("date", LocalDate.now().toString());
         map.put("tableName",tableName);
         String className = StringUtils.toCapitalizeCamelCase(tableName);
+        String changeClassName = StringUtils.toCamelCase(tableName);
+
+        // 判断是否去除表前缀
+        if (StringUtils.isNotEmpty(genConfig.getPrefix())) {
+            className = StringUtils.toCapitalizeCamelCase(StrUtil.removePrefix(tableName,genConfig.getPrefix()));
+            changeClassName = StringUtils.toCamelCase(StrUtil.removePrefix(tableName,genConfig.getPrefix()));
+        }
         map.put("className", className);
         map.put("upperCaseClassName", className.toUpperCase());
-        map.put("changeClassName", StringUtils.toCamelCase(tableName));
+        map.put("changeClassName", changeClassName);
         map.put("hasTimestamp",false);
         map.put("hasBigDecimal",false);
         map.put("hasQuery",false);

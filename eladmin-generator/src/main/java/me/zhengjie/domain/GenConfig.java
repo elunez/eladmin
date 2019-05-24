@@ -34,6 +34,9 @@ public class GenConfig {
     /** 作者 **/
     private String author;
 
+    /** 表前缀 **/
+    private String prefix;
+
     /** 是否覆盖 **/
     private Boolean cover;
 }

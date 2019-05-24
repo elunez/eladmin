@@ -5,7 +5,7 @@
     <parent>
         <artifactId>eladmin</artifactId>
         <groupId>me.zhengjie</groupId>
-        <version>1.9</version>
+        <version>2.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -20,7 +20,7 @@
         <dependency>
             <groupId>me.zhengjie</groupId>
             <artifactId>eladmin-generator</artifactId>
-            <version>1.9</version>
+            <version>2.0</version>
             <exclusions>
                 <exclusion>
                     <groupId>me.zhengjie</groupId>
@@ -32,7 +32,7 @@
         <dependency>
             <groupId>me.zhengjie</groupId>
             <artifactId>eladmin-tools</artifactId>
-            <version>1.9</version>
+            <version>2.0</version>
         </dependency>
 
         <!--jwt-->
@@ -53,6 +53,7 @@
             <groupId>org.quartz-scheduler</groupId>
             <artifactId>quartz</artifactId>
         </dependency>
+
     </dependencies>
 
     <build>

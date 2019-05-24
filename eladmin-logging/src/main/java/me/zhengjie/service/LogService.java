@@ -17,4 +17,11 @@ public interface LogService {
      */
     @Async
     void save(ProceedingJoinPoint joinPoint, Log log);
+
+    /**
+     * 查询异常详情
+     * @param id
+     * @return
+     */
+    Object findByErrDetail(Long id);
 }

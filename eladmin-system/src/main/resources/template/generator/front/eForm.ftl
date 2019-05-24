@@ -4,7 +4,7 @@
 <#if columns??>
   <#list columns as column>
   <#if column.changeColumnName != '${pkChangeColName}'>
-      <el-form-item label="<#if column.columnComment != ''>${column.columnComment}<#else>${column.changeColumnName}</#if>">
+      <el-form-item label="<#if column.columnComment != ''>${column.columnComment}<#else>${column.changeColumnName}</#if>" <#if column.columnKey = 'UNI'>prop="${column.changeColumnName}"</#if>>
         <el-input v-model="form.${column.changeColumnName}" style="width: 370px;"/>
       </el-form-item>
   </#if>
@@ -40,6 +40,15 @@ export default {
         ${column.changeColumnName}: ''<#if column_has_next>,</#if>
     </#list>
 </#if>
+      },
+      rules: {
+<#list columns as column>
+<#if column.columnKey = 'UNI'>
+        ${column.changeColumnName}: [
+          { required: true, message: 'please enter', trigger: 'blur' }
+        ]<#if (column_has_next)>,</#if>
+</#if>
+</#list>
       }
     }
   },
