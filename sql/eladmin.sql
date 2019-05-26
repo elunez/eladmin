@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50562
 File Encoding         : 65001
 
-Date: 2019-05-18 11:18:44
+Date: 2019-05-26 16:31:04
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -130,13 +130,9 @@ CREATE TABLE `gen_config` (
   `pack` varchar(255) DEFAULT NULL COMMENT '至于哪个包下',
   `path` varchar(255) DEFAULT NULL COMMENT '前端代码生成的路径',
   `api_path` varchar(255) DEFAULT NULL,
+  `prefix` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of gen_config
--- ----------------------------
-INSERT INTO `gen_config` VALUES ('1', 'jie', '\0', 'eladmin-system', 'me.zhengjie.modules.system', 'E:\\workspace\\me\\eladmin-qt\\src\\views\\system\\dictDetail', 'E:\\workspace\\me\\eladmin-qt\\src\\api');
 
 -- ----------------------------
 -- Table structure for job
@@ -180,11 +176,7 @@ CREATE TABLE `log` (
   `time` bigint(20) DEFAULT NULL,
   `username` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8176 DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of log
--- ----------------------------
+) ENGINE=InnoDB AUTO_INCREMENT=9465 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for menu
@@ -251,7 +243,7 @@ CREATE TABLE `permission` (
   `name` varchar(255) DEFAULT NULL COMMENT '名称',
   `pid` int(11) NOT NULL COMMENT '上级权限',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=56 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=55 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of permission
@@ -322,7 +314,7 @@ CREATE TABLE `picture` (
   `username` varchar(255) DEFAULT NULL COMMENT '用户名称',
   `width` varchar(255) DEFAULT NULL COMMENT '图片宽度',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of picture
@@ -356,7 +348,7 @@ CREATE TABLE `qiniu_content` (
   `update_time` datetime DEFAULT NULL COMMENT '上传或同步的时间',
   `url` varchar(255) DEFAULT NULL COMMENT '文件url',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=99 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of qiniu_content
@@ -402,7 +394,7 @@ CREATE TABLE `quartz_log` (
   `params` varchar(255) DEFAULT NULL,
   `time` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of quartz_log
@@ -420,13 +412,13 @@ CREATE TABLE `role` (
   `data_scope` varchar(255) DEFAULT NULL,
   `level` int(255) DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of role
 -- ----------------------------
 INSERT INTO `role` VALUES ('1', '2018-11-23 11:04:37', '超级管理员', '系统所有权', '全部', '1');
-INSERT INTO `role` VALUES ('2', '2018-11-23 13:09:06', '普通用户', '用于测试菜单与权限', '本级', '3');
+INSERT INTO `role` VALUES ('2', '2018-11-23 13:09:06', '普通用户', '用于测试菜单与权限', '自定义', '3');
 INSERT INTO `role` VALUES ('4', '2019-05-13 14:16:15', '普通管理员', '普通管理员级别为2，使用该角色新增用户时只能赋予比普通管理员级别低的角色', '全部', '2');
 
 -- ----------------------------
@@ -445,6 +437,8 @@ CREATE TABLE `roles_depts` (
 -- ----------------------------
 -- Records of roles_depts
 -- ----------------------------
+INSERT INTO `roles_depts` VALUES ('2', '5');
+INSERT INTO `roles_depts` VALUES ('2', '8');
 
 -- ----------------------------
 -- Table structure for roles_menus
@@ -501,7 +495,6 @@ INSERT INTO `roles_menus` VALUES ('3', '2');
 INSERT INTO `roles_menus` VALUES ('4', '2');
 INSERT INTO `roles_menus` VALUES ('5', '2');
 INSERT INTO `roles_menus` VALUES ('6', '2');
-INSERT INTO `roles_menus` VALUES ('7', '2');
 INSERT INTO `roles_menus` VALUES ('8', '2');
 INSERT INTO `roles_menus` VALUES ('9', '2');
 INSERT INTO `roles_menus` VALUES ('10', '2');
@@ -520,7 +513,6 @@ INSERT INTO `roles_menus` VALUES ('24', '2');
 INSERT INTO `roles_menus` VALUES ('27', '2');
 INSERT INTO `roles_menus` VALUES ('28', '2');
 INSERT INTO `roles_menus` VALUES ('30', '2');
-INSERT INTO `roles_menus` VALUES ('32', '2');
 INSERT INTO `roles_menus` VALUES ('33', '2');
 INSERT INTO `roles_menus` VALUES ('34', '2');
 INSERT INTO `roles_menus` VALUES ('35', '2');
@@ -595,9 +587,9 @@ CREATE TABLE `user` (
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES ('1', 'https://i.loli.net/2019/04/04/5ca5b971e1548.jpeg', '2018-08-23 09:11:56', 'admin@eladmin.net', '1', 'e10adc3949ba59abbe56e057f20f883e', 'admin', '2019-04-04 16:00:46', '2', '18888888888', '11');
-INSERT INTO `user` VALUES ('3', 'https://i.loli.net/2019/04/04/5ca5b971e1548.jpeg', '2018-12-27 20:05:26', 'test@eladmin.net', '1', 'e10adc3949ba59abbe56e057f20f883e', 'test', '2019-04-01 09:15:24', '2', '17777777777', '12');
-INSERT INTO `user` VALUES ('5', 'https://i.loli.net/2019/04/04/5ca5b971e1548.jpeg', '2019-04-02 10:07:12', 'hr@eladmin.net', '1', 'e10adc3949ba59abbe56e057f20f883e', 'hr', null, '11', '15555555555', '8');
+INSERT INTO `user` VALUES ('1', 'https://i.loli.net/2019/04/04/5ca5b971e1548.jpeg', '2018-08-23 09:11:56', 'admin@eladmin.net', '1', 'e10adc3949ba59abbe56e057f20f883e', 'admin', '2019-05-18 17:34:21', '2', '18888888888', '11');
+INSERT INTO `user` VALUES ('3', 'https://aurora-1255840532.cos.ap-chengdu.myqcloud.com/8918a306ea314404835a9196585c4b75.jpeg', '2018-12-27 20:05:26', 'test@eladmin.net', '1', 'e10adc3949ba59abbe56e057f20f883e', 'test', '2019-04-01 09:15:24', '2', '17777777777', '12');
+INSERT INTO `user` VALUES ('5', 'https://aurora-1255840532.cos.ap-chengdu.myqcloud.com/8918a306ea314404835a9196585c4b75.jpeg', '2019-04-02 10:07:12', 'hr@eladmin.net', '1', 'e10adc3949ba59abbe56e057f20f883e', 'hr', null, '11', '15555555555', '8');
 
 -- ----------------------------
 -- Table structure for users_roles
@@ -632,7 +624,7 @@ CREATE TABLE `verification_code` (
   `value` varchar(255) DEFAULT NULL COMMENT '接收邮箱或者手机号码',
   `scenes` varchar(255) DEFAULT NULL COMMENT '业务名称：如重置邮箱、重置密码等',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of verification_code
@@ -651,4 +643,8 @@ CREATE TABLE `visits` (
   `week_day` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `UK_11aksgq87euk9bcyeesfs4vtp` (`date`)
-) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=47 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of visits
+-- ----------------------------
