@@ -1,16 +1,6 @@
 server:
   port: 8000
 
-# actuator 配置
-management:
-  endpoints:
-    web:
-      exposure:
-        # env 环境属性
-        # heapdump 应用的 JVM 堆信息
-        # metrics 应用程序度量信息
-        include: env,health,heapdump,metrics
-
 spring:
   profiles:
     active: dev
