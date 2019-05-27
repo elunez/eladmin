@@ -17,7 +17,6 @@ import java.io.Serializable;
 public class EmailConfig implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     /**
