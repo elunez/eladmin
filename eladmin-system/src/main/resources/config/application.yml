@@ -37,10 +37,17 @@ spring:
     #连接超时时间
     timeout: 5000
 
+#  servlet:
+#    multipart:
+#      # 上传一个文件最大值,默认1Mb
+#      max-file-size: 5KB
+#      # 上传多个文件最大值,50Mb,默认10Mb
+#      max-request-size: 5KB
+
 #七牛云
 qiniu:
   # 文件大小 /M
-  max-size: 15
+  max-size: 1
 
 #验证码有效时间/分钟
 code:
