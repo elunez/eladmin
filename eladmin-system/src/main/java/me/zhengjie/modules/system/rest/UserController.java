@@ -100,9 +100,6 @@ public class UserController {
     @PostMapping(value = "/users")
     @PreAuthorize("hasAnyRole('ADMIN','USER_ALL','USER_CREATE')")
     public ResponseEntity create(@Validated @RequestBody User resources){
-        if (resources.getId() != null) {
-            throw new BadRequestException("A new "+ ENTITY_NAME +" cannot already have an ID");
-        }
         checkLevel(resources);
         return new ResponseEntity(userService.create(resources),HttpStatus.CREATED);
     }

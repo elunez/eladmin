@@ -40,13 +40,15 @@ public class LogQueryService {
 
     public Object queryAll(Log log, Pageable pageable){
         Page<Log> page = logRepository.findAll(new Spec(log),pageable);
-        if (!ObjectUtils.isEmpty(log.getUsername())) {
-            return PageUtil.toPage(page.map(logSmallMapper::toDto));
-        }
         if (log.getLogType().equals("ERROR")) {
             return PageUtil.toPage(page.map(logErrorMapper::toDto));
         }
-        return logRepository.findAll(new Spec(log),pageable);
+        return page;
+    }
+
+    public Object queryAllByUser(Log log, Pageable pageable) {
+        Page<Log> page = logRepository.findAll(new Spec(log),pageable);
+        return PageUtil.toPage(page.map(logSmallMapper::toDto));
     }
 
     class Spec implements Specification<Log> {

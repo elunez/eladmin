@@ -39,7 +39,7 @@ public class LogController {
     public ResponseEntity getUserLogs(Log log, Pageable pageable){
         log.setLogType("INFO");
         log.setUsername(SecurityUtils.getUsername());
-        return new ResponseEntity(logQueryService.queryAll(log,pageable), HttpStatus.OK);
+        return new ResponseEntity(logQueryService.queryAllByUser(log,pageable), HttpStatus.OK);
     }
 
     @GetMapping(value = "/logs/error")
