@@ -91,7 +91,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/**/*.js"
                 ).permitAll()
 
-                .antMatchers( HttpMethod.POST,"/auth/"+loginPath).permitAll()
+                .antMatchers(HttpMethod.POST, "/auth/" + loginPath).permitAll()
+                .antMatchers(HttpMethod.POST, "/reg/**").permitAll()
                 .antMatchers("/websocket/**").permitAll()
                 // 支付宝回调
                 .antMatchers("/api/aliPay/return").anonymous()
@@ -111,7 +112,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/test/**").anonymous()
                 .antMatchers(HttpMethod.OPTIONS, "/**").anonymous()
 
-                .antMatchers("/druid/**").permitAll()
+                .antMatchers("/druid/**").anonymous()
                 // 所有请求都需要认证
                 .anyRequest().authenticated()
                 // 防止iframe 造成跨域
