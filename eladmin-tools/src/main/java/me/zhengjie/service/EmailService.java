@@ -5,7 +5,6 @@ import me.zhengjie.domain.vo.EmailVo;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.scheduling.annotation.Async;
 
 /**
  * @author jie
@@ -16,6 +15,7 @@ public interface EmailService {
 
     /**
      * 更新邮件配置
+     *
      * @param emailConfig
      * @param old
      * @return
@@ -25,6 +25,7 @@ public interface EmailService {
 
     /**
      * 查询配置
+     *
      * @return
      */
     @Cacheable(key = "'1'")
@@ -32,10 +33,10 @@ public interface EmailService {
 
     /**
      * 发送邮件
+     *
      * @param emailVo
      * @param emailConfig
-     * @throws Exception
      */
-    @Async
-    void send(EmailVo emailVo, EmailConfig emailConfig) throws Exception;
+    void send(EmailVo emailVo, EmailConfig emailConfig);
+
 }

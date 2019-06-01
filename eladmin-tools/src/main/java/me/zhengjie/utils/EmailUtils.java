@@ -4,6 +4,7 @@ import me.zhengjie.domain.EmailConfig;
 import me.zhengjie.utils.thread.LocalExecutorManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
@@ -31,23 +32,24 @@ public class EmailUtils {
 
     @Resource
     private TemplateEngine templateEngine;
+    @Value("${email.sender}")
+    private String EMAIL_SENDER;
 
     /**
      * 发送模版邮件
      *
-     * @param sender
      * @param sendto
      * @param templateName
      * @param o
      */
-    public void sendTemplateMail(String sender, String sendto, String title, String templateName, Object o) {
+    public void sendTemplateMail(String sendto, String title, String templateName, Object o) {
 
         log.info("开始给" + sendto + "发送邮件");
         MimeMessage message = mailSender.createMimeMessage();
         try {
             //true表示需要创建一个multipart message html内容
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
-            helper.setFrom(sender);
+            helper.setFrom(EMAIL_SENDER);
             helper.setTo(sendto);
             helper.setSubject(title);
 
@@ -67,14 +69,14 @@ public class EmailUtils {
         }
     }
 
-    public void sendTemplateMail(String sender, String sendto, String title, String content) {
+    public void sendTemplateMail(String sendto, String title, String content) {
 
         log.info("开始给" + sendto + "发送邮件");
         MimeMessage message = mailSender.createMimeMessage();
         try {
             //true表示需要创建一个multipart message html内容
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
-            helper.setFrom(sender);
+            helper.setFrom(EMAIL_SENDER);
             helper.setTo(sendto);
             helper.setSubject(title);
             helper.setText(content, true);
@@ -87,31 +89,46 @@ public class EmailUtils {
         }
     }
 
-    public void sendTemplateMail(EmailConfig emailConfig, String sendto, String title, String content) {
+    public boolean sendTemplateMail(EmailConfig emailConfig, String sendto, String title, String content) {
         log.info("开始给" + sendto + "发送邮件");
-        ExecutorService executorService = LocalExecutorManager.getExecutorService();
-        executorService.execute(() -> {
-            try {
+        return send(emailConfig, sendto, title, content);
+    }
+
+    private boolean send(EmailConfig emailConfig, String sendto, String title, String content) {
+        try {
+            String form = EMAIL_SENDER;
+
+            if (StringUtils.isNotBlank(emailConfig.getHost())) {
                 mailSender.setHost(emailConfig.getHost());
                 mailSender.setPort(Integer.parseInt(emailConfig.getPort()));
                 mailSender.setUsername(emailConfig.getFromUser());
                 mailSender.setPassword(EncryptUtils.desDecrypt(emailConfig.getPass()));
-
-                //true表示需要创建一个multipart message html内容
-                MimeMessage message = mailSender.createMimeMessage();
-                MimeMessageHelper helper = new MimeMessageHelper(message, true);
-                helper.setFrom(emailConfig.getUser() + "<" + emailConfig.getFromUser() + ">");
-                helper.setTo(sendto);
-                helper.setSubject(title);
-                helper.setText(content, true);
-
-                mailSender.send(message);
-                log.info("给" + sendto + "发送邮件成功");
-
-            } catch (Exception e) {
-                log.error(e.getMessage(), e);
-                //e.printStackTrace();
+                form = emailConfig.getUser() + "<" + emailConfig.getFromUser() + ">";
             }
+
+            //true表示需要创建一个multipart message html内容
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+            helper.setFrom(form);
+            helper.setTo(sendto);
+            helper.setSubject(title);
+            helper.setText(content, true);
+
+            mailSender.send(message);
+            log.info("给" + sendto + "发送邮件成功");
+            return true;
+
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return false;
+        }
+    }
+
+    public void sendTemplateMailAsync(EmailConfig emailConfig, String sendto, String title, String content) {
+        log.info("开始给" + sendto + "发送邮件");
+        ExecutorService executorService = LocalExecutorManager.getExecutorService();
+        executorService.execute(() -> {
+            send(emailConfig, sendto, title, content);
         });
 
     }

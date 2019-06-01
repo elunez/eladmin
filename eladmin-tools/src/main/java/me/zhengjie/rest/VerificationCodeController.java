@@ -6,10 +6,8 @@ import me.zhengjie.service.EmailService;
 import me.zhengjie.service.VerificationCodeService;
 import me.zhengjie.utils.ElAdminConstant;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -24,17 +22,13 @@ public class VerificationCodeController {
     private VerificationCodeService verificationCodeService;
 
     @Autowired
-    @Qualifier("jwtUserDetailsService")
-    private UserDetailsService userDetailsService;
-
-    @Autowired
     private EmailService emailService;
 
     @PostMapping(value = "/code/resetEmail")
     public ResponseEntity resetEmail(@RequestBody VerificationCode code) throws Exception {
         code.setScenes(ElAdminConstant.RESET_MAIL);
         EmailVo emailVo = verificationCodeService.sendEmail(code);
-        emailService.send(emailVo,emailService.find());
+        emailService.send(emailVo, emailService.find());
         return new ResponseEntity(HttpStatus.OK);
     }
 
@@ -45,12 +39,12 @@ public class VerificationCodeController {
         code.setValue(email);
         code.setScenes(ElAdminConstant.RESET_MAIL);
         EmailVo emailVo = verificationCodeService.sendEmail(code);
-        emailService.send(emailVo,emailService.find());
+        emailService.send(emailVo, emailService.find());
         return new ResponseEntity(HttpStatus.OK);
     }
 
     @GetMapping(value = "/code/validated")
-    public ResponseEntity validated(VerificationCode code){
+    public ResponseEntity validated(VerificationCode code) {
         verificationCodeService.validated(code);
         return new ResponseEntity(HttpStatus.OK);
     }

@@ -81,9 +81,12 @@ public class EmailServiceImpl implements EmailService {
         /**
          * 发送
          */
-        try {
-            emailUtils.sendTemplateMail(emailConfig, emailVo.getTos().get(0), emailVo.getSubject(), content);
-            log.info("==发送邮件成功==");
+        boolean isSuccess = emailUtils.sendTemplateMail(emailConfig, emailVo.getTos().get(0), emailVo.getSubject(), content);
+        log.info("==发送邮件状态:{}", isSuccess);
+        if (!isSuccess) {
+            throw new BadRequestException("邮件发送失败");
+        }
+//        try {
 //            Mail.create(account)
 //                    .setTos(emailVo.getTos().toArray(new String[emailVo.getTos().size()]))
 //                    .setTitle(emailVo.getSubject())
@@ -91,8 +94,9 @@ public class EmailServiceImpl implements EmailService {
 //                    .setHtml(true)
 //                    .setUseGlobalSession(false)//关闭session
 //                    .send();
-        } catch (Exception e) {
-            throw new BadRequestException(e.getMessage());
-        }
+//        } catch (Exception e) {
+//throw new BadRequestException(e.getMessage());
+//        }
     }
+
 }

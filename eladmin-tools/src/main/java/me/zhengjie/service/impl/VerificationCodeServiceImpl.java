@@ -49,6 +49,7 @@ public class VerificationCodeServiceImpl implements VerificationCodeService {
         Template template = engine.getTemplate("email/email.ftl");
         if (verificationCode == null) {
             code.setCode(RandomUtil.randomNumbers(6));
+            code.setStatus(true);
             content = template.render(Dict.create().set("code", code.getCode()));
             emailVo = new EmailVo(Arrays.asList(code.getValue()), "Xpay后台管理系统", content);
             timedDestruction(verificationCodeRepository.save(code));
@@ -90,7 +91,7 @@ public class VerificationCodeServiceImpl implements VerificationCodeService {
                 log.info("===update verifyCode===");
                 verifyCode.setStatus(false);
                 verificationCodeRepository.save(verifyCode);
-            }, expiration, TimeUnit.SECONDS);
+            }, expiration, TimeUnit.MINUTES);
         } catch (Exception e) {
             e.printStackTrace();
         }
