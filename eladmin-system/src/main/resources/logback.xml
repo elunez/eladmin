@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scan="true" scanPeriod="60 seconds" debug="false">
-    <contextName>elAdmin</contextName>
+    <contextName>XpayAdmin</contextName>
 
     <!--输出到控制台-->
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
@@ -15,31 +15,31 @@
 
     <!--普通日志输出到控制台-->
     <root level="info">
-        <appender-ref ref="console" />
+        <appender-ref ref="console"/>
     </root>
 
     <!--监控sql日志输出 -->
     <logger name="jdbc.sqlonly" level="INFO" additivity="false">
-        <appender-ref ref="console" />
+        <appender-ref ref="console"/>
     </logger>
 
     <logger name="jdbc.resultset" level="ERROR" additivity="false">
-        <appender-ref ref="console" />
+        <appender-ref ref="console"/>
     </logger>
 
     <logger name="jdbc.resultsettable" level="INFO" additivity="false">
-        <appender-ref ref="console" />
+        <appender-ref ref="console"/>
     </logger>
 
     <logger name="jdbc.connection" level="OFF" additivity="false">
-        <appender-ref ref="console" />
+        <appender-ref ref="console"/>
     </logger>
 
     <logger name="jdbc.sqltiming" level="OFF" additivity="false">
-        <appender-ref ref="console" />
+        <appender-ref ref="console"/>
     </logger>
 
     <logger name="jdbc.audit" level="OFF" additivity="false">
-        <appender-ref ref="console" />
+        <appender-ref ref="console"/>
     </logger>
 </configuration>

@@ -4,6 +4,7 @@ import me.zhengjie.utils.SpringContextHolder;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 
@@ -12,6 +13,7 @@ import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBr
  * @date 2018/11/15 9:20:19
  */
 @SpringBootApplication
+@EnableAsync
 @EnableTransactionManagement
 @EnableWebSocketMessageBroker
 public class AppRun {
