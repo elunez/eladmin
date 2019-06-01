@@ -78,6 +78,7 @@ public class VerificationCodeServiceImpl implements VerificationCodeService {
      */
     private void timedDestruction(VerificationCode verifyCode) {
         //以下示例为程序调用结束继续运行
+        log.info("===开启5分钟后验证码过期===");
 //        ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
         ScheduledExecutorService executorService = LocalExecutorManager.getScheduledExecutorService(LocalExecutorManager.EXECUTOR_VERIFICATION_CODE);
         try {
@@ -89,7 +90,7 @@ public class VerificationCodeServiceImpl implements VerificationCodeService {
                 log.info("===update verifyCode===");
                 verifyCode.setStatus(false);
                 verificationCodeRepository.save(verifyCode);
-            }, expiration, TimeUnit.MINUTES);
+            }, expiration, TimeUnit.SECONDS);
         } catch (Exception e) {
             e.printStackTrace();
         }
