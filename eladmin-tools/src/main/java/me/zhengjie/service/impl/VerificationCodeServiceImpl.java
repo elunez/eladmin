@@ -50,12 +50,12 @@ public class VerificationCodeServiceImpl implements VerificationCodeService {
         if (verificationCode == null) {
             code.setCode(RandomUtil.randomNumbers(6));
             content = template.render(Dict.create().set("code", code.getCode()));
-            emailVo = new EmailVo(Arrays.asList(code.getValue()), "eladmin后台管理系统", content);
+            emailVo = new EmailVo(Arrays.asList(code.getValue()), "Xpay后台管理系统", content);
             timedDestruction(verificationCodeRepository.save(code));
             // 存在就再次发送原来的验证码
         } else {
             content = template.render(Dict.create().set("code", verificationCode.getCode()));
-            emailVo = new EmailVo(Arrays.asList(verificationCode.getValue()), "eladmin后台管理系统", content);
+            emailVo = new EmailVo(Arrays.asList(verificationCode.getValue()), "Xpay后台管理系统", content);
         }
         return emailVo;
     }

@@ -1,5 +1,6 @@
 package me.zhengjie.service.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import me.zhengjie.domain.EmailConfig;
 import me.zhengjie.domain.vo.EmailVo;
 import me.zhengjie.exception.BadRequestException;
@@ -19,6 +20,7 @@ import java.util.Optional;
  * @author jie
  * @date 2018-12-26
  */
+@Slf4j
 @Service
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class EmailServiceImpl implements EmailService {
@@ -81,6 +83,7 @@ public class EmailServiceImpl implements EmailService {
          */
         try {
             emailUtils.sendTemplateMail(emailConfig, emailVo.getTos().get(0), emailVo.getSubject(), content);
+            log.info("==发送邮件成功==");
 //            Mail.create(account)
 //                    .setTos(emailVo.getTos().toArray(new String[emailVo.getTos().size()]))
 //                    .setTitle(emailVo.getSubject())

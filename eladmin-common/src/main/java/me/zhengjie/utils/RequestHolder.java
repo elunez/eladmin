@@ -14,10 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 public class RequestHolder {
 
     public static HttpServletRequest getHttpServletRequest() {
-        ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        if (null == requestAttributes) {
-            return null;
-        }
-        return requestAttributes.getRequest();
+        return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
     }
 }

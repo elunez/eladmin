@@ -37,9 +37,6 @@ public class LogServiceImpl implements LogService {
 
         // 获取request
         HttpServletRequest request = RequestHolder.getHttpServletRequest();
-        if (null == request) {
-            return;
-        }
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
         me.zhengjie.aop.log.Log aopLog = method.getAnnotation(me.zhengjie.aop.log.Log.class);

@@ -50,6 +50,10 @@
             <appender-ref ref="console"/>
         </logger>
 
+        <logger name="jdbc.resultset" level="ERROR" additivity="false">
+            <appender-ref ref="console"/>
+        </logger>
+
         <logger name="jdbc.resultsettable" level="INFO" additivity="false">
             <appender-ref ref="console"/>
         </logger>

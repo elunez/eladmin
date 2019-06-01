@@ -5,7 +5,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
@@ -39,7 +38,6 @@ public class EmailUtils {
      * @param templateName
      * @param o
      */
-    @Async
     public void sendTemplateMail(String sender, String sendto, String title, String templateName, Object o) {
 
         log.info("开始给" + sendto + "发送邮件");
@@ -67,7 +65,6 @@ public class EmailUtils {
         }
     }
 
-    @Async
     public void sendTemplateMail(String sender, String sendto, String title, String content) {
 
         log.info("开始给" + sendto + "发送邮件");
@@ -88,7 +85,6 @@ public class EmailUtils {
         }
     }
 
-    @Async
     public void sendTemplateMail(EmailConfig emailConfig, String sendto, String title, String content) {
 
         log.info("开始给" + sendto + "发送邮件");

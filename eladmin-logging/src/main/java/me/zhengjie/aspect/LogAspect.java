@@ -2,7 +2,6 @@ package me.zhengjie.aspect;
 
 import lombok.extern.slf4j.Slf4j;
 import me.zhengjie.domain.Log;
-import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.service.LogService;
 import me.zhengjie.utils.ThrowableUtil;
 import org.aspectj.lang.JoinPoint;
@@ -46,7 +45,7 @@ public class LogAspect {
         Object result = null;
         currentTime = System.currentTimeMillis();
         result = joinPoint.proceed();
-        Log log = new Log("INFO",System.currentTimeMillis() - currentTime);
+        Log log = new Log("INFO", System.currentTimeMillis() - currentTime);
         logService.save(joinPoint, log);
         return result;
     }
@@ -55,12 +54,12 @@ public class LogAspect {
      * 配置异常通知
      *
      * @param joinPoint join point for advice
-     * @param e exception
+     * @param e         exception
      */
     @AfterThrowing(pointcut = "logPointcut()", throwing = "e")
     public void logAfterThrowing(JoinPoint joinPoint, Throwable e) {
-        Log log = new Log("ERROR",System.currentTimeMillis() - currentTime);
+        Log log = new Log("ERROR", System.currentTimeMillis() - currentTime);
         log.setExceptionDetail(ThrowableUtil.getStackTrace(e));
-        logService.save((ProceedingJoinPoint)joinPoint, log);
+        logService.save((ProceedingJoinPoint) joinPoint, log);
     }
 }
