@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 
@@ -32,10 +33,13 @@ public class LogServiceImpl implements LogService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void save(ProceedingJoinPoint joinPoint, Log log){
+    public void save(ProceedingJoinPoint joinPoint, Log log) {
 
         // 获取request
         HttpServletRequest request = RequestHolder.getHttpServletRequest();
+        if (null == request) {
+            return;
+        }
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
         me.zhengjie.aop.log.Log aopLog = method.getAnnotation(me.zhengjie.aop.log.Log.class);
@@ -46,17 +50,17 @@ public class LogServiceImpl implements LogService {
         }
 
         // 方法路径
-        String methodName = joinPoint.getTarget().getClass().getName()+"."+signature.getName()+"()";
+        String methodName = joinPoint.getTarget().getClass().getName() + "." + signature.getName() + "()";
 
         String params = "{";
         //参数值
         Object[] argValues = joinPoint.getArgs();
         //参数名称
-        String[] argNames = ((MethodSignature)joinPoint.getSignature()).getParameterNames();
+        String[] argNames = ((MethodSignature) joinPoint.getSignature()).getParameterNames();
         // 用户名
         String username = "";
 
-        if(argValues != null){
+        if (argValues != null) {
             for (int i = 0; i < argValues.length; i++) {
                 params += " " + argNames[i] + ": " + argValues[i];
             }
@@ -65,13 +69,13 @@ public class LogServiceImpl implements LogService {
         // 获取IP地址
         log.setRequestIp(StringUtils.getIP(request));
 
-        if(!LOGINPATH.equals(signature.getName())){
+        if (!LOGINPATH.equals(signature.getName())) {
             username = SecurityUtils.getUsername();
         } else {
             try {
                 JSONObject jsonObject = new JSONObject(argValues[0]);
                 username = jsonObject.get("username").toString();
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -83,6 +87,6 @@ public class LogServiceImpl implements LogService {
 
     @Override
     public Object findByErrDetail(Long id) {
-        return Dict.create().set("exception",logRepository.findExceptionById(id));
+        return Dict.create().set("exception", logRepository.findExceptionById(id));
     }
 }

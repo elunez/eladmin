@@ -79,7 +79,7 @@ public class VerificationCodeServiceImpl implements VerificationCodeService {
     private void timedDestruction(VerificationCode verifyCode) {
         //以下示例为程序调用结束继续运行
 //        ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
-        ScheduledExecutorService executorService = LocalExecutorManager.getScheduledExecutorService(LocalExecutorManager.executor_verification_code);
+        ScheduledExecutorService executorService = LocalExecutorManager.getScheduledExecutorService(LocalExecutorManager.EXECUTOR_VERIFICATION_CODE);
         try {
             if (null == executorService) {
                 log.error("can not get ScheduledExecutorService");

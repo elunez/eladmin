@@ -1,45 +1,77 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scan="true" scanPeriod="60 seconds" debug="false">
     <contextName>XpayAdmin</contextName>
+    <property name="log.base" value="logs/xpay-admin"/>
+    <springProperty scope="context" name="logging.level" source="logging.level.com.xpay.spring.boot"/>
+    <property name="LOG_PATTERN_FILE" value="%-20(%d{HH:mm:ss.SSS} [%thread]) %-5level %logger{80}:%line - %msg%n"/>
+    <!--<property name="LOG_PATTERN" value="%black(%contextName-) %-20(%red(%d{HH:mm:ss.SSS}) %green([%thread])) %highlight(%-5level) %boldMagenta(%logger{80}:%line) - %msg%n"/>-->
+    <property name="LOG_PATTERN" value="%red(%d{HH:mm:ss.SSS}) %green([%thread]) %highlight(%-5level) %boldMagenta(%logger{80}:%line) - %gray(%msg%n)"/>
 
-    <!--输出到控制台-->
-    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder>
-            <pattern>%black(%contextName-) %red(%d{yyyy-MM-dd HH:mm:ss}) %green([%thread]) %highlight(%-5level) %boldMagenta(%logger{36}) - %gray(%msg%n)</pattern>
-            <charset>utf-8</charset>
+    <appender name="log_file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log.base}.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${log.base}.log.%d{yyyy-MM-dd}-%i</FileNamePattern>
+            <maxHistory>7</maxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>200MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${LOG_PATTERN_FILE}</pattern>
+            <charset>UTF-8</charset>
         </encoder>
-
         <!--添加我们自定义的filter-->
         <filter class="me.zhengjie.modules.monitor.config.LogFilter"></filter>
     </appender>
 
-    <!--普通日志输出到控制台-->
-    <root level="info">
-        <appender-ref ref="console"/>
-    </root>
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+            <charset>utf8</charset>
+        </encoder>
+        <!--添加我们自定义的filter-->
+        <filter class="me.zhengjie.modules.monitor.config.LogFilter"></filter>
+    </appender>
 
-    <!--监控sql日志输出 -->
-    <logger name="jdbc.sqlonly" level="INFO" additivity="false">
-        <appender-ref ref="console"/>
-    </logger>
+    <!--<root level="WARN">-->
+    <!--<appender-ref ref="log_file"/>-->
+    <!--</root>-->
+    <!--<logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="TRACE">-->
+    <!--<appender-ref ref="log_console"/>-->
+    <!--</logger>-->
 
-    <logger name="jdbc.resultset" level="ERROR" additivity="false">
-        <appender-ref ref="console"/>
-    </logger>
+    <springProfile name="dev,test">
+        <root level="info">
+            <appender-ref ref="console"/>
+            <!--<appender-ref ref="log_file"/>-->
+        </root>
+        <!--监控sql日志输出 -->
+        <logger name="jdbc.sqlonly" level="INFO" additivity="false">
+            <appender-ref ref="console"/>
+        </logger>
 
-    <logger name="jdbc.resultsettable" level="INFO" additivity="false">
-        <appender-ref ref="console"/>
-    </logger>
+        <logger name="jdbc.resultsettable" level="INFO" additivity="false">
+            <appender-ref ref="console"/>
+        </logger>
 
-    <logger name="jdbc.connection" level="OFF" additivity="false">
-        <appender-ref ref="console"/>
-    </logger>
+        <logger name="jdbc.connection" level="OFF" additivity="false">
+            <appender-ref ref="console"/>
+        </logger>
 
-    <logger name="jdbc.sqltiming" level="OFF" additivity="false">
-        <appender-ref ref="console"/>
-    </logger>
+        <logger name="jdbc.sqltiming" level="OFF" additivity="false">
+            <appender-ref ref="console"/>
+        </logger>
 
-    <logger name="jdbc.audit" level="OFF" additivity="false">
-        <appender-ref ref="console"/>
-    </logger>
+        <logger name="jdbc.audit" level="OFF" additivity="false">
+            <appender-ref ref="console"/>
+        </logger>
+    </springProfile>
+
+    <springProfile name="prod">
+        <root level="warn">
+            <appender-ref ref="log_file"/>
+        </root>
+    </springProfile>
+
+
 </configuration>
