@@ -21,6 +21,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
+
 import java.time.Duration;
 
 /**
@@ -58,10 +59,11 @@ public class RedisConfig extends CachingConfigurerSupport {
 
     /**
      * 配置 redis 连接池
+     *
      * @return
      */
     @Bean
-    public JedisPool redisPoolFactory(){
+    public JedisPool redisPoolFactory() {
         JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
         jedisPoolConfig.setMaxIdle(maxIdle);
         jedisPoolConfig.setMaxWaitMillis(maxWaitMillis);
@@ -70,12 +72,13 @@ public class RedisConfig extends CachingConfigurerSupport {
     }
 
     /**
-     *  设置 redis 数据默认过期时间，默认1天
-     *  设置@cacheable 序列化方式
+     * 设置 redis 数据默认过期时间，默认1天
+     * 设置@cacheable 序列化方式
+     *
      * @return
      */
     @Bean
-    public RedisCacheConfiguration redisCacheConfiguration(){
+    public RedisCacheConfiguration redisCacheConfiguration() {
         FastJsonRedisSerializer<Object> fastJsonRedisSerializer = new FastJsonRedisSerializer<>(Object.class);
         RedisCacheConfiguration configuration = RedisCacheConfiguration.defaultCacheConfig();
         configuration = configuration.serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(fastJsonRedisSerializer)).entryTtl(Duration.ofDays(1));
@@ -97,6 +100,7 @@ public class RedisConfig extends CachingConfigurerSupport {
         // 建议使用这种方式，小范围指定白名单
         ParserConfig.getGlobalInstance().addAccept("me.zhengjie.domain");
         ParserConfig.getGlobalInstance().addAccept("me.zhengjie.modules.system.service.dto");
+        ParserConfig.getGlobalInstance().addAccept("me.zhengjie.modules.pay.service.dto");
         ParserConfig.getGlobalInstance().addAccept("me.zhengjie.modules.system.domain");
         ParserConfig.getGlobalInstance().addAccept("me.zhengjie.modules.quartz.domain");
         ParserConfig.getGlobalInstance().addAccept("me.zhengjie.modules.monitor.domain");
@@ -111,6 +115,7 @@ public class RedisConfig extends CachingConfigurerSupport {
     /**
      * 自定义缓存key生成策略
      * 使用方法 @Cacheable(keyGenerator="keyGenerator")
+     *
      * @return
      */
     @Bean
