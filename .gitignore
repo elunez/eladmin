@@ -1,5 +1,9 @@
 ### IDEA ###
 .idea/*
+classes
+logs
 *.iml
 */target/*
 */*.iml
+*/node_modules
+*/dist
