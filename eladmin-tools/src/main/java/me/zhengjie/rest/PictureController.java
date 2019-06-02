@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,6 +50,26 @@ public class PictureController {
     @PreAuthorize("hasAnyRole('ADMIN','PICTURE_ALL','PICTURE_UPLOAD')")
     @PostMapping(value = "/pictures")
     public ResponseEntity upload(@RequestParam MultipartFile file) throws MaxUploadSizeExceededException {
+        String userName = SecurityUtils.getUsername();
+        Picture picture = pictureService.upload(file, userName);
+        Map<String, Object> map = new HashMap<>();
+        map.put("errno", 0);
+        map.put("id", picture.getId());
+        map.put("data", new String[]{picture.getUrl()});
+        return new ResponseEntity(map, HttpStatus.OK);
+    }
+
+    @Log("查询支付图片")
+    @PreAuthorize("hasAnyRole('ADMIN','PICTURE_ALL','PICTURE_SELECT')")
+    @GetMapping(value = "/pay/pic")
+    public ResponseEntity getPayPic(Picture resources, Pageable pageable) {
+        return new ResponseEntity(pictureQueryService.queryAll(resources, pageable), HttpStatus.OK);
+    }
+
+    @Log("上传支付图片")
+    @PreAuthorize("hasAnyRole('ADMIN','PICTURE_ALL','PICTURE_UPLOAD')")
+    @PostMapping(value = "/pay/pic")
+    public ResponseEntity uploadPayPic(@RequestParam MultipartFile file, HttpServletRequest request) throws MaxUploadSizeExceededException {
         String userName = SecurityUtils.getUsername();
         Picture picture = pictureService.upload(file, userName);
         Map<String, Object> map = new HashMap<>();

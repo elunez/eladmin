@@ -93,6 +93,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .antMatchers(HttpMethod.POST, "/auth/**" + loginPath).permitAll()
                 .antMatchers(HttpMethod.POST, "/auth/reg/**").permitAll()
+                .antMatchers("/files/**").permitAll()
                 .antMatchers("/websocket/**").permitAll()
                 // 支付宝回调
                 .antMatchers("/api/aliPay/return").anonymous()

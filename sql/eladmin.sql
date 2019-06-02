@@ -18,6 +18,25 @@ SET FOREIGN_KEY_CHECKS=0;
 -- ----------------------------
 -- Table structure for alipay_config
 -- ----------------------------
+DROP TABLE IF EXISTS `pay_config`;
+CREATE TABLE `pay_config` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `img_alipay` varchar(255) DEFAULT NULL COMMENT '支付宝图片',
+  `img_wechat` varchar(255) DEFAULT NULL COMMENT '微信图片',
+  `img_qq` varchar(255) DEFAULT NULL COMMENT 'QQ支付图片',
+  `img_unionpay` varchar(255) DEFAULT NULL COMMENT '银联支付图片',
+  `uid` bigint(20) NOT NULL COMMENT '用户ID',
+  `notify_url` varchar(255) DEFAULT NULL COMMENT '异步回调',
+  `private_key` text COMMENT '私钥',
+  `public_key` text COMMENT '公钥',
+  `sys_service_provider_id` varchar(255) DEFAULT NULL COMMENT '商户号',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+
+-- ----------------------------
+-- Table structure for alipay_config
+-- ----------------------------
 DROP TABLE IF EXISTS `alipay_config`;
 CREATE TABLE `alipay_config` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
