@@ -58,34 +58,4 @@ public class DictQueryService {
         /** Dong ZhaoYang 2019/6/3 不分页 同理 */
         return dictMapper.toDto(dictRepository.findAll((root, query, cb) -> BeanHelp.getPredicate(root, dict, cb)));
     }
-
-    class Spec implements Specification<Dict> {
-
-        private DictDTO dict;
-
-        public Spec(DictDTO dict){
-            this.dict = dict;
-        }
-
-        @Override
-        public Predicate toPredicate(Root<Dict> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder cb) {
-
-            List<Predicate> list = new ArrayList<Predicate>();
-
-            if(!ObjectUtils.isEmpty(dict.getName())){
-                /**
-                * 模糊
-                */
-                list.add(cb.like(root.get("name").as(String.class),"%"+dict.getName()+"%"));
-            }
-            if(!ObjectUtils.isEmpty(dict.getRemark())){
-                /**
-                * 模糊
-                */
-                list.add(cb.like(root.get("remark").as(String.class),"%"+dict.getRemark()+"%"));
-            }
-            Predicate[] p = new Predicate[list.size()];
-            return cb.and(list.toArray(p));
-        }
-    }
 }

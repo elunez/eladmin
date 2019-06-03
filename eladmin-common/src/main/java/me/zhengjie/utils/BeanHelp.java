@@ -6,10 +6,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import me.zhengjie.aop.limit.PredicateInfo;
+import me.zhengjie.annotation.PredicateInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
