@@ -5,15 +5,12 @@ import cn.hutool.json.JSONObject;
 import me.zhengjie.domain.Log;
 import me.zhengjie.repository.LogRepository;
 import me.zhengjie.service.LogService;
-import me.zhengjie.utils.SecurityUtils;
-import me.zhengjie.utils.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 
 /**
@@ -31,7 +28,7 @@ public class LogServiceImpl implements LogService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void save(String username, HttpServletRequest request, ProceedingJoinPoint joinPoint, Log log){
+    public void save(String username, String ip, ProceedingJoinPoint joinPoint, Log log){
 
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
@@ -57,7 +54,7 @@ public class LogServiceImpl implements LogService {
         }
 
         // 获取IP地址
-        log.setRequestIp(StringUtils.getIP(request));
+        log.setRequestIp(ip);
 
         if(LOGINPATH.equals(signature.getName())){
             try {

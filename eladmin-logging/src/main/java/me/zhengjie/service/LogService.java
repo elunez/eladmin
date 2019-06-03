@@ -18,7 +18,7 @@ public interface LogService {
      * @param log
      */
     @Async
-    void save(String username, HttpServletRequest request, ProceedingJoinPoint joinPoint, Log log);
+    void save(String username, String ip, ProceedingJoinPoint joinPoint, Log log);
 
     /**
      * 查询异常详情
