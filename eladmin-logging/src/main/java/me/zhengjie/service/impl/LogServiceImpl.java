@@ -5,7 +5,6 @@ import cn.hutool.json.JSONObject;
 import me.zhengjie.domain.Log;
 import me.zhengjie.repository.LogRepository;
 import me.zhengjie.service.LogService;
-import me.zhengjie.utils.RequestHolder;
 import me.zhengjie.utils.SecurityUtils;
 import me.zhengjie.utils.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -32,10 +31,8 @@ public class LogServiceImpl implements LogService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void save(ProceedingJoinPoint joinPoint, Log log){
+    public void save(String username, HttpServletRequest request, ProceedingJoinPoint joinPoint, Log log){
 
-        // 获取request
-        HttpServletRequest request = RequestHolder.getHttpServletRequest();
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
         me.zhengjie.aop.log.Log aopLog = method.getAnnotation(me.zhengjie.aop.log.Log.class);
@@ -53,9 +50,6 @@ public class LogServiceImpl implements LogService {
         Object[] argValues = joinPoint.getArgs();
         //参数名称
         String[] argNames = ((MethodSignature)joinPoint.getSignature()).getParameterNames();
-        // 用户名
-        String username = "";
-
         if(argValues != null){
             for (int i = 0; i < argValues.length; i++) {
                 params += " " + argNames[i] + ": " + argValues[i];
@@ -65,9 +59,7 @@ public class LogServiceImpl implements LogService {
         // 获取IP地址
         log.setRequestIp(StringUtils.getIP(request));
 
-        if(!LOGINPATH.equals(signature.getName())){
-            username = SecurityUtils.getUsername();
-        } else {
+        if(LOGINPATH.equals(signature.getName())){
             try {
                 JSONObject jsonObject = new JSONObject(argValues[0]);
                 username = jsonObject.get("username").toString();
