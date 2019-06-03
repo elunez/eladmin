@@ -23,6 +23,8 @@ spring:
       test-while-idle: true
       test-on-borrow: false
       test-on-return: false
+
+      validation-query: select 1
       # 配置监控统计拦截的filters
       filters: stat
       stat-view-servlet:

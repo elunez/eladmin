@@ -4,6 +4,8 @@ import me.zhengjie.domain.Log;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.springframework.scheduling.annotation.Async;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * @author jie
  * @date 2018-11-24
@@ -16,7 +18,7 @@ public interface LogService {
      * @param log
      */
     @Async
-    void save(ProceedingJoinPoint joinPoint, Log log);
+    void save(String username, String ip, ProceedingJoinPoint joinPoint, Log log);
 
     /**
      * 查询异常详情
