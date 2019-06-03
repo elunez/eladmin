@@ -2,6 +2,7 @@ package me.zhengjie.service.query;
 
 import me.zhengjie.domain.QiniuContent;
 import me.zhengjie.repository.QiniuContentRepository;
+import me.zhengjie.utils.BeanHelp;
 import me.zhengjie.utils.PageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -36,31 +37,7 @@ public class QiNiuQueryService {
      */
     @Cacheable(keyGenerator = "keyGenerator")
     public Object queryAll(QiniuContent qiniuContent, Pageable pageable){
-        return PageUtil.toPage(qiniuContentRepository.findAll(new Spec(qiniuContent),pageable));
+        return PageUtil.toPage(qiniuContentRepository.findAll((root, query, cb) -> BeanHelp.getPredicate(root, qiniuContent, cb), pageable));
     }
 
-    class Spec implements Specification<QiniuContent> {
-
-        private QiniuContent qiniuContent;
-
-        public Spec(QiniuContent qiniuContent){
-            this.qiniuContent = qiniuContent;
-        }
-
-        @Override
-        public Predicate toPredicate(Root<QiniuContent> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder cb) {
-
-            List<Predicate> list = new ArrayList<Predicate>();
-
-            if(!ObjectUtils.isEmpty(qiniuContent.getKey())){
-                /**
-                 * 模糊
-                 */
-                list.add(cb.like(root.get("key").as(String.class),"%"+qiniuContent.getKey()+"%"));
-            }
-
-            Predicate[] p = new Predicate[list.size()];
-            return cb.and(list.toArray(p));
-        }
-    }
 }

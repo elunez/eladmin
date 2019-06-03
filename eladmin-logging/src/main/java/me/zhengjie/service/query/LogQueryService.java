@@ -4,6 +4,7 @@ import me.zhengjie.domain.Log;
 import me.zhengjie.repository.LogRepository;
 import me.zhengjie.service.mapper.LogErrorMapper;
 import me.zhengjie.service.mapper.LogSmallMapper;
+import me.zhengjie.utils.BeanHelp;
 import me.zhengjie.utils.PageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -39,7 +40,7 @@ public class LogQueryService {
     private LogSmallMapper logSmallMapper;
 
     public Object queryAll(Log log, Pageable pageable){
-        Page<Log> page = logRepository.findAll(new Spec(log),pageable);
+        Page<Log> page = logRepository.findAll((root, query, cb) -> BeanHelp.getPredicate(root, log, cb), pageable);
         if (log.getLogType().equals("ERROR")) {
             return PageUtil.toPage(page.map(logErrorMapper::toDto));
         }
@@ -47,7 +48,7 @@ public class LogQueryService {
     }
 
     public Object queryAllByUser(Log log, Pageable pageable) {
-        Page<Log> page = logRepository.findAll(new Spec(log),pageable);
+        Page<Log> page = logRepository.findAll((root, query, cb) -> BeanHelp.getPredicate(root, log, cb), pageable);
         return PageUtil.toPage(page.map(logSmallMapper::toDto));
     }
 

@@ -2,6 +2,7 @@ package me.zhengjie.service.query;
 
 import me.zhengjie.domain.Picture;
 import me.zhengjie.repository.PictureRepository;
+import me.zhengjie.utils.BeanHelp;
 import me.zhengjie.utils.PageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -36,38 +37,7 @@ public class PictureQueryService {
      */
     @Cacheable(keyGenerator = "keyGenerator")
     public Object queryAll(Picture picture, Pageable pageable){
-        return PageUtil.toPage(pictureRepository.findAll(new Spec(picture),pageable));
+        return PageUtil.toPage(pictureRepository.findAll((root, query, cb) -> BeanHelp.getPredicate(root, picture, cb), pageable));
     }
 
-    class Spec implements Specification<Picture> {
-
-        private Picture picture;
-
-        public Spec(Picture picture){
-            this.picture = picture;
-        }
-
-        @Override
-        public Predicate toPredicate(Root<Picture> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder cb) {
-
-            List<Predicate> list = new ArrayList<Predicate>();
-
-            if(!ObjectUtils.isEmpty(picture.getFilename())){
-                /**
-                 * 模糊
-                 */
-                list.add(cb.like(root.get("filename").as(String.class),"%"+picture.getFilename()+"%"));
-            }
-
-            if(!ObjectUtils.isEmpty(picture.getUsername())){
-                /**
-                 * 模糊
-                 */
-                list.add(cb.like(root.get("username").as(String.class),"%"+picture.getUsername()+"%"));
-            }
-
-            Predicate[] p = new Predicate[list.size()];
-            return cb.and(list.toArray(p));
-        }
-    }
 }

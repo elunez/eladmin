@@ -1,6 +1,7 @@
 package me.zhengjie.domain;
 
 import lombok.Data;
+import me.zhengjie.annotation.PredicateInfo;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
@@ -25,6 +26,7 @@ public class QiniuContent implements Serializable {
      * 文件名，如qiniu.jpg
      */
     @Column(name = "name",unique = false)
+    @PredicateInfo(queryType = PredicateInfo.QueryType.INNER_LIKE)
     private String key;
 
     /**

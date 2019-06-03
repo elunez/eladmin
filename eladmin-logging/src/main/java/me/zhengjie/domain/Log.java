@@ -2,6 +2,7 @@ package me.zhengjie.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import me.zhengjie.annotation.PredicateInfo;
 import org.hibernate.annotations.CreationTimestamp;
 import javax.persistence.*;
 import java.io.Serializable;
@@ -24,6 +25,7 @@ public class Log  implements Serializable {
     /**
      * 操作用户
      */
+    @PredicateInfo(queryType = PredicateInfo.QueryType.INNER_LIKE)
     private String username;
 
     /**
@@ -46,6 +48,7 @@ public class Log  implements Serializable {
      * 日志类型
      */
     @Column(name = "log_type")
+    @PredicateInfo(queryType = PredicateInfo.QueryType.BASIC)
     private String logType;
 
     /**

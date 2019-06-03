@@ -1,6 +1,7 @@
 package me.zhengjie.domain;
 
 import lombok.Data;
+import me.zhengjie.annotation.PredicateInfo;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
@@ -22,6 +23,7 @@ public class Picture implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @PredicateInfo(queryType = PredicateInfo.QueryType.INNER_LIKE)
     private String filename;
 
     private String url;
@@ -38,6 +40,7 @@ public class Picture implements Serializable {
     @Column(name = "delete_url")
     private String delete;
 
+    @PredicateInfo(queryType = PredicateInfo.QueryType.INNER_LIKE)
     private String username;
 
     @CreationTimestamp
