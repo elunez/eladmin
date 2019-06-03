@@ -1,6 +1,8 @@
 package me.zhengjie.modules.system.service.dto;
 
 import lombok.Data;
+import me.zhengjie.annotation.PredicateInfo;
+
 import java.io.Serializable;
 
 /**
@@ -15,10 +17,12 @@ public class DictDTO implements Serializable {
     /**
      * 字典名称
      */
+    @PredicateInfo(queryType = PredicateInfo.QueryType.INNER_LIKE)
     private String name;
 
     /**
      * 描述
      */
+    @PredicateInfo(queryType = PredicateInfo.QueryType.INNER_LIKE)
     private String remark;
 }
