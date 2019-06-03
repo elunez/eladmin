@@ -54,7 +54,9 @@ public class DictQueryService {
     */
     @Cacheable(keyGenerator = "keyGenerator")
     public Object queryAll(DictDTO dict){
-        return dictMapper.toDto(dictRepository.findAll(new Spec(dict)));
+        //return dictMapper.toDto(dictRepository.findAll(new Spec(dict)));
+        /** Dong ZhaoYang 2019/6/3 不分页 同理 */
+        return dictMapper.toDto(dictRepository.findAll((root, query, cb) -> BeanHelp.getPredicate(root, dict, cb)));
     }
 
     class Spec implements Specification<Dict> {
