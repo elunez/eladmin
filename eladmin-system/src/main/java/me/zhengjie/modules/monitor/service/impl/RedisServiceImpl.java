@@ -9,8 +9,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +29,10 @@ public class RedisServiceImpl implements RedisService {
             key = "*" + key + "*";
         }
         for (Object s : redisTemplate.keys(key)) {
+            // 过滤掉权限的缓存
+            if (s.toString().indexOf("role::loadPermissionByUser") != -1 || s.toString().indexOf("user::loadUserByUsername") != -1) {
+                continue;
+            }
             RedisVo redisVo = new RedisVo(s.toString(),redisTemplate.opsForValue().get(s.toString()).toString());
             redisVos.add(redisVo);
         }
@@ -39,11 +41,6 @@ public class RedisServiceImpl implements RedisService {
                 pageable,
                 redisVos.size());
         return page;
-    }
-
-    @Override
-    public void save(RedisVo redisVo) {
-        redisTemplate.opsForValue().set(redisVo.getKey(),redisVo.getValue());
     }
 
     @Override
