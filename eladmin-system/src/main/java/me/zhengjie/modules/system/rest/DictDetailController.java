@@ -4,8 +4,7 @@ import me.zhengjie.aop.log.Log;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.modules.system.domain.DictDetail;
 import me.zhengjie.modules.system.service.DictDetailService;
-import me.zhengjie.modules.system.service.dto.DictDetailDTO;
-import me.zhengjie.modules.system.service.query.DictDetailQueryService;
+import me.zhengjie.modules.system.service.dto.DictDetailQueryCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -27,16 +26,13 @@ public class DictDetailController {
     @Autowired
     private DictDetailService dictDetailService;
 
-    @Autowired
-    private DictDetailQueryService dictDetailQueryService;
-
     private static final String ENTITY_NAME = "dictDetail";
 
     @Log("查询字典详情")
     @GetMapping(value = "/dictDetail")
-    public ResponseEntity getDictDetails(DictDetailDTO resources,
+    public ResponseEntity getDictDetails(DictDetailQueryCriteria criteria,
                                          @PageableDefault(value = 10, sort = {"sort"}, direction = Sort.Direction.ASC) Pageable pageable){
-        return new ResponseEntity(dictDetailQueryService.queryAll(resources,pageable),HttpStatus.OK);
+        return new ResponseEntity(dictDetailService.queryAll(criteria,pageable),HttpStatus.OK);
     }
 
     @Log("新增字典详情")

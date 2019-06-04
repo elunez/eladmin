@@ -1,12 +1,17 @@
 package me.zhengjie.modules.system.service.impl;
 
 import me.zhengjie.modules.system.domain.DictDetail;
+import me.zhengjie.modules.system.service.dto.DictDetailQueryCriteria;
+import me.zhengjie.utils.PageUtil;
+import me.zhengjie.utils.QueryHelp;
 import me.zhengjie.utils.ValidationUtil;
 import me.zhengjie.modules.system.repository.DictDetailRepository;
 import me.zhengjie.modules.system.service.DictDetailService;
 import me.zhengjie.modules.system.service.dto.DictDetailDTO;
 import me.zhengjie.modules.system.service.mapper.DictDetailMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +30,12 @@ public class DictDetailServiceImpl implements DictDetailService {
 
     @Autowired
     private DictDetailMapper dictDetailMapper;
+
+    @Override
+    public Object queryAll(DictDetailQueryCriteria criteria, Pageable pageable) {
+        Page<DictDetail> page = dictDetailRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable);
+        return PageUtil.toPage(page.map(dictDetailMapper::toDto));
+    }
 
     @Override
     public DictDetailDTO findById(Long id) {

@@ -1,6 +1,6 @@
 package me.zhengjie.modules.monitor.rest;
 
-import me.zhengjie.aop.limit.Limit;
+import me.zhengjie.annotation.Limit;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

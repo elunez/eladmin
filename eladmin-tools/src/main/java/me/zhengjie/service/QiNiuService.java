@@ -2,10 +2,12 @@ package me.zhengjie.service;
 
 import me.zhengjie.domain.QiniuConfig;
 import me.zhengjie.domain.QiniuContent;
+import me.zhengjie.service.dto.QiniuQueryCriteria;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -14,6 +16,15 @@ import org.springframework.web.multipart.MultipartFile;
  */
 @CacheConfig(cacheNames = "qiNiu")
 public interface QiNiuService {
+
+    /**
+     * 查询文件
+     * @param criteria
+     * @param pageable
+     * @return
+     */
+    @Cacheable(keyGenerator = "keyGenerator")
+    Object queryAll(QiniuQueryCriteria criteria, Pageable pageable);
 
     /**
      * 查配置

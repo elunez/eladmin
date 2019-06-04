@@ -121,7 +121,6 @@ public class RedisConfig extends CachingConfigurerSupport {
             sb.append(target.getClass().getName());
             sb.append(method.getName());
             for (Object obj : params) {
-                // 由于参数可能不同, hashCode肯定不一样, 缓存的key也需要不一样
                 sb.append(JSON.toJSONString(obj).hashCode());
             }
             return sb.toString();

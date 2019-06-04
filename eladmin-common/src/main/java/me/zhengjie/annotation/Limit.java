@@ -1,4 +1,4 @@
-package me.zhengjie.aop.limit;
+package me.zhengjie.annotation;
 
 import me.zhengjie.aspect.LimitType;
 

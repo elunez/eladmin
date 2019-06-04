@@ -1,12 +1,16 @@
 package me.zhengjie.modules.system.service.impl;
 
 import me.zhengjie.modules.system.domain.Dict;
+import me.zhengjie.utils.PageUtil;
+import me.zhengjie.utils.QueryHelp;
 import me.zhengjie.utils.ValidationUtil;
 import me.zhengjie.modules.system.repository.DictRepository;
 import me.zhengjie.modules.system.service.DictService;
 import me.zhengjie.modules.system.service.dto.DictDTO;
 import me.zhengjie.modules.system.service.mapper.DictMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +29,12 @@ public class DictServiceImpl implements DictService {
 
     @Autowired
     private DictMapper dictMapper;
+
+    @Override
+    public Object queryAll(DictDTO dict, Pageable pageable){
+        Page<Dict> page = dictRepository.findAll((root, query, cb) -> QueryHelp.getPredicate(root, dict, cb), pageable);
+        return PageUtil.toPage(page.map(dictMapper::toDto));
+    }
 
     @Override
     public DictDTO findById(Long id) {

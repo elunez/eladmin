@@ -2,6 +2,7 @@ package me.zhengjie.modules.system.service;
 
 import me.zhengjie.modules.system.domain.Dept;
 import me.zhengjie.modules.system.service.dto.DeptDTO;
+import me.zhengjie.modules.system.service.dto.DeptQueryCriteria;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -15,6 +16,14 @@ import java.util.Set;
 */
 @CacheConfig(cacheNames = "dept")
 public interface DeptService {
+
+    /**
+     * queryAll
+     * @param criteria
+     * @return
+     */
+    @Cacheable(keyGenerator = "keyGenerator")
+    List<DeptDTO> queryAll(DeptQueryCriteria criteria);
 
     /**
      * findById

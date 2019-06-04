@@ -6,7 +6,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 
 /**
  * @author jie
@@ -15,7 +14,6 @@ import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBr
 @EnableAsync
 @SpringBootApplication
 @EnableTransactionManagement
-@EnableWebSocketMessageBroker
 public class AppRun {
 
     public static void main(String[] args) {

@@ -4,8 +4,8 @@ import me.zhengjie.aop.log.Log;
 import me.zhengjie.modules.system.domain.Permission;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.modules.system.service.PermissionService;
+import me.zhengjie.modules.system.service.dto.CommonQueryCriteria;
 import me.zhengjie.modules.system.service.dto.PermissionDTO;
-import me.zhengjie.modules.system.service.query.PermissionQueryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,9 +26,6 @@ public class PermissionController {
     @Autowired
     private PermissionService permissionService;
 
-    @Autowired
-    private PermissionQueryService permissionQueryService;
-
     private static final String ENTITY_NAME = "permission";
 
     /**
@@ -44,8 +41,8 @@ public class PermissionController {
     @Log("查询权限")
     @GetMapping(value = "/permissions")
     @PreAuthorize("hasAnyRole('ADMIN','PERMISSION_ALL','PERMISSION_SELECT')")
-    public ResponseEntity getPermissions(@RequestParam(required = false) String name){
-        List<PermissionDTO> permissionDTOS = permissionQueryService.queryAll(name);
+    public ResponseEntity getPermissions(CommonQueryCriteria criteria){
+        List<PermissionDTO> permissionDTOS = permissionService.queryAll(criteria);
         return new ResponseEntity(permissionService.buildTree(permissionDTOS),HttpStatus.OK);
     }
 

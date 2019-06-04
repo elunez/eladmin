@@ -6,23 +6,32 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * @描述 :  为生成{@link javax.persistence.criteria.Predicate }提供的注解
- * @作者 :  Dong ZhaoYang
- * @日期 :  2017/08/07
- * @时间 :  16:25
+ * @author jie
+ * @date 2019-6-4 13:52:30
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface PredicateInfo {
+public @interface Query {
 
     /** Dong ZhaoYang 2017/8/7 基本对象的属性名 */
     String propName() default "";
     /** Dong ZhaoYang 2017/8/7 查询方式 */
-    QueryType queryType() default QueryType.BASIC;
+    Type type() default Type.EQUAL;
 
-    enum QueryType {
-        /** Dong ZhaoYang 2017/8/7 基本 */
-        BASIC
+    /**
+     * 连接查询的属性名，如User类中的dept
+     * @return
+     */
+    String joinName() default "";
+
+    /**
+     * 默认左连接
+     * @return
+     */
+    Join join() default Join.LEFT;
+
+    enum Type {
+        EQUAL
         /** Dong ZhaoYang 2017/8/7 大于等于 */
         , GREATER_THAN
         /** Dong ZhaoYang 2017/8/7 小于等于 */
@@ -35,6 +44,19 @@ public @interface PredicateInfo {
         , RIGHT_LIKE
         /** Dong ZhaoYang 2017/8/7 小于 */
         , LESS_THAN_NQ
+        //** jie 2019/6/4 包含 */
+        , IN
+    }
+
+    /**
+     * @author jie
+     * 适用于简单连接查询，复杂的请自定义该注解，或者使用sql查询
+     */
+    enum Join {
+        /** jie 2019-6-4 13:18:30 左连接 */
+        LEFT
+        /** jie 2019-6-4 13:18:30 右连接 */
+        , RIGHT
     }
 
 }

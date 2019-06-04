@@ -4,18 +4,16 @@ import me.zhengjie.aop.log.Log;
 import me.zhengjie.config.DataScope;
 import me.zhengjie.domain.Picture;
 import me.zhengjie.domain.VerificationCode;
-import me.zhengjie.modules.system.domain.Role;
 import me.zhengjie.modules.system.domain.User;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.modules.system.service.DeptService;
 import me.zhengjie.modules.system.service.RoleService;
 import me.zhengjie.modules.system.service.dto.RoleSmallDTO;
+import me.zhengjie.modules.system.service.dto.UserQueryCriteria;
 import me.zhengjie.service.PictureService;
 import me.zhengjie.service.VerificationCodeService;
 import me.zhengjie.utils.*;
 import me.zhengjie.modules.system.service.UserService;
-import me.zhengjie.modules.system.service.dto.UserDTO;
-import me.zhengjie.modules.system.service.query.UserQueryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -42,9 +40,6 @@ public class UserController {
     private UserService userService;
 
     @Autowired
-    private UserQueryService userQueryService;
-
-    @Autowired
     private PictureService pictureService;
 
     @Autowired
@@ -59,19 +54,16 @@ public class UserController {
     @Autowired
     private VerificationCodeService verificationCodeService;
 
-
-    private static final String ENTITY_NAME = "user";
-
     @Log("查询用户")
     @GetMapping(value = "/users")
     @PreAuthorize("hasAnyRole('ADMIN','USER_ALL','USER_SELECT')")
-    public ResponseEntity getUsers(UserDTO userDTO, Pageable pageable){
+    public ResponseEntity getUsers(UserQueryCriteria criteria, Pageable pageable){
         Set<Long> deptSet = new HashSet<>();
         Set<Long> result = new HashSet<>();
 
-        if (!ObjectUtils.isEmpty(userDTO.getDeptId())) {
-            deptSet.add(userDTO.getDeptId());
-            deptSet.addAll(dataScope.getDeptChildren(deptService.findByPid(userDTO.getDeptId())));
+        if (!ObjectUtils.isEmpty(criteria.getDeptId())) {
+            deptSet.add(criteria.getDeptId());
+            deptSet.addAll(dataScope.getDeptChildren(deptService.findByPid(criteria.getDeptId())));
         }
 
         // 数据权限
@@ -85,14 +77,16 @@ public class UserController {
             result.retainAll(deptIds);
 
             // 若无交集，则代表无数据权限
+            criteria.setDeptIds(result);
             if(result.size() == 0){
                 return new ResponseEntity(PageUtil.toPage(null,0),HttpStatus.OK);
-            } else return new ResponseEntity(userQueryService.queryAll(userDTO,result,pageable),HttpStatus.OK);
+            } else return new ResponseEntity(userService.queryAll(criteria,pageable),HttpStatus.OK);
         // 否则取并集
         } else {
             result.addAll(deptSet);
             result.addAll(deptIds);
-            return new ResponseEntity(userQueryService.queryAll(userDTO,result,pageable),HttpStatus.OK);
+            criteria.setDeptIds(result);
+            return new ResponseEntity(userService.queryAll(criteria,pageable),HttpStatus.OK);
         }
     }
 

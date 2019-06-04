@@ -5,9 +5,16 @@ import cn.hutool.json.JSONObject;
 import me.zhengjie.domain.Log;
 import me.zhengjie.repository.LogRepository;
 import me.zhengjie.service.LogService;
+import me.zhengjie.service.dto.LogQueryCriteria;
+import me.zhengjie.service.mapper.LogErrorMapper;
+import me.zhengjie.service.mapper.LogSmallMapper;
+import me.zhengjie.utils.PageUtil;
+import me.zhengjie.utils.QueryHelp;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,7 +31,28 @@ public class LogServiceImpl implements LogService {
     @Autowired
     private LogRepository logRepository;
 
+    @Autowired
+    private LogErrorMapper logErrorMapper;
+
+    @Autowired
+    private LogSmallMapper logSmallMapper;
+
     private final String LOGINPATH = "login";
+
+    @Override
+    public Object queryAll(LogQueryCriteria criteria, Pageable pageable){
+        Page<Log> page = logRepository.findAll(((root, criteriaQuery, cb) -> QueryHelp.getPredicate(root, criteria, cb)),pageable);
+        if (criteria.getLogType().equals("ERROR")) {
+            return PageUtil.toPage(page.map(logErrorMapper::toDto));
+        }
+        return page;
+    }
+
+    @Override
+    public Object queryAllByUser(LogQueryCriteria criteria, Pageable pageable) {
+        Page<Log> page = logRepository.findAll(((root, criteriaQuery, cb) -> QueryHelp.getPredicate(root, criteria, cb)),pageable);
+        return PageUtil.toPage(page.map(logSmallMapper::toDto));
+    }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
