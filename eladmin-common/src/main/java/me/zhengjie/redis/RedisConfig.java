@@ -35,40 +35,6 @@ import java.time.Duration;
 @EnableConfigurationProperties(RedisProperties.class)
 public class RedisConfig extends CachingConfigurerSupport {
 
-    @Value("${spring.redis.host}")
-    private String host;
-
-    @Value("${spring.redis.port}")
-    private int port;
-
-    @Value("${spring.redis.timeout}")
-    private int timeout;
-
-    @Value("${spring.redis.jedis.pool.max-idle}")
-    private int maxIdle;
-
-    @Value("${spring.redis.jedis.pool.max-wait}")
-    private long maxWaitMillis;
-
-    @Value("${spring.redis.password}")
-    private String password;
-
-    @Value("${spring.redis.database}")
-    private int database;
-
-    /**
-     * 配置 redis 连接池
-     * @return
-     */
-    @Bean
-    public JedisPool redisPoolFactory(){
-        JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
-        jedisPoolConfig.setMaxIdle(maxIdle);
-        jedisPoolConfig.setMaxWaitMillis(maxWaitMillis);
-        String pwd = StringUtils.isBlank(password) ? null : password;
-        return new JedisPool(jedisPoolConfig, host, port, timeout, pwd, database);
-    }
-
     /**
      *  设置 redis 数据默认过期时间，默认1天
      *  设置@cacheable 序列化方式
