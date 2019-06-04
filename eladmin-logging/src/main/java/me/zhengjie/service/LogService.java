@@ -1,16 +1,32 @@
 package me.zhengjie.service;
 
 import me.zhengjie.domain.Log;
+import me.zhengjie.service.dto.LogQueryCriteria;
 import org.aspectj.lang.ProceedingJoinPoint;
+import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Async;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author jie
  * @date 2018-11-24
  */
 public interface LogService {
+
+    /**
+     * queryAll
+     * @param criteria
+     * @param pageable
+     * @return
+     */
+    Object queryAll(LogQueryCriteria criteria, Pageable pageable);
+
+    /**
+     * queryAllByUser
+     * @param criteria
+     * @param pageable
+     * @return
+     */
+    Object queryAllByUser(LogQueryCriteria criteria, Pageable pageable);
 
     /**
      * 新增日志

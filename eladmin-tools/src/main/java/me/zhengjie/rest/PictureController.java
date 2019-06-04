@@ -3,7 +3,7 @@ package me.zhengjie.rest;
 import me.zhengjie.aop.log.Log;
 import me.zhengjie.domain.Picture;
 import me.zhengjie.service.PictureService;
-import me.zhengjie.service.query.PictureQueryService;
+import me.zhengjie.service.dto.PictureQueryCriteria;
 import me.zhengjie.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -26,14 +26,11 @@ public class PictureController {
     @Autowired
     private PictureService pictureService;
 
-    @Autowired
-    private PictureQueryService pictureQueryService;
-
     @Log("查询图片")
     @PreAuthorize("hasAnyRole('ADMIN','PICTURE_ALL','PICTURE_SELECT')")
     @GetMapping(value = "/pictures")
-    public ResponseEntity getRoles(Picture resources, Pageable pageable){
-        return new ResponseEntity(pictureQueryService.queryAll(resources,pageable),HttpStatus.OK);
+    public ResponseEntity getRoles(PictureQueryCriteria criteria, Pageable pageable){
+        return new ResponseEntity(pictureService.queryAll(criteria,pageable),HttpStatus.OK);
     }
 
     /**

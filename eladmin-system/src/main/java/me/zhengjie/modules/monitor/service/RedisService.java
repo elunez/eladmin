@@ -19,12 +19,6 @@ public interface RedisService {
     public Page findByKey(String key, Pageable pageable);
 
     /**
-     * create
-     * @param redisVo
-     */
-    public void save(RedisVo redisVo);
-
-    /**
      * delete
      * @param key
      */

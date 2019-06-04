@@ -2,6 +2,7 @@ package me.zhengjie.modules.system.service;
 
 import me.zhengjie.modules.system.domain.Menu;
 import me.zhengjie.modules.system.domain.Role;
+import me.zhengjie.modules.system.service.dto.CommonQueryCriteria;
 import me.zhengjie.modules.system.service.dto.MenuDTO;
 import me.zhengjie.modules.system.service.dto.RoleSmallDTO;
 import org.springframework.cache.annotation.CacheConfig;
@@ -17,6 +18,14 @@ import java.util.Set;
  */
 @CacheConfig(cacheNames = "menu")
 public interface MenuService {
+
+    /**
+     * queryAll
+     * @param criteria
+     * @return
+     */
+    @Cacheable(keyGenerator = "keyGenerator")
+    List<MenuDTO> queryAll(CommonQueryCriteria criteria);
 
     /**
      * get

@@ -15,16 +15,15 @@ import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.repository.QiNiuConfigRepository;
 import me.zhengjie.repository.QiniuContentRepository;
 import me.zhengjie.service.QiNiuService;
-import me.zhengjie.utils.QiNiuUtil;
-import me.zhengjie.utils.FileUtil;
-import me.zhengjie.utils.ValidationUtil;
+import me.zhengjie.service.dto.QiniuQueryCriteria;
+import me.zhengjie.utils.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.util.Optional;
 
 /**
@@ -45,6 +44,11 @@ public class QiNiuServiceImpl implements QiNiuService {
     private Long maxSize;
 
     private final String TYPE = "公开";
+
+    @Override
+    public Object queryAll(QiniuQueryCriteria criteria, Pageable pageable){
+        return PageUtil.toPage(qiniuContentRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable));
+    }
 
     @Override
     public QiniuConfig find() {

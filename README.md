@@ -1,6 +1,21 @@
-# eladmin
+<h1 style="text-align: center">el-admin 后台管理系统</h1>
+<div style="text-align: center">
 
-项目基于 Spring Boot 2.1.0 、 Spring boot Jpa、 Spring Security、redis、Vue的前后端分离的权限管理系统，项目采用分模块开发方式， 权限控制采用 RBAC（Role-Based Access Control，基于角色的访问控制），支持数据字典、数据权限管理、前端菜单支持动态路由
+[![AUR](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg)](https://github.com/elunez/eladmin/blob/master/LICENSE)
+[![star](https://gitee.com/elunez/eladmin/badge/star.svg?theme=white)](https://gitee.com/elunez/eladmin)
+[![GitHub stars](https://img.shields.io/github/stars/elunez/eladmin.svg?style=social&label=Stars)](https://github.com/elunez/eladmin)
+[![GitHub forks](https://img.shields.io/github/forks/elunez/eladmin.svg?style=social&label=Fork)](https://github.com/elunez/eladmin)
+
+</div>
+
+#### 项目简介
+eladmin基于 Spring Boot 2.1.0 、 Jpa、 Spring Security、redis、Vue的前后端分离的后台管理系统， 权限控制的方式为RBAC，项目支持数据字典与数据权限管理，支持一键生成前后端代码，支持前端菜单动态路由
+
+**开发文档**  [https://docs.auauz.net/](https://docs.auauz.net)
+
+**体验地址**  [https://auauz.net/](https://auauz.net/)
+
+**账号密码** ```admin/123456```(默认密码都是123456)
 
 #### 项目源码
 
@@ -8,103 +23,41 @@
 |---  |--- | --- |
 |  github   |  https://github.com/elunez/eladmin   |  https://github.com/elunez/eladmin-qd   |
 |  码云   |  https://gitee.com/elunez/eladmin   |  https://gitee.com/elunez/eladmin-qt   |
-#### 开发文档
-[https://docs.auauz.net/#/](https://docs.auauz.net/#/)
 
-#### 预览地址
-[https://auauz.net](https://auauz.net)
+####  系统功能
+- 用户管理：提供用户的相关配置，新增用户后，默认密码为123456
+- 角色管理：对权限与菜单进行分配，可根据部门设置角色的数据权限
+- 权限管理：权限细化到接口，可以理解成按钮权限
+- 菜单管理：已实现菜单动态路由，后端可配置化，支持多级菜单
+- 部门管理：可配置系统组织架构，树形表格展示
+- 岗位管理：配置各个部门的职位
+- 字典管理：应广大码友的要求加入字典管理，可维护常用一些固定的数据，如：状态，性别等
+- 操作日志：记录用户操作的日志
+- 异常日志：记录异常日志，方便开发人员定位错误
+- 系统缓存：使用jedis将缓存操作可视化，并提供对redis的基本操作，可根据需求自行扩展
+- 实时控制台：实时打印logback日志
+- SQL监控：采用druid 监控数据库访问性能，默认用户名admin，密码123456
+- 定时任务：整合Quartz做定时任务，加入任务日志，任务运行情况一目了然
+- 代码生成：高灵活度一键生成前后端代码，减少百分之80左右的工作任务
+- 邮件工具：配合富文本，发送html格式的邮件
+- 免费图床：使用sm.ms图床，用作公共图片上传使用
+- 七牛云存储：可同步七牛云存储的数据到系统，无需登录七牛云直接操作云数据
+- 支付宝支付：整合了支付宝支付并且提供了测试账号，可自行测试
 
-##### 用户账号密码
-
-- 管理员： admin
-- 测试用户： test
-- 密码： 123456
-
-#### 开发环境
-
-- JDK：8
-- IDE：IntelliJ IDEA （后端）
-- IDE：JetBrains WebStorm（前端）
-- 依赖管理：Maven
-- 数据库：MySQL 5.5.59
-
-#### 功能模块
-```
-- 系统管理
-    - 用户管理 提供用户的相关配置
-    - 角色管理 对权限与菜单进行分配
-    - 权限管理 权限细化到接口
-    - 菜单管理 已实现菜单动态路由，后端可配置化，支持多级菜单
-    - 部门管理与岗位管理
-    - 字典管理 应广大码友的要求加入字典管理
-- 系统监控
-    - 操作日志 使用apo记录用户操作日志
-    - 异常日志 记录操作过程中的异常，并且提供查看异常的堆栈信息
-    - 系统缓存 使用jedis将缓存操作可视化，并提供对redis的基本操作，可根据需求自行扩展
-    - 实时控制台 实时打印logback日志，来自微强迫症患者的精心配色，更好的监控系统的运行状态
-    - SQL监控 采用druid 监控数据库访问性能，默认用户名admin，密码123456
-- 系统工具
- - 定时任务 整合Quartz做定时任务，加入任务日志，任务运行情况一目了然
-    - 代码生成 高灵活度一键生成前后端代码，减少百分之80左右的工作任务
-    - 接口文档 使用的是 swagger-ui 
-    - 邮件工具 配合富文本，发送html格式的邮件
-    - SM.MS免费图床 挺好用的一个图床，作为公共图片上传使用
-    - 七牛云存储 这个就不多说了
-    - 支付宝支付 提供了测试账号，可自行测试
-- 组件管理
-    - 图标库 系统图标来自 https://www.iconfont.cn/
-    - 富文本 集成wangEditor富文本
-    - Markdown编辑器与Yaml编辑器
-```
 #### 项目结构
-```
-# 项目模块如下
+项目采用分模块开发方式，将通用的配置放在公共模块，```system```模块为系统核心模块也是项目入口模块，```logging``` 模块为系统的日志模块，```tools``` 为第三方工具模块，包含了图床、邮件、七牛云、支付宝，```generator``` 为系统的代码生成模块
 - eladmin-common 公共模块
-    - aop.limit 接口限流自定义注解
     - exception 项目统一异常的处理
     - mapper mapstruct的通用mapper
     - redis redis缓存相关配置
     - swagger2 接口文档配置
-    - utils 通用工具
-- eladmin-system 系统核心模块
-	- config 配置跨域与静态资源
-	- modules 系统相关模块
-		- monitor 系统监控
-		    - config 配置日志拦截器与WebSocket等
-		    - domain 实体类
-		    - repository 数据库操作
-		    - rest 前端控制器
-		    - service 业务接口
-		        - impl 业务接口实现
-		        - query 业务查询
-        - quartz 定时任务
-        - security 系统安全
-	        - config  JWT的安全过滤器配置
-		    - rest 用户登录授权的接口
-		    - security 配置spring security
-		    - service 用户登录与权限的处理
-		    - utils JWT工具
-    	- system 系统管理
+    - utils 系统通用工具类
+- eladmin-system 系统核心模块（系统启动入口）
+	- config 配置跨域与静态资源，与数据权限
+	- modules 系统相关模块(登录授权、定时任务等)
 - eladmin-logging 系统日志模块
 - eladmin-tools 系统第三方工具模块
 - eladmin-generator 系统代码生成模块
-```
-#### 后端技术栈
-
-- 基础框架：Spring Boot 2.1.0.RELEASE
-- 持久层框架：Spring boot Jpa
-- 安全框架：Spring Security
-- 缓存框架：Redis
-- 日志打印：logback+log4jdbc
-- 接口文档 swagger2
-- 其他：fastjson、aop、MapStruct等
-
-#### 前端技术栈
-- node
-- vue
-- vue-router
-- axios
-- element ui
 
 #### 系统预览
 <table>
@@ -127,14 +80,6 @@
 </table>
 
 #### 项目捐赠
-
-> Donate
-> 
-> 项目的发展离不开你的支持，请作者喝杯咖啡吧☕！
-
-|   微信  |   支付宝  |
-|--- | --- |
-|  ![](https://i.loli.net/2019/03/28/5c9c951c61a9a.png)   |  ![](https://i.loli.net/2019/03/28/5c9c95355fecb.png)  |
+如果你用爽了，可以请作者喝杯咖啡表示支持 ☕️！ [Donate](https://docs.auauz.net/#/jz)
 #### 反馈交流
-
 - QQ交流群：891137268

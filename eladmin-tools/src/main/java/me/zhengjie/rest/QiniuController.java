@@ -5,7 +5,7 @@ import me.zhengjie.aop.log.Log;
 import me.zhengjie.domain.QiniuConfig;
 import me.zhengjie.domain.QiniuContent;
 import me.zhengjie.service.QiNiuService;
-import me.zhengjie.service.query.QiNiuQueryService;
+import me.zhengjie.service.dto.QiniuQueryCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -29,9 +29,6 @@ public class QiniuController {
     @Autowired
     private QiNiuService qiNiuService;
 
-    @Autowired
-    private QiNiuQueryService qiNiuQueryService;
-
     @GetMapping(value = "/qiNiuConfig")
     public ResponseEntity get(){
         return new ResponseEntity(qiNiuService.find(), HttpStatus.OK);
@@ -46,8 +43,8 @@ public class QiniuController {
 
     @Log("查询文件")
     @GetMapping(value = "/qiNiuContent")
-    public ResponseEntity getRoles(QiniuContent resources, Pageable pageable){
-        return new ResponseEntity(qiNiuQueryService.queryAll(resources,pageable),HttpStatus.OK);
+    public ResponseEntity getRoles(QiniuQueryCriteria criteria, Pageable pageable){
+        return new ResponseEntity(qiNiuService.queryAll(criteria,pageable),HttpStatus.OK);
     }
 
     /**
