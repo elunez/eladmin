@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50562
 File Encoding         : 65001
 
-Date: 2019-05-26 16:31:04
+Date: 2019-06-05 11:13:41
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -135,6 +135,11 @@ CREATE TABLE `gen_config` (
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
+-- Records of gen_config
+-- ----------------------------
+INSERT INTO `gen_config` VALUES ('1', 'jie', '\0', 'eladmin-system', 'me.zhengjie.modules.test', 'E:\\workspace\\me\\front\\eladmin-qt\\src\\views\\test', 'E:\\workspace\\me\\front\\eladmin-qt\\src\\api', null);
+
+-- ----------------------------
 -- Table structure for job
 -- ----------------------------
 DROP TABLE IF EXISTS `job`;
@@ -176,7 +181,11 @@ CREATE TABLE `log` (
   `time` bigint(20) DEFAULT NULL,
   `username` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9465 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=10334 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of log
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for menu
@@ -193,7 +202,7 @@ CREATE TABLE `menu` (
   `icon` varchar(255) DEFAULT NULL COMMENT '图标',
   `path` varchar(255) DEFAULT NULL COMMENT '链接地址',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of menu
@@ -209,7 +218,6 @@ INSERT INTO `menu` VALUES ('8', '2018-12-18 15:19:01', '\0', '系统缓存', 'mo
 INSERT INTO `menu` VALUES ('9', '2018-12-18 15:19:34', '\0', 'SQL监控', 'monitor/sql/index', '6', '14', 'sqlMonitor', 'druid');
 INSERT INTO `menu` VALUES ('10', '2018-12-19 13:38:16', '\0', '组件管理', null, '0', '50', 'zujian', 'components');
 INSERT INTO `menu` VALUES ('11', '2018-12-19 13:38:49', '\0', '图标库', 'components/IconSelect', '10', '51', 'icon', 'icon');
-INSERT INTO `menu` VALUES ('12', '2018-12-24 20:37:35', '\0', '实时控制台', 'monitor/log/msg', '6', '16', 'codeConsole', 'msg');
 INSERT INTO `menu` VALUES ('14', '2018-12-27 10:13:09', '\0', '邮件工具', 'tools/email/index', '36', '24', 'email', 'email');
 INSERT INTO `menu` VALUES ('15', '2018-12-27 11:58:25', '\0', '富文本', 'components/Editor', '10', '52', 'fwb', 'tinymce');
 INSERT INTO `menu` VALUES ('16', '2018-12-28 09:36:53', '\0', '图床管理', 'tools/picture/index', '36', '25', 'image', 'pictures');
@@ -265,9 +273,7 @@ INSERT INTO `permission` VALUES ('15', '权限创建', '2018-12-09 20:14:10', 'P
 INSERT INTO `permission` VALUES ('16', '权限编辑', '2018-12-09 20:15:44', 'PERMISSION_EDIT', '13');
 INSERT INTO `permission` VALUES ('17', '权限删除', '2018-12-09 20:15:59', 'PERMISSION_DELETE', '13');
 INSERT INTO `permission` VALUES ('18', '缓存管理', '2018-12-17 13:53:25', 'REDIS_ALL', '0');
-INSERT INTO `permission` VALUES ('19', '新增缓存', '2018-12-17 13:53:44', 'REDIS_CREATE', '18');
 INSERT INTO `permission` VALUES ('20', '缓存查询', '2018-12-17 13:54:07', 'REDIS_SELECT', '18');
-INSERT INTO `permission` VALUES ('21', '缓存编辑', '2018-12-17 13:54:26', 'REDIS_EDIT', '18');
 INSERT INTO `permission` VALUES ('22', '缓存删除', '2018-12-17 13:55:04', 'REDIS_DELETE', '18');
 INSERT INTO `permission` VALUES ('23', '图床管理', '2018-12-27 20:31:49', 'PICTURE_ALL', '0');
 INSERT INTO `permission` VALUES ('24', '查询图片', '2018-12-27 20:32:04', 'PICTURE_SELECT', '23');
@@ -314,11 +320,7 @@ CREATE TABLE `picture` (
   `username` varchar(255) DEFAULT NULL COMMENT '用户名称',
   `width` varchar(255) DEFAULT NULL COMMENT '图片宽度',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of picture
--- ----------------------------
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for qiniu_config
@@ -348,11 +350,7 @@ CREATE TABLE `qiniu_content` (
   `update_time` datetime DEFAULT NULL COMMENT '上传或同步的时间',
   `url` varchar(255) DEFAULT NULL COMMENT '文件url',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of qiniu_content
--- ----------------------------
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for quartz_job
@@ -394,7 +392,7 @@ CREATE TABLE `quartz_log` (
   `params` varchar(255) DEFAULT NULL,
   `time` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of quartz_log
@@ -419,7 +417,7 @@ CREATE TABLE `role` (
 -- ----------------------------
 INSERT INTO `role` VALUES ('1', '2018-11-23 11:04:37', '超级管理员', '系统所有权', '全部', '1');
 INSERT INTO `role` VALUES ('2', '2018-11-23 13:09:06', '普通用户', '用于测试菜单与权限', '自定义', '3');
-INSERT INTO `role` VALUES ('4', '2019-05-13 14:16:15', '普通管理员', '普通管理员级别为2，使用该角色新增用户时只能赋予比普通管理员级别低的角色', '全部', '2');
+INSERT INTO `role` VALUES ('4', '2019-05-13 14:16:15', '普通管理员', '普通管理员级别为2，使用该角色新增用户时只能赋予比普通管理员级别低的角色', '自定义', '2');
 
 -- ----------------------------
 -- Table structure for roles_depts
@@ -438,6 +436,8 @@ CREATE TABLE `roles_depts` (
 -- Records of roles_depts
 -- ----------------------------
 INSERT INTO `roles_depts` VALUES ('2', '5');
+INSERT INTO `roles_depts` VALUES ('4', '6');
+INSERT INTO `roles_depts` VALUES ('4', '7');
 INSERT INTO `roles_depts` VALUES ('2', '8');
 
 -- ----------------------------
@@ -467,7 +467,6 @@ INSERT INTO `roles_menus` VALUES ('8', '1');
 INSERT INTO `roles_menus` VALUES ('9', '1');
 INSERT INTO `roles_menus` VALUES ('10', '1');
 INSERT INTO `roles_menus` VALUES ('11', '1');
-INSERT INTO `roles_menus` VALUES ('12', '1');
 INSERT INTO `roles_menus` VALUES ('14', '1');
 INSERT INTO `roles_menus` VALUES ('15', '1');
 INSERT INTO `roles_menus` VALUES ('16', '1');
@@ -499,7 +498,6 @@ INSERT INTO `roles_menus` VALUES ('8', '2');
 INSERT INTO `roles_menus` VALUES ('9', '2');
 INSERT INTO `roles_menus` VALUES ('10', '2');
 INSERT INTO `roles_menus` VALUES ('11', '2');
-INSERT INTO `roles_menus` VALUES ('12', '2');
 INSERT INTO `roles_menus` VALUES ('14', '2');
 INSERT INTO `roles_menus` VALUES ('15', '2');
 INSERT INTO `roles_menus` VALUES ('16', '2');
@@ -540,12 +538,10 @@ CREATE TABLE `roles_permissions` (
 -- Records of roles_permissions
 -- ----------------------------
 INSERT INTO `roles_permissions` VALUES ('1', '1');
-INSERT INTO `roles_permissions` VALUES ('4', '2');
 INSERT INTO `roles_permissions` VALUES ('2', '3');
 INSERT INTO `roles_permissions` VALUES ('4', '3');
 INSERT INTO `roles_permissions` VALUES ('4', '4');
 INSERT INTO `roles_permissions` VALUES ('4', '5');
-INSERT INTO `roles_permissions` VALUES ('4', '6');
 INSERT INTO `roles_permissions` VALUES ('2', '8');
 INSERT INTO `roles_permissions` VALUES ('2', '14');
 INSERT INTO `roles_permissions` VALUES ('2', '20');
@@ -643,8 +639,4 @@ CREATE TABLE `visits` (
   `week_day` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `UK_11aksgq87euk9bcyeesfs4vtp` (`date`)
-) ENGINE=InnoDB AUTO_INCREMENT=47 DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of visits
--- ----------------------------
+) ENGINE=InnoDB AUTO_INCREMENT=55 DEFAULT CHARSET=utf8;

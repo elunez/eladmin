@@ -14,6 +14,7 @@ import me.zhengjie.utils.ValidationUtil;
 import ${package}.repository.${className}Repository;
 import ${package}.service.${className}Service;
 import ${package}.service.dto.${className}DTO;
+import ${package}.service.dto.${className}QueryCriteria;
 import ${package}.service.mapper.${className}Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,10 @@ import cn.hutool.core.util.IdUtil;
 <#if !auto && pkColumnType = 'String'>
 import cn.hutool.core.util.IdUtil;
 </#if>
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import me.zhengjie.utils.PageUtil;
+import me.zhengjie.utils.QueryHelp;
 
 /**
 * @author ${author}
@@ -41,6 +46,17 @@ public class ${className}ServiceImpl implements ${className}Service {
 
     @Autowired
     private ${className}Mapper ${changeClassName}Mapper;
+
+    @Override
+    public Object queryAll(${className}QueryCriteria criteria, Pageable pageable){
+        Page<${className}> page = ${changeClassName}Repository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable);
+        return PageUtil.toPage(page.map(${changeClassName}Mapper::toDto));
+    }
+
+    @Override
+    public Object queryAll(${className}QueryCriteria criteria){
+        return ${changeClassName}Mapper.toDto(${changeClassName}Repository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder)));
+    }
 
     @Override
     public ${className}DTO findById(${pkColumnType} ${pkChangeColName}) {
