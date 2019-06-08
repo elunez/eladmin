@@ -8,9 +8,11 @@ import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.exception.EntityExistException;
 import me.zhengjie.modules.system.repository.MenuRepository;
 import me.zhengjie.modules.system.service.MenuService;
+import me.zhengjie.modules.system.service.dto.CommonQueryCriteria;
 import me.zhengjie.modules.system.service.dto.MenuDTO;
 import me.zhengjie.modules.system.service.dto.RoleSmallDTO;
 import me.zhengjie.modules.system.service.mapper.MenuMapper;
+import me.zhengjie.utils.QueryHelp;
 import me.zhengjie.utils.ValidationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,6 +30,11 @@ public class MenuServiceImpl implements MenuService {
 
     @Autowired
     private MenuMapper menuMapper;
+
+    @Override
+    public List queryAll(CommonQueryCriteria criteria){
+        return menuMapper.toDto(menuRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder)));
+    }
 
     @Override
     public MenuDTO findById(long id) {

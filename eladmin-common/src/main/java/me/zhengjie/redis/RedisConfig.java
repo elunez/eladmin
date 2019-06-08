@@ -19,8 +19,6 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
-import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.JedisPoolConfig;
 import java.time.Duration;
 
 /**
@@ -34,40 +32,6 @@ import java.time.Duration;
 @ConditionalOnClass(RedisOperations.class)
 @EnableConfigurationProperties(RedisProperties.class)
 public class RedisConfig extends CachingConfigurerSupport {
-
-    @Value("${spring.redis.host}")
-    private String host;
-
-    @Value("${spring.redis.port}")
-    private int port;
-
-    @Value("${spring.redis.timeout}")
-    private int timeout;
-
-    @Value("${spring.redis.jedis.pool.max-idle}")
-    private int maxIdle;
-
-    @Value("${spring.redis.jedis.pool.max-wait}")
-    private long maxWaitMillis;
-
-    @Value("${spring.redis.password}")
-    private String password;
-
-    @Value("${spring.redis.database}")
-    private int database;
-
-    /**
-     * 配置 redis 连接池
-     * @return
-     */
-    @Bean
-    public JedisPool redisPoolFactory(){
-        JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
-        jedisPoolConfig.setMaxIdle(maxIdle);
-        jedisPoolConfig.setMaxWaitMillis(maxWaitMillis);
-        String pwd = StringUtils.isBlank(password) ? null : password;
-        return new JedisPool(jedisPoolConfig, host, port, timeout, pwd, database);
-    }
 
     /**
      *  设置 redis 数据默认过期时间，默认1天
@@ -121,7 +85,6 @@ public class RedisConfig extends CachingConfigurerSupport {
             sb.append(target.getClass().getName());
             sb.append(method.getName());
             for (Object obj : params) {
-                // 由于参数可能不同, hashCode肯定不一样, 缓存的key也需要不一样
                 sb.append(JSON.toJSONString(obj).hashCode());
             }
             return sb.toString();

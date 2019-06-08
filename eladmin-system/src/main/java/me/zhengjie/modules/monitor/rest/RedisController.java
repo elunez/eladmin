@@ -29,22 +29,6 @@ public class RedisController {
         return new ResponseEntity(redisService.findByKey(key,pageable), HttpStatus.OK);
     }
 
-    @Log("新增Redis缓存")
-    @PostMapping(value = "/redis")
-    @PreAuthorize("hasAnyRole('ADMIN','REDIS_ALL','REDIS_CREATE')")
-    public ResponseEntity create(@Validated @RequestBody RedisVo resources){
-        redisService.save(resources);
-        return new ResponseEntity(HttpStatus.CREATED);
-    }
-
-    @Log("修改Redis缓存")
-    @PutMapping(value = "/redis")
-    @PreAuthorize("hasAnyRole('ADMIN','REDIS_ALL','REDIS_EDIT')")
-    public ResponseEntity update(@Validated @RequestBody RedisVo resources){
-        redisService.save(resources);
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
-    }
-
     @Log("删除Redis缓存")
     @DeleteMapping(value = "/redis")
     @PreAuthorize("hasAnyRole('ADMIN','REDIS_ALL','REDIS_DELETE')")

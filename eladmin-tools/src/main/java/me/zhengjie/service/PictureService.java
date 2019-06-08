@@ -1,17 +1,27 @@
 package me.zhengjie.service;
 
 import me.zhengjie.domain.Picture;
+import me.zhengjie.service.dto.PictureQueryCriteria;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
-
 /**
  * @author jie
  * @date 2018-12-27
  */
 @CacheConfig(cacheNames = "picture")
 public interface PictureService {
+
+    /**
+     * 查询图片
+     * @param criteria
+     * @param pageable
+     * @return
+     */
+    @Cacheable(keyGenerator = "keyGenerator")
+    Object queryAll(PictureQueryCriteria criteria, Pageable pageable);
 
     /**
      * 上传图片

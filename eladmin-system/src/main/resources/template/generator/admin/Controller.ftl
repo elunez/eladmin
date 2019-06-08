@@ -3,8 +3,7 @@ package ${package}.rest;
 import me.zhengjie.aop.log.Log;
 import ${package}.domain.${className};
 import ${package}.service.${className}Service;
-import ${package}.service.dto.${className}DTO;
-import ${package}.service.query.${className}QueryService;
+import ${package}.service.dto.${className}QueryCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -12,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
 
 /**
 * @author ${author}
@@ -24,14 +24,11 @@ public class ${className}Controller {
     @Autowired
     private ${className}Service ${changeClassName}Service;
 
-    @Autowired
-    private ${className}QueryService ${changeClassName}QueryService;
-
     @Log("查询${className}")
     @GetMapping(value = "/${changeClassName}")
     @PreAuthorize("hasAnyRole('ADMIN','${upperCaseClassName}_ALL','${upperCaseClassName}_SELECT')")
-    public ResponseEntity get${className}s(${className}DTO resources, Pageable pageable){
-        return new ResponseEntity(${changeClassName}QueryService.queryAll(resources,pageable),HttpStatus.OK);
+    public ResponseEntity get${className}s(${className}QueryCriteria criteria, Pageable pageable){
+        return new ResponseEntity(${changeClassName}Service.queryAll(criteria,pageable),HttpStatus.OK);
     }
 
     @Log("新增${className}")

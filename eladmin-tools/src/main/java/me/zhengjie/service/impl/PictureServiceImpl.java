@@ -9,10 +9,10 @@ import me.zhengjie.domain.Picture;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.repository.PictureRepository;
 import me.zhengjie.service.PictureService;
-import me.zhengjie.utils.ElAdminConstant;
-import me.zhengjie.utils.FileUtil;
-import me.zhengjie.utils.ValidationUtil;
+import me.zhengjie.service.dto.PictureQueryCriteria;
+import me.zhengjie.utils.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,6 +38,11 @@ public class PictureServiceImpl implements PictureService {
     public static final String CODE = "code";
 
     public static final String MSG = "msg";
+
+    @Override
+    public Object queryAll(PictureQueryCriteria criteria, Pageable pageable){
+        return PageUtil.toPage(pictureRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable));
+    }
 
     @Override
     @Transactional(rollbackFor = Throwable.class)

@@ -2,15 +2,13 @@ package me.zhengjie.modules.system.rest;
 
 import me.zhengjie.aop.log.Log;
 import me.zhengjie.modules.system.domain.Menu;
-import me.zhengjie.modules.system.domain.User;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.modules.system.service.MenuService;
 import me.zhengjie.modules.system.service.RoleService;
 import me.zhengjie.modules.system.service.UserService;
+import me.zhengjie.modules.system.service.dto.CommonQueryCriteria;
 import me.zhengjie.modules.system.service.dto.MenuDTO;
 import me.zhengjie.modules.system.service.dto.UserDTO;
-import me.zhengjie.modules.system.service.mapper.MenuMapper;
-import me.zhengjie.modules.system.service.query.MenuQueryService;
 import me.zhengjie.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,16 +30,10 @@ public class MenuController {
     private MenuService menuService;
 
     @Autowired
-    private MenuQueryService menuQueryService;
-
-    @Autowired
     private UserService userService;
 
     @Autowired
     private RoleService roleService;
-
-    @Autowired
-    private MenuMapper menuMapper;
 
     private static final String ENTITY_NAME = "menu";
 
@@ -70,8 +62,8 @@ public class MenuController {
     @Log("查询菜单")
     @GetMapping(value = "/menus")
     @PreAuthorize("hasAnyRole('ADMIN','MENU_ALL','MENU_SELECT')")
-    public ResponseEntity getMenus(@RequestParam(required = false) String name){
-        List<MenuDTO> menuDTOList = menuQueryService.queryAll(name);
+    public ResponseEntity getMenus(CommonQueryCriteria criteria){
+        List<MenuDTO> menuDTOList = menuService.queryAll(criteria);
         return new ResponseEntity(menuService.buildTree(menuDTOList),HttpStatus.OK);
     }
 

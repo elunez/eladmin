@@ -3,9 +3,11 @@ package me.zhengjie.modules.system.service;
 import me.zhengjie.modules.system.domain.User;
 import me.zhengjie.modules.security.security.JwtUser;
 import me.zhengjie.modules.system.service.dto.UserDTO;
+import me.zhengjie.modules.system.service.dto.UserQueryCriteria;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Pageable;
 
 /**
  * @author jie
@@ -75,4 +77,7 @@ public interface UserService {
      */
     @CacheEvict(allEntries = true)
     void updateEmail(String username, String email);
+
+    @Cacheable(keyGenerator = "keyGenerator")
+    Object queryAll(UserQueryCriteria criteria, Pageable pageable);
 }
