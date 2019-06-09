@@ -64,6 +64,7 @@ public class EmailServiceImpl implements EmailService {
         account.setHost(emailConfig.getHost());
         account.setPort(Integer.parseInt(emailConfig.getPort()));
         account.setAuth(true);
+        account.setSslEnable(false);
         try {
             // 对称解密
             account.setPass(EncryptUtils.desDecrypt(emailConfig.getPass()));
