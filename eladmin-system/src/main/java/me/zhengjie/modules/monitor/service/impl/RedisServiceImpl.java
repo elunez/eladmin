@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author jie
+ * @author Zheng Jie
  * @date 2018-12-10
  */
 @Service
@@ -23,7 +23,7 @@ public class RedisServiceImpl implements RedisService {
     RedisTemplate redisTemplate;
 
     @Override
-    public Page findByKey(String key, Pageable pageable){
+    public Page<RedisVo> findByKey(String key, Pageable pageable){
         List<RedisVo> redisVos = new ArrayList<>();
         if(!key.equals("*")){
             key = "*" + key + "*";
@@ -43,6 +43,8 @@ public class RedisServiceImpl implements RedisService {
         return page;
     }
 
+
+
     @Override
     public void delete(String key) {
         redisTemplate.delete(key);
@@ -51,6 +53,20 @@ public class RedisServiceImpl implements RedisService {
     @Override
     public void flushdb() {
         redisTemplate.getConnectionFactory().getConnection().flushDb();
+    }
 
+    @Override
+    public String getCodeVal(String key) {
+        try {
+            String value = redisTemplate.opsForValue().get(key).toString();
+            return value;
+        }catch (Exception e){
+            return "";
+        }
+    }
+
+    @Override
+    public void saveCode(String key, Object val) {
+        redisTemplate.opsForValue().set(key,val,2000);
     }
 }

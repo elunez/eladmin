@@ -12,7 +12,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * @author jie
+ * @author Zheng Jie
  * @date 2018-12-10
  */
 @RestController

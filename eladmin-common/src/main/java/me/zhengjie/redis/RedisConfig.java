@@ -22,7 +22,7 @@ import org.springframework.data.redis.serializer.RedisSerializationContext;
 import java.time.Duration;
 
 /**
- * @author jie
+ * @author Zheng Jie
  * @date 2018-11-24
  */
 @Slf4j

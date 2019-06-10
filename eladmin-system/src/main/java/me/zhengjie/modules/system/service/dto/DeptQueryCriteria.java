@@ -5,7 +5,7 @@ import me.zhengjie.annotation.Query;
 import java.util.Set;
 
 /**
-* @author jie
+* @author Zheng Jie
 * @date 2019-03-25
 */
 @Data

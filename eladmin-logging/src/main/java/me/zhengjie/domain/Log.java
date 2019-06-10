@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 
 /**
- * @author jie
+ * @author Zheng Jie
  * @date 2018-11-24
  */
 @Entity
@@ -63,7 +63,7 @@ public class Log  implements Serializable {
      * 异常详细
      */
     @Column(name = "exception_detail", columnDefinition = "text")
-    private String exceptionDetail;
+    private byte[] exceptionDetail;
 
     /**
      * 创建日期

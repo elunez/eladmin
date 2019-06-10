@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * @author jie
+ * @author Zheng Jie
  * @date 2018-11-24
  */
 @Component
@@ -65,7 +65,7 @@ public class LogAspect {
     @AfterThrowing(pointcut = "logPointcut()", throwing = "e")
     public void logAfterThrowing(JoinPoint joinPoint, Throwable e) {
         Log log = new Log("ERROR",System.currentTimeMillis() - currentTime);
-        log.setExceptionDetail(ThrowableUtil.getStackTrace(e));
+        log.setExceptionDetail(ThrowableUtil.getStackTrace(e).getBytes());
         logService.save(getUsername(), StringUtils.getIP(RequestHolder.getHttpServletRequest()), (ProceedingJoinPoint)joinPoint, log);
     }
 

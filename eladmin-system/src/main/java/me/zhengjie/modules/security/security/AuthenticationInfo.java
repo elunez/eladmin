@@ -5,7 +5,7 @@ import lombok.Getter;
 import java.io.Serializable;
 
 /**
- * @author jie
+ * @author Zheng Jie
  * @date 2018-11-23
  * 返回token
  */

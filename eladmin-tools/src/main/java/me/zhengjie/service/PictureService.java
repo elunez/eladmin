@@ -8,7 +8,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 /**
- * @author jie
+ * @author Zheng Jie
  * @date 2018-12-27
  */
 @CacheConfig(cacheNames = "picture")
