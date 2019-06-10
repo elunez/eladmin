@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.Set;
 
 /**
- * @author jie
+ * @author Zheng Jie
  * @date 2018-11-23
  */
 @Data
@@ -39,9 +39,9 @@ public class UserDTO implements Serializable {
     private Set<RoleSmallDTO> roles;
 
     @ApiModelProperty(hidden = true)
-    private JobDTO job;
+    private JobSmallDTO job;
 
-    private DeptDTO dept;
+    private DeptSmallDTO dept;
 
     private Long deptId;
 }

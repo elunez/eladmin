@@ -6,7 +6,7 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
-* @author jie
+* @author Zheng Jie
 * @date 2019-04-10
 */
 @Entity

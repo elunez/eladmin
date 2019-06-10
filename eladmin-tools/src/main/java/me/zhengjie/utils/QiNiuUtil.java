@@ -8,7 +8,7 @@ import java.util.Date;
 
 /**
  * 七牛云存储工具类
- * @author jie
+ * @author Zheng Jie
  * @date 2018-12-31
  */
 public class QiNiuUtil {

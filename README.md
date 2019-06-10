@@ -35,7 +35,6 @@ eladmin基于 Spring Boot 2.1.0 、 Jpa、 Spring Security、redis、Vue的前�
 - 操作日志：记录用户操作的日志
 - 异常日志：记录异常日志，方便开发人员定位错误
 - 系统缓存：使用jedis将缓存操作可视化，并提供对redis的基本操作，可根据需求自行扩展
-- 实时控制台：实时打印logback日志
 - SQL监控：采用druid 监控数据库访问性能，默认用户名admin，密码123456
 - 定时任务：整合Quartz做定时任务，加入任务日志，任务运行情况一目了然
 - 代码生成：高灵活度一键生成前后端代码，减少百分之80左右的工作任务
@@ -71,10 +70,9 @@ eladmin基于 Spring Boot 2.1.0 、 Jpa、 Spring Security、redis、Vue的前�
     </tr>
     <tr>
         <td><img src="https://i.loli.net/2019/05/18/5cdf77632b4b090165.png"/></td>
-        <td><img src="https://i.loli.net/2019/05/18/5cdf77639b1be47210.png"/></td>
-    </tr>
-    <tr>
         <td><img src="https://i.loli.net/2019/05/18/5cdf77639929277783.png"/></td>
+    </tr>
+    <tr>   
  <td><img src="https://i.loli.net/2019/05/18/5cdf78969adc389599.png"/></td>
     </tr>
 </table>

@@ -12,7 +12,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * @author jie
+ * @author Zheng Jie
  * @date 2018-11-22
  */
 public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificationExecutor {

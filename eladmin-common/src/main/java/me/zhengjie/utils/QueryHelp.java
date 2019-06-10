@@ -9,7 +9,7 @@ import java.lang.reflect.Field;
 import java.util.*;
 
 /**
- * @author jie
+ * @author Zheng Jie
  * @date 2019-6-4 14:59:48
  */
 @Slf4j
@@ -97,12 +97,14 @@ public class QueryHelp {
         return cb.and(list.toArray(new Predicate[list.size()]));
     }
 
+    @SuppressWarnings("unchecked")
     private static <T, R> Expression<T> getExpression(String attributeName, Join join, Root<R> root) {
         if (ObjectUtil.isNotEmpty(join)) {
             return join.get(attributeName);
         } else return root.get(attributeName);
     }
 
+    @SuppressWarnings("unchecked")
     public static boolean isBlank(final CharSequence cs) {
         int strLen;
         if (cs == null || (strLen = cs.length()) == 0) {
@@ -116,6 +118,7 @@ public class QueryHelp {
         return true;
     }
 
+    @SuppressWarnings("unchecked")
     private static List<Field> getAllFields(Class clazz, List<Field> fields) {
         if (clazz != null) {
             fields.addAll(Arrays.asList(clazz.getDeclaredFields()));

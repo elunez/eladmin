@@ -39,7 +39,6 @@ public class LimitAspect {
         Method signatureMethod = signature.getMethod();
         Limit limit = signatureMethod.getAnnotation(Limit.class);
         LimitType limitType = limit.limitType();
-        String name = limit.name();
         String key = limit.key();
         if (StringUtils.isEmpty(key)) {
             switch (limitType) {

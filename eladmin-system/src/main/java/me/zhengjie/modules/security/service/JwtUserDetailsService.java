@@ -1,12 +1,9 @@
 package me.zhengjie.modules.security.service;
 
 import me.zhengjie.exception.BadRequestException;
-import me.zhengjie.modules.system.domain.*;
 import me.zhengjie.modules.security.security.JwtUser;
 import me.zhengjie.modules.system.service.UserService;
-import me.zhengjie.modules.system.service.dto.DeptDTO;
-import me.zhengjie.modules.system.service.dto.JobDTO;
-import me.zhengjie.modules.system.service.dto.UserDTO;
+import me.zhengjie.modules.system.service.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -16,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
 /**
- * @author jie
+ * @author Zheng Jie
  * @date 2018-11-22
  */
 @Service
@@ -48,8 +45,8 @@ public class JwtUserDetailsService implements UserDetailsService {
                 user.getAvatar(),
                 user.getEmail(),
                 user.getPhone(),
-                Optional.ofNullable(user.getDept()).map(DeptDTO::getName).orElse(null),
-                Optional.ofNullable(user.getJob()).map(JobDTO::getName).orElse(null),
+                Optional.ofNullable(user.getDept()).map(DeptSmallDTO::getName).orElse(null),
+                Optional.ofNullable(user.getJob()).map(JobSmallDTO::getName).orElse(null),
                 permissionService.mapToGrantedAuthorities(user),
                 user.getEnabled(),
                 user.getCreateTime(),

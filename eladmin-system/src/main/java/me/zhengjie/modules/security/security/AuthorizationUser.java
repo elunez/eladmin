@@ -6,7 +6,7 @@ import lombok.Setter;
 import javax.validation.constraints.NotBlank;
 
 /**
- * @author jie
+ * @author Zheng Jie
  * @date 2018-11-30
  */
 @Getter
@@ -18,6 +18,10 @@ public class AuthorizationUser {
 
     @NotBlank
     private String password;
+
+    private String code;
+
+    private String uuid = "";
 
     @Override
     public String toString() {

@@ -15,7 +15,7 @@ import java.util.Set;
 
 /**
  * 角色
- * @author jie
+ * @author Zheng Jie
  * @date 2018-11-22
  */
 @Entity

@@ -5,7 +5,7 @@ import java.io.StringWriter;
 
 /**
  * 异常工具
- * @author jie
+ * @author Zheng Jie
  * @date 2019-01-06
  */
 public class ThrowableUtil {

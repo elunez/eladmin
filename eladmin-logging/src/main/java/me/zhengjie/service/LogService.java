@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Async;
 
 /**
- * @author jie
+ * @author Zheng Jie
  * @date 2018-11-24
  */
 public interface LogService {

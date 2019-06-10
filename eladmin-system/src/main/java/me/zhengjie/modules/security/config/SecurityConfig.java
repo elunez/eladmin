@@ -92,13 +92,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 ).anonymous()
 
                 .antMatchers( HttpMethod.POST,"/auth/"+loginPath).anonymous()
-                .antMatchers("/websocket/**").anonymous()
+                .antMatchers("/auth/vCode").anonymous()
                 // 支付宝回调
                 .antMatchers("/api/aliPay/return").anonymous()
                 .antMatchers("/api/aliPay/notify").anonymous()
-
-                // 系统监控
-                .antMatchers("/actuator/**").anonymous()
 
                 // swagger start
                 .antMatchers("/swagger-ui.html").anonymous()
