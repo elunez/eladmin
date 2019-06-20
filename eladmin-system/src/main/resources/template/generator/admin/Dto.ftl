@@ -24,9 +24,7 @@ public class ${className}DTO implements Serializable {
     <#list columns as column>
 
     <#if column.columnComment != ''>
-    /**
-     * ${column.columnComment}
-     */
+    // ${column.columnComment}
     </#if>
     <#if column.columnKey = 'PRI'>
     <#if !auto && pkColumnType = 'Long'>
