@@ -81,6 +81,9 @@ public class MenuController {
     @PutMapping(value = "/menus")
     @PreAuthorize("hasAnyRole('ADMIN','MENU_ALL','MENU_EDIT')")
     public ResponseEntity update(@Validated(Menu.Update.class) @RequestBody Menu resources){
+        if (resources.getId() <= new Long(39).longValue()) {
+            throw new BadRequestException("演示环境不可操作");
+        }
         menuService.update(resources);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
@@ -89,6 +92,9 @@ public class MenuController {
     @DeleteMapping(value = "/menus/{id}")
     @PreAuthorize("hasAnyRole('ADMIN','MENU_ALL','MENU_DELETE')")
     public ResponseEntity delete(@PathVariable Long id){
+        if (id.longValue() <= new Long(39).longValue()) {
+            throw new BadRequestException("演示环境不可操作");
+        }
         List<Menu> menuList = menuService.findByPid(id);
 
         // 特殊情况，对级联删除进行处理

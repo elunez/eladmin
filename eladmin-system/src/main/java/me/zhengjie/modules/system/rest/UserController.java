@@ -102,6 +102,9 @@ public class UserController {
     @PutMapping(value = "/users")
     @PreAuthorize("hasAnyRole('ADMIN','USER_ALL','USER_EDIT')")
     public ResponseEntity update(@Validated(User.Update.class) @RequestBody User resources){
+        if (resources.getId().equals(1L)) {
+            throw new BadRequestException("演示环境不可操作");
+        }
         checkLevel(resources);
         userService.update(resources);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
@@ -111,6 +114,9 @@ public class UserController {
     @DeleteMapping(value = "/users/{id}")
     @PreAuthorize("hasAnyRole('ADMIN','USER_ALL','USER_DELETE')")
     public ResponseEntity delete(@PathVariable Long id){
+        if (id.equals(1L)) {
+            throw new BadRequestException("演示环境不可操作");
+        }
         Integer currentLevel =  Collections.min(roleService.findByUsers_Id(SecurityUtils.getUserId()).stream().map(RoleSmallDTO::getLevel).collect(Collectors.toList()));
         Integer optLevel =  Collections.min(roleService.findByUsers_Id(id).stream().map(RoleSmallDTO::getLevel).collect(Collectors.toList()));
 
@@ -145,6 +151,9 @@ public class UserController {
     @PostMapping(value = "/users/updatePass")
     public ResponseEntity updatePass(@RequestBody User user){
         UserDetails userDetails = SecurityUtils.getUserDetails();
+        if (userDetails.getUsername().equals("admin")) {
+            throw new BadRequestException("演示环境不可操作");
+        }
         if(userDetails.getPassword().equals(EncryptUtils.encryptPassword(user.getPassword()))){
             throw new BadRequestException("新密码不能与旧密码相同");
         }

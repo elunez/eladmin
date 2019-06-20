@@ -2,8 +2,6 @@ package me.zhengjie.modules.security.rest;
 
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.util.IdUtil;
-import com.wf.captcha.Captcha;
-import com.wf.captcha.SpecCaptcha;
 import lombok.extern.slf4j.Slf4j;
 import me.zhengjie.aop.log.Log;
 import me.zhengjie.exception.BadRequestException;

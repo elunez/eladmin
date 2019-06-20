@@ -82,6 +82,9 @@ public class RoleController {
     @PutMapping(value = "/roles")
     @PreAuthorize("hasAnyRole('ADMIN','ROLES_ALL','ROLES_EDIT')")
     public ResponseEntity update(@Validated(Role.Update.class) @RequestBody Role resources){
+        if (resources.getId().equals(1L)) {
+            throw new BadRequestException("演示环境不可操作");
+        }
         roleService.update(resources);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
@@ -90,6 +93,9 @@ public class RoleController {
     @PutMapping(value = "/roles/permission")
     @PreAuthorize("hasAnyRole('ADMIN','ROLES_ALL','ROLES_EDIT')")
     public ResponseEntity updatePermission(@RequestBody Role resources){
+        if (resources.getId().equals(1L)) {
+            throw new BadRequestException("演示环境不可操作");
+        }
         roleService.updatePermission(resources,roleService.findById(resources.getId()));
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
@@ -98,6 +104,9 @@ public class RoleController {
     @PutMapping(value = "/roles/menu")
     @PreAuthorize("hasAnyRole('ADMIN','ROLES_ALL','ROLES_EDIT')")
     public ResponseEntity updateMenu(@RequestBody Role resources){
+        if (resources.getId().equals(1L)) {
+            throw new BadRequestException("演示环境不可操作");
+        }
         roleService.updateMenu(resources,roleService.findById(resources.getId()));
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
@@ -106,6 +115,9 @@ public class RoleController {
     @DeleteMapping(value = "/roles/{id}")
     @PreAuthorize("hasAnyRole('ADMIN','ROLES_ALL','ROLES_DELETE')")
     public ResponseEntity delete(@PathVariable Long id){
+        if (id.equals(1L)) {
+            throw new BadRequestException("演示环境不可操作");
+        }
         roleService.delete(id);
         return new ResponseEntity(HttpStatus.OK);
     }
