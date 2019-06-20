@@ -60,9 +60,6 @@ public class PermissionController {
     @PutMapping(value = "/permissions")
     @PreAuthorize("hasAnyRole('ADMIN','PERMISSION_ALL','PERMISSION_EDIT')")
     public ResponseEntity update(@Validated(Permission.Update.class) @RequestBody Permission resources){
-        if (resources.getId() <= new Long(54).longValue()) {
-            throw new BadRequestException("演示环境不可操作");
-        }
         permissionService.update(resources);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
@@ -71,9 +68,6 @@ public class PermissionController {
     @DeleteMapping(value = "/permissions/{id}")
     @PreAuthorize("hasAnyRole('ADMIN','PERMISSION_ALL','PERMISSION_DELETE')")
     public ResponseEntity delete(@PathVariable Long id){
-        if (id <= new Long(54).longValue()) {
-            throw new BadRequestException("演示环境不可操作");
-        }
         permissionService.delete(id);
         return new ResponseEntity(HttpStatus.OK);
     }
