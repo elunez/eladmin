@@ -2,8 +2,6 @@ package me.zhengjie.modules.security.rest;
 
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.util.IdUtil;
-import com.wf.captcha.Captcha;
-import com.wf.captcha.SpecCaptcha;
 import lombok.extern.slf4j.Slf4j;
 import me.zhengjie.aop.log.Log;
 import me.zhengjie.exception.BadRequestException;
@@ -12,6 +10,7 @@ import me.zhengjie.modules.security.security.AuthenticationInfo;
 import me.zhengjie.modules.security.security.AuthorizationUser;
 import me.zhengjie.modules.security.security.ImgResult;
 import me.zhengjie.modules.security.security.JwtUser;
+import me.zhengjie.modules.security.utils.VerifyCodeUtils;
 import me.zhengjie.utils.EncryptUtils;
 import me.zhengjie.modules.security.utils.JwtTokenUtil;
 import me.zhengjie.utils.SecurityUtils;
@@ -102,21 +101,16 @@ public class AuthenticationController {
      */
     @GetMapping(value = "vCode")
     public ImgResult getCode(HttpServletResponse response) throws IOException {
-        // 三个参数分别为宽、高、位数
-        SpecCaptcha specCaptcha = new SpecCaptcha(105, 33, 4);
 
-        // 设置类型，纯数字、纯字母、字母数字混合
-        specCaptcha.setCharType(Captcha.TYPE_DEFAULT);
-
-        // 生成的验证码
-        String code = specCaptcha.text();
-
+        //生成随机字串
+        String verifyCode = VerifyCodeUtils.generateVerifyCode(4);
         String uuid = IdUtil.simpleUUID();
-        redisService.saveCode(uuid,code);
-        response.addHeader("codeUuid",uuid);
+        redisService.saveCode(uuid,verifyCode);
+        // 生成图片
+        int w = 111, h = 36;
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        VerifyCodeUtils.outputImage(w, h, stream, verifyCode);
         try {
-            specCaptcha.out(stream);
             return new ImgResult(Base64.encode(stream.toByteArray()),uuid);
         } catch (Exception e) {
             e.printStackTrace();

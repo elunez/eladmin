@@ -15,22 +15,7 @@
         <jjwt.version>0.9.1</jjwt.version>
     </properties>
 
-    <repositories>
-        <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
-        </repository>
-    </repositories>
-
     <dependencies>
-
-        <!--    验证码    -->
-        <dependency>
-            <groupId>com.github.whvcse</groupId>
-            <artifactId>EasyCaptcha</artifactId>
-            <version>1.5.0</version>
-        </dependency>
-
         <dependency>
             <groupId>me.zhengjie</groupId>
             <artifactId>eladmin-generator</artifactId>
