@@ -25,10 +25,6 @@ export default {
     isAdd: {
       type: Boolean,
       required: true
-    },
-    sup_this: {
-      type: Object,
-      default: null
     }
   },
   data() {
@@ -71,7 +67,7 @@ export default {
           duration: 2500
         })
         this.loading = false
-        this.$parent.$parent.init()
+        this.$parent.init()
       }).catch(err => {
         this.loading = false
         console.log(err.response.data.message)
@@ -86,7 +82,7 @@ export default {
           duration: 2500
         })
         this.loading = false
-        this.sup_this.init()
+        this.$parent.init()
       }).catch(err => {
         this.loading = false
         console.log(err.response.data.message)

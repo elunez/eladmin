@@ -3,16 +3,16 @@ package ${package}.service;
 import ${package}.domain.${className};
 import ${package}.service.dto.${className}DTO;
 import ${package}.service.dto.${className}QueryCriteria;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
+//import org.springframework.cache.annotation.CacheConfig;
+//import org.springframework.cache.annotation.CacheEvict;
+//import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
 
 /**
 * @author ${author}
 * @date ${date}
 */
-@CacheConfig(cacheNames = "${changeClassName}")
+//@CacheConfig(cacheNames = "${changeClassName}")
 public interface ${className}Service {
 
     /**
@@ -21,7 +21,7 @@ public interface ${className}Service {
     * @param pageable
     * @return
     */
-    @Cacheable(keyGenerator = "keyGenerator")
+    //@Cacheable(keyGenerator = "keyGenerator")
     Object queryAll(${className}QueryCriteria criteria, Pageable pageable);
 
     /**
@@ -29,7 +29,7 @@ public interface ${className}Service {
     * @param criteria
     * @return
     */
-    @Cacheable(keyGenerator = "keyGenerator")
+    //@Cacheable(keyGenerator = "keyGenerator")
     public Object queryAll(${className}QueryCriteria criteria);
 
     /**
@@ -37,7 +37,7 @@ public interface ${className}Service {
      * @param ${pkChangeColName}
      * @return
      */
-    @Cacheable(key = "#p0")
+    //@Cacheable(key = "#p0")
     ${className}DTO findById(${pkColumnType} ${pkChangeColName});
 
     /**
@@ -45,20 +45,20 @@ public interface ${className}Service {
      * @param resources
      * @return
      */
-    @CacheEvict(allEntries = true)
+    //@CacheEvict(allEntries = true)
     ${className}DTO create(${className} resources);
 
     /**
      * update
      * @param resources
      */
-    @CacheEvict(allEntries = true)
+    //@CacheEvict(allEntries = true)
     void update(${className} resources);
 
     /**
      * delete
      * @param ${pkChangeColName}
      */
-    @CacheEvict(allEntries = true)
+    //@CacheEvict(allEntries = true)
     void delete(${pkColumnType} ${pkChangeColName});
 }

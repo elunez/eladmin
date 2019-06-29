@@ -31,6 +31,7 @@ public @interface Query {
     Join join() default Join.LEFT;
 
     enum Type {
+        /** jie 2019/6/4 相等 */
         EQUAL
         /** Dong ZhaoYang 2017/8/7 大于等于 */
         , GREATER_THAN

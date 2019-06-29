@@ -101,7 +101,9 @@ public class QueryHelp {
     private static <T, R> Expression<T> getExpression(String attributeName, Join join, Root<R> root) {
         if (ObjectUtil.isNotEmpty(join)) {
             return join.get(attributeName);
-        } else return root.get(attributeName);
+        } else {
+            return root.get(attributeName);
+        }
     }
 
     @SuppressWarnings("unchecked")

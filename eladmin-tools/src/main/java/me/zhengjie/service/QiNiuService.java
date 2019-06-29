@@ -45,6 +45,7 @@ public interface QiNiuService {
      * 上传文件
      * @param file
      * @param qiniuConfig
+     * @return
      */
     @CacheEvict(allEntries = true)
     QiniuContent upload(MultipartFile file, QiniuConfig qiniuConfig);
@@ -84,7 +85,7 @@ public interface QiNiuService {
     /**
      * 删除文件
      * @param ids
-     * @return
+     * @param config
      */
     @CacheEvict(allEntries = true)
     void deleteAll(Long[] ids, QiniuConfig config);

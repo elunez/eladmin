@@ -122,22 +122,6 @@ public class UserController {
     }
 
     /**
-     * 验证密码
-     * @param user
-     * @return
-     */
-    @PostMapping(value = "/users/validPass")
-    public ResponseEntity validPass(@RequestBody User user){
-        UserDetails userDetails = SecurityUtils.getUserDetails();
-        Map map = new HashMap();
-        map.put("status",200);
-        if(!userDetails.getPassword().equals(EncryptUtils.encryptPassword(user.getPassword()))){
-           map.put("status",400);
-        }
-        return new ResponseEntity(map,HttpStatus.OK);
-    }
-
-    /**
      * 修改密码
      * @param user
      * @return
@@ -145,6 +129,9 @@ public class UserController {
     @PostMapping(value = "/users/updatePass")
     public ResponseEntity updatePass(@RequestBody User user){
         UserDetails userDetails = SecurityUtils.getUserDetails();
+        if(!userDetails.getPassword().equals(EncryptUtils.encryptPassword(user.getPassword()))){
+            throw new BadRequestException("修改失败，旧密码错误");
+        }
         if(userDetails.getPassword().equals(EncryptUtils.encryptPassword(user.getPassword()))){
             throw new BadRequestException("新密码不能与旧密码相同");
         }

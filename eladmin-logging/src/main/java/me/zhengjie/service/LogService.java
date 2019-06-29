@@ -30,6 +30,8 @@ public interface LogService {
 
     /**
      * 新增日志
+     * @param username
+     * @param ip
      * @param joinPoint
      * @param log
      */

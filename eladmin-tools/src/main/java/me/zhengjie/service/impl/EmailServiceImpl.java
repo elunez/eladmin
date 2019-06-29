@@ -83,7 +83,8 @@ public class EmailServiceImpl implements EmailService {
                     .setTitle(emailVo.getSubject())
                     .setContent(content)
                     .setHtml(true)
-                    .setUseGlobalSession(false)//关闭session
+                    //关闭session
+                    .setUseGlobalSession(false)
                     .send();
         }catch (Exception e){
             throw new BadRequestException(e.getMessage());

@@ -16,4 +16,7 @@ public class LogQueryCriteria {
 
     @Query
     private String logType;
+
+    @Query(type = Query.Type.INNER_LIKE)
+    private String description;
 }

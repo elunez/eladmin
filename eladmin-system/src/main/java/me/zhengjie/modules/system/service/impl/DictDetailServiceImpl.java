@@ -15,6 +15,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -32,7 +34,7 @@ public class DictDetailServiceImpl implements DictDetailService {
     private DictDetailMapper dictDetailMapper;
 
     @Override
-    public Object queryAll(DictDetailQueryCriteria criteria, Pageable pageable) {
+    public Map queryAll(DictDetailQueryCriteria criteria, Pageable pageable) {
         Page<DictDetail> page = dictDetailRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable);
         return PageUtil.toPage(page.map(dictDetailMapper::toDto));
     }

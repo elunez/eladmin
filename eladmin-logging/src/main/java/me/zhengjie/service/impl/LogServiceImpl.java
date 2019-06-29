@@ -42,7 +42,7 @@ public class LogServiceImpl implements LogService {
     @Override
     public Object queryAll(LogQueryCriteria criteria, Pageable pageable){
         Page<Log> page = logRepository.findAll(((root, criteriaQuery, cb) -> QueryHelp.getPredicate(root, criteria, cb)),pageable);
-        if (criteria.getLogType().equals("ERROR")) {
+        if ("ERROR".equals(criteria.getLogType())) {
             return PageUtil.toPage(page.map(logErrorMapper::toDto));
         }
         return page;

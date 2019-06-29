@@ -49,7 +49,7 @@ public class PictureServiceImpl implements PictureService {
     public Picture upload(MultipartFile multipartFile, String username) {
         File file = FileUtil.toFile(multipartFile);
 
-        HashMap<String, Object> paramMap = new HashMap<>();
+        HashMap<String, Object> paramMap = new HashMap<>(1);
 
         paramMap.put("smfile", file);
         String result= HttpUtil.post(ElAdminConstant.Url.SM_MS_URL, paramMap);

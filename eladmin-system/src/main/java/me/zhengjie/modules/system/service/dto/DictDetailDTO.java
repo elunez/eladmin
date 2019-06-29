@@ -26,9 +26,4 @@ public class DictDetailDTO implements Serializable {
      * 排序
      */
     private String sort;
-
-    /**
-     * 字典id
-     */
-    private String dictName;
 }
