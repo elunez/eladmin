@@ -120,6 +120,7 @@ public class GenUtil {
             listMap.put("changeColumnName",changeColumnName);
             listMap.put("capitalColumnName",capitalColumnName);
 
+            // 判断是否有查询，如有则把查询的字段set进columnQuery
             if(!StringUtils.isBlank(column.getColumnQuery())){
                 listMap.put("columnQuery",column.getColumnQuery());
                 map.put("hasQuery",true);
@@ -140,10 +141,8 @@ public class GenUtil {
             File file = new File(filePath);
 
             // 如果非覆盖生成
-            if(!genConfig.getCover()){
-                if(FileUtil.exist(file)){
-                    continue;
-                }
+            if(!genConfig.getCover() && FileUtil.exist(file)){
+                continue;
             }
             // 生成代码
             genFile(file, template, map);
@@ -158,10 +157,8 @@ public class GenUtil {
             File file = new File(filePath);
 
             // 如果非覆盖生成
-            if(!genConfig.getCover()){
-                if(FileUtil.exist(file)){
-                    continue;
-                }
+            if(!genConfig.getCover() && FileUtil.exist(file)){
+                continue;
             }
             // 生成代码
             genFile(file, template, map);

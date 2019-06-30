@@ -67,7 +67,6 @@ public class JobServiceImpl implements JobService {
         ValidationUtil.isNull( optionalJob,"Job","id",resources.getId());
 
         Job job = optionalJob.get();
-        // 此处需自己修改
         resources.setId(job.getId());
         jobRepository.save(resources);
     }

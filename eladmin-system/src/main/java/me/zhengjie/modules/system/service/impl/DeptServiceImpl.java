@@ -105,9 +105,7 @@ public class DeptServiceImpl implements DeptService {
         }
         Optional<Dept> optionalDept = deptRepository.findById(resources.getId());
         ValidationUtil.isNull( optionalDept,"Dept","id",resources.getId());
-
         Dept dept = optionalDept.get();
-        // 此处需自己修改
         resources.setId(dept.getId());
         deptRepository.save(resources);
     }

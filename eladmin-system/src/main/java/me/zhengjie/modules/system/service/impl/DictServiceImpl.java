@@ -54,9 +54,7 @@ public class DictServiceImpl implements DictService {
     public void update(Dict resources) {
         Optional<Dict> optionalDict = dictRepository.findById(resources.getId());
         ValidationUtil.isNull( optionalDict,"Dict","id",resources.getId());
-
         Dict dict = optionalDict.get();
-        // 此处需自己修改
         resources.setId(dict.getId());
         dictRepository.save(resources);
     }

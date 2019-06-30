@@ -57,9 +57,7 @@ public class DictDetailServiceImpl implements DictDetailService {
     public void update(DictDetail resources) {
         Optional<DictDetail> optionalDictDetail = dictDetailRepository.findById(resources.getId());
         ValidationUtil.isNull( optionalDictDetail,"DictDetail","id",resources.getId());
-
         DictDetail dictDetail = optionalDictDetail.get();
-        // 此处需自己修改
         resources.setId(dictDetail.getId());
         dictDetailRepository.save(resources);
     }
