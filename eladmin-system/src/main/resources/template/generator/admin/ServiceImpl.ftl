@@ -92,7 +92,6 @@ public class ${className}ServiceImpl implements ${className}Service {
     public void update(${className} resources) {
         Optional<${className}> optional${className} = ${changeClassName}Repository.findById(resources.get${pkCapitalColName}());
         ValidationUtil.isNull( optional${className},"${className}","id",resources.get${pkCapitalColName}());
-
         ${className} ${changeClassName} = optional${className}.get();
 <#if columns??>
     <#list columns as column>
@@ -107,9 +106,8 @@ public class ${className}ServiceImpl implements ${className}Service {
         </#if>
     </#list>
 </#if>
-        // 此处需自己修改
-        resources.set${pkCapitalColName}(${changeClassName}.get${pkCapitalColName}());
-        ${changeClassName}Repository.save(resources);
+        ${changeClassName}.copy(resources);
+        ${changeClassName}Repository.save(${changeClassName});
     }
 
     @Override

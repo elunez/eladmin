@@ -57,8 +57,6 @@ public class GenUtil {
         List<String> templateNames = new ArrayList<>();
         templateNames.add("api");
         templateNames.add("index");
-        templateNames.add("header");
-        templateNames.add("edit");
         templateNames.add("eForm");
         return templateNames;
     }
@@ -122,6 +120,7 @@ public class GenUtil {
             listMap.put("changeColumnName",changeColumnName);
             listMap.put("capitalColumnName",capitalColumnName);
 
+            // 判断是否有查询，如有则把查询的字段set进columnQuery
             if(!StringUtils.isBlank(column.getColumnQuery())){
                 listMap.put("columnQuery",column.getColumnQuery());
                 map.put("hasQuery",true);
@@ -142,10 +141,8 @@ public class GenUtil {
             File file = new File(filePath);
 
             // 如果非覆盖生成
-            if(!genConfig.getCover()){
-                if(FileUtil.exist(file)){
-                    continue;
-                }
+            if(!genConfig.getCover() && FileUtil.exist(file)){
+                continue;
             }
             // 生成代码
             genFile(file, template, map);
@@ -160,10 +157,8 @@ public class GenUtil {
             File file = new File(filePath);
 
             // 如果非覆盖生成
-            if(!genConfig.getCover()){
-                if(FileUtil.exist(file)){
-                    continue;
-                }
+            if(!genConfig.getCover() && FileUtil.exist(file)){
+                continue;
             }
             // 生成代码
             genFile(file, template, map);
@@ -174,8 +169,8 @@ public class GenUtil {
      * 定义后端文件路径以及名称
      */
     public static String getAdminFilePath(String templateName, GenConfig genConfig, String className) {
-        String ProjectPath = System.getProperty("user.dir") + File.separator + genConfig.getModuleName();
-        String packagePath = ProjectPath + File.separator + "src" +File.separator+ "main" + File.separator + "java" + File.separator;
+        String projectPath = System.getProperty("user.dir") + File.separator + genConfig.getModuleName();
+        String packagePath = projectPath + File.separator + "src" +File.separator+ "main" + File.separator + "java" + File.separator;
         if (!ObjectUtils.isEmpty(genConfig.getPack())) {
             packagePath += genConfig.getPack().replace(".", File.separator) + File.separator;
         }
@@ -229,16 +224,8 @@ public class GenUtil {
             return path  + File.separator + "index.vue";
         }
 
-        if ("header".equals(templateName)) {
-            return path  + File.separator + "module" + File.separator + "header.vue";
-        }
-
-        if ("edit".equals(templateName)) {
-            return path  + File.separator + "module" + File.separator + "edit.vue";
-        }
-
         if ("eForm".equals(templateName)) {
-            return path  + File.separator + "module" + File.separator + "form.vue";
+            return path  + File.separator + File.separator + "form.vue";
         }
         return null;
     }

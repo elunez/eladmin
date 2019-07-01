@@ -25,7 +25,7 @@ public class RedisServiceImpl implements RedisService {
     @Override
     public Page<RedisVo> findByKey(String key, Pageable pageable){
         List<RedisVo> redisVos = new ArrayList<>();
-        if(!key.equals("*")){
+        if(!"*".equals(key)){
             key = "*" + key + "*";
         }
         for (Object s : redisTemplate.keys(key)) {

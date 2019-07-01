@@ -23,6 +23,7 @@ public interface GenConfigService {
     /**
      * update
      * @param genConfig
+     * @return
      */
     @CacheEvict(allEntries = true)
     GenConfig update(GenConfig genConfig);

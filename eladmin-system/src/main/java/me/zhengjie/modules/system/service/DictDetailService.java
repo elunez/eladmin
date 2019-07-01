@@ -8,6 +8,8 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
 
+import java.util.Map;
+
 /**
 * @author Zheng Jie
 * @date 2019-04-10
@@ -46,5 +48,5 @@ public interface DictDetailService {
     void delete(Long id);
 
     @Cacheable(keyGenerator = "keyGenerator")
-    Object queryAll(DictDetailQueryCriteria criteria, Pageable pageable);
+    Map queryAll(DictDetailQueryCriteria criteria, Pageable pageable);
 }

@@ -1,6 +1,8 @@
 package ${package}.domain;
 
 import lombok.Data;
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.bean.copier.CopyOptions;
 import javax.persistence.*;
 <#if hasTimestamp>
 import java.sql.Timestamp;
@@ -34,4 +36,8 @@ public class ${className} implements Serializable {
     private ${column.columnType} ${column.changeColumnName};
     </#list>
 </#if>
+
+    public void copy(${className} source){
+        BeanUtil.copyProperties(source,this, CopyOptions.create().setIgnoreNullValue(true));
+    }
 }
