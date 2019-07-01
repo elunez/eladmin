@@ -4,6 +4,7 @@ import me.zhengjie.modules.monitor.domain.vo.RedisVo;
 import me.zhengjie.modules.monitor.service.RedisService;
 import me.zhengjie.utils.PageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -11,6 +12,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Zheng Jie
@@ -21,6 +23,9 @@ public class RedisServiceImpl implements RedisService {
 
     @Autowired
     RedisTemplate redisTemplate;
+
+    @Value("${loginCode.expiration}")
+    private Long expiration;
 
     @Override
     public Page<RedisVo> findByKey(String key, Pageable pageable){
@@ -67,6 +72,7 @@ public class RedisServiceImpl implements RedisService {
 
     @Override
     public void saveCode(String key, Object val) {
-        redisTemplate.opsForValue().set(key,val,2000);
+        redisTemplate.opsForValue().set(key,val);
+        redisTemplate.expire(key,expiration, TimeUnit.MINUTES);
     }
 }
