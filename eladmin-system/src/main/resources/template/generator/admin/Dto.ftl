@@ -8,6 +8,11 @@ import java.sql.Timestamp;
 import java.math.BigDecimal;
 </#if>
 import java.io.Serializable;
+<#if !auto && pkColumnType = 'Long'>
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+</#if>
+
 
 /**
 * @author ${author}
@@ -19,9 +24,13 @@ public class ${className}DTO implements Serializable {
     <#list columns as column>
 
     <#if column.columnComment != ''>
-    /**
-     * ${column.columnComment}
-     */
+    // ${column.columnComment}
+    </#if>
+    <#if column.columnKey = 'PRI'>
+    <#if !auto && pkColumnType = 'Long'>
+    // 处理精度丢失问题
+    @JsonSerialize(using= ToStringSerializer.class)
+    </#if>
     </#if>
     private ${column.columnType} ${column.changeColumnName};
     </#list>

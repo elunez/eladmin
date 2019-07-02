@@ -1,29 +1,19 @@
 package me.zhengjie.modules.security.service;
 
-import me.zhengjie.modules.system.domain.Permission;
-import me.zhengjie.modules.system.domain.Role;
-import me.zhengjie.modules.system.domain.User;
-import me.zhengjie.exception.EntityNotFoundException;
-import me.zhengjie.modules.system.repository.UserRepository;
+import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.modules.security.security.JwtUser;
-import me.zhengjie.utils.ValidationUtil;
+import me.zhengjie.modules.system.service.UserService;
+import me.zhengjie.modules.system.service.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 /**
- * @author jie
+ * @author Zheng Jie
  * @date 2018-11-22
  */
 @Service
@@ -31,50 +21,36 @@ import java.util.stream.Collectors;
 public class JwtUserDetailsService implements UserDetailsService {
 
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
+
+    @Autowired
+    private JwtPermissionService permissionService;
 
     @Override
     public UserDetails loadUserByUsername(String username){
 
-        User user = null;
-        if(ValidationUtil.isEmail(username)){
-            user = userRepository.findByEmail(username);
-        } else {
-            user = userRepository.findByUsername(username);
-        }
-
+        UserDTO user = userService.findByName(username);
         if (user == null) {
-            throw new EntityNotFoundException(User.class, "name", username);
+            throw new BadRequestException("账号不存在");
         } else {
-            return create(user);
+            return createJwtUser(user);
         }
     }
 
-    public UserDetails create(User user) {
+    public UserDetails createJwtUser(UserDTO user) {
         return new JwtUser(
                 user.getId(),
                 user.getUsername(),
                 user.getPassword(),
                 user.getAvatar(),
                 user.getEmail(),
-                mapToGrantedAuthorities(user.getRoles()),
+                user.getPhone(),
+                Optional.ofNullable(user.getDept()).map(DeptSmallDTO::getName).orElse(null),
+                Optional.ofNullable(user.getJob()).map(JobSmallDTO::getName).orElse(null),
+                permissionService.mapToGrantedAuthorities(user),
                 user.getEnabled(),
                 user.getCreateTime(),
                 user.getLastPasswordResetTime()
         );
-    }
-
-    private static List<GrantedAuthority> mapToGrantedAuthorities(Set<Role> roles) {
-
-        Set<Permission> permissions = new HashSet<>();
-        for (Role role : roles) {
-            Set<Role> roleSet = new HashSet<>();
-            roleSet.add(role);
-            permissions.addAll(role.getPermissions());
-        }
-
-        return permissions.stream()
-                .map(permission -> new SimpleGrantedAuthority("ROLE_"+permission.getName()))
-                .collect(Collectors.toList());
     }
 }

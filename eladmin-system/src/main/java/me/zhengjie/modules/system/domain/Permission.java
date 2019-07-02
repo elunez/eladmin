@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -13,7 +12,7 @@ import java.sql.Timestamp;
 import java.util.Set;
 
 /**
- * @author jie
+ * @author Zheng Jie
  * @date 2018-12-03
  */
 @Entity
@@ -24,6 +23,7 @@ public class Permission implements Serializable{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@NotNull(groups = {Update.class})
 	private Long id;
 
 	@NotBlank
@@ -57,4 +57,6 @@ public class Permission implements Serializable{
 				", createTime=" + createTime +
 				'}';
 	}
+
+	public interface Update{}
 }

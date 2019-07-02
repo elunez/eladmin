@@ -5,8 +5,10 @@ import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.exception.EntityExistException;
 import me.zhengjie.modules.system.repository.PermissionRepository;
 import me.zhengjie.modules.system.service.PermissionService;
+import me.zhengjie.modules.system.service.dto.CommonQueryCriteria;
 import me.zhengjie.modules.system.service.dto.PermissionDTO;
 import me.zhengjie.modules.system.service.mapper.PermissionMapper;
+import me.zhengjie.utils.QueryHelp;
 import me.zhengjie.utils.ValidationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 
 /**
- * @author jie
+ * @author Zheng Jie
  * @date 2018-12-03
  */
 @Service
@@ -27,6 +29,11 @@ public class PermissionServiceImpl implements PermissionService {
 
     @Autowired
     private PermissionMapper permissionMapper;
+
+    @Override
+    public List<PermissionDTO> queryAll(CommonQueryCriteria criteria) {
+        return permissionMapper.toDto(permissionRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder)));
+    }
 
     @Override
     public PermissionDTO findById(long id) {
@@ -48,16 +55,12 @@ public class PermissionServiceImpl implements PermissionService {
     @Transactional(rollbackFor = Exception.class)
     public void update(Permission resources) {
         Optional<Permission> optionalPermission = permissionRepository.findById(resources.getId());
+        if(resources.getId().equals(resources.getPid())) {
+            throw new BadRequestException("上级不能为自己");
+        }
         ValidationUtil.isNull(optionalPermission,"Permission","id",resources.getId());
 
         Permission permission = optionalPermission.get();
-
-        /**
-         * 根据实际需求修改
-         */
-        if(permission.getId().equals(1L)){
-            throw new BadRequestException("该权限不能被修改");
-        }
 
         Permission permission1 = permissionRepository.findByName(resources.getName());
 
@@ -74,12 +77,6 @@ public class PermissionServiceImpl implements PermissionService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void delete(Long id) {
-        /**
-         * 根据实际需求修改
-         */
-        if(id.equals(1L)){
-            throw new BadRequestException("该权限不能被删除");
-        }
         List<Permission> permissionList = permissionRepository.findByPid(id);
         for (Permission permission : permissionList) {
             permissionRepository.delete(permission);

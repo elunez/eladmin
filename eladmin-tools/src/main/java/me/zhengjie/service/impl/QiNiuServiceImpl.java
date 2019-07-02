@@ -15,11 +15,11 @@ import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.repository.QiNiuConfigRepository;
 import me.zhengjie.repository.QiniuContentRepository;
 import me.zhengjie.service.QiNiuService;
-import me.zhengjie.util.QiNiuUtil;
-import me.zhengjie.utils.FileUtil;
-import me.zhengjie.utils.ValidationUtil;
+import me.zhengjie.service.dto.QiniuQueryCriteria;
+import me.zhengjie.utils.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,7 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.Optional;
 
 /**
- * @author jie
+ * @author Zheng Jie
  * @date 2018-12-31
  */
 @Service
@@ -44,6 +44,11 @@ public class QiNiuServiceImpl implements QiNiuService {
     private Long maxSize;
 
     private final String TYPE = "公开";
+
+    @Override
+    public Object queryAll(QiniuQueryCriteria criteria, Pageable pageable){
+        return PageUtil.toPage(qiniuContentRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable));
+    }
 
     @Override
     public QiniuConfig find() {
@@ -84,7 +89,11 @@ public class QiNiuServiceImpl implements QiNiuService {
         Auth auth = Auth.create(qiniuConfig.getAccessKey(), qiniuConfig.getSecretKey());
         String upToken = auth.uploadToken(qiniuConfig.getBucket());
         try {
-            Response response = uploadManager.put(file.getBytes(), QiNiuUtil.getKey(file.getOriginalFilename()), upToken);
+            String key = file.getOriginalFilename();
+            if(qiniuContentRepository.findByKey(key) != null) {
+                key = QiNiuUtil.getKey(key);
+            }
+            Response response = uploadManager.put(file.getBytes(), key, upToken);
             //解析上传成功的结果
             DefaultPutRet putRet = new Gson().fromJson(response.bodyString(), DefaultPutRet.class);
             //存入数据库
@@ -134,8 +143,7 @@ public class QiNiuServiceImpl implements QiNiuService {
             bucketManager.delete(content.getBucket(), content.getKey());
             qiniuContentRepository.delete(content);
         } catch (QiniuException ex) {
-            System.err.println(ex.code());
-            System.err.println(ex.response.toString());
+            qiniuContentRepository.delete(content);
         }
     }
 
@@ -174,5 +182,12 @@ public class QiNiuServiceImpl implements QiNiuService {
             }
         }
 
+    }
+
+    @Override
+    public void deleteAll(Long[] ids, QiniuConfig config) {
+        for (Long id : ids) {
+            delete(findByContentId(id), config);
+        }
     }
 }

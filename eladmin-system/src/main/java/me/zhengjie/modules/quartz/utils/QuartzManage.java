@@ -11,7 +11,7 @@ import java.util.Date;
 import static org.quartz.TriggerBuilder.newTrigger;
 
 /**
- * @author jie
+ * @author Zheng Jie
  * @date 2019-01-07
  */
 @Slf4j
@@ -72,6 +72,7 @@ public class QuartzManage {
             trigger = trigger.getTriggerBuilder().withIdentity(triggerKey).withSchedule(scheduleBuilder).build();
             //重置启动时间
             ((CronTriggerImpl)trigger).setStartTime(new Date());
+            trigger.getJobDataMap().put(QuartzJob.JOB_KEY,quartzJob);
 
             scheduler.rescheduleJob(triggerKey, trigger);
             // 暂停任务
@@ -110,9 +111,8 @@ public class QuartzManage {
             TriggerKey triggerKey = TriggerKey.triggerKey(JOB_NAME + quartzJob.getId());
             CronTrigger trigger = (CronTrigger) scheduler.getTrigger(triggerKey);
             // 如果不存在则创建一个定时任务
-            if(trigger == null){
+            if(trigger == null)
                 addJob(quartzJob);
-            }
             JobKey jobKey = JobKey.jobKey(JOB_NAME + quartzJob.getId());
             scheduler.resumeJob(jobKey);
         } catch (Exception e){
@@ -131,9 +131,8 @@ public class QuartzManage {
             TriggerKey triggerKey = TriggerKey.triggerKey(JOB_NAME + quartzJob.getId());
             CronTrigger trigger = (CronTrigger) scheduler.getTrigger(triggerKey);
             // 如果不存在则创建一个定时任务
-            if(trigger == null){
+            if(trigger == null)
                 addJob(quartzJob);
-            }
             JobDataMap dataMap = new JobDataMap();
             dataMap.put(QuartzJob.JOB_KEY, quartzJob);
             JobKey jobKey = JobKey.jobKey(JOB_NAME + quartzJob.getId());

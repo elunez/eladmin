@@ -3,18 +3,23 @@ package me.zhengjie.modules.quartz.service.impl;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.modules.quartz.domain.QuartzJob;
 import me.zhengjie.modules.quartz.repository.QuartzJobRepository;
+import me.zhengjie.modules.quartz.repository.QuartzLogRepository;
 import me.zhengjie.modules.quartz.service.QuartzJobService;
+import me.zhengjie.modules.quartz.service.dto.JobQueryCriteria;
 import me.zhengjie.modules.quartz.utils.QuartzManage;
+import me.zhengjie.utils.PageUtil;
+import me.zhengjie.utils.QueryHelp;
 import me.zhengjie.utils.ValidationUtil;
 import org.quartz.CronExpression;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
 /**
- * @author jie
+ * @author Zheng Jie
  * @date 2019-01-07
  */
 @Service(value = "quartzJobService")
@@ -25,7 +30,20 @@ public class QuartzJobServiceImpl implements QuartzJobService {
     private QuartzJobRepository quartzJobRepository;
 
     @Autowired
+    private QuartzLogRepository quartzLogRepository;
+
+    @Autowired
     private QuartzManage quartzManage;
+
+    @Override
+    public Object queryAll(JobQueryCriteria criteria, Pageable pageable){
+        return PageUtil.toPage(quartzJobRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable));
+    }
+
+    @Override
+    public Object queryAllLog(JobQueryCriteria criteria, Pageable pageable){
+        return PageUtil.toPage(quartzLogRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable));
+    }
 
     @Override
     public QuartzJob findById(Long id) {

@@ -1,16 +1,36 @@
 package me.zhengjie.modules.quartz.service;
 
 import me.zhengjie.modules.quartz.domain.QuartzJob;
+import me.zhengjie.modules.quartz.domain.QuartzLog;
+import me.zhengjie.modules.quartz.service.dto.JobQueryCriteria;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Pageable;
 
 /**
- * @author jie
+ * @author Zheng Jie
  * @date 2019-01-07
  */
 @CacheConfig(cacheNames = "quartzJob")
 public interface QuartzJobService {
+
+    /**
+     * queryAll quartzJob
+     * @param criteria
+     * @param pageable
+     * @return
+     */
+    @Cacheable(keyGenerator = "keyGenerator")
+    Object queryAll(JobQueryCriteria criteria, Pageable pageable);
+
+    /**
+     * queryAll quartzLog
+     * @param criteria
+     * @param pageable
+     * @return
+     */
+    Object queryAllLog(JobQueryCriteria criteria, Pageable pageable);
 
     /**
      * create

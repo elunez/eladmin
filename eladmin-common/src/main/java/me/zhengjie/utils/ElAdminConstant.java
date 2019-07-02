@@ -2,7 +2,7 @@ package me.zhengjie.utils;
 
 /**
  * 常用静态常量
- * @author jie
+ * @author Zheng Jie
  * @date 2018-12-26
  */
 public class ElAdminConstant {

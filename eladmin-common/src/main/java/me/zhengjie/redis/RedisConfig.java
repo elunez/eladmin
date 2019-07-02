@@ -19,55 +19,19 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
-import org.springframework.data.redis.serializer.StringRedisSerializer;
-import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.JedisPoolConfig;
 import java.time.Duration;
 
 /**
- * @author jie
+ * @author Zheng Jie
  * @date 2018-11-24
  */
 @Slf4j
 @Configuration
 @EnableCaching
+// 自动配置
 @ConditionalOnClass(RedisOperations.class)
 @EnableConfigurationProperties(RedisProperties.class)
 public class RedisConfig extends CachingConfigurerSupport {
-
-    @Value("${spring.redis.host}")
-    private String host;
-
-    @Value("${spring.redis.port}")
-    private int port;
-
-    @Value("${spring.redis.timeout}")
-    private int timeout;
-
-    @Value("${spring.redis.jedis.pool.max-idle}")
-    private int maxIdle;
-
-    @Value("${spring.redis.jedis.pool.max-wait}")
-    private long maxWaitMillis;
-
-    @Value("${spring.redis.password}")
-    private String password;
-
-    /**
-     * 配置 redis 连接池
-     * @return
-     */
-    @Bean
-    public JedisPool redisPoolFactory(){
-        JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
-        jedisPoolConfig.setMaxIdle(maxIdle);
-        jedisPoolConfig.setMaxWaitMillis(maxWaitMillis);
-        if (StringUtils.isNotBlank(password)) {
-            return new JedisPool(jedisPoolConfig, host, port, timeout, password);
-        } else {
-            return new JedisPool(jedisPoolConfig, host, port,timeout);
-        }
-    }
 
     /**
      *  设置 redis 数据默认过期时间，默认1天
@@ -91,13 +55,13 @@ public class RedisConfig extends CachingConfigurerSupport {
         // value值的序列化采用fastJsonRedisSerializer
         template.setValueSerializer(fastJsonRedisSerializer);
         template.setHashValueSerializer(fastJsonRedisSerializer);
+
         // 全局开启AutoType，不建议使用
         // ParserConfig.getGlobalInstance().setAutoTypeSupport(true);
         // 建议使用这种方式，小范围指定白名单
-        ParserConfig.getGlobalInstance().addAccept("me.zhengjie.modules.system.service.dto");
-        ParserConfig.getGlobalInstance().addAccept("me.zhengjie.modules.test.service.dto");
-        ParserConfig.getGlobalInstance().addAccept("me.zhengjie.modules.system.domain");
         ParserConfig.getGlobalInstance().addAccept("me.zhengjie.domain");
+        ParserConfig.getGlobalInstance().addAccept("me.zhengjie.modules.system.service.dto");
+        ParserConfig.getGlobalInstance().addAccept("me.zhengjie.modules.system.domain");
         ParserConfig.getGlobalInstance().addAccept("me.zhengjie.modules.quartz.domain");
         ParserConfig.getGlobalInstance().addAccept("me.zhengjie.modules.monitor.domain");
         ParserConfig.getGlobalInstance().addAccept("me.zhengjie.modules.security.security");
@@ -121,7 +85,6 @@ public class RedisConfig extends CachingConfigurerSupport {
             sb.append(target.getClass().getName());
             sb.append(method.getName());
             for (Object obj : params) {
-                // 由于参数可能不同, hashCode肯定不一样, 缓存的key也需要不一样
                 sb.append(JSON.toJSONString(obj).hashCode());
             }
             return sb.toString();

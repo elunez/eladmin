@@ -6,8 +6,8 @@ import me.zhengjie.aop.log.Log;
 import me.zhengjie.domain.AlipayConfig;
 import me.zhengjie.domain.vo.TradeVo;
 import me.zhengjie.service.AlipayService;
-import me.zhengjie.util.AliPayStatusEnum;
-import me.zhengjie.util.AlipayUtils;
+import me.zhengjie.utils.AliPayStatusEnum;
+import me.zhengjie.utils.AlipayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
 /**
- * @author jie
+ * @author Zheng Jie
  * @date 2018-12-31
  */
 @Slf4j
@@ -34,8 +34,8 @@ public class AliPayController {
     private AlipayService alipayService;
 
     @GetMapping(value = "/aliPay")
-    public ResponseEntity get(){
-        return new ResponseEntity(alipayService.find(),HttpStatus.OK);
+    public ResponseEntity<AlipayConfig> get(){
+        return new ResponseEntity<>(alipayService.find(),HttpStatus.OK);
     }
 
     @Log("配置支付宝")
@@ -49,8 +49,7 @@ public class AliPayController {
     @Log("支付宝PC网页支付")
     @ApiOperation(value = "PC网页支付")
     @PostMapping(value = "/aliPay/toPayAsPC")
-    public ResponseEntity toPayAsPC(@Validated@RequestBody TradeVo trade) throws Exception{
-        log.warn("REST request to toPayAsPC Trade : {}" +trade);
+    public ResponseEntity<String> toPayAsPC(@Validated@RequestBody TradeVo trade) throws Exception{
         AlipayConfig alipay = alipayService.find();
         trade.setOutTradeNo(alipayUtils.getOrderCode());
         String payUrl = alipayService.toPayAsPC(alipay,trade);
@@ -60,8 +59,7 @@ public class AliPayController {
     @Log("支付宝手机网页支付")
     @ApiOperation(value = "手机网页支付")
     @PostMapping(value = "/aliPay/toPayAsWeb")
-    public ResponseEntity toPayAsWeb(@Validated @RequestBody TradeVo trade) throws Exception{
-        log.warn("REST request to toPayAsWeb Trade : {}" +trade);
+    public ResponseEntity<String> toPayAsWeb(@Validated @RequestBody TradeVo trade) throws Exception{
         AlipayConfig alipay = alipayService.find();
         trade.setOutTradeNo(alipayUtils.getOrderCode());
         String payUrl = alipayService.toPayAsWeb(alipay,trade);
@@ -71,7 +69,7 @@ public class AliPayController {
     @ApiIgnore
     @GetMapping("/aliPay/return")
     @ApiOperation(value = "支付之后跳转的链接")
-    public ResponseEntity returnPage(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public ResponseEntity<String> returnPage(HttpServletRequest request, HttpServletResponse response) throws Exception {
         AlipayConfig alipay = alipayService.find();
         response.setContentType("text/html;charset=" + alipay.getCharset());
         //内容验签，防止黑客篡改参数
@@ -85,12 +83,12 @@ public class AliPayController {
             /**
              * 根据业务需要返回数据，这里统一返回OK
              */
-            return new ResponseEntity("payment successful",HttpStatus.OK);
+            return new ResponseEntity<>("payment successful",HttpStatus.OK);
         }else{
             /**
              * 根据业务需要返回数据
              */
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 

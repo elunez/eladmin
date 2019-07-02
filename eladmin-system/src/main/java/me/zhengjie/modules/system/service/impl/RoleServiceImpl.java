@@ -1,21 +1,29 @@
 package me.zhengjie.modules.system.service.impl;
 
+import me.zhengjie.modules.system.domain.Menu;
 import me.zhengjie.modules.system.domain.Role;
-import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.exception.EntityExistException;
 import me.zhengjie.modules.system.repository.RoleRepository;
 import me.zhengjie.modules.system.service.RoleService;
+import me.zhengjie.modules.system.service.dto.CommonQueryCriteria;
 import me.zhengjie.modules.system.service.dto.RoleDTO;
+import me.zhengjie.modules.system.service.dto.RoleSmallDTO;
 import me.zhengjie.modules.system.service.mapper.RoleMapper;
+import me.zhengjie.modules.system.service.mapper.RoleSmallMapper;
+import me.zhengjie.utils.PageUtil;
+import me.zhengjie.utils.QueryHelp;
 import me.zhengjie.utils.ValidationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
- * @author jie
+ * @author Zheng Jie
  * @date 2018-12-03
  */
 @Service
@@ -27,6 +35,20 @@ public class RoleServiceImpl implements RoleService {
 
     @Autowired
     private RoleMapper roleMapper;
+
+    @Autowired
+    private RoleSmallMapper roleSmallMapper;
+
+    @Override
+    public Object queryAll(Pageable pageable) {
+        return roleMapper.toDto(roleRepository.findAll(pageable).getContent());
+    }
+
+    @Override
+    public Object queryAll(CommonQueryCriteria criteria, Pageable pageable) {
+        Page<Role> page = roleRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable);
+        return PageUtil.toPage(page.map(roleMapper::toDto));
+    }
 
     @Override
     public RoleDTO findById(long id) {
@@ -47,17 +69,11 @@ public class RoleServiceImpl implements RoleService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void update(Role resources) {
+
         Optional<Role> optionalRole = roleRepository.findById(resources.getId());
         ValidationUtil.isNull(optionalRole,"Role","id",resources.getId());
 
         Role role = optionalRole.get();
-
-        /**
-         * 根据实际需求修改
-         */
-        if(role.getId().equals(1L)){
-            throw new BadRequestException("该角色不能被修改");
-        }
 
         Role role1 = roleRepository.findByName(resources.getName());
 
@@ -67,35 +83,53 @@ public class RoleServiceImpl implements RoleService {
 
         role.setName(resources.getName());
         role.setRemark(resources.getRemark());
+        role.setDataScope(resources.getDataScope());
+        role.setDepts(resources.getDepts());
+        role.setLevel(resources.getLevel());
+        roleRepository.save(role);
+    }
+
+    @Override
+    public void updatePermission(Role resources, RoleDTO roleDTO) {
+        Role role = roleMapper.toEntity(roleDTO);
         role.setPermissions(resources.getPermissions());
         roleRepository.save(role);
     }
 
     @Override
+    public void updateMenu(Role resources, RoleDTO roleDTO) {
+        Role role = roleMapper.toEntity(roleDTO);
+        role.setMenus(resources.getMenus());
+        roleRepository.save(role);
+    }
+
+    @Override
+    public void untiedMenu(Menu menu) {
+        Set<Role> roles = roleRepository.findByMenus_Id(menu.getId());
+        for (Role role : roles) {
+            menu.getRoles().remove(role);
+            role.getMenus().remove(menu);
+            roleRepository.save(role);
+        }
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public void delete(Long id) {
-
-        /**
-         * 根据实际需求修改
-         */
-        if(id.equals(1L)){
-            throw new BadRequestException("该角色不能被删除");
-        }
         roleRepository.deleteById(id);
     }
 
     @Override
-    public Object getRoleTree() {
+    public List<RoleSmallDTO> findByUsers_Id(Long id) {
+        return roleSmallMapper.toDto(roleRepository.findByUsers_Id(id).stream().collect(Collectors.toList()));
+    }
 
-        List<Role> roleList = roleRepository.findAll();
-
-        List<Map<String, Object>> list = new ArrayList<>();
-        for (Role role : roleList) {
-            Map<String, Object> map = new HashMap<>();
-            map.put("id",role.getId());
-            map.put("label",role.getName());
-            list.add(map);
+    @Override
+    public Integer findByRoles(Set<Role> roles) {
+        Set<RoleDTO> roleDTOS = new HashSet<>();
+        for (Role role : roles) {
+            roleDTOS.add(findById(role.getId()));
         }
-        return list;
+        return Collections.min(roleDTOS.stream().map(RoleDTO::getLevel).collect(Collectors.toList()));
     }
 }

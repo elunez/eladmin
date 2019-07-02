@@ -2,24 +2,35 @@ package me.zhengjie.service;
 
 import me.zhengjie.domain.QiniuConfig;
 import me.zhengjie.domain.QiniuContent;
+import me.zhengjie.service.dto.QiniuQueryCriteria;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
- * @author jie
+ * @author Zheng Jie
  * @date 2018-12-31
  */
 @CacheConfig(cacheNames = "qiNiu")
 public interface QiNiuService {
 
     /**
+     * 查询文件
+     * @param criteria
+     * @param pageable
+     * @return
+     */
+    @Cacheable(keyGenerator = "keyGenerator")
+    Object queryAll(QiniuQueryCriteria criteria, Pageable pageable);
+
+    /**
      * 查配置
      * @return
      */
-    @Cacheable(key = "'1'")
+    @Cacheable(cacheNames = "qiNiuConfig", key = "'1'")
     QiniuConfig find();
 
     /**
@@ -27,13 +38,14 @@ public interface QiNiuService {
      * @param qiniuConfig
      * @return
      */
-    @CachePut(key = "'1'")
+    @CachePut(cacheNames = "qiNiuConfig", key = "'1'")
     QiniuConfig update(QiniuConfig qiniuConfig);
 
     /**
      * 上传文件
      * @param file
      * @param qiniuConfig
+     * @return
      */
     @CacheEvict(allEntries = true)
     QiniuContent upload(MultipartFile file, QiniuConfig qiniuConfig);
@@ -69,4 +81,12 @@ public interface QiNiuService {
      */
     @CacheEvict(allEntries = true)
     void synchronize(QiniuConfig config);
+
+    /**
+     * 删除文件
+     * @param ids
+     * @param config
+     */
+    @CacheEvict(allEntries = true)
+    void deleteAll(Long[] ids, QiniuConfig config);
 }

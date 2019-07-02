@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.Set;
 
 /**
- * @author jie
+ * @author Zheng Jie
  * @date 2018-11-23
  */
 @Data
@@ -24,6 +24,8 @@ public class UserDTO implements Serializable {
 
     private String email;
 
+    private String phone;
+
     private Boolean enabled;
 
     @JsonIgnore
@@ -34,5 +36,12 @@ public class UserDTO implements Serializable {
     private Date lastPasswordResetTime;
 
     @ApiModelProperty(hidden = true)
-    private Set<RoleDTO> roles;
+    private Set<RoleSmallDTO> roles;
+
+    @ApiModelProperty(hidden = true)
+    private JobSmallDTO job;
+
+    private DeptSmallDTO dept;
+
+    private Long deptId;
 }

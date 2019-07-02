@@ -12,9 +12,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.core.GrantedAuthorityDefaults;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -41,13 +41,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private String tokenHeader;
 
     @Value("${jwt.auth.path}")
-    private String authenticationPath;
+    private String loginPath;
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth
                 .userDetailsService(jwtUserDetailsService)
                 .passwordEncoder(passwordEncoderBean());
+    }
+
+    @Bean
+    GrantedAuthorityDefaults grantedAuthorityDefaults() {
+        // Remove the ROLE_ prefix
+        return new GrantedAuthorityDefaults("");
     }
 
     @Bean
@@ -74,12 +80,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 // 不创建会话
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+
+                // 过滤请求
                 .authorizeRequests()
+                .antMatchers(
+                        HttpMethod.GET,
+                        "/*.html",
+                        "/**/*.html",
+                        "/**/*.css",
+                        "/**/*.js"
+                ).anonymous()
 
-                .antMatchers("/auth/**").permitAll()
-                .antMatchers("/websocket/**").permitAll()
-                .antMatchers("/druid/**").anonymous()
-
+                .antMatchers( HttpMethod.POST,"/auth/"+loginPath).anonymous()
+                .antMatchers("/auth/vCode").anonymous()
                 // 支付宝回调
                 .antMatchers("/api/aliPay/return").anonymous()
                 .antMatchers("/api/aliPay/notify").anonymous()
@@ -91,33 +104,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/*/api-docs").anonymous()
                 // swagger end
 
+                // 接口限流测试
                 .antMatchers("/test/**").anonymous()
                 .antMatchers(HttpMethod.OPTIONS, "/**").anonymous()
+
+                .antMatchers("/druid/**").anonymous()
                 // 所有请求都需要认证
-                .anyRequest().authenticated();
+                .anyRequest().authenticated()
+                // 防止iframe 造成跨域
+                .and().headers().frameOptions().disable();
 
         httpSecurity
                 .addFilterBefore(authenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
-    }
-
-    @Override
-    public void configure(WebSecurity web) throws Exception {
-        // AuthenticationTokenFilter will ignore the below paths
-        web.ignoring()
-            .antMatchers(
-                    HttpMethod.POST,
-                    authenticationPath
-            )
-
-            // allow anonymous resource requests
-            .and()
-            .ignoring()
-            .antMatchers(
-                    HttpMethod.GET,
-                    "/*.html",
-                    "/**/*.html",
-                    "/**/*.css",
-                    "/**/*.js"
-            );
     }
 }

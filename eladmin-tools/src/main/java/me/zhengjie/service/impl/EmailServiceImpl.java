@@ -1,5 +1,6 @@
 package me.zhengjie.service.impl;
 
+import cn.hutool.extra.mail.Mail;
 import cn.hutool.extra.mail.MailAccount;
 import cn.hutool.extra.mail.MailUtil;
 import me.zhengjie.domain.EmailConfig;
@@ -16,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
 /**
- * @author jie
+ * @author Zheng Jie
  * @date 2018-12-26
  */
 @Service
@@ -37,8 +38,7 @@ public class EmailServiceImpl implements EmailService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        emailRepository.saveAndFlush(emailConfig);
-        return emailConfig;
+        return emailRepository.save(emailConfig);
     }
 
     @Override
@@ -78,11 +78,14 @@ public class EmailServiceImpl implements EmailService {
          * 发送
          */
         try {
-            MailUtil.send(account,
-                          emailVo.getTos(),
-                          emailVo.getSubject(),
-                          content,
-                          true);
+            Mail.create(account)
+                    .setTos(emailVo.getTos().toArray(new String[emailVo.getTos().size()]))
+                    .setTitle(emailVo.getSubject())
+                    .setContent(content)
+                    .setHtml(true)
+                    //关闭session
+                    .setUseGlobalSession(false)
+                    .send();
         }catch (Exception e){
             throw new BadRequestException(e.getMessage());
         }

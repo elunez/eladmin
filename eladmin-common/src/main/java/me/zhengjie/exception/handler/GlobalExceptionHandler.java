@@ -7,14 +7,14 @@ import me.zhengjie.exception.EntityNotFoundException;
 import me.zhengjie.utils.ThrowableUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import java.nio.file.AccessDeniedException;
 import static org.springframework.http.HttpStatus.*;
 
 /**
- * @author jie
+ * @author Zheng Jie
  * @date 2018-11-23
  */
 @Slf4j
@@ -26,8 +26,8 @@ public class GlobalExceptionHandler {
      * @param e
      * @return
      */
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity handleException(Exception e){
+    @ExceptionHandler(Throwable.class)
+    public ResponseEntity handleException(Throwable e){
         // 打印堆栈信息
         log.error(ThrowableUtil.getStackTrace(e));
         ApiError apiError = new ApiError(BAD_REQUEST.value(),e.getMessage());

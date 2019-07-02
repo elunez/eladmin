@@ -4,17 +4,18 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import javax.persistence.*;
+import java.io.Serializable;
 import java.sql.Timestamp;
 
 /**
- * @author jie
+ * @author Zheng Jie
  * @date 2018-11-24
  */
 @Entity
 @Data
 @Table(name = "log")
 @NoArgsConstructor
-public class Log {
+public class Log  implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -62,7 +63,7 @@ public class Log {
      * 异常详细
      */
     @Column(name = "exception_detail", columnDefinition = "text")
-    private String exceptionDetail;
+    private byte[] exceptionDetail;
 
     /**
      * 创建日期

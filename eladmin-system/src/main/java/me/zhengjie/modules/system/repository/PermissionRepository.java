@@ -4,11 +4,13 @@ import me.zhengjie.modules.system.domain.Permission;
 import me.zhengjie.modules.system.domain.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
 /**
- * @author jie
+ * @author Zheng Jie
  * @date 2018-12-03
  */
 public interface PermissionRepository extends JpaRepository<Permission, Long>, JpaSpecificationExecutor {
@@ -19,13 +21,6 @@ public interface PermissionRepository extends JpaRepository<Permission, Long>, J
      * @return
      */
     Permission findByName(String name);
-
-    /**
-     * findByRoles
-     * @param roleSet
-     * @return
-     */
-    Set<Permission> findByRoles(Set<Role> roleSet);
 
     /**
      * findByPid

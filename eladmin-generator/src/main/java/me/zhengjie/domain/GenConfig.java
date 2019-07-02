@@ -5,7 +5,7 @@ import javax.persistence.*;
 
 /**
  * 代码生成配置
- * @author jie
+ * @author Zheng Jie
  * @date 2019-01-03
  */
 @Data
@@ -14,7 +14,6 @@ import javax.persistence.*;
 public class GenConfig {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     /** 包路径 **/
@@ -33,6 +32,9 @@ public class GenConfig {
 
     /** 作者 **/
     private String author;
+
+    /** 表前缀 **/
+    private String prefix;
 
     /** 是否覆盖 **/
     private Boolean cover;

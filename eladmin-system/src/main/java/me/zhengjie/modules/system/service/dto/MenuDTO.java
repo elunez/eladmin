@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * @author jie
+ * @author Zheng Jie
  * @date 2018-12-17
  */
 @Data
@@ -28,8 +28,6 @@ public class MenuDTO {
     private Boolean iFrame;
 
     private String icon;
-
-    private Set<RoleDTO> roles;
 
     private List<MenuDTO> children;
 

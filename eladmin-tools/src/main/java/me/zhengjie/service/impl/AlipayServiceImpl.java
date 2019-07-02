@@ -9,7 +9,7 @@ import me.zhengjie.domain.vo.TradeVo;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.repository.AlipayRepository;
 import me.zhengjie.service.AlipayService;
-import me.zhengjie.util.AlipayUtils;
+import me.zhengjie.utils.AlipayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
 /**
- * @author jie
+ * @author Zheng Jie
  * @date 2018-12-31
  */
 @Service
@@ -39,9 +39,6 @@ public class AlipayServiceImpl implements AlipayService {
         AlipayClient alipayClient = new DefaultAlipayClient(alipay.getGatewayUrl(), alipay.getAppID(), alipay.getPrivateKey(), alipay.getFormat(), alipay.getCharset(), alipay.getPublicKey(), alipay.getSignType());
 
         double money = Double.parseDouble(trade.getTotalAmount());
-        if(money <= 0 || money>=5000){
-            throw new BadRequestException("测试金额过大");
-        }
 
         /**
          * 创建API对应的request(电脑网页版)
@@ -129,6 +126,6 @@ public class AlipayServiceImpl implements AlipayService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public AlipayConfig update(AlipayConfig alipayConfig) {
-        return alipayRepository.saveAndFlush(alipayConfig);
+        return alipayRepository.save(alipayConfig);
     }
 }

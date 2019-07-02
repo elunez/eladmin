@@ -8,32 +8,28 @@ spring:
       username: root
       password: 123456
 
-      # 初始化连接大小
-      initial-size: 5
-      # 最小空闲连接数
-      min-idle: 5
-      max-active: 20
-      max-wait: 30000
-      # 可关闭的空闲连接间隔时间
-      time-between-eviction-runs-millis: 60000
-      # 配置连接在池中的最小生存时间
-      min-evictable-idle-time-millis: 300000
-      validation-query: select '1' from dual
+      # 初始化配置
+      initial-size: 3
+      # 最小连接数
+      min-idle: 3
+      # 最大连接数
+      max-active: 15
+      # 获取连接超时时间
+      max-wait: 5000
+      # 连接有效性检测时间
+      time-between-eviction-runs-millis: 90000
+      # 最大空闲时间
+      min-evictable-idle-time-millis: 1800000
       test-while-idle: true
       test-on-borrow: false
       test-on-return: false
-      # 打开PSCache，并且指定每个连接上PSCache的大小
-      pool-prepared-statements: true
-      max-open-prepared-statements: 20
-      max-pool-prepared-statement-per-connection-size: 20
+
+      validation-query: select 1
       # 配置监控统计拦截的filters
       filters: stat
-
       stat-view-servlet:
         url-pattern: /druid/*
         reset-enable: false
-        login-username: admin
-        login-password: 123456
 
       web-stat-filter:
         url-pattern: /*
@@ -59,4 +55,8 @@ jwt:
 
 #是否允许生成代码，生产环境设置为false
 generator:
+  enabled: true
+
+#是否开启 swagger-ui
+swagger:
   enabled: true

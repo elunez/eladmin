@@ -3,8 +3,8 @@
     <el-form ref="form" :model="form" :rules="rules" size="small" label-width="80px">
 <#if columns??>
   <#list columns as column>
-  <#if column.changeColumnName != 'id'>
-      <el-form-item label="<#if column.columnComment != ''>${column.columnComment}<#else>${column.changeColumnName}</#if>">
+  <#if column.changeColumnName != '${pkChangeColName}'>
+      <el-form-item label="<#if column.columnComment != ''>${column.columnComment}<#else>${column.changeColumnName}</#if>" <#if column.columnKey = 'UNI'>prop="${column.changeColumnName}"</#if>>
         <el-input v-model="form.${column.changeColumnName}" style="width: 370px;"/>
       </el-form-item>
   </#if>
@@ -25,10 +25,6 @@ export default {
     isAdd: {
       type: Boolean,
       required: true
-    },
-    sup_this: {
-      type: Object,
-      default: null
     }
   },
   data() {
@@ -40,6 +36,15 @@ export default {
         ${column.changeColumnName}: ''<#if column_has_next>,</#if>
     </#list>
 </#if>
+      },
+      rules: {
+<#list columns as column>
+<#if column.columnKey = 'UNI'>
+        ${column.changeColumnName}: [
+          { required: true, message: 'please enter', trigger: 'blur' }
+        ]<#if (column_has_next)>,</#if>
+</#if>
+</#list>
       }
     }
   },
@@ -62,7 +67,7 @@ export default {
           duration: 2500
         })
         this.loading = false
-        this.$parent.$parent.init()
+        this.$parent.init()
       }).catch(err => {
         this.loading = false
         console.log(err.response.data.message)
@@ -77,7 +82,7 @@ export default {
           duration: 2500
         })
         this.loading = false
-        this.sup_this.init()
+        this.$parent.init()
       }).catch(err => {
         this.loading = false
         console.log(err.response.data.message)
