@@ -94,6 +94,7 @@ public class QuartzManage {
     public void deleteJob(QuartzJob quartzJob){
         try {
             JobKey jobKey = JobKey.jobKey(JOB_NAME + quartzJob.getId());
+            scheduler.pauseJob(jobKey);
             scheduler.deleteJob(jobKey);
         } catch (Exception e){
             log.error("删除定时任务失败", e);
