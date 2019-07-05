@@ -1,5 +1,6 @@
 package me.zhengjie.modules.monitor.service.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import me.zhengjie.modules.monitor.domain.vo.RedisVo;
 import me.zhengjie.modules.monitor.service.RedisService;
 import me.zhengjie.utils.PageUtil;
@@ -18,6 +19,7 @@ import java.util.concurrent.TimeUnit;
  * @author Zheng Jie
  * @date 2018-12-10
  */
+@Slf4j
 @Service
 public class RedisServiceImpl implements RedisService {
 
@@ -38,8 +40,12 @@ public class RedisServiceImpl implements RedisService {
             if (s.toString().indexOf("role::loadPermissionByUser") != -1 || s.toString().indexOf("user::loadUserByUsername") != -1) {
                 continue;
             }
-            RedisVo redisVo = new RedisVo(s.toString(),redisTemplate.opsForValue().get(s.toString()).toString());
-            redisVos.add(redisVo);
+            try {
+                RedisVo redisVo = new RedisVo(s.toString(), redisTemplate.opsForValue().get(s.toString()).toString());
+                redisVos.add(redisVo);
+            }catch (Exception e){
+                log.error("redis key:["+s.toString()+"] is not string",e);
+            }
         }
         Page<RedisVo> page = new PageImpl<RedisVo>(
                 PageUtil.toPage(pageable.getPageNumber(),pageable.getPageSize(),redisVos),
