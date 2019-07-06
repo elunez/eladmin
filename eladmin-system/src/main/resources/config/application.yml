@@ -3,7 +3,7 @@ server:
 
 spring:
   profiles:
-    active: dev
+    active: prod
   jackson:
     time-zone: GMT+8
   data:
@@ -20,10 +20,10 @@ spring:
 
   redis:
     #数据库索引
-    database: 0
-    host: 127.0.0.1
+    database: 2
+    host: 172.17.91.107
     port: 6379
-    password:
+    password: test@2018
     #连接超时时间
     timeout: 5000
 

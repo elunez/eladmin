@@ -4,9 +4,9 @@ spring:
     druid:
       type: com.alibaba.druid.pool.DruidDataSource
       driverClassName: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
-      url: jdbc:log4jdbc:mysql://localhost:3306/eladmin?serverTimezone=Asia/Shanghai&characterEncoding=utf8&useSSL=false
-      username: root
-      password: 123456
+      url: jdbc:log4jdbc:mysql://172.17.91.107:3307/gamerplus?serverTimezone=Asia/Shanghai&characterEncoding=utf8&useSSL=false
+      username: gameplus
+      password: gameplus
 
       # 初始化配置
       initial-size: 3
