@@ -6,6 +6,7 @@ import me.zhengjie.domain.Picture;
 import me.zhengjie.domain.VerificationCode;
 import me.zhengjie.modules.system.domain.User;
 import me.zhengjie.exception.BadRequestException;
+import me.zhengjie.modules.system.domain.vo.UserPassVo;
 import me.zhengjie.modules.system.service.DeptService;
 import me.zhengjie.modules.system.service.RoleService;
 import me.zhengjie.modules.system.service.dto.RoleSmallDTO;
@@ -127,15 +128,15 @@ public class UserController {
      * @return
      */
     @PostMapping(value = "/users/updatePass")
-    public ResponseEntity updatePass(@RequestBody User user){
+    public ResponseEntity updatePass(@RequestBody UserPassVo user){
         UserDetails userDetails = SecurityUtils.getUserDetails();
-        if(!userDetails.getPassword().equals(EncryptUtils.encryptPassword(user.getPassword()))){
+        if(!userDetails.getPassword().equals(EncryptUtils.encryptPassword(user.getOldPass()))){
             throw new BadRequestException("修改失败，旧密码错误");
         }
-        if(userDetails.getPassword().equals(EncryptUtils.encryptPassword(user.getPassword()))){
+        if(userDetails.getPassword().equals(EncryptUtils.encryptPassword(user.getNewPass()))){
             throw new BadRequestException("新密码不能与旧密码相同");
         }
-        userService.updatePass(userDetails.getUsername(),EncryptUtils.encryptPassword(user.getPassword()));
+        userService.updatePass(userDetails.getUsername(),EncryptUtils.encryptPassword(user.getNewPass()));
         return new ResponseEntity(HttpStatus.OK);
     }
 
