@@ -1,9 +1,7 @@
 package me.zhengjie.modules.wms.bd.service.mapper;
 
 import me.zhengjie.mapper.EntityMapper;
-import me.zhengjie.modules.wms.bd.domain.ProductCategory;
 import me.zhengjie.modules.wms.bd.domain.SpendCategory;
-import me.zhengjie.modules.wms.bd.service.dto.ProductCategoryDTO;
 import me.zhengjie.modules.wms.bd.service.dto.SpendCategoryDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;

@@ -1,14 +1,9 @@
 package me.zhengjie.modules.wms.bd.service.impl;
 
-import me.zhengjie.modules.wms.bd.domain.IncomeCategory;
 import me.zhengjie.modules.wms.bd.domain.MaterialCategory;
-import me.zhengjie.modules.wms.bd.repository.IncomeCategoryRepository;
 import me.zhengjie.modules.wms.bd.repository.MaterialCategoryRepository;
-import me.zhengjie.modules.wms.bd.service.IncomeCategoryService;
 import me.zhengjie.modules.wms.bd.service.MaterialCategoryService;
-import me.zhengjie.modules.wms.bd.service.dto.IncomeCategoryDTO;
 import me.zhengjie.modules.wms.bd.service.dto.MaterialCategoryDTO;
-import me.zhengjie.modules.wms.bd.service.mapper.IncomeCategoryMapper;
 import me.zhengjie.modules.wms.bd.service.mapper.MaterialCategoryMapper;
 import me.zhengjie.utils.PageUtil;
 import me.zhengjie.utils.QueryHelp;

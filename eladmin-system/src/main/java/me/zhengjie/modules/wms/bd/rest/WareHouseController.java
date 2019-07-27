@@ -2,11 +2,8 @@ package me.zhengjie.modules.wms.bd.rest;
 
 import me.zhengjie.aop.log.Log;
 import me.zhengjie.exception.BadRequestException;
-import me.zhengjie.modules.wms.bd.domain.MeasureUnit;
 import me.zhengjie.modules.wms.bd.domain.WareHouse;
-import me.zhengjie.modules.wms.bd.service.MeasureUnitService;
 import me.zhengjie.modules.wms.bd.service.WareHouseService;
-import me.zhengjie.modules.wms.bd.service.dto.MeasureUnitDTO;
 import me.zhengjie.modules.wms.bd.service.dto.WareHouseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -30,7 +27,7 @@ public class WareHouseController {
     private static final String ENTITY_NAME = "wareHouse";
 
     @Log("新增仓库")
-    @PostMapping(value = "/warehouse")
+    @PostMapping(value = "/wareHouse")
     public ResponseEntity create(@Validated @RequestBody WareHouse resources){
         if (resources.getId() != null) {
             throw new BadRequestException("A new "+ ENTITY_NAME +" cannot already have an ID");
@@ -39,20 +36,20 @@ public class WareHouseController {
     }
 
     @Log("查看仓库详情")
-    @GetMapping(value = "/warehouse/{id}")
+    @GetMapping(value = "/wareHouse/{id}")
     public ResponseEntity getMessureUnits(@PathVariable Long id){
         return new ResponseEntity(wareHouseService.findById(id), HttpStatus.OK);
     }
 
     @Log("删除仓库")
-    @DeleteMapping(value = "/warehouse/{id}")
+    @DeleteMapping(value = "/wareHouse/{id}")
     public ResponseEntity delete(@PathVariable Long id){
         wareHouseService.delete(id);
         return new ResponseEntity(HttpStatus.OK);
     }
 
     @Log("查询仓库")
-    @GetMapping(value = "/warehouse")
+    @GetMapping(value = "/wareHouse")
     public ResponseEntity getDicts(WareHouseDTO resources, Pageable pageable){
         return new ResponseEntity(wareHouseService.queryAll(resources,pageable),HttpStatus.OK);
     }

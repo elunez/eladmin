@@ -2,11 +2,8 @@ package me.zhengjie.modules.wms.bd.rest;
 
 import me.zhengjie.aop.log.Log;
 import me.zhengjie.exception.BadRequestException;
-import me.zhengjie.modules.wms.bd.domain.MeasureUnit;
 import me.zhengjie.modules.wms.bd.domain.SpendCategory;
-import me.zhengjie.modules.wms.bd.service.MeasureUnitService;
 import me.zhengjie.modules.wms.bd.service.SpendCategoryService;
-import me.zhengjie.modules.wms.bd.service.dto.MeasureUnitDTO;
 import me.zhengjie.modules.wms.bd.service.dto.SpendCategoryDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;

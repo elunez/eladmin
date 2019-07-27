@@ -1,15 +1,10 @@
 package me.zhengjie.modules.wms.bd.service.impl;
 
 import me.zhengjie.modules.wms.bd.domain.IncomeCategory;
-import me.zhengjie.modules.wms.bd.domain.MeasureUnit;
 import me.zhengjie.modules.wms.bd.repository.IncomeCategoryRepository;
-import me.zhengjie.modules.wms.bd.repository.MeasureUnitRepository;
 import me.zhengjie.modules.wms.bd.service.IncomeCategoryService;
-import me.zhengjie.modules.wms.bd.service.MeasureUnitService;
 import me.zhengjie.modules.wms.bd.service.dto.IncomeCategoryDTO;
-import me.zhengjie.modules.wms.bd.service.dto.MeasureUnitDTO;
 import me.zhengjie.modules.wms.bd.service.mapper.IncomeCategoryMapper;
-import me.zhengjie.modules.wms.bd.service.mapper.MeasureUnitMapper;
 import me.zhengjie.utils.PageUtil;
 import me.zhengjie.utils.QueryHelp;
 import me.zhengjie.utils.ValidationUtil;

@@ -1,6 +1,5 @@
 package me.zhengjie.modules.wms.bd.service.impl;
 
-import me.zhengjie.modules.system.domain.Dict;
 import me.zhengjie.modules.wms.bd.domain.MeasureUnit;
 import me.zhengjie.modules.wms.bd.repository.MeasureUnitRepository;
 import me.zhengjie.modules.wms.bd.service.MeasureUnitService;

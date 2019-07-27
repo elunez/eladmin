@@ -1,14 +1,9 @@
 package me.zhengjie.modules.wms.bd.service.impl;
 
-import me.zhengjie.modules.wms.bd.domain.SupplierCategory;
 import me.zhengjie.modules.wms.bd.domain.WareHouse;
-import me.zhengjie.modules.wms.bd.repository.SupplierCategoryRepository;
 import me.zhengjie.modules.wms.bd.repository.WareHouseRepository;
-import me.zhengjie.modules.wms.bd.service.SupplierCategoryService;
 import me.zhengjie.modules.wms.bd.service.WareHouseService;
-import me.zhengjie.modules.wms.bd.service.dto.SupplierCategoryDTO;
 import me.zhengjie.modules.wms.bd.service.dto.WareHouseDTO;
-import me.zhengjie.modules.wms.bd.service.mapper.SupplierCategoryMapper;
 import me.zhengjie.modules.wms.bd.service.mapper.WareHouseMapper;
 import me.zhengjie.utils.PageUtil;
 import me.zhengjie.utils.QueryHelp;

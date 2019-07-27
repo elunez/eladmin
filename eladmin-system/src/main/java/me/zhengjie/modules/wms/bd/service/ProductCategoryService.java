@@ -1,8 +1,6 @@
 package me.zhengjie.modules.wms.bd.service;
 
-import me.zhengjie.modules.wms.bd.domain.MeasureUnit;
 import me.zhengjie.modules.wms.bd.domain.ProductCategory;
-import me.zhengjie.modules.wms.bd.service.dto.MeasureUnitDTO;
 import me.zhengjie.modules.wms.bd.service.dto.ProductCategoryDTO;
 import org.springframework.data.domain.Pageable;
 
