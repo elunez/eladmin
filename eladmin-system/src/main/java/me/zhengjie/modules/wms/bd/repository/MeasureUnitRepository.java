@@ -9,4 +9,5 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
  * @date 2019-07-26
  */
 public interface MeasureUnitRepository extends JpaRepository<MeasureUnit, Long >, JpaSpecificationExecutor {
+
 }

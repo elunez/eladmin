@@ -2,16 +2,23 @@ package me.zhengjie.modules.wms.bd.rest;
 
 import me.zhengjie.aop.log.Log;
 import me.zhengjie.exception.BadRequestException;
+import me.zhengjie.modules.system.service.dto.DictDTO;
+import me.zhengjie.modules.system.service.dto.RoleSmallDTO;
 import me.zhengjie.modules.wms.bd.domain.MeasureUnit;
 import me.zhengjie.modules.wms.bd.service.MeasureUnitService;
+import me.zhengjie.modules.wms.bd.service.dto.MeasureUnitDTO;
+import me.zhengjie.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Collections;
+import java.util.stream.Collectors;
+
 
 /**
  * @author 黄星星
@@ -33,5 +40,24 @@ public class MeasureUnitController {
             throw new BadRequestException("A new "+ ENTITY_NAME +" cannot already have an ID");
         }
         return new ResponseEntity(measureUnitService.create(resources), HttpStatus.CREATED);
+    }
+
+    @Log("查看计量单位详情")
+    @GetMapping(value = "/measureUnit/{id}")
+    public ResponseEntity getMessureUnits(@PathVariable Long id){
+        return new ResponseEntity(measureUnitService.findById(id), HttpStatus.OK);
+    }
+
+    @Log("删除计量单位")
+    @DeleteMapping(value = "/measureUnit/{id}")
+    public ResponseEntity delete(@PathVariable Long id){
+        measureUnitService.delete(id);
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @Log("查询计量单位")
+    @GetMapping(value = "/measureUnit")
+    public ResponseEntity getDicts(MeasureUnitDTO resources, Pageable pageable){
+        return new ResponseEntity(measureUnitService.queryAll(resources,pageable),HttpStatus.OK);
     }
 }
