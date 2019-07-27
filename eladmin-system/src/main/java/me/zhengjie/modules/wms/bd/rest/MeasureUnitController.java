@@ -41,7 +41,7 @@ public class MeasureUnitController {
 
     @Log("查看计量单位详情")
     @GetMapping(value = "/measureUnit/{id}")
-    public ResponseEntity getMessureUnits(@PathVariable Long id){
+    public ResponseEntity getMessureUnit(@PathVariable Long id){
         return new ResponseEntity(measureUnitService.findById(id), HttpStatus.OK);
     }
 
@@ -54,7 +54,7 @@ public class MeasureUnitController {
 
     @Log("查询计量单位")
     @GetMapping(value = "/measureUnit")
-    public ResponseEntity getDicts(MeasureUnitDTO resources, Pageable pageable){
+    public ResponseEntity getMessureUnits(MeasureUnitDTO resources, Pageable pageable){
         return new ResponseEntity(measureUnitService.queryAll(resources,pageable),HttpStatus.OK);
     }
 }
