@@ -1,5 +1,6 @@
 package me.zhengjie.modules.wms.bd.service.impl;
 
+import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.modules.wms.bd.domain.WareHouse;
 import me.zhengjie.modules.wms.bd.repository.WareHouseRepository;
 import me.zhengjie.modules.wms.bd.service.WareHouseService;
@@ -14,7 +15,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -34,6 +37,11 @@ public class WareHouseServiceImpl implements WareHouseService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public WareHouseDTO create(WareHouse resources) {
+        //验证仓库编码或者仓库名字是否存在
+        List<WareHouse> wareHouseList = wareHouseRepository.findByNameOrWareHouseCode(resources.getName(), resources.getWareHouseCode());
+        if(!CollectionUtils.isEmpty(wareHouseList)) {
+            throw new BadRequestException("仓库编码或编号已经存在");
+        }
         return wareHouseMapper.toDto(wareHouseRepository.save(resources));
     }
 
