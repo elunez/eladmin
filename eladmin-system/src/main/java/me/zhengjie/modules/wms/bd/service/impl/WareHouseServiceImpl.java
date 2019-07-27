@@ -38,9 +38,17 @@ public class WareHouseServiceImpl implements WareHouseService {
     @Transactional(rollbackFor = Exception.class)
     public WareHouseDTO create(WareHouse resources) {
         //验证仓库编码或者仓库名字是否存在
-        List<WareHouse> wareHouseList = wareHouseRepository.findByNameOrWareHouseCode(resources.getName(), resources.getWareHouseCode());
+        List<WareHouse> wareHouseList = wareHouseRepository.findByNameOrWareHouseCodeAndStatusTrue(resources.getName(), resources.getWareHouseCode());
         if(!CollectionUtils.isEmpty(wareHouseList)) {
             throw new BadRequestException("仓库编码或编号已经存在");
+        }
+
+        WareHouse wareHouseDelete = wareHouseRepository.findByNameAndWareHouseCodeAndStatusFalse(resources.getName(), resources.getWareHouseCode());
+        if(null != wareHouseDelete){
+            wareHouseDelete.setStatus(true);
+            wareHouseRepository.updateStatusTrue(wareHouseDelete.getId());
+            return wareHouseMapper.toDto(wareHouseDelete);
+
         }
         return wareHouseMapper.toDto(wareHouseRepository.save(resources));
     }
@@ -55,8 +63,11 @@ public class WareHouseServiceImpl implements WareHouseService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void delete(Long id) {
-        wareHouseRepository.deleteById(id);
+    public void delete(long id) {
+        Optional<WareHouse> wareHouseOptional  = wareHouseRepository.findById(id);
+        WareHouse wareHouse = wareHouseOptional.get();
+        wareHouse.setStatus(false);
+        wareHouseRepository.deleteWareHouse(id);
     }
 
     @Override
