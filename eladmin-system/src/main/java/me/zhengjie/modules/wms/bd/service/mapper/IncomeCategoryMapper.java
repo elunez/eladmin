@@ -1,7 +1,9 @@
 package me.zhengjie.modules.wms.bd.service.mapper;
 
 import me.zhengjie.mapper.EntityMapper;
+import me.zhengjie.modules.wms.bd.domain.IncomeCategory;
 import me.zhengjie.modules.wms.bd.domain.MeasureUnit;
+import me.zhengjie.modules.wms.bd.service.dto.IncomeCategoryDTO;
 import me.zhengjie.modules.wms.bd.service.dto.MeasureUnitDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
@@ -11,6 +13,6 @@ import org.mapstruct.ReportingPolicy;
  * @date 2019-07-27
  */
 @Mapper(componentModel = "spring",uses = {},unmappedTargetPolicy = ReportingPolicy.IGNORE)
-public interface MeasureUnitMapper extends EntityMapper<MeasureUnitDTO, MeasureUnit> {
+public interface IncomeCategoryMapper extends EntityMapper<IncomeCategoryDTO, IncomeCategory> {
 
 }

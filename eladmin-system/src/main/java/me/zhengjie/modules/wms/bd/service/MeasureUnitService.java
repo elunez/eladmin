@@ -1,6 +1,5 @@
 package me.zhengjie.modules.wms.bd.service;
 
-import me.zhengjie.modules.system.service.dto.DictDTO;
 import me.zhengjie.modules.wms.bd.domain.MeasureUnit;
 import me.zhengjie.modules.wms.bd.service.dto.MeasureUnitDTO;
 import org.springframework.data.domain.Pageable;
@@ -17,5 +16,5 @@ public interface MeasureUnitService {
 
     void delete(Long id);
 
-    Object queryAll(MeasureUnitDTO dict, Pageable pageable);
+    Object queryAll(MeasureUnitDTO measureUnit, Pageable pageable);
 }
