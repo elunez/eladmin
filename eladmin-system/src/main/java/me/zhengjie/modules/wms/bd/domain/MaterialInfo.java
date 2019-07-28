@@ -3,6 +3,8 @@ package me.zhengjie.modules.wms.bd.domain;
 import lombok.Data;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
+import org.hibernate.annotations.CreationTimestamp;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.io.Serializable;
@@ -20,11 +22,11 @@ public class MaterialInfo implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Integer id;
+    private long id;
 
     // 所属物料分类主键
     @Column(name = "material_category_id",nullable = false)
-    private Integer materialCategoryId;
+    private long materialCategoryId;
 
     // 物料分类名称
     @Column(name = "material_category_name",nullable = false)
@@ -34,13 +36,17 @@ public class MaterialInfo implements Serializable {
     @Column(name = "name")
     private String name;
 
+    // 物料编码
+    @Column(name = "material_code")
+    private String materialCode;
+
     // 物料规格
     @Column(name = "specifications")
     private String specifications;
 
     // 所属计量单位主键
     @Column(name = "measure_unit_id")
-    private Integer measureUnitId;
+    private Long measureUnitId;
 
     // 所属计量单位名称
     @Column(name = "measure_unit_name")
@@ -65,10 +71,12 @@ public class MaterialInfo implements Serializable {
 
     // 创建时间
     @Column(name = "create_time")
+    @CreationTimestamp
     private Timestamp createTime;
 
     // 更新时间
     @Column(name = "update_time")
+    @CreationTimestamp
     private Timestamp updateTime;
 
     public void copy(MaterialInfo source){

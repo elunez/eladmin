@@ -1,6 +1,11 @@
 package me.zhengjie.modules.wms.bd.service.impl;
 
+import me.zhengjie.exception.BadRequestException;
+import me.zhengjie.modules.wms.bd.domain.MaterialCategory;
 import me.zhengjie.modules.wms.bd.domain.MaterialInfo;
+import me.zhengjie.modules.wms.bd.domain.MeasureUnit;
+import me.zhengjie.modules.wms.bd.repository.MaterialCategoryRepository;
+import me.zhengjie.modules.wms.bd.repository.MeasureUnitRepository;
 import me.zhengjie.utils.ValidationUtil;
 import me.zhengjie.modules.wms.bd.repository.MaterialInfoRepository;
 import me.zhengjie.modules.wms.bd.service.MaterialInfoService;
@@ -16,6 +21,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import me.zhengjie.utils.PageUtil;
 import me.zhengjie.utils.QueryHelp;
+import org.springframework.util.StringUtils;
 
 /**
 * @author 黄星星
@@ -31,6 +37,12 @@ public class MaterialInfoServiceImpl implements MaterialInfoService {
     @Autowired
     private MaterialInfoMapper materialInfoMapper;
 
+    @Autowired
+    private MaterialCategoryRepository materialCategoryRepository;
+
+    @Autowired
+    private MeasureUnitRepository measureUnitRepository;
+
     @Override
     public Object queryAll(MaterialInfoQueryCriteria criteria, Pageable pageable){
         Page<MaterialInfo> page = materialInfoRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable);
@@ -43,7 +55,7 @@ public class MaterialInfoServiceImpl implements MaterialInfoService {
     }
 
     @Override
-    public MaterialInfoDTO findById(Integer id) {
+    public MaterialInfoDTO findById(Long id) {
         Optional<MaterialInfo> bdMaterialInfo = materialInfoRepository.findById(id);
         ValidationUtil.isNull(bdMaterialInfo,"BdMaterialInfo","id",id);
         return materialInfoMapper.toDto(bdMaterialInfo.get());
@@ -52,6 +64,27 @@ public class MaterialInfoServiceImpl implements MaterialInfoService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public MaterialInfoDTO create(MaterialInfo resources) {
+        Long materialCategoryId = resources.getMaterialCategoryId();
+        String materialCategoryName = resources.getMaterialCategoryName();
+        if(null == materialCategoryId || StringUtils.isEmpty(materialCategoryName)){
+            throw new BadRequestException("物料类别不能为空!");
+        }
+
+        MaterialCategory materialCategory = materialCategoryRepository.findByIdAndStatusTrue(materialCategoryId);
+        if(null == materialCategory){
+            throw new BadRequestException("物料类别不存在!");
+        }
+
+        Long measureUnitId = resources.getMeasureUnitId();
+        String measureUnitName = resources.getMeasureUnitName();
+        if(null == measureUnitId || StringUtils.isEmpty(measureUnitName)){
+            throw new BadRequestException("计量单位不能为空!");
+        }
+
+        MeasureUnit measureUnit = measureUnitRepository.findByIdAndStatusTrue(measureUnitId);
+        if(null == measureUnit){
+            throw new BadRequestException("计量单位不存在!");
+        }
         return materialInfoMapper.toDto(materialInfoRepository.save(resources));
     }
 
@@ -59,7 +92,7 @@ public class MaterialInfoServiceImpl implements MaterialInfoService {
     @Transactional(rollbackFor = Exception.class)
     public void update(MaterialInfo resources) {
         Optional<MaterialInfo> optionalBdMaterialInfo = materialInfoRepository.findById(resources.getId());
-        ValidationUtil.isNull( optionalBdMaterialInfo,"BdMaterialInfo","id",resources.getId());
+        ValidationUtil.isNull( optionalBdMaterialInfo,"MaterialInfo","id",resources.getId());
         MaterialInfo materialInfo = optionalBdMaterialInfo.get();
         materialInfo.copy(resources);
         materialInfoRepository.save(materialInfo);
@@ -67,7 +100,7 @@ public class MaterialInfoServiceImpl implements MaterialInfoService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void delete(Integer id) {
+    public void delete(long id) {
         materialInfoRepository.deleteById(id);
     }
 }

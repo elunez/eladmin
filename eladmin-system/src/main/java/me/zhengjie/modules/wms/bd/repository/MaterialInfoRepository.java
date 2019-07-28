@@ -8,5 +8,5 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 * @author 黄星星
 * @date 2019-07-27
 */
-public interface MaterialInfoRepository extends JpaRepository<MaterialInfo, Integer>, JpaSpecificationExecutor {
+public interface MaterialInfoRepository extends JpaRepository<MaterialInfo, Long>, JpaSpecificationExecutor {
 }

@@ -10,4 +10,10 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
  */
 public interface MaterialCategoryRepository extends JpaRepository<MaterialCategory, Long >, JpaSpecificationExecutor {
 
+    /**
+     * 查询存在的物料资料
+     * @param id
+     * @return
+     */
+    MaterialCategory findByIdAndStatusTrue(long id);
 }

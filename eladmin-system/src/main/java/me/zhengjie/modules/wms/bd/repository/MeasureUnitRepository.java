@@ -10,4 +10,10 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
  */
 public interface MeasureUnitRepository extends JpaRepository<MeasureUnit, Long >, JpaSpecificationExecutor {
 
+    /**
+     * 根据主键查询状态正常的计量单位
+     * @param id
+     * @return
+     */
+    MeasureUnit findByIdAndStatusTrue(long id);
 }

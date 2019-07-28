@@ -38,7 +38,7 @@ public interface MaterialInfoService {
      * @return
      */
     //@Cacheable(key = "#p0")
-    MaterialInfoDTO findById(Integer id);
+    MaterialInfoDTO findById(Long id);
 
     /**
      * create
@@ -60,5 +60,5 @@ public interface MaterialInfoService {
      * @param id
      */
     //@CacheEvict(allEntries = true)
-    void delete(Integer id);
+    void delete(long id);
 }
