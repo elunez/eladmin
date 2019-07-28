@@ -6,6 +6,7 @@ import cn.hutool.core.bean.copier.CopyOptions;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 import java.io.Serializable;
 
@@ -68,6 +69,9 @@ public class MaterialInfo implements Serializable {
     // 物料期初合计总数量
     @Column(name = "material_initial_setup_total_number")
     private String materialInitialSetupTotalNumber;
+
+    @NotNull
+    private Boolean status;
 
     // 创建时间
     @Column(name = "create_time")

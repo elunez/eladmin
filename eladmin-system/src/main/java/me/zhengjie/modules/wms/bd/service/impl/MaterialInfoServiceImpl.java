@@ -85,6 +85,13 @@ public class MaterialInfoServiceImpl implements MaterialInfoService {
         if(null == measureUnit){
             throw new BadRequestException("计量单位不存在!");
         }
+
+        // 物料编码
+        String materialCode = resources.getMaterialCode();
+        MaterialInfo byMaterialCodeAndStatusTrue = materialInfoRepository.findByMaterialCodeAndStatusTrue(materialCode);
+        if(null != byMaterialCodeAndStatusTrue){
+            throw new BadRequestException("物料编码已存在!");
+        }
         return materialInfoMapper.toDto(materialInfoRepository.save(resources));
     }
 
@@ -101,6 +108,10 @@ public class MaterialInfoServiceImpl implements MaterialInfoService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void delete(long id) {
-        materialInfoRepository.deleteById(id);
+        MaterialInfo materialInfo = materialInfoRepository.findByIdAndStatusTrue(id);
+        if(null == materialInfo){
+            throw new BadRequestException("物料资料不存在!");
+        }
+        materialInfoRepository.deleteMaterialInfo(id);
     }
 }
