@@ -17,4 +17,6 @@ public class MaterialInfoQueryCriteria {
     @Query(type = Query.Type.INNER_LIKE)
     private String materialCode;
 
+    private Long materialCategoryId;
+
 }
