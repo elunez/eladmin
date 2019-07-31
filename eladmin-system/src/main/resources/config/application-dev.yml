@@ -6,7 +6,7 @@ spring:
       driverClassName: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
       url: jdbc:log4jdbc:mysql://localhost:3306/eladmin?serverTimezone=Asia/Shanghai&characterEncoding=utf8&useSSL=false
       username: root
-      password: 123456
+      password: root
 
       # 初始化配置
       initial-size: 3
@@ -40,7 +40,10 @@ spring:
     hibernate:
       # 生产环境设置成 none，避免程序运行时自动更新数据库结构
       ddl-auto: update
-
+#配置流程引擎
+flowable:
+#关闭定时任务JOB
+  async-executor-activate: false
 #jwt
 jwt:
   header: Authorization
