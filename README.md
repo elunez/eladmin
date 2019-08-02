@@ -47,18 +47,18 @@ eladmin-en Using , Spring Boot 2.1.0 、 Jpa、 Spring Security、redis、Vue ba
 The project adopts the sub-module development method, and the general configuration is placed in the common module. 
 The ```system`` module is the system core module and the project entry module. The ```logging``` module is the system log module, ``` Tools``` is a third-party tool module that contains the map bed, mail, seven cattle cloud, Alipay, ```generator``` for the system code generation module
 - eladmin-common public module
-     - exception handling of uniform exceptions
-     - generic mapper for mapper mapstruct
-     - redis redis cache related configuration
-     - swagger2 interface document configuration
-     - utils system generic tool class
+     - exception handling of uniform exceptions
+     - generic mapper for mapper mapstruct
+     - redis redis cache related configuration
+     - swagger2 interface document configuration
+     - utils system generic tool class
 - eladmin-system system core module (system boot entry)
 - config configure cross-domain and static resources, with data permissions
 - modules system related modules (login authorization, scheduled tasks, etc.)
 - eladmin-logging system log module
 - eladmin-tools system third-party tool module
 - eladmin-generator system code generation module
-#### 系统预览
+#### System preview
 <table>
     <tr>
         <td><img src="https://i.loli.net/2019/05/18/5cdf77fa8144d68788.png"/></td>
