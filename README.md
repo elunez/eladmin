@@ -44,7 +44,8 @@ eladmin-en Using , Spring Boot 2.1.0 、 Jpa、 Spring Security、redis、Vue ba
 - Alipay payment: integrated Alipay payment and provided test account, you can test it yourself
 
 #### Project structure
-The project adopts the sub-module development method, and the general configuration is placed in the common module. The ```system`` module is the system core module and the project entry module. The ```logging``` module is the system log module, ``` Tools``` is a third-party tool module that contains the map bed, mail, seven cattle cloud, Alipay, ```generator``` for the system code generation module
+The project adopts the sub-module development method, and the general configuration is placed in the common module. 
+The ```system`` module is the system core module and the project entry module. The ```logging``` module is the system log module, ``` Tools``` is a third-party tool module that contains the map bed, mail, seven cattle cloud, Alipay, ```generator``` for the system code generation module
 - eladmin-common public module
      - exception handling of uniform exceptions
      - generic mapper for mapper mapstruct
