@@ -53,8 +53,8 @@ The ```system`` module is the system core module and the project entry module. T
      - swagger2 interface document configuration
      - utils system generic tool class
 - eladmin-system system core module (system boot entry)
-- config configure cross-domain and static resources, with data permissions
-- modules system related modules (login authorization, scheduled tasks, etc.)
+     - config configure cross-domain and static resources, with data permissions
+     - modules system related modules (login authorization, scheduled tasks, etc.)
 - eladmin-logging system log module
 - eladmin-tools system third-party tool module
 - eladmin-generator system code generation module
@@ -77,7 +77,7 @@ The ```system`` module is the system core module and the project entry module. T
     </tr>
 </table>
 
-#### 项目捐赠
-如果你用爽了，可以请作者喝杯咖啡表示支持 ☕️！ [Donate](https://docs.auauz.net/#/jz)
-#### 反馈交流
-- QQ交流群：891137268
+#### Project donation
+If you are cool, you can ask the author to have a cup of coffee to express support. ☕️！ [Donate](https://docs.auauz.net/#/jz)
+#### Feedback 
+- QQ Chat group：891137268
