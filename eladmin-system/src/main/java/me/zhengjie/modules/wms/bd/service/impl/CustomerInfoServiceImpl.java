@@ -93,8 +93,8 @@ public class CustomerInfoServiceImpl implements CustomerInfoService {
         Optional<CustomerInfo> customerInfoOptional = customerInfoRepository.findById(id);
         ValidationUtil.isNull(customerInfoOptional,"customerInfo","id",id);
         CustomerInfo customerInfo = customerInfoOptional.get();
-        CustomerInfoDTO customerInfoDTO = customerInfoMapper.toDto(customerInfo);
-        return customerInfoDTO;
+        customerInfoMapper.toDto(customerInfo);
+        return customerInfoMapper.toDto(customerInfo);
     }
 
     @Override
