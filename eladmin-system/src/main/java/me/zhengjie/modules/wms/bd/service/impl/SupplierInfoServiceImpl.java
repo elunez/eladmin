@@ -98,8 +98,8 @@ public class SupplierInfoServiceImpl implements SupplierInfoService {
     public SupplierInfoDTO create(SupplierInfo resources) {
         resources.setStatus(true);
         SupplierInfo supplierInfo = supplierInfoRepository.save(resources);
-        SupplierInfoDTO supplierInfoDTO = supplierInfoMapper.toDto(supplierInfo);
-        return supplierInfoDTO;
+        supplierInfoMapper.toDto(supplierInfo);
+        return supplierInfoMapper.toDto(supplierInfo);
     }
 
     @Override

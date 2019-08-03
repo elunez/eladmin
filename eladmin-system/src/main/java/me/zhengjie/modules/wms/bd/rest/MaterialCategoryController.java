@@ -37,7 +37,7 @@ public class MaterialCategoryController {
 
     @Log("查看物料类别")
     @GetMapping(value = "/materialCategory/{id}")
-    public ResponseEntity getMessureUnits(@PathVariable Long id){
+    public ResponseEntity getMessureUnit(@PathVariable Long id){
         return new ResponseEntity(materialCategoryService.findById(id), HttpStatus.OK);
     }
 
