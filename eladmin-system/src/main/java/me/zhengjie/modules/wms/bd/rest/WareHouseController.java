@@ -4,7 +4,7 @@ import me.zhengjie.aop.log.Log;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.modules.wms.bd.domain.WareHouse;
 import me.zhengjie.modules.wms.bd.service.WareHouseService;
-import me.zhengjie.modules.wms.bd.service.dto.WareHouseDTO;
+import me.zhengjie.modules.wms.bd.service.dto.WareHouseQueryCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -48,9 +48,15 @@ public class WareHouseController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @Log("查询仓库")
+    @Log("分页查询仓库")
     @GetMapping(value = "/wareHouse")
-    public ResponseEntity getDicts(WareHouseDTO resources, Pageable pageable){
-        return new ResponseEntity(wareHouseService.queryAll(resources,pageable),HttpStatus.OK);
+    public ResponseEntity getWareHouses(WareHouseQueryCriteria wareHouseQueryCriteria, Pageable pageable){
+        return new ResponseEntity(wareHouseService.queryAll(wareHouseQueryCriteria,pageable),HttpStatus.OK);
+    }
+
+    @Log("查询仓库列表")
+    @GetMapping(value = "/wareHouse/all")
+    public ResponseEntity queryWareHouseList(WareHouseQueryCriteria wareHouseQueryCriteria){
+        return new ResponseEntity(wareHouseService.queryAll(wareHouseQueryCriteria),HttpStatus.OK);
     }
 }

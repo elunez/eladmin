@@ -5,6 +5,7 @@ import me.zhengjie.modules.wms.bd.domain.WareHouse;
 import me.zhengjie.modules.wms.bd.repository.WareHouseRepository;
 import me.zhengjie.modules.wms.bd.service.WareHouseService;
 import me.zhengjie.modules.wms.bd.service.dto.WareHouseDTO;
+import me.zhengjie.modules.wms.bd.service.dto.WareHouseQueryCriteria;
 import me.zhengjie.modules.wms.bd.service.mapper.WareHouseMapper;
 import me.zhengjie.utils.PageUtil;
 import me.zhengjie.utils.QueryHelp;
@@ -71,9 +72,15 @@ public class WareHouseServiceImpl implements WareHouseService {
     }
 
     @Override
-    public Object queryAll(WareHouseDTO wareHouse, Pageable pageable) {
-        Page<WareHouse> page = wareHouseRepository.findAll((root, query, cb) -> QueryHelp.getPredicate(root, wareHouse, cb), pageable);
+    public Object queryAll(WareHouseQueryCriteria wareHouseQueryCriteria, Pageable pageable) {
+        Page<WareHouse> page = wareHouseRepository.findAll((root, query, cb) -> QueryHelp.getPredicate(root, wareHouseQueryCriteria, cb), pageable);
         return PageUtil.toPage(page.map(wareHouseMapper::toDto));
+    }
+
+    @Override
+    public Object queryAll(WareHouseQueryCriteria wareHouseQueryCriteria) {
+        List<WareHouse> wareHouseList = wareHouseRepository.findAll((root, query, cb) -> QueryHelp.getPredicate(root, wareHouseQueryCriteria, cb));
+        return wareHouseList;
     }
 
 }

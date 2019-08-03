@@ -2,6 +2,7 @@ package me.zhengjie.modules.wms.bd.service;
 
 import me.zhengjie.modules.wms.bd.domain.WareHouse;
 import me.zhengjie.modules.wms.bd.service.dto.WareHouseDTO;
+import me.zhengjie.modules.wms.bd.service.dto.WareHouseQueryCriteria;
 import org.springframework.data.domain.Pageable;
 
 
@@ -17,6 +18,8 @@ public interface WareHouseService {
 
     void delete(long id);
 
-    Object queryAll(WareHouseDTO wareHouse, Pageable pageable);
+    Object queryAll(WareHouseQueryCriteria wareHouseQueryCriteria, Pageable pageable);
+
+    Object queryAll(WareHouseQueryCriteria wareHouseQueryCriteria);
 
 }
