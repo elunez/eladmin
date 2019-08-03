@@ -61,4 +61,10 @@ public class MaterialInfoController {
         materialInfoService.delete(id);
         return new ResponseEntity(HttpStatus.OK);
     }
+
+    @Log("查看物料资料详情")
+    @GetMapping(value = "/materialInfo/{id}")
+    public ResponseEntity getMessureUnit(@PathVariable Long id){
+        return new ResponseEntity(materialInfoService.findById(id), HttpStatus.OK);
+    }
 }

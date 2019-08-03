@@ -65,4 +65,10 @@ public class ProductInfoController {
         productInfoService.delete(id);
         return new ResponseEntity(HttpStatus.OK);
     }
+
+    @Log("查看产品资料详情")
+    @GetMapping(value = "/productInfo/{id}")
+    public ResponseEntity getMessureUnit(@PathVariable Long id){
+        return new ResponseEntity(productInfoService.findById(id), HttpStatus.OK);
+    }
 }
