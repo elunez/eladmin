@@ -17,7 +17,7 @@ import io.swagger.annotations.*;
 * @author 黄星星
 * @date 2019-07-27
 */
-@Api(tags = "BdMaterialInfo管理")
+@Api(tags = "物料资料管理")
 @RestController
 @RequestMapping("api")
 public class MaterialInfoController {
@@ -25,18 +25,23 @@ public class MaterialInfoController {
     @Autowired
     private MaterialInfoService materialInfoService;
 
-    @Log("查询物料资料")
-    @ApiOperation(value = "查询物料资料")
+    @Log("分页查询物料资料")
+    @ApiOperation(value = "分页查询物料资料")
     @GetMapping(value = "/materialInfo")
-    @PreAuthorize("hasAnyRole('ADMIN','BDMATERIALINFO_ALL','BDMATERIALINFO_SELECT')")
     public ResponseEntity getBdMaterialInfos(MaterialInfoQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity(materialInfoService.queryAll(criteria,pageable),HttpStatus.OK);
+    }
+
+    @Log("查询所有物料资料")
+    @ApiOperation(value = "查询所有物料资料")
+    @GetMapping(value = "/queryMaterialInfoList")
+    public ResponseEntity queryMaterialInfoList(MaterialInfoQueryCriteria criteria){
+        return new ResponseEntity(materialInfoService.queryAll(criteria),HttpStatus.OK);
     }
 
     @Log("新增物料资料")
     @ApiOperation(value = "新增物料资料")
     @PostMapping(value = "/materialInfo")
-    @PreAuthorize("hasAnyRole('ADMIN','BDMATERIALINFO_ALL','BDMATERIALINFO_CREATE')")
     public ResponseEntity create(@Validated @RequestBody MaterialInfo resources){
         return new ResponseEntity(materialInfoService.create(resources),HttpStatus.CREATED);
     }
@@ -44,7 +49,6 @@ public class MaterialInfoController {
     @Log("修改物料资料")
     @ApiOperation(value = "修改物料资料")
     @PutMapping(value = "/materialInfo")
-    @PreAuthorize("hasAnyRole('ADMIN','BDMATERIALINFO_ALL','BDMATERIALINFO_EDIT')")
     public ResponseEntity update(@Validated @RequestBody MaterialInfo resources){
         materialInfoService.update(resources);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
@@ -53,7 +57,6 @@ public class MaterialInfoController {
     @Log("删除物料资料")
     @ApiOperation(value = "删除物料资料")
     @DeleteMapping(value = "/materialInfo/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN','BDMATERIALINFO_ALL','BDMATERIALINFO_DELETE')")
     public ResponseEntity delete(@PathVariable Integer id){
         materialInfoService.delete(id);
         return new ResponseEntity(HttpStatus.OK);

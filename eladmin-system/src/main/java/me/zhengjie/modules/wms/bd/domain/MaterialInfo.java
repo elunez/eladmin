@@ -23,11 +23,11 @@ public class MaterialInfo implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private long id;
+    private Long id;
 
     // 所属物料分类主键
     @Column(name = "material_category_id",nullable = false)
-    private long materialCategoryId;
+    private Long materialCategoryId;
 
     // 物料分类名称
     @Column(name = "material_category_name",nullable = false)

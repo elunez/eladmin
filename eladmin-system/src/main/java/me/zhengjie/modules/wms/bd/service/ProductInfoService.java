@@ -38,7 +38,7 @@ public interface ProductInfoService {
      * @return
      */
     //@Cacheable(key = "#p0")
-    ProductInfoDTO findById(Integer id);
+    ProductInfoDTO findById(Long id);
 
     /**
      * create

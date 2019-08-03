@@ -4,6 +4,7 @@ import lombok.Data;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 import java.io.Serializable;
 
@@ -20,11 +21,11 @@ public class ProductInfo implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Integer id;
+    private long id;
 
     // 所属产品分类
     @Column(name = "product_category_id",nullable = false)
-    private Integer productCategoryId;
+    private long productCategoryId;
 
     // 产品分类名称
     @Column(name = "product_category_name",nullable = false)
@@ -44,7 +45,7 @@ public class ProductInfo implements Serializable {
 
     // 所属计量单位主键
     @Column(name = "measure_unit_id")
-    private Integer measureUnitId;
+    private long measureUnitId;
 
     // 所属计量单位名称
     @Column(name = "measure_unit_name")
@@ -52,7 +53,7 @@ public class ProductInfo implements Serializable {
 
     // 产品单价(保留两位小数) 单位:元 
     @Column(name = "unit_price")
-    private Integer unitPrice;
+    private Long unitPrice;
 
     // 产品库存预警[{“sort”:1,”ware_house_code”:””,”ware_house_name”:””,”minimum_inventory”:””,”highest_inventory”:””}]
     @Column(name = "product_inventory_warning")
@@ -72,6 +73,9 @@ public class ProductInfo implements Serializable {
     // 更新时间
     @Column(name = "update_time")
     private Timestamp updateTime;
+
+    @NotNull
+    private Boolean status;
 
     public void copy(ProductInfo source){
         BeanUtil.copyProperties(source,this, CopyOptions.create().setIgnoreNullValue(true));

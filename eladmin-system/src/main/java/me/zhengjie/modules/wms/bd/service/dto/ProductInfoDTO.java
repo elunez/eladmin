@@ -13,10 +13,10 @@ import java.io.Serializable;
 public class ProductInfoDTO implements Serializable {
 
     // 主键
-    private Integer id;
+    private long id;
 
     // 所属产品分类
-    private Integer productCategoryId;
+    private long productCategoryId;
 
     // 产品分类名称
     private String productCategoryName;
@@ -31,13 +31,13 @@ public class ProductInfoDTO implements Serializable {
     private String specifications;
 
     // 所属计量单位主键
-    private Integer measureUnitId;
+    private long measureUnitId;
 
     // 所属计量单位名称
     private String measureUnitName;
 
     // 产品单价(保留两位小数) 单位:元 
-    private Integer unitPrice;
+    private long unitPrice;
 
     // 产品库存预警[{“sort”:1,”ware_house_code”:””,”ware_house_name”:””,”minimum_inventory”:””,”highest_inventory”:””}]
     private String productInventoryWarning;

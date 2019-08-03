@@ -49,13 +49,13 @@ public class WareHouseController {
     }
 
     @Log("分页查询仓库")
-    @GetMapping(value = "/wareHouse")
+    @GetMapping(value = "/wareHouses")
     public ResponseEntity getWareHouses(WareHouseQueryCriteria wareHouseQueryCriteria, Pageable pageable){
         return new ResponseEntity(wareHouseService.queryAll(wareHouseQueryCriteria,pageable),HttpStatus.OK);
     }
 
     @Log("查询仓库列表")
-    @GetMapping(value = "/wareHouse/all")
+    @GetMapping(value = "/queryWareHouseList")
     public ResponseEntity queryWareHouseList(WareHouseQueryCriteria wareHouseQueryCriteria){
         return new ResponseEntity(wareHouseService.queryAll(wareHouseQueryCriteria),HttpStatus.OK);
     }

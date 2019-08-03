@@ -13,10 +13,10 @@ import java.io.Serializable;
 public class MaterialInfoDTO implements Serializable {
 
     // 主键
-    private Integer id;
+    private Long id;
 
     // 所属物料分类主键
-    private Integer materialCategoryId;
+    private Long materialCategoryId;
 
     // 物料分类名称
     private String materialCategoryName;
@@ -28,7 +28,7 @@ public class MaterialInfoDTO implements Serializable {
     private String specifications;
 
     // 所属计量单位主键
-    private Integer measureUnitId;
+    private Long measureUnitId;
 
     // 所属计量单位名称
     private String measureUnitName;
@@ -41,7 +41,7 @@ public class MaterialInfoDTO implements Serializable {
 
     // 物料期初合计期初总价格
 
-    private Integer materialInitialSetupTotalPrice;
+    private Long materialInitialSetupTotalPrice;
 
     // 物料期初合计总数量
     private String materialInitialSetupTotalNumber;

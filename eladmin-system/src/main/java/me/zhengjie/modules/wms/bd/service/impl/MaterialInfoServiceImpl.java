@@ -29,10 +29,7 @@ import me.zhengjie.utils.QueryHelp;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 
 /**
  * @author 黄星星
@@ -83,7 +80,6 @@ public class MaterialInfoServiceImpl implements MaterialInfoService {
                 }
 
 
-
                 Predicate materialCategoryIdPredicate = null;
                 Long materialCategoryId = criteria.getMaterialCategoryId();
                 if (null != materialCategoryId) {
@@ -91,6 +87,8 @@ public class MaterialInfoServiceImpl implements MaterialInfoService {
                     targetPredicateList.add(materialCategoryIdPredicate);
                 }
 
+                Predicate statusPredicate = criteriaBuilder.equal(root.get("status"), 1);
+                targetPredicateList.add(statusPredicate);
 
                 if(CollectionUtils.isEmpty(targetPredicateList)){
                     return null;
@@ -106,7 +104,24 @@ public class MaterialInfoServiceImpl implements MaterialInfoService {
 
     @Override
     public Object queryAll(MaterialInfoQueryCriteria criteria) {
-        return materialInfoMapper.toDto(materialInfoRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root, criteria, criteriaBuilder)));
+        Specification<MaterialInfo> specification = new Specification<MaterialInfo>() {
+            @Override
+            public Predicate toPredicate(Root<MaterialInfo> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+
+                List<Predicate> targetPredicateList = new ArrayList<>();
+
+                Predicate statusPredicate = criteriaBuilder.equal(root.get("status"), 1);
+                targetPredicateList.add(statusPredicate);
+
+                if(CollectionUtils.isEmpty(targetPredicateList)){
+                    return null;
+                }else{
+                    return criteriaBuilder.and(targetPredicateList.toArray(new Predicate[targetPredicateList.size()]));
+                }
+            }
+        };
+        List<MaterialInfo> materialInfoList = materialInfoRepository.findAll(specification);
+        return materialInfoMapper.toDto(materialInfoList);
     }
 
     @Override
