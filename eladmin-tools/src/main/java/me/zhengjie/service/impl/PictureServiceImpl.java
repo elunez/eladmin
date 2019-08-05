@@ -48,7 +48,6 @@ public class PictureServiceImpl implements PictureService {
     @Transactional(rollbackFor = Throwable.class)
     public Picture upload(MultipartFile multipartFile, String username) {
         File file = FileUtil.toFile(multipartFile);
-
         HashMap<String, Object> paramMap = new HashMap<>(1);
 
         paramMap.put("smfile", file);
@@ -66,7 +65,7 @@ public class PictureServiceImpl implements PictureService {
         picture.setFilename(FileUtil.getFileNameNoEx(multipartFile.getOriginalFilename())+"."+FileUtil.getExtensionName(multipartFile.getOriginalFilename()));
         pictureRepository.save(picture);
         //删除临时文件
-        FileUtil.deleteFile(file);
+        FileUtil.del(file);
         return picture;
 
     }
