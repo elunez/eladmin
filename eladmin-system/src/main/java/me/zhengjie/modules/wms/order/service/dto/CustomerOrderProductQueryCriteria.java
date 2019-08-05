@@ -1,4 +1,4 @@
-package me.zhengjie.modules.wms.bd.service.dto;
+package me.zhengjie.modules.wms.order.service.dto;
 
 import lombok.Data;
 import java.sql.Timestamp;
@@ -9,8 +9,5 @@ import me.zhengjie.annotation.Query;
 * @date 2019-08-03
 */
 @Data
-public class CustomerInfoQueryCriteria {
-
-    private String customerName;
-
+public class CustomerOrderProductQueryCriteria {
 }

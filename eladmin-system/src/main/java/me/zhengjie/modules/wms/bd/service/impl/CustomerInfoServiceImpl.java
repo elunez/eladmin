@@ -23,6 +23,7 @@ import org.springframework.data.domain.Pageable;
 import me.zhengjie.utils.PageUtil;
 import me.zhengjie.utils.QueryHelp;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -52,6 +53,14 @@ public class CustomerInfoServiceImpl implements CustomerInfoService {
 
                 List<Predicate> targetPredicateList = new ArrayList<>();
 
+                //客户名称
+                String customerName = criteria.getCustomerName();
+                if (!StringUtils.isEmpty(customerName)) {
+                    Predicate namePredicate = criteriaBuilder.like(root.get("name"), "%" + customerName + "%");
+                    targetPredicateList.add(namePredicate);
+                }
+
+                //状态
                 Predicate statusPredicate = criteriaBuilder.equal(root.get("status"), 1);
                 targetPredicateList.add(statusPredicate);
 
