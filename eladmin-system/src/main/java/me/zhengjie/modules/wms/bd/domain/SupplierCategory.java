@@ -35,7 +35,7 @@ public class SupplierCategory implements Serializable {
     @NotBlank
     private String name;
 
-    @NotNull
+//    @NotNull
     private Boolean status;
 
     /**

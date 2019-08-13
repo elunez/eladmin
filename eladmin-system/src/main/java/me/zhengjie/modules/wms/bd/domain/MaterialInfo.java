@@ -70,7 +70,7 @@ public class MaterialInfo implements Serializable {
     @Column(name = "material_initial_setup_total_number")
     private String materialInitialSetupTotalNumber;
 
-    @NotNull
+//    @NotNull
     private Boolean status;
 
     // 创建时间

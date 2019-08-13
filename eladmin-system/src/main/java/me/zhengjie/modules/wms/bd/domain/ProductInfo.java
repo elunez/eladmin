@@ -74,7 +74,7 @@ public class ProductInfo implements Serializable {
     @Column(name = "update_time")
     private Timestamp updateTime;
 
-    @NotNull
+//    @NotNull
     private Boolean status;
 
     public void copy(ProductInfo source){

@@ -57,7 +57,7 @@ public class OutSourceCompanyInfo implements Serializable {
     @Column(name = "out_source_company_contact")
     private String outSourceCompanyContact;
 
-    @Column(name = "status")
+//    @Column(name = "status")
     private Boolean status;
 
     public void copy(OutSourceCompanyInfo source){

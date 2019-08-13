@@ -43,9 +43,7 @@ public class WareHouse implements Serializable {
     @NotBlank
     private String wareHouseCode;
 
-
-
-    @NotNull
+//    @NotNull
     private Boolean status;
 
     /**

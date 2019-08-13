@@ -58,7 +58,7 @@ public class CustomerInfo implements Serializable {
     @Column(name = "customer_contact")
     private String customerContact;
 
-    @NotNull
+//    @NotNull
     private Boolean status;
 
     public void copy(CustomerInfo source){

@@ -34,6 +34,7 @@ public class MeasureUnitServiceImpl implements MeasureUnitService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public MeasureUnitDTO create(MeasureUnit resources) {
+        resources.getName();
         resources.setStatus(true);
         return measureUnitMapper.toDto(measureUnitRepository.save(resources));
     }

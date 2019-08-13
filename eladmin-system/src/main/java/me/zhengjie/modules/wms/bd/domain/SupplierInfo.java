@@ -57,7 +57,7 @@ public class SupplierInfo implements Serializable {
     @Column(name = "supplier_contact")
     private String supplierContact;
 
-    @Column(name = "status")
+//    @Column(name = "status")
     private Boolean status;
 
     // 供应商类别主键

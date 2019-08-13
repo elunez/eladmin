@@ -35,7 +35,7 @@ public class IncomeCategory implements Serializable {
     @NotBlank
     private String name;
 
-    @NotNull
+//    @NotNull
     private Boolean status;
 
     /**
