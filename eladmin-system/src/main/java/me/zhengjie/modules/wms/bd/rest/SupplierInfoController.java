@@ -13,6 +13,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.annotations.*;
 
+import java.util.Calendar;
+
 /**
 * @author jie
 * @date 2019-08-03
@@ -27,17 +29,34 @@ public class SupplierInfoController {
 
     @Log("分页查询供应商资料列表")
     @ApiOperation(value = "分页查询供应商资料列表")
-    @GetMapping(value = "/supplierInfos")
+    @GetMapping(value = "/querySupplierInfoPage")
     @PreAuthorize("hasAnyRole('ADMIN','BDSUPPLIERINFO_ALL','BDSUPPLIERINFO_SELECT')")
-    public ResponseEntity getBdSupplierInfos(SupplierInfoQueryCriteria criteria, Pageable pageable){
+    public ResponseEntity querySupplierInfoPage(SupplierInfoQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity(supplierInfoService.queryAll(criteria,pageable),HttpStatus.OK);
     }
 
-    @Log("查询供应商资料列表")
-    @ApiOperation(value = "分页查询供应商资料列表")
-    @GetMapping(value = "/getSupplierInfoList")
+    @Log("初始化供应商编号")
+    @ApiOperation(value = "初始化供应商编号")
+    @GetMapping(value = "/initSupplierCode")
     @PreAuthorize("hasAnyRole('ADMIN','BDSUPPLIERINFO_ALL','BDSUPPLIERINFO_SELECT')")
-    public ResponseEntity getBdSupplierInfoList(SupplierInfoQueryCriteria criteria){
+    public ResponseEntity initSupplierCode(){
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+        int second = calendar.get(Calendar.SECOND);
+        String supplierCode = "GYS" + year + month + day + hour + minute + second;
+        return new ResponseEntity(supplierCode,HttpStatus.OK);
+    }
+
+
+    @Log("查询供应商资料列表")
+    @ApiOperation(value = "查询供应商资料列表")
+    @GetMapping(value = "/querySupplierInfoList")
+    @PreAuthorize("hasAnyRole('ADMIN','BDSUPPLIERINFO_ALL','BDSUPPLIERINFO_SELECT')")
+    public ResponseEntity querySupplierInfoList(SupplierInfoQueryCriteria criteria){
         return new ResponseEntity(supplierInfoService.queryAll(criteria),HttpStatus.OK);
     }
 
