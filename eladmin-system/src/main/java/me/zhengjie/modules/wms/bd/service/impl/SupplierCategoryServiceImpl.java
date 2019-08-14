@@ -106,4 +106,27 @@ public class SupplierCategoryServiceImpl implements SupplierCategoryService {
         return PageUtil.toPage(page.map(supplierCategoryMapper::toDto));
     }
 
+    @Override
+    public Object queryAll(SupplierCategoryDTO supplierCategory) {
+        Specification<SupplierCategory> specification = new Specification<SupplierCategory>() {
+            @Override
+            public Predicate toPredicate(Root<SupplierCategory> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+
+                List<Predicate> targetPredicateList = new ArrayList<>();
+
+                //状态
+                Predicate statusPredicate = criteriaBuilder.equal(root.get("status"), 1);
+                targetPredicateList.add(statusPredicate);
+
+                if(CollectionUtils.isEmpty(targetPredicateList)){
+                    return null;
+                }else{
+                    return criteriaBuilder.and(targetPredicateList.toArray(new Predicate[targetPredicateList.size()]));
+                }
+            }
+        };
+        List<SupplierCategory> supplierCategoryRepositoryList = supplierCategoryRepository.findAll(specification);
+        return supplierCategoryRepositoryList;
+    }
+
 }

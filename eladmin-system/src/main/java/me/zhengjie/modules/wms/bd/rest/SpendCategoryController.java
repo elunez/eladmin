@@ -49,8 +49,8 @@ public class SpendCategoryController {
     }
 
     @Log("查询支出类别")
-    @GetMapping(value = "/spendCategory")
-    public ResponseEntity getDicts(SpendCategoryDTO resources, Pageable pageable){
+    @GetMapping(value = "/querySpendCategoryPage")
+    public ResponseEntity querySpendCategoryPage(SpendCategoryDTO resources, Pageable pageable){
         return new ResponseEntity(spendCategoryService.queryAll(resources,pageable),HttpStatus.OK);
     }
 }

@@ -17,4 +17,6 @@ public interface SupplierCategoryService {
     void delete(Long id);
 
     Object queryAll(SupplierCategoryDTO supplierCategory, Pageable pageable);
+
+    Object queryAll(SupplierCategoryDTO supplierCategory);
 }

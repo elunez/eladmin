@@ -41,4 +41,12 @@ public interface MaterialCategoryRepository extends JpaRepository<MaterialCatego
     @Modifying
     @Query(value = "update bd_product_category set status = 1 where id = ?1",nativeQuery = true)
     void updateStatusToTrue(long id);
+
+    /**
+     * 删除物料类别(逻辑删除)
+     * @param id
+     */
+    @Modifying
+    @Query(value = "update bd_product_category set status = 0 where id = ?1",nativeQuery = true)
+    void deleteMaterialCategory(long id);
 }

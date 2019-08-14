@@ -80,7 +80,7 @@ public class MaterialCategoryServiceImpl implements MaterialCategoryService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void delete(Long id) {
-        materialCategoryRepository.deleteById(id);
+        materialCategoryRepository.deleteMaterialCategory(id);
     }
 
     @Override

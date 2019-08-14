@@ -48,9 +48,9 @@ public class IncomeCategoryController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @Log("查询收入分类")
-    @GetMapping(value = "/incomeCategory")
-    public ResponseEntity getIncomeCategorys(IncomeCategoryDTO resources, Pageable pageable){
+    @Log("分页查询收入分类")
+    @GetMapping(value = "/queryIncomeCategoryPage")
+    public ResponseEntity queryIncomeCategoryPage(IncomeCategoryDTO resources, Pageable pageable){
         return new ResponseEntity(incomeCategoryService.queryAll(resources,pageable),HttpStatus.OK);
     }
 }

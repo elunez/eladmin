@@ -1,6 +1,8 @@
 package me.zhengjie.modules.wms.bd.service.impl;
 
+import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.modules.wms.bd.domain.IncomeCategory;
+import me.zhengjie.modules.wms.bd.domain.MaterialCategory;
 import me.zhengjie.modules.wms.bd.domain.ProductCategory;
 import me.zhengjie.modules.wms.bd.repository.IncomeCategoryRepository;
 import me.zhengjie.modules.wms.bd.service.IncomeCategoryService;
@@ -43,7 +45,28 @@ public class IncomeCategoryServiceImpl implements IncomeCategoryService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public IncomeCategoryDTO create(IncomeCategory resources) {
-        return incomeCategoryMapper.toDto(incomeCategoryRepository.save(resources));
+        /**
+         * 查看状态正常的情况下该收入类别是否存在，如果存在，则提示收入类别已存在
+         * 查看删除状态下该名字的收入类别，如果收入类别存在，则修改收入类别状态
+         * 否则直接插入新的记录
+         */
+        IncomeCategory byNameAndStatusTrue = incomeCategoryRepository.findByNameAndStatusTrue(resources.getName());
+        if(null != byNameAndStatusTrue){
+            throw new BadRequestException("该物料类别已经存在");
+        }
+        IncomeCategory byNameAndStatusFalse = incomeCategoryRepository.findByNameAndStatusFalse(resources.getName());
+        if(null != byNameAndStatusFalse){
+            resources.setStatus(true);
+            incomeCategoryRepository.updateStatusToTrue(byNameAndStatusFalse.getId());
+            Optional<IncomeCategory> incomeCategoryOptional = incomeCategoryRepository.findById(byNameAndStatusFalse.getId());
+            IncomeCategory incomeCategory = incomeCategoryOptional.get();
+            return incomeCategoryMapper.toDto(incomeCategory);
+        }else{
+            resources.getName();
+            resources.setStatus(true);
+            IncomeCategory materialCategory = incomeCategoryRepository.save(resources);
+            return incomeCategoryMapper.toDto(materialCategory);
+        }
     }
 
     @Override
@@ -57,7 +80,7 @@ public class IncomeCategoryServiceImpl implements IncomeCategoryService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void delete(Long id) {
-        incomeCategoryRepository.deleteById(id);
+        incomeCategoryRepository.deleteSupplierCategory(id);
     }
 
     @Override

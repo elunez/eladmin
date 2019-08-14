@@ -53,4 +53,10 @@ public class SupplierCategoryController {
     public ResponseEntity querySupplierCategoryPage(SupplierCategoryDTO resources, Pageable pageable){
         return new ResponseEntity(supplierCategoryService.queryAll(resources,pageable),HttpStatus.OK);
     }
+
+    @Log("查询所有供应商类别")
+    @GetMapping(value = "/queryAllCategoryList")
+    public ResponseEntity queryAllCategoryList(SupplierCategoryDTO resources){
+        return new ResponseEntity(supplierCategoryService.queryAll(resources),HttpStatus.OK);
+    }
 }
