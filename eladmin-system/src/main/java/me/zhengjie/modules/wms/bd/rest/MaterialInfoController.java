@@ -28,7 +28,7 @@ public class MaterialInfoController {
     @Log("分页查询物料资料")
     @ApiOperation(value = "分页查询物料资料")
     @GetMapping(value = "/materialInfo")
-    public ResponseEntity getBdMaterialInfos(MaterialInfoQueryCriteria criteria, Pageable pageable){
+    public ResponseEntity queryMaterialInfoPage(MaterialInfoQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity(materialInfoService.queryAll(criteria,pageable),HttpStatus.OK);
     }
 
@@ -64,7 +64,7 @@ public class MaterialInfoController {
 
     @Log("查看物料资料详情")
     @GetMapping(value = "/materialInfo/{id}")
-    public ResponseEntity getMessureUnit(@PathVariable Long id){
+    public ResponseEntity getMaterialInfo(@PathVariable Long id){
         return new ResponseEntity(materialInfoService.findById(id), HttpStatus.OK);
     }
 }

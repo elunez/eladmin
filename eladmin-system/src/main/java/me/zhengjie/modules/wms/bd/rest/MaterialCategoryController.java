@@ -49,8 +49,8 @@ public class MaterialCategoryController {
     }
 
     @Log("查询物料类别")
-    @GetMapping(value = "/materialCategory")
-    public ResponseEntity getDicts(MaterialCategoryDTO resources, Pageable pageable){
+    @GetMapping(value = "/queryMaterialCategoryPage")
+    public ResponseEntity queryMaterialCategoryPage(MaterialCategoryDTO resources, Pageable pageable){
         return new ResponseEntity(materialCategoryService.queryAll(resources,pageable),HttpStatus.OK);
     }
 }
