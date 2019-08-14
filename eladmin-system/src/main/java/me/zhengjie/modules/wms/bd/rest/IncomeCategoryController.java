@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
  * @author 黄星星
  * @date 2019-07-27
  */
-@RestController
+@RestController("收入类别管理")
 @RequestMapping("api")
 public class IncomeCategoryController {
 

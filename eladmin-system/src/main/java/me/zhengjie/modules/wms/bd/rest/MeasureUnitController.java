@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
  * @author 黄星星
  * @date 2019-07-27
  */
-@RestController
+@RestController("计量单位管理")
 @RequestMapping("api")
 public class MeasureUnitController {
 
