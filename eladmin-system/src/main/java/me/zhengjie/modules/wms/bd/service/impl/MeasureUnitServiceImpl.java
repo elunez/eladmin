@@ -1,5 +1,6 @@
 package me.zhengjie.modules.wms.bd.service.impl;
 
+import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.modules.wms.bd.domain.MeasureUnit;
 import me.zhengjie.modules.wms.bd.repository.MeasureUnitRepository;
 import me.zhengjie.modules.wms.bd.service.MeasureUnitService;
@@ -14,7 +15,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
+import javax.validation.constraints.NotBlank;
 import java.util.Optional;
 
 /**
@@ -34,9 +37,53 @@ public class MeasureUnitServiceImpl implements MeasureUnitService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public MeasureUnitDTO create(MeasureUnit resources) {
-        resources.getName();
-        resources.setStatus(true);
-        return measureUnitMapper.toDto(measureUnitRepository.save(resources));
+        /**
+         * 查看状态正常的情况下该计量单位是否存在，如果存在，则提示计量单位已存在
+         * 查看删除状态下该名字的计量单位，如果计量单位存在，则修改计量单位状态
+         * 否则直接插入新的记录
+         */
+        MeasureUnit byNameAndStatusTrue = measureUnitRepository.findByNameAndStatusTrue(resources.getName());
+        if(null != byNameAndStatusTrue){
+            throw new BadRequestException("该计量单位已经存在");
+        }
+        MeasureUnit byNameAndStatusFalse = measureUnitRepository.findByNameAndStatusFalse(resources.getName());
+        if(null != byNameAndStatusFalse){
+            resources.setStatus(true);
+            measureUnitRepository.updateStatusToTrue(resources.getId());
+            Optional<MeasureUnit> measureUnitOptional = measureUnitRepository.findById(resources.getId());
+            MeasureUnit measureUnit = measureUnitOptional.get();
+            return measureUnitMapper.toDto(measureUnit);
+        }else{
+            resources.getName();
+            resources.setStatus(true);
+            MeasureUnit measureUnit = measureUnitRepository.save(resources);
+            return measureUnitMapper.toDto(measureUnit);
+        }
+    }
+
+    @Override
+    public MeasureUnitDTO updateMeasureUnit(MeasureUnit measureUnit) {
+        /**
+         * 修改的名称不能为空
+         * 查看修改后的name对应的状态为true的计量单位是否存在，如果存在，则提示计量单位已存在
+         * 修改计量单位名称
+         * 备注：
+         * 如果修改后的name对应的状态为false的计量单位存在，则会有冗余数据
+         */
+        String name = measureUnit.getName();
+        if(StringUtils.isEmpty(name)){
+            throw new BadRequestException("计量单位名称不能为空");
+        }
+
+        MeasureUnit byNameAndStatusTrue = measureUnitRepository.findByNameAndStatusTrue(name);
+        if(null != byNameAndStatusTrue){
+            throw new BadRequestException("计量单位已存在");
+        }
+
+        measureUnitRepository.updateNameById(measureUnit.getName(), measureUnit.getId());
+
+        Optional<MeasureUnit> measureUnitOptional = measureUnitRepository.findById(measureUnit.getId());
+        return measureUnitMapper.toDto(measureUnitOptional.get());
     }
 
     @Override
@@ -50,7 +97,8 @@ public class MeasureUnitServiceImpl implements MeasureUnitService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void delete(Long id) {
-        measureUnitRepository.deleteById(id);
+        //逻辑删除
+        measureUnitRepository.deleteMeasureUnit(id);
     }
 
     @Override

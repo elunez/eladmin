@@ -36,6 +36,15 @@ public class MeasureUnitController {
         return new ResponseEntity(measureUnitService.create(resources), HttpStatus.CREATED);
     }
 
+    @Log("修改计量单位")
+    @PostMapping(value = "/measureUnit/update")
+    public ResponseEntity updateMeasureUnit(@RequestBody MeasureUnit resources){
+        if (resources.getId() == null) {
+            throw new BadRequestException("主键不能为空");
+        }
+        return new ResponseEntity(measureUnitService.create(resources), HttpStatus.CREATED);
+    }
+
     @Log("查看计量单位详情")
     @GetMapping(value = "/measureUnit/{id}")
     public ResponseEntity getMessureUnit(@PathVariable Long id){

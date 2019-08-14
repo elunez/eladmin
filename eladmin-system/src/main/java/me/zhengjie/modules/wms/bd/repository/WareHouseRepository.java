@@ -33,7 +33,7 @@ public interface WareHouseRepository extends JpaRepository<WareHouse, Long >, Jp
     WareHouse findByNameAndWareHouseCodeAndStatusFalse(String name, String wareHouseCode);
 
     /**
-     * 删除仓库
+     * 删除仓库(逻辑删除)
      * @param id
      */
     @Modifying

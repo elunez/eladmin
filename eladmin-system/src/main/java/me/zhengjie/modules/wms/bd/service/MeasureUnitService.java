@@ -12,6 +12,8 @@ public interface MeasureUnitService {
 
     MeasureUnitDTO create(MeasureUnit resources);
 
+    MeasureUnitDTO updateMeasureUnit(MeasureUnit measureUnit);
+
     MeasureUnitDTO findById(long id);
 
     void delete(Long id);
