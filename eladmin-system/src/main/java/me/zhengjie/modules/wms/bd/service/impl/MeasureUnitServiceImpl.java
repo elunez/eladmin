@@ -1,6 +1,7 @@
 package me.zhengjie.modules.wms.bd.service.impl;
 
 import me.zhengjie.exception.BadRequestException;
+import me.zhengjie.modules.wms.bd.domain.CustomerInfo;
 import me.zhengjie.modules.wms.bd.domain.MeasureUnit;
 import me.zhengjie.modules.wms.bd.repository.MeasureUnitRepository;
 import me.zhengjie.modules.wms.bd.service.MeasureUnitService;
@@ -12,12 +13,20 @@ import me.zhengjie.utils.ValidationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import javax.validation.constraints.NotBlank;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -49,8 +58,8 @@ public class MeasureUnitServiceImpl implements MeasureUnitService {
         MeasureUnit byNameAndStatusFalse = measureUnitRepository.findByNameAndStatusFalse(resources.getName());
         if(null != byNameAndStatusFalse){
             resources.setStatus(true);
-            measureUnitRepository.updateStatusToTrue(resources.getId());
-            Optional<MeasureUnit> measureUnitOptional = measureUnitRepository.findById(resources.getId());
+            measureUnitRepository.updateStatusToTrue(byNameAndStatusFalse.getId());
+            Optional<MeasureUnit> measureUnitOptional = measureUnitRepository.findById(byNameAndStatusFalse.getId());
             MeasureUnit measureUnit = measureUnitOptional.get();
             return measureUnitMapper.toDto(measureUnit);
         }else{
@@ -103,7 +112,25 @@ public class MeasureUnitServiceImpl implements MeasureUnitService {
 
     @Override
     public Object queryAll(MeasureUnitDTO measureUnit, Pageable pageable) {
-        Page<MeasureUnit> page = measureUnitRepository.findAll((root, query, cb) -> QueryHelp.getPredicate(root, measureUnit, cb), pageable);
+        Specification<MeasureUnit> specification = new Specification<MeasureUnit>() {
+            @Override
+            public Predicate toPredicate(Root<MeasureUnit> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+
+                List<Predicate> targetPredicateList = new ArrayList<>();
+
+                //状态
+                Predicate statusPredicate = criteriaBuilder.equal(root.get("status"), 1);
+                targetPredicateList.add(statusPredicate);
+
+                if(CollectionUtils.isEmpty(targetPredicateList)){
+                    return null;
+                }else{
+                    return criteriaBuilder.and(targetPredicateList.toArray(new Predicate[targetPredicateList.size()]));
+                }
+            }
+        };
+
+        Page<MeasureUnit> page = measureUnitRepository.findAll(specification, pageable);
         return PageUtil.toPage(page.map(measureUnitMapper::toDto));
     }
 
