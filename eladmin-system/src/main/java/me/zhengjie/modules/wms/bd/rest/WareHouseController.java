@@ -12,6 +12,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
+
 
 /**
  * @author 黄星星
@@ -33,6 +37,15 @@ public class WareHouseController {
             throw new BadRequestException("A new "+ ENTITY_NAME +" cannot already have an ID");
         }
         return new ResponseEntity(wareHouseService.create(resources), HttpStatus.CREATED);
+    }
+
+
+    @Log("初始化仓库编号")
+    @GetMapping(value = "/initWareHouseCode")
+    public ResponseEntity initWareHouseCode(){
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS");//设置日期格式
+        String supplierCode = "CK"+ LocalDateTime.now().format(fmt);
+        return new ResponseEntity(supplierCode,HttpStatus.OK);
     }
 
     @Log("查看仓库详情")
