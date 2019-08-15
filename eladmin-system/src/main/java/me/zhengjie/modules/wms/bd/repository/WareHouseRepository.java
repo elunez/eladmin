@@ -20,7 +20,7 @@ public interface WareHouseRepository extends JpaRepository<WareHouse, Long >, Jp
      * @param wareHouseCode
      * @return
      */
-    @Query(value ="select * from bd_ware_house where (name = ?1 or ware_house_code = ?2) and status = 1", nativeQuery = true)
+    @Query(value ="select * from bd_ware_house where name = ?1 and ware_house_code = ?2 and status = 1", nativeQuery = true)
     List<WareHouse> findByNameOrWareHouseCodeAndStatusTrue(String name, String wareHouseCode);
 
 
@@ -30,6 +30,7 @@ public interface WareHouseRepository extends JpaRepository<WareHouse, Long >, Jp
      * @param wareHouseCode
      * @return
      */
+    @Query(value ="select * from bd_ware_house where name = ?1 and ware_house_code = ?2 and status = 0", nativeQuery = true)
     WareHouse findByNameAndWareHouseCodeAndStatusFalse(String name, String wareHouseCode);
 
     /**

@@ -1,6 +1,7 @@
 package me.zhengjie.modules.wms.bd.service.impl;
 
 import me.zhengjie.exception.BadRequestException;
+import me.zhengjie.modules.wms.bd.domain.SupplierInfo;
 import me.zhengjie.modules.wms.bd.domain.WareHouse;
 import me.zhengjie.modules.wms.bd.repository.WareHouseRepository;
 import me.zhengjie.modules.wms.bd.service.WareHouseService;
@@ -13,11 +14,17 @@ import me.zhengjie.utils.ValidationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,6 +58,7 @@ public class WareHouseServiceImpl implements WareHouseService {
             return wareHouseMapper.toDto(wareHouseDelete);
 
         }
+        resources.setStatus(true);
         return wareHouseMapper.toDto(wareHouseRepository.save(resources));
     }
 
@@ -73,13 +81,45 @@ public class WareHouseServiceImpl implements WareHouseService {
 
     @Override
     public Object queryAll(WareHouseQueryCriteria wareHouseQueryCriteria, Pageable pageable) {
-        Page<WareHouse> page = wareHouseRepository.findAll((root, query, cb) -> QueryHelp.getPredicate(root, wareHouseQueryCriteria, cb), pageable);
+        Specification<WareHouse> specification = new Specification<WareHouse>() {
+            @Override
+            public Predicate toPredicate(Root<WareHouse> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+
+                List<Predicate> targetPredicateList = new ArrayList<>();
+
+                Predicate statusPredicate = criteriaBuilder.equal(root.get("status"), 1);
+                targetPredicateList.add(statusPredicate);
+
+                if(CollectionUtils.isEmpty(targetPredicateList)){
+                    return null;
+                }else{
+                    return criteriaBuilder.and(targetPredicateList.toArray(new Predicate[targetPredicateList.size()]));
+                }
+            }
+        };
+        Page<WareHouse> page = wareHouseRepository.findAll(specification, pageable);
         return PageUtil.toPage(page.map(wareHouseMapper::toDto));
     }
 
     @Override
     public Object queryAll(WareHouseQueryCriteria wareHouseQueryCriteria) {
-        List<WareHouse> wareHouseList = wareHouseRepository.findAll((root, query, cb) -> QueryHelp.getPredicate(root, wareHouseQueryCriteria, cb));
+        Specification<WareHouse> specification = new Specification<WareHouse>() {
+            @Override
+            public Predicate toPredicate(Root<WareHouse> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+
+                List<Predicate> targetPredicateList = new ArrayList<>();
+
+                Predicate statusPredicate = criteriaBuilder.equal(root.get("status"), 1);
+                targetPredicateList.add(statusPredicate);
+
+                if(CollectionUtils.isEmpty(targetPredicateList)){
+                    return null;
+                }else{
+                    return criteriaBuilder.and(targetPredicateList.toArray(new Predicate[targetPredicateList.size()]));
+                }
+            }
+        };
+        List<WareHouse> wareHouseList = wareHouseRepository.findAll(specification);
         return wareHouseList;
     }
 

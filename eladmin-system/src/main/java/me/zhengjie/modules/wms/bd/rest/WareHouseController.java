@@ -32,7 +32,7 @@ public class WareHouseController {
 
     @Log("新增仓库")
     @PostMapping(value = "/wareHouse")
-    public ResponseEntity create(@Validated @RequestBody WareHouse resources){
+    public ResponseEntity create(@RequestBody WareHouse resources){
         if (resources.getId() != null) {
             throw new BadRequestException("A new "+ ENTITY_NAME +" cannot already have an ID");
         }
@@ -62,8 +62,8 @@ public class WareHouseController {
     }
 
     @Log("分页查询仓库")
-    @GetMapping(value = "/wareHouses")
-    public ResponseEntity getWareHouses(WareHouseQueryCriteria wareHouseQueryCriteria, Pageable pageable){
+    @GetMapping(value = "/queryWareHousePage")
+    public ResponseEntity queryWareHousePage(WareHouseQueryCriteria wareHouseQueryCriteria, Pageable pageable){
         return new ResponseEntity(wareHouseService.queryAll(wareHouseQueryCriteria,pageable),HttpStatus.OK);
     }
 
