@@ -24,7 +24,7 @@ public class OutSourceProcessSheetProduct implements Serializable {
 
     // 状态
     @Column(name = "status")
-    private Integer status;
+    private Boolean status;
 
     // 创建时间
     @Column(name = "create_time")
