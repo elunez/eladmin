@@ -1,21 +1,33 @@
 package me.zhengjie.modules.wms.order.service.impl;
 
+import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.modules.wms.order.domain.CustomerOrder;
+import me.zhengjie.modules.wms.order.domain.CustomerOrderProduct;
+import me.zhengjie.modules.wms.order.repository.CustomerOrderProductRepository;
 import me.zhengjie.modules.wms.order.repository.CustomerOrderRepository;
+import me.zhengjie.modules.wms.order.request.CreateCustomerOrderRequest;
+import me.zhengjie.modules.wms.order.request.CustomerOrderProductRequest;
 import me.zhengjie.modules.wms.order.service.CustomerOrderService;
 import me.zhengjie.modules.wms.order.service.dto.CustomerOrderDTO;
+import me.zhengjie.modules.wms.order.service.dto.CustomerOrderProductDTO;
 import me.zhengjie.modules.wms.order.service.dto.CustomerOrderQueryCriteria;
 import me.zhengjie.modules.wms.order.service.mapper.CustomerOrderMapper;
+import me.zhengjie.modules.wms.order.service.mapper.CustomerOrderProductMapper;
 import me.zhengjie.utils.ValidationUtil;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import me.zhengjie.utils.PageUtil;
 import me.zhengjie.utils.QueryHelp;
+import org.springframework.util.CollectionUtils;
 
 /**
 * @author jie
@@ -29,7 +41,13 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
     private CustomerOrderRepository customerOrderRepository;
 
     @Autowired
+    private CustomerOrderProductRepository customerOrderProductRepository;
+
+    @Autowired
     private CustomerOrderMapper customerOrderMapper;
+
+    @Autowired
+    private CustomerOrderProductMapper customerOrderProductMapper;
 
     @Override
     public Object queryAll(CustomerOrderQueryCriteria criteria, Pageable pageable){
@@ -51,9 +69,38 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public CustomerOrderDTO create(CustomerOrder resources) {
-        resources.setStatus(true);
-        return customerOrderMapper.toDto(customerOrderRepository.save(resources));
+    public CustomerOrderDTO create(CreateCustomerOrderRequest createCustomerOrderRequest) {
+        CustomerOrder customerOrder = new CustomerOrder();
+        BeanUtils.copyProperties(createCustomerOrderRequest, customerOrder);
+        customerOrder.setStatus(true);
+        //插入客户订单
+        customerOrderRepository.save(customerOrder);
+        customerOrder= customerOrderRepository.findByCustomerOrderCodeAndStatusTrue(createCustomerOrderRequest.getCustomerOrderCode());
+
+        //插入客户订单对应的产品信息
+        List<CustomerOrderProductRequest> customerOrderProductRequestList = createCustomerOrderRequest.getCustomerOrderProductList();
+        if(CollectionUtils.isEmpty(customerOrderProductRequestList)){
+            throw new BadRequestException("订单产品不能为空!");
+        }
+
+        List<CustomerOrderProduct> customerOrderProductList = new ArrayList<>();
+        for(CustomerOrderProductRequest customerOrderProductRequest : customerOrderProductRequestList){
+            CustomerOrderProduct customerOrderProduct = new CustomerOrderProduct();
+            BeanUtils.copyProperties(customerOrderProductRequest, customerOrderProduct);
+            customerOrderProduct.setCustomerOrderId(customerOrder.getId());
+            customerOrderProduct.setStatus(true);
+        }
+
+        customerOrderProductRepository.saveAll(customerOrderProductList);
+
+
+        CustomerOrderDTO customerOrderDTO = customerOrderMapper.toDto(customerOrder);
+        List<CustomerOrderProduct> byCustomerOrderIdAndStatusTrue = customerOrderProductRepository.findByCustomerOrderIdAndStatusTrue(customerOrder.getId());
+        List<CustomerOrderProductDTO> customerOrderProductDTOList = customerOrderProductMapper.toDto(byCustomerOrderIdAndStatusTrue);
+        customerOrderDTO.setCustomerOrderProductList(customerOrderProductDTOList);
+
+
+        return customerOrderDTO;
     }
 
     @Override

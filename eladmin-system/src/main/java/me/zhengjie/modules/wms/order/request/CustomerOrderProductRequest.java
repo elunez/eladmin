@@ -1,18 +1,16 @@
+package me.zhengjie.modules.wms.order.request;
 
-package me.zhengjie.modules.wms.order.service.dto;
+import lombok.Data;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 
 /**
  * @author 黄星星
  * @date 2019-08-17
  */
-public class CustomerOrderProductDTO {
-
-    private Long id;
-
-    // 所属客户订单
-    private Long customerOrderId;
+@Data
+public class CustomerOrderProductRequest implements Serializable {
 
     // 产品主键
     private Long productId;

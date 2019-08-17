@@ -13,4 +13,6 @@ public class CustomerInfoQueryCriteria {
 
     private String customerName;
 
+    private String customerCode;
+
 }

@@ -60,6 +60,13 @@ public class CustomerOrderProduct implements Serializable {
     @Column(name = "update_time")
     private Timestamp updateTime;
 
+    // 状态
+    private Boolean status;
+
+    // 产品编号
+    @Column(name = "product_code")
+    private String productCode;
+
     public void copy(CustomerOrderProduct source){
         BeanUtil.copyProperties(source,this, CopyOptions.create().setIgnoreNullValue(true));
     }

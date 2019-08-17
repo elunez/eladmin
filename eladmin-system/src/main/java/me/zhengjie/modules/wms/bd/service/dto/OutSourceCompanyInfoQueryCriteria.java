@@ -10,4 +10,10 @@ import me.zhengjie.annotation.Query;
 */
 @Data
 public class OutSourceCompanyInfoQueryCriteria {
+
+    // 委外公司名称
+    private String outSourceCompanyName;
+
+    // 委外公司编号
+    private String outSourceCompanyCode;
 }

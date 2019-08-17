@@ -2,6 +2,7 @@ package me.zhengjie.modules.wms.order.rest;
 
 import me.zhengjie.aop.log.Log;
 import me.zhengjie.modules.wms.order.domain.CustomerOrder;
+import me.zhengjie.modules.wms.order.request.CreateCustomerOrderRequest;
 import me.zhengjie.modules.wms.order.service.CustomerOrderService;
 import me.zhengjie.modules.wms.order.service.dto.CustomerOrderQueryCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,11 +14,14 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.annotations.*;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 /**
 * @author jie
 * @date 2019-08-03
 */
-@Api(tags = "SCustomerOrder管理")
+@Api(tags = "客户订单管理")
 @RestController
 @RequestMapping("api")
 public class CustomerOrderController {
@@ -27,9 +31,9 @@ public class CustomerOrderController {
 
     @Log("分页查询客户订单列表")
     @ApiOperation(value = "分页查询客户订单列表")
-    @GetMapping(value = "/customerOrders")
+    @GetMapping(value = "/queryCustomerOrderPage")
     @PreAuthorize("hasAnyRole('ADMIN','SCUSTOMERORDER_ALL','SCUSTOMERORDER_SELECT')")
-    public ResponseEntity getCustomerOrders(CustomerOrderQueryCriteria criteria, Pageable pageable){
+    public ResponseEntity queryCustomerOrderPage(CustomerOrderQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity(customerOrderService.queryAll(criteria,pageable),HttpStatus.OK);
     }
 
@@ -37,11 +41,11 @@ public class CustomerOrderController {
     @ApiOperation(value = "新增客户订单")
     @PostMapping(value = "/customerOrder")
     @PreAuthorize("hasAnyRole('ADMIN','SCUSTOMERORDER_ALL','SCUSTOMERORDER_CREATE')")
-    public ResponseEntity create(@RequestBody CustomerOrder resources){
-        return new ResponseEntity(customerOrderService.create(resources),HttpStatus.CREATED);
+    public ResponseEntity create(@RequestBody CreateCustomerOrderRequest createCustomerOrderRequest){
+        return new ResponseEntity(customerOrderService.create(createCustomerOrderRequest),HttpStatus.CREATED);
     }
 
-    @Log("修改SCustomerOrder")
+    @Log("修改客户订单")
     @ApiOperation(value = "修改SCustomerOrder")
     @PutMapping(value = "/customerOrder")
     @PreAuthorize("hasAnyRole('ADMIN','SCUSTOMERORDER_ALL','SCUSTOMERORDER_EDIT')")
@@ -50,12 +54,20 @@ public class CustomerOrderController {
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
-    @Log("删除SCustomerOrder")
+    @Log("删除客户订单")
     @ApiOperation(value = "删除SCustomerOrder")
     @DeleteMapping(value = "/customerOrder/{id}")
     @PreAuthorize("hasAnyRole('ADMIN','SCUSTOMERORDER_ALL','SCUSTOMERORDER_DELETE')")
     public ResponseEntity delete(@PathVariable Long id){
         customerOrderService.delete(id);
         return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @Log("初始化客户订单编号")
+    @GetMapping(value = "/initCustomerOrderCode")
+    public ResponseEntity initCustomerOrderCode(){
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS");//设置日期格式
+        String supplierCode = "DD"+ LocalDateTime.now().format(fmt);
+        return new ResponseEntity(supplierCode,HttpStatus.OK);
     }
 }

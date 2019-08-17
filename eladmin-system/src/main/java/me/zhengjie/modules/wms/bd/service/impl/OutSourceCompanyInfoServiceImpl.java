@@ -23,6 +23,7 @@ import org.springframework.data.domain.Pageable;
 import me.zhengjie.utils.PageUtil;
 import me.zhengjie.utils.QueryHelp;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -54,6 +55,20 @@ public class OutSourceCompanyInfoServiceImpl implements OutSourceCompanyInfoServ
                 Predicate statusPredicate = criteriaBuilder.equal(root.get("status"), 1);
                 targetPredicateList.add(statusPredicate);
 
+                //委外公司名称
+                String outSourceCompanyName = criteria.getOutSourceCompanyName();
+                if (!StringUtils.isEmpty(outSourceCompanyName)) {
+                    Predicate outSourceCompanyNamePredicate = criteriaBuilder.like(root.get("outSourceCompanyName"), "%" + outSourceCompanyName + "%");
+                    targetPredicateList.add(outSourceCompanyNamePredicate);
+                }
+
+                //委外公司名称
+                String outSourceCompanyCode = criteria.getOutSourceCompanyCode();
+                if (!StringUtils.isEmpty(outSourceCompanyName)) {
+                    Predicate outSourceCompanyCodePredicate = criteriaBuilder.like(root.get("outSourceCompanyCode"), "%" + outSourceCompanyCode + "%");
+                    targetPredicateList.add(outSourceCompanyCodePredicate);
+                }
+
                 if(CollectionUtils.isEmpty(targetPredicateList)){
                     return null;
                 }else{
@@ -75,6 +90,20 @@ public class OutSourceCompanyInfoServiceImpl implements OutSourceCompanyInfoServ
 
                 Predicate statusPredicate = criteriaBuilder.equal(root.get("status"), 1);
                 targetPredicateList.add(statusPredicate);
+
+                //委外公司名称
+                String outSourceCompanyName = criteria.getOutSourceCompanyName();
+                if (!StringUtils.isEmpty(outSourceCompanyName)) {
+                    Predicate outSourceCompanyNamePredicate = criteriaBuilder.like(root.get("outSourceCompanyName"), "%" + outSourceCompanyName + "%");
+                    targetPredicateList.add(outSourceCompanyNamePredicate);
+                }
+
+                //委外公司名称
+                String outSourceCompanyCode = criteria.getOutSourceCompanyCode();
+                if (!StringUtils.isEmpty(outSourceCompanyName)) {
+                    Predicate outSourceCompanyCodePredicate = criteriaBuilder.like(root.get("outSourceCompanyCode"), "%" + outSourceCompanyCode + "%");
+                    targetPredicateList.add(outSourceCompanyCodePredicate);
+                }
 
                 if(CollectionUtils.isEmpty(targetPredicateList)){
                     return null;

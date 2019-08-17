@@ -14,9 +14,19 @@ public interface CustomerOrderRepository extends JpaRepository<CustomerOrder, Lo
 
     /**
      * 删除仓库(逻辑删除)
+     *
      * @param id
      */
     @Modifying
-    @Query(value = "update s_customer_order set status = 0 where id = ?1",nativeQuery = true)
+    @Query(value = "update s_customer_order set status = 0 where id = ?1", nativeQuery = true)
     void deleteCustomerOrder(long id);
+
+    /**
+     * 根据订单编号查询订单状态正常的客户订单
+     *
+     * @param customerOrderCode
+     * @return
+     */
+    @Query(value = "select * from s_customer_order where customerOrderCode = ?1  and status = 1", nativeQuery = true)
+    CustomerOrder findByCustomerOrderCodeAndStatusTrue(String customerOrderCode);
 }

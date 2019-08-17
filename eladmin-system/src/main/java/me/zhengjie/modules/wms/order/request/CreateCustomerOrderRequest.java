@@ -1,21 +1,19 @@
-package me.zhengjie.modules.wms.order.service.dto;
+package me.zhengjie.modules.wms.order.request;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import lombok.Data;
+import me.zhengjie.modules.wms.order.domain.CustomerOrder;
 
-import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.List;
 
 /**
-* @author jie
-* @date 2019-08-03
-*/
+ * @author 黄星星
+ * @date 2019-08-17
+ */
 @Data
-public class CustomerOrderDTO implements Serializable {
-
-    private Long id;
+public class CreateCustomerOrderRequest {
 
     // 所属客户主键
     private Long customerId;
@@ -74,13 +72,11 @@ public class CustomerOrderDTO implements Serializable {
     // 总数量
     private Long totalNumber;
 
-    // 状态
-    private Boolean status;
 
-    // 订单产品
-    private List<CustomerOrderProductDTO>  customerOrderProductList;
+    private List<CustomerOrderProductRequest> customerOrderProductList;
 
-    public void copy(CustomerOrderDTO source){
+
+    public void copy(CustomerOrder source){
         BeanUtil.copyProperties(source,this, CopyOptions.create().setIgnoreNullValue(true));
     }
 }

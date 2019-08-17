@@ -56,13 +56,19 @@ public class CustomerInfoServiceImpl implements CustomerInfoService {
                 //客户名称
                 String customerName = criteria.getCustomerName();
                 if (!StringUtils.isEmpty(customerName)) {
-                    Predicate namePredicate = criteriaBuilder.like(root.get("name"), "%" + customerName + "%");
+                    Predicate namePredicate = criteriaBuilder.like(root.get("customerName"), "%" + customerName + "%");
                     targetPredicateList.add(namePredicate);
                 }
 
                 //状态
                 Predicate statusPredicate = criteriaBuilder.equal(root.get("status"), 1);
                 targetPredicateList.add(statusPredicate);
+
+                String customerCode = criteria.getCustomerCode();
+                if(!StringUtils.isEmpty(customerCode)){
+                    Predicate customerCodePredicate = criteriaBuilder.like(root.get("customerCode"), "%" + customerName + "%");
+                    targetPredicateList.add(customerCodePredicate);
+                }
 
                 if(CollectionUtils.isEmpty(targetPredicateList)){
                     return null;

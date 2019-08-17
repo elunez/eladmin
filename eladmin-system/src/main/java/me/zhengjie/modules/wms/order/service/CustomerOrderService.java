@@ -4,6 +4,7 @@ package me.zhengjie.modules.wms.order.service;
 //import org.springframework.cache.annotation.CacheEvict;
 //import org.springframework.cache.annotation.Cacheable;
 import me.zhengjie.modules.wms.order.domain.CustomerOrder;
+import me.zhengjie.modules.wms.order.request.CreateCustomerOrderRequest;
 import me.zhengjie.modules.wms.order.service.dto.CustomerOrderDTO;
 import me.zhengjie.modules.wms.order.service.dto.CustomerOrderQueryCriteria;
 import org.springframework.data.domain.Pageable;
@@ -42,11 +43,11 @@ public interface CustomerOrderService {
 
     /**
      * create
-     * @param resources
+     * @param createCustomerOrderRequest
      * @return
      */
     //@CacheEvict(allEntries = true)
-    CustomerOrderDTO create(CustomerOrder resources);
+    CustomerOrderDTO create(CreateCustomerOrderRequest createCustomerOrderRequest);
 
     /**
      * update

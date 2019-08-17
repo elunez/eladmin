@@ -17,7 +17,7 @@ import io.swagger.annotations.*;
 * @author jie
 * @date 2019-08-03
 */
-@Api(tags = "SCustomerOrderProduct管理")
+@Api(tags = "客户订单管理")
 @RestController
 @RequestMapping("api")
 public class CustomerOrderProductController {
@@ -25,11 +25,11 @@ public class CustomerOrderProductController {
     @Autowired
     private CustomerOrderProductService customerOrderProductService;
 
-    @Log("查询SCustomerOrderProduct")
-    @ApiOperation(value = "查询SCustomerOrderProduct")
-    @GetMapping(value = "/sCustomerOrderProduct")
+    @Log("分页查询客户订单产品列表")
+    @ApiOperation(value = "分页查询客户订单产品列表")
+    @GetMapping(value = "/queryCustomerOrderProductPage")
     @PreAuthorize("hasAnyRole('ADMIN','SCUSTOMERORDERPRODUCT_ALL','SCUSTOMERORDERPRODUCT_SELECT')")
-    public ResponseEntity getSCustomerOrderProducts(CustomerOrderProductQueryCriteria criteria, Pageable pageable){
+    public ResponseEntity queryCustomerOrderProductPage(CustomerOrderProductQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity(customerOrderProductService.queryAll(criteria,pageable),HttpStatus.OK);
     }
 
