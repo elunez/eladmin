@@ -6,6 +6,7 @@ import me.zhengjie.modules.wms.outSourceProductSheet.domain.OutSourceProcessShee
 import me.zhengjie.modules.wms.outSourceProductSheet.repository.OutSourceProcessSheetProductRepository;
 import me.zhengjie.modules.wms.outSourceProductSheet.request.CreateOutSourceProcessSheetRequest;
 import me.zhengjie.modules.wms.outSourceProductSheet.request.OutSourceProcessSheetProductRequest;
+import me.zhengjie.modules.wms.outSourceProductSheet.request.UpdateOutSourceProcessSheetRequest;
 import me.zhengjie.modules.wms.outSourceProductSheet.service.dto.OutSourceProcessSheetProductDTO;
 import me.zhengjie.utils.ValidationUtil;
 import me.zhengjie.modules.wms.outSourceProductSheet.repository.OutSourceProcessSheetRepository;
@@ -114,12 +115,8 @@ public class OutSourceProcessSheetServiceImpl implements OutSourceProcessSheetSe
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void update(OutSourceProcessSheet resources) {
-        Optional<OutSourceProcessSheet> optionalSOutSourceProcessSheet = outSourceProcessSheetRepository.findById(resources.getId());
-        ValidationUtil.isNull( optionalSOutSourceProcessSheet,"SOutSourceProcessSheet","id",resources.getId());
-        OutSourceProcessSheet outSourceProcessSheet = optionalSOutSourceProcessSheet.get();
-        outSourceProcessSheet.copy(resources);
-        outSourceProcessSheetRepository.save(outSourceProcessSheet);
+    public void update(UpdateOutSourceProcessSheetRequest updateOutSourceProcessSheetRequest) {
+
     }
 
     @Override

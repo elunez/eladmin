@@ -3,6 +3,7 @@ package me.zhengjie.modules.wms.outSourceProductSheet.rest;
 import me.zhengjie.aop.log.Log;
 import me.zhengjie.modules.wms.outSourceProductSheet.domain.OutSourceProcessSheet;
 import me.zhengjie.modules.wms.outSourceProductSheet.request.CreateOutSourceProcessSheetRequest;
+import me.zhengjie.modules.wms.outSourceProductSheet.request.UpdateOutSourceProcessSheetRequest;
 import me.zhengjie.modules.wms.outSourceProductSheet.service.OutSourceProcessSheetService;
 import me.zhengjie.modules.wms.outSourceProductSheet.service.dto.OutSourceProcessSheetQueryCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,8 +47,8 @@ public class OutSourceProcessSheetController {
     @ApiOperation(value = "修改委外加工单")
     @PutMapping(value = "/outSourceProcessSheet")
     @PreAuthorize("hasAnyRole('ADMIN','SOUTSOURCEPROCESSSHEET_ALL','SOUTSOURCEPROCESSSHEET_EDIT')")
-    public ResponseEntity update(@Validated @RequestBody OutSourceProcessSheet resources){
-        outSourceProcessSheetService.update(resources);
+    public ResponseEntity update(@RequestBody UpdateOutSourceProcessSheetRequest updateOutSourceProcessSheetRequest){
+        outSourceProcessSheetService.update(updateOutSourceProcessSheetRequest);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
