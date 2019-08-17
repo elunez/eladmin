@@ -3,6 +3,7 @@ package me.zhengjie.modules.wms.order.rest;
 import me.zhengjie.aop.log.Log;
 import me.zhengjie.modules.wms.order.domain.CustomerOrder;
 import me.zhengjie.modules.wms.order.request.CreateCustomerOrderRequest;
+import me.zhengjie.modules.wms.order.request.UpdateCustomerOrderRequest;
 import me.zhengjie.modules.wms.order.service.CustomerOrderService;
 import me.zhengjie.modules.wms.order.service.dto.CustomerOrderQueryCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,8 +50,8 @@ public class CustomerOrderController {
     @ApiOperation(value = "修改SCustomerOrder")
     @PutMapping(value = "/customerOrder")
     @PreAuthorize("hasAnyRole('ADMIN','SCUSTOMERORDER_ALL','SCUSTOMERORDER_EDIT')")
-    public ResponseEntity update(@RequestBody CustomerOrder resources){
-        customerOrderService.update(resources);
+    public ResponseEntity update(@RequestBody UpdateCustomerOrderRequest updateCustomerOrderRequest){
+        customerOrderService.update(updateCustomerOrderRequest);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 

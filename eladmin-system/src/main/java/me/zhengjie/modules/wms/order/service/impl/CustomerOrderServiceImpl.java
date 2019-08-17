@@ -7,6 +7,7 @@ import me.zhengjie.modules.wms.order.repository.CustomerOrderProductRepository;
 import me.zhengjie.modules.wms.order.repository.CustomerOrderRepository;
 import me.zhengjie.modules.wms.order.request.CreateCustomerOrderRequest;
 import me.zhengjie.modules.wms.order.request.CustomerOrderProductRequest;
+import me.zhengjie.modules.wms.order.request.UpdateCustomerOrderRequest;
 import me.zhengjie.modules.wms.order.service.CustomerOrderService;
 import me.zhengjie.modules.wms.order.service.dto.CustomerOrderDTO;
 import me.zhengjie.modules.wms.order.service.dto.CustomerOrderProductDTO;
@@ -105,12 +106,25 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void update(CustomerOrder resources) {
-        Optional<CustomerOrder> optionalSCustomerOrder = customerOrderRepository.findById(resources.getId());
-        ValidationUtil.isNull( optionalSCustomerOrder,"SCustomerOrder","id",resources.getId());
-        CustomerOrder customerOrder = optionalSCustomerOrder.get();
-        customerOrder.copy(resources);
+    public void update(UpdateCustomerOrderRequest updateCustomerOrderRequest) {
+
+        CustomerOrder customerOrder = new CustomerOrder();
+        BeanUtils.copyProperties(updateCustomerOrderRequest, customerOrder);
         customerOrderRepository.save(customerOrder);
+
+        List<CustomerOrderProductDTO> customerOrderProductRequestList = updateCustomerOrderRequest.getCustomerOrderProductList();
+        if(CollectionUtils.isEmpty(customerOrderProductRequestList)){
+            throw new BadRequestException("订单产品不能为空!");
+        }
+
+        List<CustomerOrderProduct> customerOrderProductList = new ArrayList<>();
+        for(CustomerOrderProductDTO customerOrderProductDTO : customerOrderProductRequestList){
+            CustomerOrderProduct customerOrderProduct = new CustomerOrderProduct();
+            BeanUtils.copyProperties(customerOrderProductDTO, customerOrderProduct);
+            customerOrderProduct.setCustomerOrderId(customerOrder.getId());
+            customerOrderProduct.setStatus(true);
+        }
+        customerOrderProductRepository.saveAll(customerOrderProductList);
     }
 
     @Override
