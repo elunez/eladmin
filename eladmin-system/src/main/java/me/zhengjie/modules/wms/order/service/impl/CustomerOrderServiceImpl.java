@@ -52,6 +52,7 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public CustomerOrderDTO create(CustomerOrder resources) {
+        resources.setStatus(true);
         return customerOrderMapper.toDto(customerOrderRepository.save(resources));
     }
 
@@ -68,6 +69,6 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void delete(Long id) {
-        customerOrderRepository.deleteById(id);
+        customerOrderRepository.deleteCustomerOrder(id);
     }
 }

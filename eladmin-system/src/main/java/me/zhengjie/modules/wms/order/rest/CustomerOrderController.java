@@ -37,7 +37,7 @@ public class CustomerOrderController {
     @ApiOperation(value = "新增客户订单")
     @PostMapping(value = "/customerOrder")
     @PreAuthorize("hasAnyRole('ADMIN','SCUSTOMERORDER_ALL','SCUSTOMERORDER_CREATE')")
-    public ResponseEntity create(@Validated @RequestBody CustomerOrder resources){
+    public ResponseEntity create(@RequestBody CustomerOrder resources){
         return new ResponseEntity(customerOrderService.create(resources),HttpStatus.CREATED);
     }
 
@@ -45,7 +45,7 @@ public class CustomerOrderController {
     @ApiOperation(value = "修改SCustomerOrder")
     @PutMapping(value = "/customerOrder")
     @PreAuthorize("hasAnyRole('ADMIN','SCUSTOMERORDER_ALL','SCUSTOMERORDER_EDIT')")
-    public ResponseEntity update(@Validated @RequestBody CustomerOrder resources){
+    public ResponseEntity update(@RequestBody CustomerOrder resources){
         customerOrderService.update(resources);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
