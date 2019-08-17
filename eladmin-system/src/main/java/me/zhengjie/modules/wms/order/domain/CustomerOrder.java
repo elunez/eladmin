@@ -98,6 +98,7 @@ public class CustomerOrder implements Serializable {
     private Long totalNumber;
 
     // 状态
+    @Column(name = "status")
     private Boolean status;
 
     public void copy(CustomerOrder source){
