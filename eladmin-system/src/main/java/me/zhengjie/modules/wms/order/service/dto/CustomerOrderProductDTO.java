@@ -1,12 +1,15 @@
 
 package me.zhengjie.modules.wms.order.service.dto;
 
+import lombok.Data;
+
 import java.sql.Timestamp;
 
 /**
  * @author 黄星星
  * @date 2019-08-17
  */
+@Data
 public class CustomerOrderProductDTO {
 
     private Long id;

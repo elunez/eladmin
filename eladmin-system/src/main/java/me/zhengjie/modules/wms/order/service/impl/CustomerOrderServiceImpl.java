@@ -23,7 +23,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import me.zhengjie.utils.PageUtil;
@@ -110,12 +114,33 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
 
         CustomerOrder customerOrder = new CustomerOrder();
         BeanUtils.copyProperties(updateCustomerOrderRequest, customerOrder);
+        // 修改客户订单概要信息
         customerOrderRepository.save(customerOrder);
+
+        // 修改产品信息之前，查询该订单中原来的产品信息，key为产品code
+        List<CustomerOrderProduct> customerOrderProductListBeforeUpdate = customerOrderProductRepository.findByCustomerOrderIdAndStatusTrue(customerOrder.getId());
+        Map<String, CustomerOrderProduct> customerOrderProductMapBefore = customerOrderProductListBeforeUpdate.stream().collect(Collectors.toMap(CustomerOrderProduct::getProductCode, Function.identity()));
 
         List<CustomerOrderProductDTO> customerOrderProductRequestList = updateCustomerOrderRequest.getCustomerOrderProductList();
         if(CollectionUtils.isEmpty(customerOrderProductRequestList)){
             throw new BadRequestException("订单产品不能为空!");
         }
+
+        Map<String, CustomerOrderProductDTO> customerOrderProductMapAfter = customerOrderProductRequestList.stream().collect(Collectors.toMap(CustomerOrderProductDTO::getProductCode, Function.identity()));
+
+        //需要将订单中原来订单对应的产品删除了的数据
+        List<String> deleteTargetList = new ArrayList<>();
+        //比较量个map中，key不一样的数据
+        for(Map.Entry<String, CustomerOrderProduct> entry:customerOrderProductMapBefore.entrySet()){
+            String productCode = entry.getKey();
+            //修改后的map记录对应的key在原来中是否存在
+            CustomerOrderProductDTO customerOrderProductDTOTemp = customerOrderProductMapAfter.get(productCode);
+            if(null == customerOrderProductDTOTemp){
+                deleteTargetList.add(entry.getKey());
+            }
+
+        }
+
 
         List<CustomerOrderProduct> customerOrderProductList = new ArrayList<>();
         for(CustomerOrderProductDTO customerOrderProductDTO : customerOrderProductRequestList){
@@ -125,6 +150,18 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
             customerOrderProduct.setStatus(true);
         }
         customerOrderProductRepository.saveAll(customerOrderProductList);
+
+        /**
+         * 场景描述:
+         * 1.刚开始新增了 a b c三种产品
+         * 2.修改的时候删除了 a c两种产品
+         * 3.所以需要查修改前数据库中有的产品，再比较修改传过来的产品数据，如果修改后的在原来里面没有，需要将原来里面对应的删除
+         */
+        if(!CollectionUtils.isEmpty(deleteTargetList)){
+            for(String prductCode : deleteTargetList){
+                customerOrderProductRepository.deleteByProductCodeAndCustomerOrderId(prductCode, customerOrder.getId());
+            }
+        }
     }
 
     @Override
