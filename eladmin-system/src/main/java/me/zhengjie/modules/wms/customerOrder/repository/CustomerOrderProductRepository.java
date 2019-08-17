@@ -16,8 +16,22 @@ public interface CustomerOrderProductRepository extends JpaRepository<CustomerOr
 
     List<CustomerOrderProduct> findByCustomerOrderIdAndStatusTrue(Long customerOrderId);
 
+    /**
+     * 根据产品code以及客户订单id删除订单中对应的产品信息
+     * @param productCode
+     * @param customerOrderId
+     */
     @Modifying
-    @Query(value = "delete s_customer_order_product  where product_code = ?1 and customer_order = ?2", nativeQuery = true)
+    @Query(value = "delete s_customer_order_product  where product_code = ?1 and customer_order_id = ?2", nativeQuery = true)
     void deleteByProductCodeAndCustomerOrderId(String productCode, Long customerOrderId);
+
+
+    /**
+     * 根据客户订单主键删除客户订单中的产品信息
+     * @param customerOrderId
+     */
+    @Modifying
+    @Query(value = "update s_customer_order_product set status = 0 where customer_order_id = ?1", nativeQuery = true)
+    void deleteByCustomerOrderId(Long customerOrderId);
 
 }

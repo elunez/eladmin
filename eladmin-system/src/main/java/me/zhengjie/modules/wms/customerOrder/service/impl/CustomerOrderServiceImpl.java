@@ -168,5 +168,6 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
     @Transactional(rollbackFor = Exception.class)
     public void delete(Long id) {
         customerOrderRepository.deleteCustomerOrder(id);
+        customerOrderProductRepository.deleteByCustomerOrderId(id);
     }
 }
