@@ -1,6 +1,6 @@
-package me.zhengjie.modules.wms.order.repository;
+package me.zhengjie.modules.wms.customerOrder.repository;
 
-import me.zhengjie.modules.wms.order.domain.CustomerOrder;
+import me.zhengjie.modules.wms.customerOrder.domain.CustomerOrder;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;

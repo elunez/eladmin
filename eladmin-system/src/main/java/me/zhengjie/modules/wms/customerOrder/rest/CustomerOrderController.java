@@ -1,17 +1,15 @@
-package me.zhengjie.modules.wms.order.rest;
+package me.zhengjie.modules.wms.customerOrder.rest;
 
 import me.zhengjie.aop.log.Log;
-import me.zhengjie.modules.wms.order.domain.CustomerOrder;
-import me.zhengjie.modules.wms.order.request.CreateCustomerOrderRequest;
-import me.zhengjie.modules.wms.order.request.UpdateCustomerOrderRequest;
-import me.zhengjie.modules.wms.order.service.CustomerOrderService;
-import me.zhengjie.modules.wms.order.service.dto.CustomerOrderQueryCriteria;
+import me.zhengjie.modules.wms.customerOrder.request.UpdateCustomerOrderRequest;
+import me.zhengjie.modules.wms.customerOrder.service.CustomerOrderService;
+import me.zhengjie.modules.wms.customerOrder.service.dto.CustomerOrderQueryCriteria;
+import me.zhengjie.modules.wms.customerOrder.request.CreateCustomerOrderRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.annotations.*;
 

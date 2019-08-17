@@ -1,5 +1,5 @@
 
-package me.zhengjie.modules.wms.order.service.dto;
+package me.zhengjie.modules.wms.customerOrder.service.dto;
 
 import lombok.Data;
 

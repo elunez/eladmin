@@ -1,13 +1,12 @@
-package me.zhengjie.modules.wms.order.service;
+package me.zhengjie.modules.wms.customerOrder.service;
 
 //import org.springframework.cache.annotation.CacheConfig;
 //import org.springframework.cache.annotation.CacheEvict;
 //import org.springframework.cache.annotation.Cacheable;
-import me.zhengjie.modules.wms.order.domain.CustomerOrder;
-import me.zhengjie.modules.wms.order.request.CreateCustomerOrderRequest;
-import me.zhengjie.modules.wms.order.request.UpdateCustomerOrderRequest;
-import me.zhengjie.modules.wms.order.service.dto.CustomerOrderDTO;
-import me.zhengjie.modules.wms.order.service.dto.CustomerOrderQueryCriteria;
+import me.zhengjie.modules.wms.customerOrder.service.dto.CustomerOrderQueryCriteria;
+import me.zhengjie.modules.wms.customerOrder.request.CreateCustomerOrderRequest;
+import me.zhengjie.modules.wms.customerOrder.request.UpdateCustomerOrderRequest;
+import me.zhengjie.modules.wms.customerOrder.service.dto.CustomerOrderDTO;
 import org.springframework.data.domain.Pageable;
 
 /**

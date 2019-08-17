@@ -1,8 +1,8 @@
-package me.zhengjie.modules.wms.order.service.request;
+package me.zhengjie.modules.wms.customerOrder.service.request;
 
 import lombok.Data;
-import me.zhengjie.modules.wms.order.domain.CustomerOrder;
-import me.zhengjie.modules.wms.order.domain.CustomerOrderProduct;
+import me.zhengjie.modules.wms.customerOrder.domain.CustomerOrderProduct;
+import me.zhengjie.modules.wms.customerOrder.domain.CustomerOrder;
 
 import java.util.List;
 

@@ -1,8 +1,8 @@
-package me.zhengjie.modules.wms.order.service.mapper;
+package me.zhengjie.modules.wms.customerOrder.service.mapper;
 
 import me.zhengjie.mapper.EntityMapper;
-import me.zhengjie.modules.wms.order.domain.CustomerOrder;
-import me.zhengjie.modules.wms.order.service.dto.CustomerOrderDTO;
+import me.zhengjie.modules.wms.customerOrder.service.dto.CustomerOrderDTO;
+import me.zhengjie.modules.wms.customerOrder.domain.CustomerOrder;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 

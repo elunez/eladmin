@@ -1,4 +1,4 @@
-package me.zhengjie.modules.wms.order.request;
+package me.zhengjie.modules.wms.customerOrder.request;
 
 import lombok.Data;
 

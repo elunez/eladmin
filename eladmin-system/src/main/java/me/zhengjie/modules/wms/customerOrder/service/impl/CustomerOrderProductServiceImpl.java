@@ -1,11 +1,11 @@
-package me.zhengjie.modules.wms.order.service.impl;
+package me.zhengjie.modules.wms.customerOrder.service.impl;
 
-import me.zhengjie.modules.wms.order.domain.CustomerOrderProduct;
-import me.zhengjie.modules.wms.order.repository.CustomerOrderProductRepository;
-import me.zhengjie.modules.wms.order.service.CustomerOrderProductService;
-import me.zhengjie.modules.wms.order.service.dto.CustomerOrderProductDTO;
-import me.zhengjie.modules.wms.order.service.dto.CustomerOrderProductQueryCriteria;
-import me.zhengjie.modules.wms.order.service.mapper.CustomerOrderProductMapper;
+import me.zhengjie.modules.wms.customerOrder.domain.CustomerOrderProduct;
+import me.zhengjie.modules.wms.customerOrder.service.dto.CustomerOrderProductQueryCriteria;
+import me.zhengjie.modules.wms.customerOrder.service.mapper.CustomerOrderProductMapper;
+import me.zhengjie.modules.wms.customerOrder.repository.CustomerOrderProductRepository;
+import me.zhengjie.modules.wms.customerOrder.service.CustomerOrderProductService;
+import me.zhengjie.modules.wms.customerOrder.service.dto.CustomerOrderProductDTO;
 import me.zhengjie.utils.ValidationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
