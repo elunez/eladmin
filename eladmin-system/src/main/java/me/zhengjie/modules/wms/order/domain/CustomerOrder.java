@@ -97,6 +97,9 @@ public class CustomerOrder implements Serializable {
     @Column(name = "total_number")
     private Long totalNumber;
 
+    // 状态
+    private Boolean status;
+
     public void copy(CustomerOrder source){
         BeanUtil.copyProperties(source,this, CopyOptions.create().setIgnoreNullValue(true));
     }
