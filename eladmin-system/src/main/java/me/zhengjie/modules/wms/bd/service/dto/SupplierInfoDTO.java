@@ -37,12 +37,6 @@ public class SupplierInfoDTO implements Serializable {
     // 备注
     private String remark;
 
-    // 供应商地址地址数组[{“province”:””,”city”:””,”area”:””,”address_detail”:””,”sort”:””}]
-    private String supplierAddress;
-
-    // 供应商联系人[{“sort”:””,”name”:””,”mobile”:””,”phone”:””,”email”:””,”qq”:””,”weixin”:””,”firstTag”:””}]firstTag 0:非首要联系人 1:首要联系人
-    private String supplierContact;
-
     private Boolean status;
 
     // 供应商类别主键

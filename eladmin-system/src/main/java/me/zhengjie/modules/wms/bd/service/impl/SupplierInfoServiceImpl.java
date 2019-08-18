@@ -1,12 +1,17 @@
 package me.zhengjie.modules.wms.bd.service.impl;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.modules.wms.bd.domain.CustomerInfo;
+import me.zhengjie.modules.wms.bd.domain.SupplierCategory;
 import me.zhengjie.modules.wms.bd.domain.SupplierInfo;
+import me.zhengjie.modules.wms.bd.repository.SupplierCategoryRepository;
 import me.zhengjie.modules.wms.bd.request.CreateSupplierInfoRequest;
 import me.zhengjie.modules.wms.bd.request.SupplierAddress;
 import me.zhengjie.modules.wms.bd.request.SupplierContact;
+import me.zhengjie.modules.wms.bd.service.dto.SupplierInfoDetailDTO;
+import me.zhengjie.modules.wms.bd.service.mapper.SupplierCategoryMapper;
 import me.zhengjie.utils.ValidationUtil;
 import me.zhengjie.modules.wms.bd.repository.SupplierInfoRepository;
 import me.zhengjie.modules.wms.bd.service.SupplierInfoService;
@@ -28,6 +33,7 @@ import org.springframework.data.domain.Pageable;
 import me.zhengjie.utils.PageUtil;
 import me.zhengjie.utils.QueryHelp;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -47,6 +53,12 @@ public class SupplierInfoServiceImpl implements SupplierInfoService {
 
     @Autowired
     private SupplierInfoMapper supplierInfoMapper;
+
+    @Autowired
+    private SupplierCategoryMapper supplierCategoryMapper;
+
+    @Autowired
+    private SupplierCategoryRepository supplierCategoryRepository;
 
     @Override
     public Object queryAll(SupplierInfoQueryCriteria criteria, Pageable pageable){
@@ -101,6 +113,15 @@ public class SupplierInfoServiceImpl implements SupplierInfoService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public SupplierInfoDTO create(CreateSupplierInfoRequest createSupplierInfoRequest) {
+        Long supplierCategoryId = createSupplierInfoRequest.getSupplierCategoryId();
+        if(null == supplierCategoryId){
+            throw new BadRequestException("供应商类别不存在!");
+        }
+        Optional<SupplierCategory> supplierCategoryOptional = supplierCategoryRepository.findById(supplierCategoryId);
+        SupplierCategory supplierCategory = supplierCategoryOptional.get();
+
+        SupplierInfoDetailDTO supplierInfoDetailDTO = new SupplierInfoDetailDTO();
+
         SupplierInfo supplierInfo = new SupplierInfo();
         BeanUtils.copyProperties(createSupplierInfoRequest, supplierInfo);
         supplierInfo.setStatus(true);
@@ -108,15 +129,21 @@ public class SupplierInfoServiceImpl implements SupplierInfoService {
         if(!CollectionUtils.isEmpty(supplierAddressList)){
             String supplierAddressStr = new Gson().toJson(supplierAddressList);
             supplierInfo.setSupplierAddress(supplierAddressStr);
+            supplierInfoDetailDTO.setSupplierAddress(supplierAddressList);
         }
         List<SupplierContact> supplierContactList = createSupplierInfoRequest.getSupplierContact();
         if(!CollectionUtils.isEmpty(supplierContactList)){
             String supplierContactStr = new Gson().toJson(supplierContactList);
             supplierInfo.setSupplierContact(supplierContactStr);
+            supplierInfoDetailDTO.setSupplierContact(supplierContactList);
         }
+
+        supplierInfo.setSupplierCategoryName(supplierCategory.getName());
+
         supplierInfo = supplierInfoRepository.save(supplierInfo);
         SupplierInfoDTO supplierInfoDTO = supplierInfoMapper.toDto(supplierInfo);
-        return supplierInfoDTO;
+        BeanUtils.copyProperties(supplierInfoDTO, supplierInfoDetailDTO);
+        return supplierInfoDetailDTO;
     }
 
     @Override
