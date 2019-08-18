@@ -1,6 +1,7 @@
 package me.zhengjie.modules.wms.bd.service;
 
 import me.zhengjie.modules.wms.bd.domain.SupplierInfo;
+import me.zhengjie.modules.wms.bd.request.CreateSupplierInfoRequest;
 import me.zhengjie.modules.wms.bd.service.dto.SupplierInfoDTO;
 import me.zhengjie.modules.wms.bd.service.dto.SupplierInfoQueryCriteria;
 //import org.springframework.cache.annotation.CacheConfig;
@@ -42,11 +43,11 @@ public interface SupplierInfoService {
 
     /**
      * create
-     * @param resources
+     * @param createSupplierInfoRequest
      * @return
      */
     //@CacheEvict(allEntries = true)
-    SupplierInfoDTO create(SupplierInfo resources);
+    SupplierInfoDTO create(CreateSupplierInfoRequest createSupplierInfoRequest);
 
     /**
      * update

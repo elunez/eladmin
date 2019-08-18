@@ -1,14 +1,19 @@
 package me.zhengjie.modules.wms.bd.service.impl;
 
+import com.google.gson.Gson;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.modules.wms.bd.domain.CustomerInfo;
 import me.zhengjie.modules.wms.bd.domain.SupplierInfo;
+import me.zhengjie.modules.wms.bd.request.CreateSupplierInfoRequest;
+import me.zhengjie.modules.wms.bd.request.SupplierAddress;
+import me.zhengjie.modules.wms.bd.request.SupplierContact;
 import me.zhengjie.utils.ValidationUtil;
 import me.zhengjie.modules.wms.bd.repository.SupplierInfoRepository;
 import me.zhengjie.modules.wms.bd.service.SupplierInfoService;
 import me.zhengjie.modules.wms.bd.service.dto.SupplierInfoDTO;
 import me.zhengjie.modules.wms.bd.service.dto.SupplierInfoQueryCriteria;
 import me.zhengjie.modules.wms.bd.service.mapper.SupplierInfoMapper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -95,11 +100,23 @@ public class SupplierInfoServiceImpl implements SupplierInfoService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public SupplierInfoDTO create(SupplierInfo resources) {
-        resources.setStatus(true);
-        SupplierInfo supplierInfo = supplierInfoRepository.save(resources);
-        supplierInfoMapper.toDto(supplierInfo);
-        return supplierInfoMapper.toDto(supplierInfo);
+    public SupplierInfoDTO create(CreateSupplierInfoRequest createSupplierInfoRequest) {
+        SupplierInfo supplierInfo = new SupplierInfo();
+        BeanUtils.copyProperties(createSupplierInfoRequest, supplierInfo);
+        supplierInfo.setStatus(true);
+        List<SupplierAddress> supplierAddressList = createSupplierInfoRequest.getSupplierAddress();
+        if(!CollectionUtils.isEmpty(supplierAddressList)){
+            String supplierAddressStr = new Gson().toJson(supplierAddressList);
+            supplierInfo.setSupplierAddress(supplierAddressStr);
+        }
+        List<SupplierContact> supplierContactList = createSupplierInfoRequest.getSupplierContact();
+        if(!CollectionUtils.isEmpty(supplierContactList)){
+            String supplierContactStr = new Gson().toJson(supplierContactList);
+            supplierInfo.setSupplierContact(supplierContactStr);
+        }
+        supplierInfo = supplierInfoRepository.save(supplierInfo);
+        SupplierInfoDTO supplierInfoDTO = supplierInfoMapper.toDto(supplierInfo);
+        return supplierInfoDTO;
     }
 
     @Override

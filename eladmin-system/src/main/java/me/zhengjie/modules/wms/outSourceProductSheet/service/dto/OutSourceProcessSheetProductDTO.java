@@ -16,7 +16,7 @@ public class OutSourceProcessSheetProductDTO implements Serializable {
     private Long id;
 
     // 状态
-    private Integer status;
+    private Boolean status;
 
     // 创建时间
     private Timestamp createTime;

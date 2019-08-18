@@ -49,7 +49,7 @@ public class SupplierInfo implements Serializable {
     @Column(name = "remark")
     private String remark;
 
-    // 供应商地址地址数组[{“province”:””,”city”:””,”area”:””,”address_detail”:””,”sort”:””}]
+    // 供应商地址地址数组[{“province”:””,”city”:””,”area”:””,”addressDetail”:””,”sort”:””}]
     @Column(name = "supplier_address")
     private String supplierAddress;
 

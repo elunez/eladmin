@@ -2,6 +2,7 @@ package me.zhengjie.modules.wms.bd.rest;
 
 import me.zhengjie.aop.log.Log;
 import me.zhengjie.modules.wms.bd.domain.SupplierInfo;
+import me.zhengjie.modules.wms.bd.request.CreateSupplierInfoRequest;
 import me.zhengjie.modules.wms.bd.service.SupplierInfoService;
 import me.zhengjie.modules.wms.bd.service.dto.SupplierInfoQueryCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,8 +69,8 @@ public class SupplierInfoController {
     @ApiOperation(value = "新增供应商资料")
     @PostMapping(value = "/supplierInfo")
     @PreAuthorize("hasAnyRole('ADMIN','BDSUPPLIERINFO_ALL','BDSUPPLIERINFO_CREATE')")
-    public ResponseEntity create(@Validated @RequestBody SupplierInfo resources){
-        return new ResponseEntity(supplierInfoService.create(resources),HttpStatus.CREATED);
+    public ResponseEntity create(@RequestBody CreateSupplierInfoRequest createSupplierInfoRequest){
+        return new ResponseEntity(supplierInfoService.create(createSupplierInfoRequest),HttpStatus.CREATED);
     }
 
     @Log("修改供应商资料")

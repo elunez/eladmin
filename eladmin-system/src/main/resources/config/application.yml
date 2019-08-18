@@ -3,10 +3,9 @@ server:
 
 spring:
   profiles:
-    active: dev
+    active: prod
   jackson:
-    time-zon
-    e: GMT+8
+    time-zone: GMT+8
   data:
     redis:
       repositories:
