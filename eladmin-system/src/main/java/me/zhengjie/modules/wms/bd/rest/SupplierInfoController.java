@@ -3,6 +3,7 @@ package me.zhengjie.modules.wms.bd.rest;
 import me.zhengjie.aop.log.Log;
 import me.zhengjie.modules.wms.bd.domain.SupplierInfo;
 import me.zhengjie.modules.wms.bd.request.CreateSupplierInfoRequest;
+import me.zhengjie.modules.wms.bd.request.UpdateSupplierInfoRequest;
 import me.zhengjie.modules.wms.bd.service.SupplierInfoService;
 import me.zhengjie.modules.wms.bd.service.dto.SupplierInfoQueryCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +49,6 @@ public class SupplierInfoController {
         return new ResponseEntity(supplierCode,HttpStatus.OK);
     }
 
-
     @Log("查询供应商资料列表")
     @ApiOperation(value = "查询供应商资料列表")
     @GetMapping(value = "/querySupplierInfoList")
@@ -75,10 +75,10 @@ public class SupplierInfoController {
 
     @Log("修改供应商资料")
     @ApiOperation(value = "修改供应商资料")
-    @PutMapping(value = "/supplierInfo")
+    @PostMapping(value = "/updateSupplierInfo")
     @PreAuthorize("hasAnyRole('ADMIN','BDSUPPLIERINFO_ALL','BDSUPPLIERINFO_EDIT')")
-    public ResponseEntity update(@Validated @RequestBody SupplierInfo resources){
-        supplierInfoService.update(resources);
+    public ResponseEntity updateSupplierInfo(@RequestBody UpdateSupplierInfoRequest updateSupplierInfoRequest){
+        supplierInfoService.updateSupplierInfo(updateSupplierInfoRequest);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 

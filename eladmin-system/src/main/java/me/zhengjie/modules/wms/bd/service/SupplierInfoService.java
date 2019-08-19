@@ -2,6 +2,7 @@ package me.zhengjie.modules.wms.bd.service;
 
 import me.zhengjie.modules.wms.bd.domain.SupplierInfo;
 import me.zhengjie.modules.wms.bd.request.CreateSupplierInfoRequest;
+import me.zhengjie.modules.wms.bd.request.UpdateSupplierInfoRequest;
 import me.zhengjie.modules.wms.bd.service.dto.SupplierInfoDTO;
 import me.zhengjie.modules.wms.bd.service.dto.SupplierInfoDetailDTO;
 import me.zhengjie.modules.wms.bd.service.dto.SupplierInfoQueryCriteria;
@@ -52,10 +53,10 @@ public interface SupplierInfoService {
 
     /**
      * update
-     * @param resources
+     * @param updateSupplierInfoRequest
      */
     //@CacheEvict(allEntries = true)
-    void update(SupplierInfo resources);
+    void updateSupplierInfo(UpdateSupplierInfoRequest updateSupplierInfoRequest);
 
     /**
      * delete

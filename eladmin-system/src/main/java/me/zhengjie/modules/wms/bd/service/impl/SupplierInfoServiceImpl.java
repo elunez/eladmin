@@ -10,6 +10,7 @@ import me.zhengjie.modules.wms.bd.repository.SupplierCategoryRepository;
 import me.zhengjie.modules.wms.bd.request.CreateSupplierInfoRequest;
 import me.zhengjie.modules.wms.bd.request.SupplierAddress;
 import me.zhengjie.modules.wms.bd.request.SupplierContact;
+import me.zhengjie.modules.wms.bd.request.UpdateSupplierInfoRequest;
 import me.zhengjie.modules.wms.bd.service.dto.SupplierInfoDetailDTO;
 import me.zhengjie.modules.wms.bd.service.mapper.SupplierCategoryMapper;
 import me.zhengjie.utils.ValidationUtil;
@@ -25,7 +26,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -189,13 +193,60 @@ public class SupplierInfoServiceImpl implements SupplierInfoService {
         return supplierInfoDetailDTO;
     }
 
+
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void update(SupplierInfo resources) {
-        Optional<SupplierInfo> optionalBdSupplierInfo = supplierInfoRepository.findById(resources.getId());
-        ValidationUtil.isNull( optionalBdSupplierInfo,"BdSupplierInfo","id",resources.getId());
-        SupplierInfo supplierInfo = optionalBdSupplierInfo.get();
-        supplierInfo.copy(resources);
+    public void updateSupplierInfo(UpdateSupplierInfoRequest updateSupplierInfoRequest) {
+        Long supplierInfoId = updateSupplierInfoRequest.getId();
+        if(null == supplierInfoId){
+            throw new BadRequestException("供应商主键不能为空!");
+        }
+
+        Long supplierCategoryId = updateSupplierInfoRequest.getSupplierCategoryId();
+        if(null == supplierCategoryId){
+            throw new BadRequestException("供应商类别不存在!");
+        }
+
+        Optional<SupplierCategory> supplierCategoryOptional = supplierCategoryRepository.findById(supplierCategoryId);
+        SupplierCategory supplierCategory = supplierCategoryOptional.get();
+
+        // 供应商资料-供应商给你联系地址修改目标
+        List<SupplierAddress> supplierAddressListUpdateTarget = updateSupplierInfoRequest.getSupplierAddress();
+        // 供应商资料-供应商联系方式修改目标
+        List<SupplierContact> supplierContactListUpdateTarget = updateSupplierInfoRequest.getSupplierContact();
+
+        SupplierInfo supplierInfo = supplierInfoRepository.findByIdAndStatusTrue(supplierInfoId);
+
+        if(null == supplierInfo){
+            throw new BadRequestException("供应商不存在");
+        }
+
+        Timestamp createTime = supplierInfo.getCreateTime();
+
+        // 将需要修改的值复制到数据库对象中
+        BeanUtils.copyProperties(updateSupplierInfoRequest, supplierInfo);
+
+        // 判断提前获取的供应商联系地址和联系方式是否是空
+        if(CollectionUtils.isEmpty(supplierAddressListUpdateTarget)){
+            supplierInfo.setSupplierAddress(null);
+        }else{
+            String supplierAddressStr = new Gson().toJson(supplierAddressListUpdateTarget);
+            supplierInfo.setSupplierAddress(supplierAddressStr);
+        }
+
+        if(CollectionUtils.isEmpty(supplierContactListUpdateTarget)){
+            supplierInfo.setSupplierContact(null);
+        }else{
+            String supplierContactStr = new Gson().toJson(supplierContactListUpdateTarget);
+            supplierInfo.setSupplierContact(supplierContactStr);
+        }
+
+        supplierInfo.setCreateTime(createTime);
+        supplierInfo.setStatus(true);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        supplierInfo.setUpdateTime(Timestamp.valueOf(sdf.format(new Date())));
+        supplierInfo.setSupplierCategoryName(supplierCategory.getName());
+        // 修改供应商资料
         supplierInfoRepository.save(supplierInfo);
     }
 
