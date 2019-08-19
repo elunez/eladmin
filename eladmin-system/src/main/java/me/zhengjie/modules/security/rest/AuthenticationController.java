@@ -59,16 +59,16 @@ public class AuthenticationController {
     @PostMapping(value = "${jwt.auth.path}")
     public ResponseEntity login(@Validated @RequestBody AuthorizationUser authorizationUser){
 
-        // 查询验证码
-        String code = redisService.getCodeVal(authorizationUser.getUuid());
-        // 清除验证码
-        redisService.delete(authorizationUser.getUuid());
-        if (StringUtils.isBlank(code)) {
-            throw new BadRequestException("验证码已过期");
-        }
-        if (StringUtils.isBlank(authorizationUser.getCode()) || !authorizationUser.getCode().equalsIgnoreCase(code)) {
-            throw new BadRequestException("验证码错误");
-        }
+//        // 查询验证码
+//        String code = redisService.getCodeVal(authorizationUser.getUuid());
+//        // 清除验证码
+//        redisService.delete(authorizationUser.getUuid());
+//        if (StringUtils.isBlank(code)) {
+//            throw new BadRequestException("验证码已过期");
+//        }
+//        if (StringUtils.isBlank(authorizationUser.getCode()) || !authorizationUser.getCode().equalsIgnoreCase(code)) {
+//            throw new BadRequestException("验证码错误");
+//        }
         final JwtUser jwtUser = (JwtUser) userDetailsService.loadUserByUsername(authorizationUser.getUsername());
 
         if(!jwtUser.getPassword().equals(EncryptUtils.encryptPassword(authorizationUser.getPassword()))){

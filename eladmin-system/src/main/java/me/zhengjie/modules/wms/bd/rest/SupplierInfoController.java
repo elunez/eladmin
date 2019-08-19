@@ -57,8 +57,8 @@ public class SupplierInfoController {
         return new ResponseEntity(supplierInfoService.queryAll(criteria),HttpStatus.OK);
     }
 
-    @Log("查询供应商资料列表")
-    @ApiOperation(value = "分页查询供应商资料列表")
+    @Log("查看供应商详情")
+    @ApiOperation(value = "查看供应商详情")
     @GetMapping(value = "/supplierInfo/{id}")
     @PreAuthorize("hasAnyRole('ADMIN','BDSUPPLIERINFO_ALL','BDSUPPLIERINFO_SELECT')")
     public ResponseEntity findSupplierInfo(@PathVariable("id") Long id){
@@ -75,7 +75,7 @@ public class SupplierInfoController {
 
     @Log("修改供应商资料")
     @ApiOperation(value = "修改供应商资料")
-    @PostMapping(value = "/updateSupplierInfo")
+    @PutMapping(value = "/updateSupplierInfo")
     @PreAuthorize("hasAnyRole('ADMIN','BDSUPPLIERINFO_ALL','BDSUPPLIERINFO_EDIT')")
     public ResponseEntity updateSupplierInfo(@RequestBody UpdateSupplierInfoRequest updateSupplierInfoRequest){
         supplierInfoService.updateSupplierInfo(updateSupplierInfoRequest);
