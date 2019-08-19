@@ -79,7 +79,32 @@ public class SupplierInfoServiceImpl implements SupplierInfoService {
             }
         };
         Page<SupplierInfo> page = supplierInfoRepository.findAll(specification, pageable);
-        return PageUtil.toPage(page.map(supplierInfoMapper::toDto));
+        Page<SupplierInfoDTO> supplierInfoDTOPage = page.map(supplierInfoMapper::toDto);
+        if(null != supplierInfoDTOPage){
+            List<SupplierInfoDTO> supplierInfoDtoList = supplierInfoDTOPage.getContent();
+            if(!CollectionUtils.isEmpty(supplierInfoDtoList)){
+                for(SupplierInfoDTO supplierInfoDTO : supplierInfoDtoList){
+                    Long supplierInfoDTOId = supplierInfoDTO.getId();
+                    Optional<SupplierInfo> supplierInfoOptional = supplierInfoRepository.findById(supplierInfoDTOId);
+                    if(null != supplierInfoOptional){
+                        SupplierInfo supplierInfo = supplierInfoOptional.get();
+                        if(null != supplierInfo){
+                            String supplierContactJsonStr = supplierInfo.getSupplierContact();
+                            List<SupplierContact> supplierContactList = new Gson().fromJson(supplierContactJsonStr,new TypeToken<ArrayList<SupplierContact>>() {}.getType());
+                            if(!CollectionUtils.isEmpty(supplierContactList)){
+                                for(SupplierContact supplierContact : supplierContactList){
+                                    if(supplierContact.getFirstTag() == 1){
+                                        supplierInfoDTO.setFirstContactMobile(supplierContact.getMobile());
+                                        supplierInfoDTO.setFirstContactName(supplierContact.getName());
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return PageUtil.toPage(supplierInfoDTOPage);
     }
 
     @Override
@@ -104,10 +129,28 @@ public class SupplierInfoServiceImpl implements SupplierInfoService {
     }
 
     @Override
-    public SupplierInfoDTO findById(Long id) {
+    public SupplierInfoDetailDTO findById(Long id) {
+        SupplierInfoDetailDTO supplierInfoDetailDTO = new SupplierInfoDetailDTO();
+
         Optional<SupplierInfo> bdSupplierInfo = supplierInfoRepository.findById(id);
-        ValidationUtil.isNull(bdSupplierInfo,"BdSupplierInfo","id",id);
-        return supplierInfoMapper.toDto(bdSupplierInfo.get());
+        SupplierInfo supplierInfo = bdSupplierInfo.get();
+        SupplierInfoDTO supplierInfoDTO = supplierInfoMapper.toDto(supplierInfo);
+        if(null != supplierInfoDTO){
+            BeanUtils.copyProperties( supplierInfoDTO, supplierInfoDetailDTO);
+            String supplierAddressJsonStr = supplierInfo.getSupplierAddress();
+            if(StringUtils.hasLength(supplierAddressJsonStr)){
+                List<SupplierAddress> supplierAddressList = new Gson().fromJson(supplierAddressJsonStr,new TypeToken<ArrayList<SupplierAddress>>() {}.getType());
+                supplierInfoDetailDTO.setSupplierAddress(supplierAddressList);
+            }
+
+
+            String supplierContactJsonStr = supplierInfo.getSupplierContact();
+            if(StringUtils.hasLength(supplierContactJsonStr)){
+                List<SupplierContact> supplierContactList = new Gson().fromJson(supplierContactJsonStr,new TypeToken<ArrayList<SupplierContact>>() {}.getType());
+                supplierInfoDetailDTO.setSupplierContact(supplierContactList);
+            }
+        }
+        return supplierInfoDetailDTO;
     }
 
     @Override

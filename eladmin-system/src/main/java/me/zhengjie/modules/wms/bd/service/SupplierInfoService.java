@@ -3,6 +3,7 @@ package me.zhengjie.modules.wms.bd.service;
 import me.zhengjie.modules.wms.bd.domain.SupplierInfo;
 import me.zhengjie.modules.wms.bd.request.CreateSupplierInfoRequest;
 import me.zhengjie.modules.wms.bd.service.dto.SupplierInfoDTO;
+import me.zhengjie.modules.wms.bd.service.dto.SupplierInfoDetailDTO;
 import me.zhengjie.modules.wms.bd.service.dto.SupplierInfoQueryCriteria;
 //import org.springframework.cache.annotation.CacheConfig;
 //import org.springframework.cache.annotation.CacheEvict;
@@ -39,7 +40,7 @@ public interface SupplierInfoService {
      * @return
      */
     //@Cacheable(key = "#p0")
-    SupplierInfoDTO findById(Long id);
+    SupplierInfoDetailDTO findById(Long id);
 
     /**
      * create

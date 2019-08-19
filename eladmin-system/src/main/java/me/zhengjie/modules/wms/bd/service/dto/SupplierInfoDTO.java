@@ -44,4 +44,16 @@ public class SupplierInfoDTO implements Serializable {
 
     // 供应商类别名称
     private String supplierCategoryName;
+
+    // 首要联系人姓名
+    private String firstContactName;
+
+    // 首要联系人手机
+    private String firstContactMobile;
+
+    // 首要联系人地址
+    private String firstContactAddress;
+
+    // 应付款
+    private Long upPayMoney;
 }
