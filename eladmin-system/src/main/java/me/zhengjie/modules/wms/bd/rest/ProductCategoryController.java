@@ -48,9 +48,15 @@ public class ProductCategoryController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @Log("查询产品类别")
-    @GetMapping(value = "/productCategory")
-    public ResponseEntity getDicts(ProductCategoryDTO resources, Pageable pageable){
+    @Log("查询产品类别列表")
+    @GetMapping(value = "/queryProductCategoryList")
+    public ResponseEntity queryProductCategoryList(ProductCategoryDTO resources, Pageable pageable){
+        return new ResponseEntity(productCategoryService.queryAll(resources,pageable),HttpStatus.OK);
+    }
+
+    @Log("分页查询产品类别")
+    @GetMapping(value = "/queryProductCategoryPage")
+    public ResponseEntity queryProductCategoryPage(ProductCategoryDTO resources, Pageable pageable){
         return new ResponseEntity(productCategoryService.queryAll(resources,pageable),HttpStatus.OK);
     }
 }

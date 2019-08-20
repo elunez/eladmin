@@ -58,9 +58,16 @@ public class MeasureUnitController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @Log("查询计量单位")
-    @GetMapping(value = "/measureUnit")
-    public ResponseEntity getMessureUnits(MeasureUnitDTO resources, Pageable pageable){
+    @Log("分页查询计量单位")
+    @GetMapping(value = "/queryMeasureUnitPage")
+    public ResponseEntity queryMeasureUnitPage(MeasureUnitDTO resources, Pageable pageable){
         return new ResponseEntity(measureUnitService.queryAll(resources,pageable),HttpStatus.OK);
+    }
+
+
+    @Log("查询所有计量单位")
+    @GetMapping(value = "/queryMeasureUnitList")
+    public ResponseEntity queryMeasureUnitList(MeasureUnitDTO resources){
+        return new ResponseEntity(measureUnitService.queryAll(resources),HttpStatus.OK);
     }
 }

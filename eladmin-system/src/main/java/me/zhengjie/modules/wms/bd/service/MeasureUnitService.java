@@ -19,4 +19,6 @@ public interface MeasureUnitService {
     void delete(Long id);
 
     Object queryAll(MeasureUnitDTO measureUnit, Pageable pageable);
+
+    Object queryAll(MeasureUnitDTO measureUnit);
 }

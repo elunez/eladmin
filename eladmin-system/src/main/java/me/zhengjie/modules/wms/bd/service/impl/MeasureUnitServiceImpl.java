@@ -134,4 +134,28 @@ public class MeasureUnitServiceImpl implements MeasureUnitService {
         return PageUtil.toPage(page.map(measureUnitMapper::toDto));
     }
 
+    @Override
+    public Object queryAll(MeasureUnitDTO measureUnit) {
+        Specification<MeasureUnit> specification = new Specification<MeasureUnit>() {
+            @Override
+            public Predicate toPredicate(Root<MeasureUnit> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+
+                List<Predicate> targetPredicateList = new ArrayList<>();
+
+                //状态
+                Predicate statusPredicate = criteriaBuilder.equal(root.get("status"), 1);
+                targetPredicateList.add(statusPredicate);
+
+                if(CollectionUtils.isEmpty(targetPredicateList)){
+                    return null;
+                }else{
+                    return criteriaBuilder.and(targetPredicateList.toArray(new Predicate[targetPredicateList.size()]));
+                }
+            }
+        };
+
+        List<MeasureUnit> measureUnitList = measureUnitRepository.findAll(specification);
+        return measureUnitMapper.toDto(measureUnitList);
+    }
+
 }

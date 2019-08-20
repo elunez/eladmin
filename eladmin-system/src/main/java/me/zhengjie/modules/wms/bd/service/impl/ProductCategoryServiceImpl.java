@@ -103,4 +103,27 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
         return PageUtil.toPage(page.map(productCategoryMapper::toDto));
     }
 
+    @Override
+    public Object queryAll(ProductCategoryDTO productCategory) {
+        Specification<ProductCategory> specification = new Specification<ProductCategory>() {
+            @Override
+            public Predicate toPredicate(Root<ProductCategory> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+
+                List<Predicate> targetPredicateList = new ArrayList<>();
+
+                //状态
+                Predicate statusPredicate = criteriaBuilder.equal(root.get("status"), 1);
+                targetPredicateList.add(statusPredicate);
+
+                if(CollectionUtils.isEmpty(targetPredicateList)){
+                    return null;
+                }else{
+                    return criteriaBuilder.and(targetPredicateList.toArray(new Predicate[targetPredicateList.size()]));
+                }
+            }
+        };
+        List<ProductCategory> productCategoryList = productCategoryRepository.findAll(specification);
+        return productCategoryMapper.toDto(productCategoryList);
+    }
+
 }
