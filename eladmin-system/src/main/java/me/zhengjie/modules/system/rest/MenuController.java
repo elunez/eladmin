@@ -6,8 +6,8 @@ import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.modules.system.service.MenuService;
 import me.zhengjie.modules.system.service.RoleService;
 import me.zhengjie.modules.system.service.UserService;
-import me.zhengjie.modules.system.service.dto.CommonQueryCriteria;
 import me.zhengjie.modules.system.service.dto.MenuDTO;
+import me.zhengjie.modules.system.service.dto.MenuQueryCriteria;
 import me.zhengjie.modules.system.service.dto.UserDTO;
 import me.zhengjie.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +62,7 @@ public class MenuController {
     @Log("查询菜单")
     @GetMapping(value = "/menus")
     @PreAuthorize("hasAnyRole('ADMIN','MENU_ALL','MENU_SELECT')")
-    public ResponseEntity getMenus(CommonQueryCriteria criteria){
+    public ResponseEntity getMenus(MenuQueryCriteria criteria){
         List<MenuDTO> menuDTOList = menuService.queryAll(criteria);
         return new ResponseEntity(menuService.buildTree(menuDTOList),HttpStatus.OK);
     }

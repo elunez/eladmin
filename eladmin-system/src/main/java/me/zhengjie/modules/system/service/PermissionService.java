@@ -1,13 +1,12 @@
 package me.zhengjie.modules.system.service;
 
 import me.zhengjie.modules.system.domain.Permission;
-import me.zhengjie.modules.system.service.dto.CommonQueryCriteria;
 import me.zhengjie.modules.system.service.dto.PermissionDTO;
+import me.zhengjie.modules.system.service.dto.PermissionQueryCriteria;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -76,5 +75,5 @@ public interface PermissionService {
      * @return
      */
     @Cacheable(keyGenerator = "keyGenerator")
-    List<PermissionDTO> queryAll(CommonQueryCriteria criteria);
+    List<PermissionDTO> queryAll(PermissionQueryCriteria criteria);
 }

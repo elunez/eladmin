@@ -2,8 +2,8 @@ package me.zhengjie.modules.system.service;
 
 import me.zhengjie.modules.system.domain.Menu;
 import me.zhengjie.modules.system.domain.Role;
-import me.zhengjie.modules.system.service.dto.CommonQueryCriteria;
 import me.zhengjie.modules.system.service.dto.RoleDTO;
+import me.zhengjie.modules.system.service.dto.RoleQueryCriteria;
 import me.zhengjie.modules.system.service.dto.RoleSmallDTO;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
@@ -94,5 +94,5 @@ public interface RoleService {
      * @param criteria
      * @return
      */
-    Object queryAll(CommonQueryCriteria criteria, Pageable pageable);
+    Object queryAll(RoleQueryCriteria criteria, Pageable pageable);
 }

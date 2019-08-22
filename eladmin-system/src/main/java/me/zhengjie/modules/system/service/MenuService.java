@@ -1,16 +1,14 @@
 package me.zhengjie.modules.system.service;
 
 import me.zhengjie.modules.system.domain.Menu;
-import me.zhengjie.modules.system.domain.Role;
-import me.zhengjie.modules.system.service.dto.CommonQueryCriteria;
 import me.zhengjie.modules.system.service.dto.MenuDTO;
+import me.zhengjie.modules.system.service.dto.MenuQueryCriteria;
 import me.zhengjie.modules.system.service.dto.RoleSmallDTO;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * @author Zheng Jie
@@ -25,7 +23,7 @@ public interface MenuService {
      * @return
      */
     @Cacheable(keyGenerator = "keyGenerator")
-    List<MenuDTO> queryAll(CommonQueryCriteria criteria);
+    List<MenuDTO> queryAll(MenuQueryCriteria criteria);
 
     /**
      * get

@@ -1,7 +1,14 @@
 package me.zhengjie.utils;
 
+import cn.hutool.core.io.resource.ClassPathResource;
+import org.lionsoul.ip2region.DataBlock;
+import org.lionsoul.ip2region.DbConfig;
+import org.lionsoul.ip2region.DbSearcher;
+
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Method;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -132,7 +139,49 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
         if(ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
             ip = request.getRemoteAddr();
         }
-        return "0:0:0:0:0:0:0:1".equals(ip)?"127.0.0.1":ip;
+        String[] ips = ip.split(",");
+        return "0:0:0:0:0:0:0:1".equals(ips[0])?"127.0.0.1":ips[0];
+    }
+
+    /**
+     * 根据ip获取详细地址
+     * @param ip
+     * @return
+     */
+    public static String getCityInfo(String ip) {
+        try {
+            String path = "ip2region/ip2region.db";
+            String name = "ip2region.db";
+            int algorithm = DbSearcher.BTREE_ALGORITHM;
+            DbConfig config = new DbConfig();
+            File file = FileUtil.inputStreamToFile(new ClassPathResource(path).getStream(), name);
+            DbSearcher searcher = new DbSearcher(config, file.getPath());
+            Method method = null;
+            switch (algorithm) {
+                case DbSearcher.BTREE_ALGORITHM:
+                    method = searcher.getClass().getMethod("btreeSearch", String.class);
+                    break;
+                case DbSearcher.BINARY_ALGORITHM:
+                    method = searcher.getClass().getMethod("binarySearch", String.class);
+                    break;
+                case DbSearcher.MEMORY_ALGORITYM:
+                    method = searcher.getClass().getMethod("memorySearch", String.class);
+                    break;
+                default:
+                    method = searcher.getClass().getMethod("memorySearch", String.class);
+                    break;
+            }
+            DataBlock dataBlock = null;
+            dataBlock = (DataBlock) method.invoke(searcher, ip);
+            String address = dataBlock.getRegion().replace("0|","");
+            if(address.charAt(address.length()-1) == '|'){
+                address = address.substring(0,address.length() - 1);
+            }
+            return address.equals(ElAdminConstant.REGION)?"内网IP":address;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 
     /**
