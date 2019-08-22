@@ -2,7 +2,9 @@ package me.zhengjie.modules.wms.bd.service;
 
 import me.zhengjie.modules.wms.bd.domain.ProductInfo;
 import me.zhengjie.modules.wms.bd.request.CreateProductInfoRequest;
+import me.zhengjie.modules.wms.bd.request.UpdateProductInfoRequest;
 import me.zhengjie.modules.wms.bd.service.dto.ProductInfoDTO;
+import me.zhengjie.modules.wms.bd.service.dto.ProductInfoDetailDTO;
 import me.zhengjie.modules.wms.bd.service.dto.ProductInfoQueryCriteria;
 //import org.springframework.cache.annotation.CacheConfig;
 //import org.springframework.cache.annotation.CacheEvict;
@@ -39,7 +41,7 @@ public interface ProductInfoService {
      * @return
      */
     //@Cacheable(key = "#p0")
-    ProductInfoDTO findById(Long id);
+    ProductInfoDetailDTO findById(Long id);
 
     /**
      * create
@@ -47,14 +49,14 @@ public interface ProductInfoService {
      * @return
      */
     //@CacheEvict(allEntries = true)
-    ProductInfoDTO create(CreateProductInfoRequest createProductInfoRequest);
+    ProductInfoDetailDTO create(CreateProductInfoRequest createProductInfoRequest);
 
     /**
      * update
-     * @param resources
+     * @param updateProductInfoRequest
      */
     //@CacheEvict(allEntries = true)
-    void update(ProductInfo resources);
+    void update(UpdateProductInfoRequest updateProductInfoRequest);
 
     /**
      * delete

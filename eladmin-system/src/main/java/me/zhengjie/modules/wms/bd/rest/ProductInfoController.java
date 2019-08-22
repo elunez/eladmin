@@ -3,6 +3,7 @@ package me.zhengjie.modules.wms.bd.rest;
 import me.zhengjie.aop.log.Log;
 import me.zhengjie.modules.wms.bd.domain.ProductInfo;
 import me.zhengjie.modules.wms.bd.request.CreateProductInfoRequest;
+import me.zhengjie.modules.wms.bd.request.UpdateProductInfoRequest;
 import me.zhengjie.modules.wms.bd.service.ProductInfoService;
 import me.zhengjie.modules.wms.bd.service.dto.ProductInfoQueryCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,8 +70,8 @@ public class ProductInfoController {
     @ApiOperation(value = "修改产品资料")
     @PutMapping(value = "/productInfo")
     @PreAuthorize("hasAnyRole('ADMIN','BDPRODUCTINFO_ALL','BDPRODUCTINFO_EDIT')")
-    public ResponseEntity update(@Validated @RequestBody ProductInfo resources){
-        productInfoService.update(resources);
+    public ResponseEntity update(@RequestBody UpdateProductInfoRequest updateProductInfoRequest){
+        productInfoService.update(updateProductInfoRequest);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 

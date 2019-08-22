@@ -1,6 +1,7 @@
 package me.zhengjie.modules.wms.bd.service.impl;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.modules.wms.bd.domain.*;
 import me.zhengjie.modules.wms.bd.repository.MeasureUnitRepository;
@@ -18,7 +19,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -26,6 +30,7 @@ import org.springframework.data.domain.Pageable;
 import me.zhengjie.utils.PageUtil;
 import me.zhengjie.utils.QueryHelp;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -98,15 +103,33 @@ public class ProductInfoServiceImpl implements ProductInfoService {
     }
 
     @Override
-    public ProductInfoDTO findById(Long id) {
-        Optional<ProductInfo> bdProductInfo = productInfoRepository.findById(id);
-        ValidationUtil.isNull(bdProductInfo,"BdProductInfo","id",id);
-        return productInfoMapper.toDto(bdProductInfo.get());
+    public ProductInfoDetailDTO findById(Long id) {
+        ProductInfoDetailDTO productInfoDetailDTO = new ProductInfoDetailDTO();
+
+        Optional<ProductInfo> productInfoOptional = productInfoRepository.findById(id);
+        ProductInfo productInfo = productInfoOptional.get();
+        ProductInfoDTO productInfoDTO = productInfoMapper.toDto(productInfo);
+        if(null != productInfoDTO){
+            BeanUtils.copyProperties( productInfoDTO, productInfoDetailDTO);
+            String productInventoryWarningStr = productInfo.getProductInventoryWarning();
+            if(StringUtils.hasLength(productInventoryWarningStr)){
+                List<ProductInventoryWarning> productInventoryWarningList = new Gson().fromJson(productInventoryWarningStr,new TypeToken<ArrayList<ProductInventoryWarning>>() {}.getType());
+                productInfoDetailDTO.setProductInventoryWarningList(productInventoryWarningList);
+            }
+
+
+            String productInitialSetupStr = productInfo.getProductInitialSetup();
+            if(StringUtils.hasLength(productInitialSetupStr)){
+                List<ProductInitialSetup> productInitialSetupList = new Gson().fromJson(productInitialSetupStr,new TypeToken<ArrayList<SupplierContact>>() {}.getType());
+                productInfoDetailDTO.setProductInitialSetupList(productInitialSetupList);
+            }
+        }
+        return productInfoDetailDTO;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ProductInfoDTO create(CreateProductInfoRequest createProductInfoRequest) {
+    public ProductInfoDetailDTO create(CreateProductInfoRequest createProductInfoRequest) {
         Long measureUnitId = createProductInfoRequest.getMeasureUnitId();
         if(null == measureUnitId){
             throw new BadRequestException("计量单位不能为空!");
@@ -159,11 +182,71 @@ public class ProductInfoServiceImpl implements ProductInfoService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void update(ProductInfo resources) {
-        Optional<ProductInfo> optionalBdProductInfo = productInfoRepository.findById(resources.getId());
-        ValidationUtil.isNull( optionalBdProductInfo,"productInfo","id",resources.getId());
-        ProductInfo productInfo = optionalBdProductInfo.get();
-        productInfo.copy(resources);
+    public void update(UpdateProductInfoRequest updateProductInfoRequest) {
+        Long productInfoId = updateProductInfoRequest.getId();
+        if(null == productInfoId){
+            throw new BadRequestException("产品信息主键不能为空!");
+        }
+
+        Long measureUnitId = updateProductInfoRequest.getMeasureUnitId();
+        if(null == measureUnitId){
+            throw new BadRequestException("计量单位不能为空!");
+        }
+        Optional<MeasureUnit> measureUnitOptional = measureUnitRepository.findById(measureUnitId);
+        MeasureUnit measureUnit = measureUnitOptional.get();
+        if(null == measureUnit){
+            throw new BadRequestException("计量单位不存在!");
+        }
+
+        Long productCategoryId = updateProductInfoRequest.getProductCategoryId();
+        if(null == productCategoryId){
+            throw new BadRequestException("产品类别不能为空!");
+        }
+        Optional<ProductCategory> productCategoryOptional = productCategoryRepository.findById(productCategoryId);
+        ProductCategory productCategory = productCategoryOptional.get();
+        if(null == productCategory){
+            throw new BadRequestException("产品类别不存在!");
+        }
+
+
+
+        // 产品资料-仓库预警修改目标
+        List<ProductInventoryWarning> productInventoryWarningListTarget = updateProductInfoRequest.getProductInventoryWarningList();
+        // 产品资料-期初设置修改目标
+        List<ProductInitialSetup> productInitialSetupListTarget = updateProductInfoRequest.getProductInitialSetupList();
+
+        ProductInfo productInfo = productInfoRepository.findByIdAndStatusTrue(productInfoId);
+
+        if(null == productInfo){
+            throw new BadRequestException("产品信息不存在");
+        }
+
+        Timestamp createTime = productInfo.getCreateTime();
+
+        // 将需要修改的值复制到数据库对象中
+        BeanUtils.copyProperties(updateProductInfoRequest, productInfo);
+
+        // 判断提前获取的供应商联系地址和联系方式是否是空
+        if(CollectionUtils.isEmpty(productInventoryWarningListTarget)){
+            productInfo.setProductInventoryWarning(null);
+        }else{
+            String productInventoryWarningStr = new Gson().toJson(productInventoryWarningListTarget);
+            productInfo.setProductInventoryWarning(productInventoryWarningStr);
+        }
+
+        if(CollectionUtils.isEmpty(productInitialSetupListTarget)){
+            productInfo.setProductInitialSetup(null);
+        }else{
+            String productInitialSetupStr = new Gson().toJson(productInitialSetupListTarget);
+            productInfo.setProductInitialSetup(productInitialSetupStr);
+        }
+
+        productInfo.setCreateTime(createTime);
+        productInfo.setStatus(true);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        productInfo.setUpdateTime(Timestamp.valueOf(sdf.format(new Date())));
+        productInfo.setProductCategoryName(productCategory.getName());
+        // 修改客户资料
         productInfoRepository.save(productInfo);
     }
 
