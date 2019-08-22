@@ -39,16 +39,6 @@ public class ProductInfoDTO implements Serializable {
     // 产品单价(保留两位小数) 单位:元 
     private long unitPrice;
 
-    // 产品库存预警[{“sort”:1,”ware_house_code”:””,”ware_house_name”:””,”minimum_inventory”:””,”highest_inventory”:””}]
-    private String productInventoryWarning;
-
-    // 产品期初设置
-//    [{“sort”:””,”ware_house_code”:””,”ware_house_name”:””,”ware_house_type_code”:””,“ ware_house_type_name”:””,
-//        “material_code”:””,“material_name”:””,“specifications”:””,“unit_price”:””,
-//        “total_price”:””,”minimum_inventory”:””,”highest_inventory”:””
-//    }]
-    private String productInitialSetup;
-
     // 创建时间
     private Timestamp createTime;
 

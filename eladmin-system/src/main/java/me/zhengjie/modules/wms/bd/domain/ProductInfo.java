@@ -55,7 +55,7 @@ public class ProductInfo implements Serializable {
     @Column(name = "unit_price")
     private Long unitPrice;
 
-    // 产品库存预警[{“sort”:1,”ware_house_code”:””,”ware_house_name”:””,”minimum_inventory”:””,”highest_inventory”:””}]
+    // 产品库存预警[{“sort”:1,”wareHouseCode”:””,”wareHouseName”:””,”minimumInventory”:””,”highestInventory”:””}]
     @Column(name = "product_inventory_warning")
     private String productInventoryWarning;
 

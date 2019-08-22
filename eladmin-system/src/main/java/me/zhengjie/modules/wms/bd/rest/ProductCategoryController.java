@@ -50,8 +50,8 @@ public class ProductCategoryController {
 
     @Log("查询产品类别列表")
     @GetMapping(value = "/queryProductCategoryList")
-    public ResponseEntity queryProductCategoryList(ProductCategoryDTO resources, Pageable pageable){
-        return new ResponseEntity(productCategoryService.queryAll(resources,pageable),HttpStatus.OK);
+    public ResponseEntity queryProductCategoryList(ProductCategoryDTO resources){
+        return new ResponseEntity(productCategoryService.queryAll(resources),HttpStatus.OK);
     }
 
     @Log("分页查询产品类别")

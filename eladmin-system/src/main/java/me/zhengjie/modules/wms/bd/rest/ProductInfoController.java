@@ -2,6 +2,7 @@ package me.zhengjie.modules.wms.bd.rest;
 
 import me.zhengjie.aop.log.Log;
 import me.zhengjie.modules.wms.bd.domain.ProductInfo;
+import me.zhengjie.modules.wms.bd.request.CreateProductInfoRequest;
 import me.zhengjie.modules.wms.bd.service.ProductInfoService;
 import me.zhengjie.modules.wms.bd.service.dto.ProductInfoQueryCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,8 +61,8 @@ public class ProductInfoController {
     @ApiOperation(value = "新增产品资料")
     @PostMapping(value = "/productInfo")
     @PreAuthorize("hasAnyRole('ADMIN','BDPRODUCTINFO_ALL','BDPRODUCTINFO_CREATE')")
-    public ResponseEntity create(@Validated @RequestBody ProductInfo resources){
-        return new ResponseEntity(productInfoService.create(resources),HttpStatus.CREATED);
+    public ResponseEntity create(@RequestBody CreateProductInfoRequest createProductInfoRequest){
+        return new ResponseEntity(productInfoService.create(createProductInfoRequest),HttpStatus.CREATED);
     }
 
     @Log("修改产品资料")
@@ -87,4 +88,5 @@ public class ProductInfoController {
     public ResponseEntity getMessureUnit(@PathVariable Long id){
         return new ResponseEntity(productInfoService.findById(id), HttpStatus.OK);
     }
+
 }

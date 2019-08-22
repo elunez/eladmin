@@ -1,6 +1,7 @@
 package me.zhengjie.modules.wms.bd.service;
 
 import me.zhengjie.modules.wms.bd.domain.ProductInfo;
+import me.zhengjie.modules.wms.bd.request.CreateProductInfoRequest;
 import me.zhengjie.modules.wms.bd.service.dto.ProductInfoDTO;
 import me.zhengjie.modules.wms.bd.service.dto.ProductInfoQueryCriteria;
 //import org.springframework.cache.annotation.CacheConfig;
@@ -42,11 +43,11 @@ public interface ProductInfoService {
 
     /**
      * create
-     * @param resources
+     * @param createProductInfoRequest
      * @return
      */
     //@CacheEvict(allEntries = true)
-    ProductInfoDTO create(ProductInfo resources);
+    ProductInfoDTO create(CreateProductInfoRequest createProductInfoRequest);
 
     /**
      * update

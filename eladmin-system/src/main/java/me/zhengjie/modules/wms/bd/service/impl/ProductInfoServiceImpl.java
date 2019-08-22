@@ -1,14 +1,17 @@
 package me.zhengjie.modules.wms.bd.service.impl;
 
+import com.google.gson.Gson;
 import me.zhengjie.exception.BadRequestException;
-import me.zhengjie.modules.wms.bd.domain.MaterialInfo;
-import me.zhengjie.modules.wms.bd.domain.ProductInfo;
+import me.zhengjie.modules.wms.bd.domain.*;
+import me.zhengjie.modules.wms.bd.repository.MeasureUnitRepository;
+import me.zhengjie.modules.wms.bd.repository.ProductCategoryRepository;
+import me.zhengjie.modules.wms.bd.request.*;
+import me.zhengjie.modules.wms.bd.service.dto.*;
 import me.zhengjie.utils.ValidationUtil;
 import me.zhengjie.modules.wms.bd.repository.ProductInfoRepository;
 import me.zhengjie.modules.wms.bd.service.ProductInfoService;
-import me.zhengjie.modules.wms.bd.service.dto.ProductInfoDTO;
-import me.zhengjie.modules.wms.bd.service.dto.ProductInfoQueryCriteria;
 import me.zhengjie.modules.wms.bd.service.mapper.ProductInfoMapper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -42,6 +45,12 @@ public class ProductInfoServiceImpl implements ProductInfoService {
 
     @Autowired
     private ProductInfoMapper productInfoMapper;
+
+    @Autowired
+    private MeasureUnitRepository measureUnitRepository;
+
+    @Autowired
+    private ProductCategoryRepository productCategoryRepository;
 
     @Override
     public Object queryAll(ProductInfoQueryCriteria criteria, Pageable pageable){
@@ -97,10 +106,56 @@ public class ProductInfoServiceImpl implements ProductInfoService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ProductInfoDTO create(ProductInfo resources) {
-        productInfoRepository.save(resources);
-        return productInfoMapper.toDto(productInfoRepository.save(resources));
+    public ProductInfoDTO create(CreateProductInfoRequest createProductInfoRequest) {
+        Long measureUnitId = createProductInfoRequest.getMeasureUnitId();
+        if(null == measureUnitId){
+            throw new BadRequestException("计量单位不能为空!");
+        }
+        Optional<MeasureUnit> measureUnitOptional = measureUnitRepository.findById(measureUnitId);
+        MeasureUnit measureUnit = measureUnitOptional.get();
+        if(null == measureUnit){
+            throw new BadRequestException("计量单位不存在!");
+        }
+
+        Long productCategoryId = createProductInfoRequest.getProductCategoryId();
+        if(null == productCategoryId){
+            throw new BadRequestException("产品类别不能为空!");
+        }
+        Optional<ProductCategory> productCategoryOptional = productCategoryRepository.findById(productCategoryId);
+        ProductCategory productCategory = productCategoryOptional.get();
+        if(null == productCategory){
+            throw new BadRequestException("产品类别不存在!");
+        }
+
+
+
+        ProductInfoDetailDTO productInfoDetailDTO = new ProductInfoDetailDTO();
+
+        ProductInfo productInfo = new ProductInfo();
+        BeanUtils.copyProperties(createProductInfoRequest, productInfo);
+        productInfo.setStatus(true);
+        List<ProductInventoryWarning> productInventoryWarningList = createProductInfoRequest.getProductInventoryWarningList();
+        if(!CollectionUtils.isEmpty(productInventoryWarningList)){
+            String productInventoryWarningStr = new Gson().toJson(productInventoryWarningList);
+            productInfo.setProductInventoryWarning(productInventoryWarningStr);
+            productInfoDetailDTO.setProductInventoryWarningList(productInventoryWarningList);
+        }
+        List<ProductInitialSetup> productInitialSetupList = createProductInfoRequest.getProductInitialSetupList();
+        if(!CollectionUtils.isEmpty(productInitialSetupList)){
+            String productInitialSetupStr = new Gson().toJson(productInitialSetupList);
+            productInfo.setProductInitialSetup(productInitialSetupStr);
+            productInfoDetailDTO.setProductInitialSetupList(productInitialSetupList);
+        }
+
+        productInfo.setProductCategoryName(productCategory.getName());
+        productInfo.setMeasureUnitName(measureUnit.getName());
+
+        productInfo = productInfoRepository.save(productInfo);
+        ProductInfoDTO productInfoDTO = productInfoMapper.toDto(productInfo);
+        BeanUtils.copyProperties(productInfoDTO, productInfoDetailDTO);
+        return productInfoDetailDTO;
     }
+
 
     @Override
     @Transactional(rollbackFor = Exception.class)
