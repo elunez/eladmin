@@ -45,9 +45,9 @@ public class ProductInfoController {
 
     @Log("分页查询产品资料")
     @ApiOperation(value = "分页查询产品资料")
-    @GetMapping(value = "/productInfo")
+    @GetMapping(value = "/queryProductInfoPage")
     @PreAuthorize("hasAnyRole('ADMIN','BDPRODUCTINFO_ALL','BDPRODUCTINFO_SELECT')")
-    public ResponseEntity getProductInfos(ProductInfoQueryCriteria criteria, Pageable pageable){
+    public ResponseEntity queryProductInfoPage(ProductInfoQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity(productInfoService.queryAll(criteria,pageable),HttpStatus.OK);
     }
 
@@ -86,7 +86,7 @@ public class ProductInfoController {
 
     @Log("查看产品资料详情")
     @GetMapping(value = "/productInfo/{id}")
-    public ResponseEntity getMessureUnit(@PathVariable Long id){
+    public ResponseEntity getProductInfoById(@PathVariable Long id){
         return new ResponseEntity(productInfoService.findById(id), HttpStatus.OK);
     }
 

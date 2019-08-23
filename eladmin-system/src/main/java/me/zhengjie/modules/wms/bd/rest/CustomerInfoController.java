@@ -27,15 +27,15 @@ public class CustomerInfoController {
 
     @Log("分页查询客户信息")
     @ApiOperation(value = "分页查询客户信息")
-    @GetMapping(value = "/customerInfos")
+    @GetMapping(value = "/queryCustomerInfoPage")
     @PreAuthorize("hasAnyRole('ADMIN','BDCUSTOMERINFO_ALL','BDCUSTOMERINFO_SELECT')")
-    public ResponseEntity getCustomerInfos(CustomerInfoQueryCriteria criteria, Pageable pageable){
+    public ResponseEntity queryCustomerInfoPage(CustomerInfoQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity(customerInfoService.queryAll(criteria,pageable),HttpStatus.OK);
     }
 
     @Log("查询客户信息列表")
     @ApiOperation(value = "查询客户信息列表")
-    @GetMapping(value = "/customerInfo/queryCustomerInfoList")
+    @GetMapping(value = "/queryCustomerInfoList")
     @PreAuthorize("hasAnyRole('ADMIN','BDCUSTOMERINFO_ALL','BDCUSTOMERINFO_SELECT')")
     public ResponseEntity queryCustomerInfoList(CustomerInfoQueryCriteria criteria){
         return new ResponseEntity(customerInfoService.queryAll(criteria),HttpStatus.OK);
