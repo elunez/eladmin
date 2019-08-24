@@ -2,6 +2,7 @@ package me.zhengjie.modules.wms.bd.rest;
 
 import me.zhengjie.aop.log.Log;
 import me.zhengjie.modules.wms.bd.domain.OutSourceCompanyInfo;
+import me.zhengjie.modules.wms.bd.request.CreateOutSourceCompanyInfoRequest;
 import me.zhengjie.modules.wms.bd.service.OutSourceCompanyInfoService;
 import me.zhengjie.modules.wms.bd.service.dto.OutSourceCompanyInfoDTO;
 import me.zhengjie.modules.wms.bd.service.dto.OutSourceCompanyInfoQueryCriteria;
@@ -28,18 +29,18 @@ public class OutSourceCompanyInfoController {
 
     @Log("分页查询委外公司资料列表")
     @ApiOperation(value = "分页查询委外公司资料列表")
-    @GetMapping(value = "/outSourceCompanyInfos")
+    @GetMapping(value = "/queryOutSourceCompanyInfoPage")
     @PreAuthorize("hasAnyRole('ADMIN','BDOUTSOURCECOMPANYINFO_ALL','BDOUTSOURCECOMPANYINFO_SELECT')")
-    public ResponseEntity getOutSourceCompanyInfos(OutSourceCompanyInfoQueryCriteria criteria, Pageable pageable){
+    public ResponseEntity queryOutSourceCompanyInfoPage(OutSourceCompanyInfoQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity(outSourceCompanyInfoService.queryAll(criteria,pageable),HttpStatus.OK);
     }
 
 
     @Log("查询委外公司资料列表")
     @ApiOperation(value = "分页查询委外公司资料列表")
-    @GetMapping(value = "/getOutSourceCompanyInfoList")
+    @GetMapping(value = "/queryOutSourceCompanyInfoList")
     @PreAuthorize("hasAnyRole('ADMIN','BDOUTSOURCECOMPANYINFO_ALL','BDOUTSOURCECOMPANYINFO_SELECT')")
-    public ResponseEntity getOutSourceCompanyInfoList(OutSourceCompanyInfoQueryCriteria criteria){
+    public ResponseEntity queryOutSourceCompanyInfoList(OutSourceCompanyInfoQueryCriteria criteria){
         return new ResponseEntity(outSourceCompanyInfoService.queryAll(criteria),HttpStatus.OK);
     }
 
@@ -58,8 +59,8 @@ public class OutSourceCompanyInfoController {
     @ApiOperation(value = "新增委外公司资料")
     @PostMapping(value = "/outSourceCompanyInfo")
     @PreAuthorize("hasAnyRole('ADMIN','BDOUTSOURCECOMPANYINFO_ALL','BDOUTSOURCECOMPANYINFO_CREATE')")
-    public ResponseEntity create(@Validated @RequestBody OutSourceCompanyInfo resources){
-        return new ResponseEntity(outSourceCompanyInfoService.create(resources),HttpStatus.CREATED);
+    public ResponseEntity create(@RequestBody CreateOutSourceCompanyInfoRequest createOutSourceCompanyInfoRequest){
+        return new ResponseEntity(outSourceCompanyInfoService.create(createOutSourceCompanyInfoRequest),HttpStatus.CREATED);
     }
 
     @Log("修改委外公司资料")

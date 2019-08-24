@@ -159,7 +159,7 @@ public class SupplierInfoServiceImpl implements SupplierInfoService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public SupplierInfoDTO create(CreateSupplierInfoRequest createSupplierInfoRequest) {
+    public SupplierInfoDetailDTO create(CreateSupplierInfoRequest createSupplierInfoRequest) {
         Long supplierCategoryId = createSupplierInfoRequest.getSupplierCategoryId();
         if(null == supplierCategoryId){
             throw new BadRequestException("供应商类别不存在!");

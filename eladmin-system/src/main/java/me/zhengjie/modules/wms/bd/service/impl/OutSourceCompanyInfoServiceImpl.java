@@ -1,14 +1,17 @@
 package me.zhengjie.modules.wms.bd.service.impl;
 
+import com.google.gson.Gson;
 import me.zhengjie.exception.BadRequestException;
+import me.zhengjie.modules.wms.bd.domain.CustomerInfo;
 import me.zhengjie.modules.wms.bd.domain.OutSourceCompanyInfo;
 import me.zhengjie.modules.wms.bd.domain.SupplierInfo;
+import me.zhengjie.modules.wms.bd.request.*;
+import me.zhengjie.modules.wms.bd.service.dto.*;
 import me.zhengjie.utils.ValidationUtil;
 import me.zhengjie.modules.wms.bd.repository.OutSourceCompanyInfoRepository;
 import me.zhengjie.modules.wms.bd.service.OutSourceCompanyInfoService;
-import me.zhengjie.modules.wms.bd.service.dto.OutSourceCompanyInfoDTO;
-import me.zhengjie.modules.wms.bd.service.dto.OutSourceCompanyInfoQueryCriteria;
 import me.zhengjie.modules.wms.bd.service.mapper.OutSourceCompanyInfoMapper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -124,9 +127,29 @@ public class OutSourceCompanyInfoServiceImpl implements OutSourceCompanyInfoServ
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public OutSourceCompanyInfoDTO create(OutSourceCompanyInfo resources) {
-        resources.setStatus(true);
-        return outSourceCompanyInfoMapper.toDto(outSourceCompanyInfoRepository.save(resources));
+    public OutSourceCompanyInfoDTO create(CreateOutSourceCompanyInfoRequest createOutSourceCompanyInfoRequest) {
+        OutSourceCompanyInfoDetailDTO outSourceCompanyInfoDetailDTO = new OutSourceCompanyInfoDetailDTO();
+
+        OutSourceCompanyInfo outSourceCompanyInfo = new OutSourceCompanyInfo();
+        BeanUtils.copyProperties(createOutSourceCompanyInfoRequest, outSourceCompanyInfo);
+        outSourceCompanyInfo.setStatus(true);
+        List<OutSourceCompanyAddress> outSourceCompanyAddressList = createOutSourceCompanyInfoRequest.getOutSourceCompanyAddress();
+        if(!CollectionUtils.isEmpty(outSourceCompanyAddressList)){
+            String outSourceCompanyAddressStr = new Gson().toJson(outSourceCompanyAddressList);
+            outSourceCompanyInfo.setOutSourceCompanyAddress(outSourceCompanyAddressStr);
+            outSourceCompanyInfoDetailDTO.setOutSourceCompanyAddress(outSourceCompanyAddressList);
+        }
+        List<OutSourceCompanyContact> outSourceCompanyContactList = createOutSourceCompanyInfoRequest.getOutSourceCompanyContact();
+        if(!CollectionUtils.isEmpty(outSourceCompanyContactList)){
+            String outSourceCompanyContactStr = new Gson().toJson(outSourceCompanyContactList);
+            outSourceCompanyInfo.setOutSourceCompanyContact(outSourceCompanyContactStr);
+            outSourceCompanyInfoDetailDTO.setOutSourceCompanyContact(outSourceCompanyContactList);
+        }
+
+        outSourceCompanyInfo = outSourceCompanyInfoRepository.save(outSourceCompanyInfo);
+        OutSourceCompanyInfoDTO outSourceCompanyInfoDTO = outSourceCompanyInfoMapper.toDto(outSourceCompanyInfo);
+        BeanUtils.copyProperties(outSourceCompanyInfoDTO, outSourceCompanyInfoDetailDTO);
+        return outSourceCompanyInfoDetailDTO;
     }
 
     @Override

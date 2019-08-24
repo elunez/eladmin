@@ -32,7 +32,7 @@ public class CreateCustomerInfoRequest implements Serializable {
     private String remark;
 
     // 客户地址地址数组[{“province”:””,”city”:””,”area”:””,”address_detail”:””,”sort”:””}]
-    private List<CustomerAddress> supplierAddress;
+    private List<CustomerAddress> customerAddress;
 
     // 客户联系人[{“sort”:””,”name”:””,”mobile”:””,”phone”:””,”email”:””,”qq”:””,”weixin”:””,”firstTag”:””}]firstTag 0:非首要联系人 1:首要联系人
     private List<CustomerContact> customerContact;

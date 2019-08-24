@@ -61,22 +61,8 @@ public class CustomerInfoServiceImpl implements CustomerInfoService {
 
                 List<Predicate> targetPredicateList = new ArrayList<>();
 
-                //客户名称
-                String customerName = criteria.getCustomerName();
-                if (!StringUtils.isEmpty(customerName)) {
-                    Predicate namePredicate = criteriaBuilder.like(root.get("customerName"), "%" + customerName + "%");
-                    targetPredicateList.add(namePredicate);
-                }
-
-                //状态
                 Predicate statusPredicate = criteriaBuilder.equal(root.get("status"), 1);
                 targetPredicateList.add(statusPredicate);
-
-                String customerCode = criteria.getCustomerCode();
-                if(!StringUtils.isEmpty(customerCode)){
-                    Predicate customerCodePredicate = criteriaBuilder.like(root.get("customerCode"), "%" + customerName + "%");
-                    targetPredicateList.add(customerCodePredicate);
-                }
 
                 if(CollectionUtils.isEmpty(targetPredicateList)){
                     return null;
@@ -86,7 +72,32 @@ public class CustomerInfoServiceImpl implements CustomerInfoService {
             }
         };
         Page<CustomerInfo> page = customerInfoRepository.findAll(specification, pageable);
-        return PageUtil.toPage(page.map(customerInfoMapper::toDto));
+        Page<CustomerInfoDTO> customerInfoDTOPage = page.map(customerInfoMapper::toDto);
+        if(null != customerInfoDTOPage){
+            List<CustomerInfoDTO> customerInfoDtoList = customerInfoDTOPage.getContent();
+            if(!CollectionUtils.isEmpty(customerInfoDtoList)){
+                for(CustomerInfoDTO customerInfoDTO : customerInfoDtoList){
+                    Long customerInfoDTOId = customerInfoDTO.getId();
+                    Optional<CustomerInfo> customerInfoOptional = customerInfoRepository.findById(customerInfoDTOId);
+                    if(null != customerInfoOptional){
+                        CustomerInfo customerInfo = customerInfoOptional.get();
+                        if(null != customerInfo){
+                            String customerContactJsonStr = customerInfo.getCustomerContact();
+                            List<CustomerContact> customerContactList = new Gson().fromJson(customerContactJsonStr,new TypeToken<ArrayList<CustomerContact>>() {}.getType());
+                            if(!CollectionUtils.isEmpty(customerContactList)){
+                                for(CustomerContact customerContact : customerContactList){
+                                    if(customerContact.getFirstTag() == 1){
+                                        customerInfoDTO.setFirstContactMobile(customerContact.getMobile());
+                                        customerInfoDTO.setFirstContactName(customerContact.getName());
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return PageUtil.toPage(customerInfoDTOPage);
     }
 
     @Override
@@ -138,13 +149,13 @@ public class CustomerInfoServiceImpl implements CustomerInfoService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public CustomerInfoDTO create(CreateCustomerInfoRequest createCustomerInfoRequest) {
+    public CustomerInfoDetailDTO create(CreateCustomerInfoRequest createCustomerInfoRequest) {
         CustomerInfoDetailDTO customerInfoDetailDTO = new CustomerInfoDetailDTO();
 
         CustomerInfo customerInfo = new CustomerInfo();
         BeanUtils.copyProperties(createCustomerInfoRequest, customerInfo);
         customerInfo.setStatus(true);
-        List<CustomerAddress> customerAddressList = createCustomerInfoRequest.getSupplierAddress();
+        List<CustomerAddress> customerAddressList = createCustomerInfoRequest.getCustomerAddress();
         if(!CollectionUtils.isEmpty(customerAddressList)){
             String customerAddressStr = new Gson().toJson(customerAddressList);
             customerInfo.setCustomerAddress(customerAddressStr);

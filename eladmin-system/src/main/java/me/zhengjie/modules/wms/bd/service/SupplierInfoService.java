@@ -1,14 +1,9 @@
 package me.zhengjie.modules.wms.bd.service;
 
-import me.zhengjie.modules.wms.bd.domain.SupplierInfo;
 import me.zhengjie.modules.wms.bd.request.CreateSupplierInfoRequest;
 import me.zhengjie.modules.wms.bd.request.UpdateSupplierInfoRequest;
-import me.zhengjie.modules.wms.bd.service.dto.SupplierInfoDTO;
 import me.zhengjie.modules.wms.bd.service.dto.SupplierInfoDetailDTO;
 import me.zhengjie.modules.wms.bd.service.dto.SupplierInfoQueryCriteria;
-//import org.springframework.cache.annotation.CacheConfig;
-//import org.springframework.cache.annotation.CacheEvict;
-//import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
 
 /**
@@ -49,7 +44,7 @@ public interface SupplierInfoService {
      * @return
      */
     //@CacheEvict(allEntries = true)
-    SupplierInfoDTO create(CreateSupplierInfoRequest createSupplierInfoRequest);
+    SupplierInfoDetailDTO create(CreateSupplierInfoRequest createSupplierInfoRequest);
 
     /**
      * update

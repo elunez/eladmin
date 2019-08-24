@@ -49,7 +49,7 @@ public interface CustomerInfoService {
      * @return
      */
     //@CacheEvict(allEntries = true)
-    CustomerInfoDTO create(CreateCustomerInfoRequest createCustomerInfoRequest);
+    CustomerInfoDetailDTO create(CreateCustomerInfoRequest createCustomerInfoRequest);
 
     /**
      * update

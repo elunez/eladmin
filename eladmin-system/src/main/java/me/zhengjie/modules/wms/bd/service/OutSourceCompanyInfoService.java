@@ -1,6 +1,7 @@
 package me.zhengjie.modules.wms.bd.service;
 
 import me.zhengjie.modules.wms.bd.domain.OutSourceCompanyInfo;
+import me.zhengjie.modules.wms.bd.request.CreateOutSourceCompanyInfoRequest;
 import me.zhengjie.modules.wms.bd.service.dto.OutSourceCompanyInfoDTO;
 import me.zhengjie.modules.wms.bd.service.dto.OutSourceCompanyInfoQueryCriteria;
 //import org.springframework.cache.annotation.CacheConfig;
@@ -42,11 +43,11 @@ public interface OutSourceCompanyInfoService {
 
     /**
      * create
-     * @param resources
+     * @param createOutSourceCompanyInfoRequest
      * @return
      */
     //@CacheEvict(allEntries = true)
-    OutSourceCompanyInfoDTO create(OutSourceCompanyInfo resources);
+    OutSourceCompanyInfoDTO create(CreateOutSourceCompanyInfoRequest createOutSourceCompanyInfoRequest);
 
     /**
      * update

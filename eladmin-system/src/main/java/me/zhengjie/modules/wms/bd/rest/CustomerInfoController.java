@@ -15,6 +15,9 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.annotations.*;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 /**
 * @author jie
 * @date 2019-08-03
@@ -26,6 +29,16 @@ public class CustomerInfoController {
 
     @Autowired
     private CustomerInfoService customerInfoService;
+
+    @Log("初始化客户编号")
+    @ApiOperation(value = "初始化客户编号")
+    @GetMapping(value = "/initCustomerCode")
+    @PreAuthorize("hasAnyRole('ADMIN','BDSUPPLIERINFO_ALL','BDSUPPLIERINFO_SELECT')")
+    public ResponseEntity initCustomerCode(){
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS");//设置日期格式
+        String supplierCode = "KH"+ LocalDateTime.now().format(fmt);
+        return new ResponseEntity(supplierCode,HttpStatus.OK);
+    }
 
     @Log("分页查询客户信息")
     @ApiOperation(value = "分页查询客户信息")

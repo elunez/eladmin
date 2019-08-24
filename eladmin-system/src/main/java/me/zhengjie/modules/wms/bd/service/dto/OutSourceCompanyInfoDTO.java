@@ -32,11 +32,6 @@ public class OutSourceCompanyInfoDTO implements Serializable {
     // 备注
     private String remark;
 
-    // 委外公司地址数组[{“province”:””,”city”:””,”area”:””,”address_detail”:””,”sort”:””}]
-    private String outSourceCompanyAddress;
-
-    // 委外公司联系人[{“sort”:””,”name”:””,”mobile”:””,”phone”:””,”email”:””,”qq”:””,”weixin”:””,”firstTag”:””}]firstTag 0:非首要联系人 1:首要联系人
-    private String outSourceCompanyContact;
 
     private Boolean status;
 }
