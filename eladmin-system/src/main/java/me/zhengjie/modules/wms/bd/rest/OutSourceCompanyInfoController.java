@@ -51,7 +51,7 @@ public class OutSourceCompanyInfoController {
 
 
     @Log("查询委外公司资料列表")
-    @ApiOperation(value = "分页查询委外公司资料列表")
+    @ApiOperation(value = "查询委外公司资料列表")
     @GetMapping(value = "/queryOutSourceCompanyInfoList")
     @PreAuthorize("hasAnyRole('ADMIN','BDOUTSOURCECOMPANYINFO_ALL','BDOUTSOURCECOMPANYINFO_SELECT')")
     public ResponseEntity queryOutSourceCompanyInfoList(OutSourceCompanyInfoQueryCriteria criteria){
@@ -63,7 +63,7 @@ public class OutSourceCompanyInfoController {
     @ApiOperation(value = "查询委外公司详情")
     @GetMapping(value = "/outSourceCompanyInfo/{id}")
     @PreAuthorize("hasAnyRole('ADMIN','BDOUTSOURCECOMPANYINFO_ALL','BDOUTSOURCECOMPANYINFO_SELECT')")
-    public ResponseEntity getOutSourceCompanyInfoList(@PathVariable("id") Long id){
+    public ResponseEntity getOutSourceCompanyInfoById(@PathVariable("id") Long id){
         OutSourceCompanyInfoDTO outSourceCompanyInfoDTO = outSourceCompanyInfoService.findById(id);
         return new ResponseEntity(outSourceCompanyInfoDTO,HttpStatus.OK);
     }
@@ -79,7 +79,7 @@ public class OutSourceCompanyInfoController {
 
     @Log("修改委外公司资料")
     @ApiOperation(value = "修改委外公司资料")
-    @PutMapping(value = "/outSourceCompanyInfo")
+    @PutMapping(value = "/outSourceCompanyInfo/update")
     @PreAuthorize("hasAnyRole('ADMIN','BDOUTSOURCECOMPANYINFO_ALL','BDOUTSOURCECOMPANYINFO_EDIT')")
     public ResponseEntity update(@RequestBody UpdateOutSourceCompanyInfoRequest updateOutSourceCompanyInfoRequest){
         outSourceCompanyInfoService.update(updateOutSourceCompanyInfoRequest);
