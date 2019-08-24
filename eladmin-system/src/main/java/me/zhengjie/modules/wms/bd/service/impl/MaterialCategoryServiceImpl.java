@@ -106,4 +106,27 @@ public class MaterialCategoryServiceImpl implements MaterialCategoryService {
         return PageUtil.toPage(page.map(materialCategoryMapper::toDto));
     }
 
+    @Override
+    public Object queryAll(MaterialCategoryDTO materialCategory) {
+        Specification<MaterialCategory> specification = new Specification<MaterialCategory>() {
+            @Override
+            public Predicate toPredicate(Root<MaterialCategory> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+
+                List<Predicate> targetPredicateList = new ArrayList<>();
+
+                //状态
+                Predicate statusPredicate = criteriaBuilder.equal(root.get("status"), 1);
+                targetPredicateList.add(statusPredicate);
+
+                if(CollectionUtils.isEmpty(targetPredicateList)){
+                    return null;
+                }else{
+                    return criteriaBuilder.and(targetPredicateList.toArray(new Predicate[targetPredicateList.size()]));
+                }
+            }
+        };
+        List<MaterialCategory> materialCategoryList = materialCategoryRepository.findAll(specification);
+        return materialCategoryMapper.toDto(materialCategoryList);
+    }
+
 }

@@ -17,4 +17,6 @@ public interface MaterialCategoryService {
     void delete(Long id);
 
     Object queryAll(MaterialCategoryDTO materialCategory, Pageable pageable);
+
+    Object queryAll(MaterialCategoryDTO materialCategory);
 }

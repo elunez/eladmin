@@ -53,7 +53,7 @@ public class ProductInfoController {
 
     @Log("查询产品资料列表")
     @ApiOperation(value = "查询产品资料列表")
-    @GetMapping(value = "/productInfo/all")
+    @GetMapping(value = "/queryProductInfoList")
     public ResponseEntity queryProductInfoList(ProductInfoQueryCriteria criteria){
         return new ResponseEntity(productInfoService.queryAll(criteria),HttpStatus.OK);
     }

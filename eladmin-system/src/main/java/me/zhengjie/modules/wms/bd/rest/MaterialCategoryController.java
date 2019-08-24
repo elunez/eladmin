@@ -48,9 +48,15 @@ public class MaterialCategoryController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @Log("查询物料类别")
+    @Log("分页查询物料类别")
     @GetMapping(value = "/queryMaterialCategoryPage")
     public ResponseEntity queryMaterialCategoryPage(MaterialCategoryDTO resources, Pageable pageable){
         return new ResponseEntity(materialCategoryService.queryAll(resources,pageable),HttpStatus.OK);
+    }
+
+    @Log("查询物料类别")
+    @GetMapping(value = "/queryMaterialCategoryList")
+    public ResponseEntity queryMaterialCategoryList(MaterialCategoryDTO resources){
+        return new ResponseEntity(materialCategoryService.queryAll(resources),HttpStatus.OK);
     }
 }
