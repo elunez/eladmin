@@ -2,6 +2,7 @@ package me.zhengjie.modules.wms.bd.rest;
 
 import me.zhengjie.aop.log.Log;
 import me.zhengjie.modules.wms.bd.domain.MaterialInfo;
+import me.zhengjie.modules.wms.bd.request.CreateMaterialInfoRequest;
 import me.zhengjie.modules.wms.bd.service.MaterialInfoService;
 import me.zhengjie.modules.wms.bd.service.dto.MaterialInfoQueryCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,7 @@ public class MaterialInfoController {
 
     @Log("分页查询物料资料")
     @ApiOperation(value = "分页查询物料资料")
-    @GetMapping(value = "/materialInfo")
+    @GetMapping(value = "/queryMaterialInfoPage")
     public ResponseEntity queryMaterialInfoPage(MaterialInfoQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity(materialInfoService.queryAll(criteria,pageable),HttpStatus.OK);
     }
@@ -42,13 +43,13 @@ public class MaterialInfoController {
     @Log("新增物料资料")
     @ApiOperation(value = "新增物料资料")
     @PostMapping(value = "/materialInfo")
-    public ResponseEntity create(@Validated @RequestBody MaterialInfo resources){
-        return new ResponseEntity(materialInfoService.create(resources),HttpStatus.CREATED);
+    public ResponseEntity create(@RequestBody CreateMaterialInfoRequest createMaterialInfoRequest){
+        return new ResponseEntity(materialInfoService.create(createMaterialInfoRequest),HttpStatus.CREATED);
     }
 
     @Log("修改物料资料")
     @ApiOperation(value = "修改物料资料")
-    @PutMapping(value = "/materialInfo")
+    @PutMapping(value = "/materialInfo/update")
     public ResponseEntity update(@Validated @RequestBody MaterialInfo resources){
         materialInfoService.update(resources);
         return new ResponseEntity(HttpStatus.NO_CONTENT);

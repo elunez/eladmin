@@ -12,7 +12,7 @@ import java.io.Serializable;
  * 	//”minimum_inventory”:””,”highest_inventory”:””}]
  */
 @Data
-public class ProductInitialSetup implements Serializable {
+public class MaterialInitialSetup implements Serializable {
 
     private Integer sort;
 

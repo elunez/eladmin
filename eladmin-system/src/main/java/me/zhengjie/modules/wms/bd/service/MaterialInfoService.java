@@ -1,7 +1,9 @@
 package me.zhengjie.modules.wms.bd.service;
 
 import me.zhengjie.modules.wms.bd.domain.MaterialInfo;
+import me.zhengjie.modules.wms.bd.request.CreateMaterialInfoRequest;
 import me.zhengjie.modules.wms.bd.service.dto.MaterialInfoDTO;
+import me.zhengjie.modules.wms.bd.service.dto.MaterialInfoDetailDTO;
 import me.zhengjie.modules.wms.bd.service.dto.MaterialInfoQueryCriteria;
 //import org.springframework.cache.annotation.CacheConfig;
 //import org.springframework.cache.annotation.CacheEvict;
@@ -38,15 +40,15 @@ public interface MaterialInfoService {
      * @return
      */
     //@Cacheable(key = "#p0")
-    MaterialInfoDTO findById(Long id);
+    MaterialInfoDetailDTO findById(Long id);
 
     /**
      * create
-     * @param resources
+     * @param createMaterialInfoRequest
      * @return
      */
     //@CacheEvict(allEntries = true)
-    MaterialInfoDTO create(MaterialInfo resources);
+    MaterialInfoDetailDTO create(CreateMaterialInfoRequest createMaterialInfoRequest);
 
     /**
      * update

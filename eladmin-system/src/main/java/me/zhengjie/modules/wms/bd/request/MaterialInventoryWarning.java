@@ -1,4 +1,4 @@
-package me.zhengjie.modules.wms.bd.cons;
+package me.zhengjie.modules.wms.bd.request;
 
 import lombok.Data;
 

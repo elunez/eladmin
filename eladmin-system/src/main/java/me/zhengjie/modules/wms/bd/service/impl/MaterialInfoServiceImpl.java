@@ -1,17 +1,18 @@
 package me.zhengjie.modules.wms.bd.service.impl;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import me.zhengjie.exception.BadRequestException;
-import me.zhengjie.modules.wms.bd.domain.MaterialCategory;
-import me.zhengjie.modules.wms.bd.domain.MaterialInfo;
-import me.zhengjie.modules.wms.bd.domain.MeasureUnit;
+import me.zhengjie.modules.wms.bd.domain.*;
 import me.zhengjie.modules.wms.bd.repository.MaterialCategoryRepository;
 import me.zhengjie.modules.wms.bd.repository.MeasureUnitRepository;
+import me.zhengjie.modules.wms.bd.request.*;
+import me.zhengjie.modules.wms.bd.service.dto.*;
 import me.zhengjie.utils.ValidationUtil;
 import me.zhengjie.modules.wms.bd.repository.MaterialInfoRepository;
 import me.zhengjie.modules.wms.bd.service.MaterialInfoService;
-import me.zhengjie.modules.wms.bd.service.dto.MaterialInfoDTO;
-import me.zhengjie.modules.wms.bd.service.dto.MaterialInfoQueryCriteria;
 import me.zhengjie.modules.wms.bd.service.mapper.MaterialInfoMapper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -125,44 +126,80 @@ public class MaterialInfoServiceImpl implements MaterialInfoService {
     }
 
     @Override
-    public MaterialInfoDTO findById(Long id) {
-        Optional<MaterialInfo> bdMaterialInfo = materialInfoRepository.findById(id);
-        ValidationUtil.isNull(bdMaterialInfo, "BdMaterialInfo", "id", id);
-        return materialInfoMapper.toDto(bdMaterialInfo.get());
+    public MaterialInfoDetailDTO findById(Long id) {
+        MaterialInfoDetailDTO materialInfoDetailDTO = new MaterialInfoDetailDTO();
+
+        Optional<MaterialInfo> materialInfoOptional = materialInfoRepository.findById(id);
+        MaterialInfo materialInfo = materialInfoOptional.get();
+        MaterialInfoDTO materialInfoDTO = materialInfoMapper.toDto(materialInfo);
+        if(null != materialInfoDTO){
+            BeanUtils.copyProperties( materialInfoDTO, materialInfoDetailDTO);
+            String productInventoryWarningStr = materialInfo.getMaterialInventoryWarning();
+            if(StringUtils.hasLength(productInventoryWarningStr)){
+                List<MaterialInventoryWarning> materialInventoryWarningList = new Gson().fromJson(productInventoryWarningStr,new TypeToken<ArrayList<MaterialInventoryWarning>>() {}.getType());
+                materialInfoDetailDTO.setMaterialInventoryWarningList(materialInventoryWarningList);
+            }
+
+
+            String materialInitialSetupStr = materialInfo.getMaterialInitialSetup();
+            if(StringUtils.hasLength(materialInitialSetupStr)){
+                List<MaterialInitialSetup> materialInitialSetupList = new Gson().fromJson(materialInitialSetupStr,new TypeToken<ArrayList<MaterialInitialSetup>>() {}.getType());
+                materialInfoDetailDTO.setMaterialInitialSetupList(materialInitialSetupList);
+            }
+        }
+        return materialInfoDetailDTO;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public MaterialInfoDTO create(MaterialInfo resources) {
-        Long materialCategoryId = resources.getMaterialCategoryId();
-        String materialCategoryName = resources.getMaterialCategoryName();
-        if (null == materialCategoryId || StringUtils.isEmpty(materialCategoryName)) {
-            throw new BadRequestException("物料类别不能为空!");
-        }
-
-        MaterialCategory materialCategory = materialCategoryRepository.findByIdAndStatusTrue(materialCategoryId);
-        if (null == materialCategory) {
-            throw new BadRequestException("物料类别不存在!");
-        }
-
-        Long measureUnitId = resources.getMeasureUnitId();
-        String measureUnitName = resources.getMeasureUnitName();
-        if (null == measureUnitId || StringUtils.isEmpty(measureUnitName)) {
+    public MaterialInfoDetailDTO create(CreateMaterialInfoRequest createMaterialInfoRequest) {
+        Long measureUnitId = createMaterialInfoRequest.getMeasureUnitId();
+        if(null == measureUnitId){
             throw new BadRequestException("计量单位不能为空!");
         }
-
-        MeasureUnit measureUnit = measureUnitRepository.findByIdAndStatusTrue(measureUnitId);
-        if (null == measureUnit) {
+        Optional<MeasureUnit> measureUnitOptional = measureUnitRepository.findById(measureUnitId);
+        MeasureUnit measureUnit = measureUnitOptional.get();
+        if(null == measureUnit){
             throw new BadRequestException("计量单位不存在!");
         }
 
-        // 物料编码
-        String materialCode = resources.getMaterialCode();
-        MaterialInfo byMaterialCodeAndStatusTrue = materialInfoRepository.findByMaterialCodeAndStatusTrue(materialCode);
-        if (null != byMaterialCodeAndStatusTrue) {
-            throw new BadRequestException("物料编码已存在!");
+        Long materialCategoryId = createMaterialInfoRequest.getMaterialCategoryId();
+        if(null == materialCategoryId){
+            throw new BadRequestException("物料类别不能为空!");
         }
-        return materialInfoMapper.toDto(materialInfoRepository.save(resources));
+        Optional<MaterialCategory> materialCategoryOptional = materialCategoryRepository.findById(materialCategoryId);
+        MaterialCategory materialCategory = materialCategoryOptional.get();
+        if(null == materialCategory){
+            throw new BadRequestException("物料类别不存在!");
+        }
+
+
+
+        MaterialInfoDetailDTO materialInfoDetailDTO = new MaterialInfoDetailDTO();
+
+        MaterialInfo materialInfo = new MaterialInfo();
+        BeanUtils.copyProperties(createMaterialInfoRequest, materialInfo);
+        materialInfo.setStatus(true);
+        List<MaterialInventoryWarning> materialInventoryWarningList = createMaterialInfoRequest.getMaterialInventoryWarningList();
+        if(!CollectionUtils.isEmpty(materialInventoryWarningList)){
+            String materialInventoryWarningStr = new Gson().toJson(materialInventoryWarningList);
+            materialInfo.setMaterialInventoryWarning(materialInventoryWarningStr);
+            materialInfoDetailDTO.setMaterialInventoryWarningList(materialInventoryWarningList);
+        }
+        List<MaterialInitialSetup> materialInitialSetupList = createMaterialInfoRequest.getMaterialInitialSetupList();
+        if(!CollectionUtils.isEmpty(materialInitialSetupList)){
+            String materialInitialSetupStr = new Gson().toJson(materialInitialSetupList);
+            materialInfo.setMaterialInitialSetup(materialInitialSetupStr);
+            materialInfoDetailDTO.setMaterialInitialSetupList(materialInitialSetupList);
+        }
+
+        materialInfo.setMaterialCategoryName(materialCategory.getName());
+        materialInfo.setMeasureUnitName(measureUnit.getName());
+
+        materialInfo = materialInfoRepository.save(materialInfo);
+        MaterialInfoDTO materialInfoDTO = materialInfoMapper.toDto(materialInfo);
+        BeanUtils.copyProperties(materialInfoDTO, materialInfoDetailDTO);
+        return materialInfoDetailDTO;
     }
 
     @Override
