@@ -4,8 +4,14 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import lombok.Data;
 import me.zhengjie.modules.wms.bd.domain.OutSourceCompanyInfo;
+import org.hibernate.annotations.CreationTimestamp;
 
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -13,8 +19,11 @@ import java.util.List;
  * @date 2019-08-24
  */
 @Data
-public class CreateOutSourceCompanyInfoRequest implements Serializable {
-
+public class UpdateOutSourceCompanyInfoRequest implements Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Long id;
 
     // 委外公司名称
     private String outSourceCompanyName;
@@ -24,6 +33,12 @@ public class CreateOutSourceCompanyInfoRequest implements Serializable {
 
     // 委外公司编号
     private String outSourceCompanyCode;
+
+    // 创建时间
+    private Timestamp createTime;
+
+    // 更新时间
+    private Timestamp updateTime;
 
     // 备注
     private String remark;

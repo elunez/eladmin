@@ -1,6 +1,7 @@
 package me.zhengjie.modules.wms.bd.service.impl;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.modules.wms.bd.domain.CustomerInfo;
 import me.zhengjie.modules.wms.bd.domain.OutSourceCompanyInfo;
@@ -18,7 +19,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -80,7 +84,32 @@ public class OutSourceCompanyInfoServiceImpl implements OutSourceCompanyInfoServ
             }
         };
         Page<OutSourceCompanyInfo> page = outSourceCompanyInfoRepository.findAll(specification, pageable);
-        return PageUtil.toPage(page.map(outSourceCompanyInfoMapper::toDto));
+        Page<OutSourceCompanyInfoDTO> outSourceCompanyInfoDTOPage = page.map(outSourceCompanyInfoMapper::toDto);
+        if(null != outSourceCompanyInfoDTOPage){
+            List<OutSourceCompanyInfoDTO> outSourceCompanyInfoDTOList = outSourceCompanyInfoDTOPage.getContent();
+            if(!CollectionUtils.isEmpty(outSourceCompanyInfoDTOList)){
+                for(OutSourceCompanyInfoDTO outSourceCompanyInfoDTO : outSourceCompanyInfoDTOList){
+                    Long outSourceCompanyInfoDTOId = outSourceCompanyInfoDTO.getId();
+                    Optional<OutSourceCompanyInfo> outSourceCompanyInfoOptional = outSourceCompanyInfoRepository.findById(outSourceCompanyInfoDTOId);
+                    if(null != outSourceCompanyInfoOptional){
+                        OutSourceCompanyInfo outSourceCompanyInfo = outSourceCompanyInfoOptional.get();
+                        if(null != outSourceCompanyInfo){
+                            String outSourceCompanyJsonStr = outSourceCompanyInfo.getOutSourceCompanyContact();
+                            List<OutSourceCompanyContact> outSourceCompanyContactList = new Gson().fromJson(outSourceCompanyJsonStr,new TypeToken<ArrayList<CustomerContact>>() {}.getType());
+                            if(!CollectionUtils.isEmpty(outSourceCompanyContactList)){
+                                for(OutSourceCompanyContact outSourceCompanyContact : outSourceCompanyContactList){
+                                    if(outSourceCompanyContact.getFirstTag() == 1){
+                                        outSourceCompanyInfoDTO.setFirstContactMobile(outSourceCompanyContact.getMobile());
+                                        outSourceCompanyInfoDTO.setFirstContactName(outSourceCompanyContact.getName());
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return PageUtil.toPage(outSourceCompanyInfoDTOPage);
     }
 
     @Override
@@ -119,15 +148,33 @@ public class OutSourceCompanyInfoServiceImpl implements OutSourceCompanyInfoServ
     }
 
     @Override
-    public OutSourceCompanyInfoDTO findById(Long id) {
-        Optional<OutSourceCompanyInfo> bdOutSourceCompanyInfo = outSourceCompanyInfoRepository.findById(id);
-        ValidationUtil.isNull(bdOutSourceCompanyInfo,"OutSourceCompanyInfo","id",id);
-        return outSourceCompanyInfoMapper.toDto(bdOutSourceCompanyInfo.get());
+    public OutSourceCompanyInfoDetailDTO findById(Long id) {
+        OutSourceCompanyInfoDetailDTO outSourceCompanyInfoDetailDTO = new OutSourceCompanyInfoDetailDTO();
+
+        Optional<OutSourceCompanyInfo> outSourceCompanyInfoOptional = outSourceCompanyInfoRepository.findById(id);
+        OutSourceCompanyInfo outSourceCompanyInfo = outSourceCompanyInfoOptional.get();
+        OutSourceCompanyInfoDTO outSourceCompanyInfoDTO = outSourceCompanyInfoMapper.toDto(outSourceCompanyInfo);
+        if(null != outSourceCompanyInfoDTO){
+            BeanUtils.copyProperties( outSourceCompanyInfoDTO, outSourceCompanyInfoDetailDTO);
+            String outSourceCompanyAddressJsonStr = outSourceCompanyInfo.getOutSourceCompanyAddress();
+            if(StringUtils.hasLength(outSourceCompanyAddressJsonStr)){
+                List<OutSourceCompanyAddress> outSourceCompanyAddressList = new Gson().fromJson(outSourceCompanyAddressJsonStr,new TypeToken<ArrayList<OutSourceCompanyAddress>>() {}.getType());
+                outSourceCompanyInfoDetailDTO.setOutSourceCompanyAddress(outSourceCompanyAddressList);
+            }
+
+
+            String outSourceCompanyContactJsonStr = outSourceCompanyInfo.getOutSourceCompanyContact();
+            if(StringUtils.hasLength(outSourceCompanyContactJsonStr)){
+                List<OutSourceCompanyContact> outSourceCompanyContactList = new Gson().fromJson(outSourceCompanyContactJsonStr,new TypeToken<ArrayList<OutSourceCompanyContact>>() {}.getType());
+                outSourceCompanyInfoDetailDTO.setOutSourceCompanyContact(outSourceCompanyContactList);
+            }
+        }
+        return outSourceCompanyInfoDetailDTO;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public OutSourceCompanyInfoDTO create(CreateOutSourceCompanyInfoRequest createOutSourceCompanyInfoRequest) {
+    public OutSourceCompanyInfoDetailDTO create(CreateOutSourceCompanyInfoRequest createOutSourceCompanyInfoRequest) {
         OutSourceCompanyInfoDetailDTO outSourceCompanyInfoDetailDTO = new OutSourceCompanyInfoDetailDTO();
 
         OutSourceCompanyInfo outSourceCompanyInfo = new OutSourceCompanyInfo();
@@ -154,11 +201,48 @@ public class OutSourceCompanyInfoServiceImpl implements OutSourceCompanyInfoServ
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void update(OutSourceCompanyInfo resources) {
-        Optional<OutSourceCompanyInfo> optionalBdOutSourceCompanyInfo = outSourceCompanyInfoRepository.findById(resources.getId());
-        ValidationUtil.isNull( optionalBdOutSourceCompanyInfo,"BdOutSourceCompanyInfo","id",resources.getId());
-        OutSourceCompanyInfo outSourceCompanyInfo = optionalBdOutSourceCompanyInfo.get();
-        outSourceCompanyInfo.copy(resources);
+    public void update(UpdateOutSourceCompanyInfoRequest updateOutSourceCompanyInfoRequest) {
+        Long outSourceCompanyInfoId = updateOutSourceCompanyInfoRequest.getId();
+        if(null == outSourceCompanyInfoId){
+            throw new BadRequestException("委外公司主键不能为空!");
+        }
+
+        // 委外公司资料-客户联系地址修改目标
+        List<OutSourceCompanyAddress> outSourceCompanyInfoAddressListUpdateTarget = updateOutSourceCompanyInfoRequest.getOutSourceCompanyAddress();
+        // 委外公司资料-供应商联系方式修改目标
+        List<OutSourceCompanyContact> outSourceCompanyInfoContactListUpdateTarget = updateOutSourceCompanyInfoRequest.getOutSourceCompanyContact();
+
+        OutSourceCompanyInfo outSourceCompanyInfo = outSourceCompanyInfoRepository.findByIdAndStatusTrue(outSourceCompanyInfoId);
+
+        if(null == outSourceCompanyInfo){
+            throw new BadRequestException("委外公司不存在");
+        }
+
+        Timestamp createTime = outSourceCompanyInfo.getCreateTime();
+
+        // 将需要修改的值复制到数据库对象中
+        BeanUtils.copyProperties(updateOutSourceCompanyInfoRequest, outSourceCompanyInfo);
+
+        // 判断提前获取的供应商联系地址和联系方式是否是空
+        if(CollectionUtils.isEmpty(outSourceCompanyInfoAddressListUpdateTarget)){
+            outSourceCompanyInfo.setOutSourceCompanyAddress(null);
+        }else{
+            String supplierAddressStr = new Gson().toJson(outSourceCompanyInfoAddressListUpdateTarget);
+            outSourceCompanyInfo.setOutSourceCompanyAddress(supplierAddressStr);
+        }
+
+        if(CollectionUtils.isEmpty(outSourceCompanyInfoContactListUpdateTarget)){
+            outSourceCompanyInfo.setOutSourceCompanyContact(null);
+        }else{
+            String supplierContactStr = new Gson().toJson(outSourceCompanyInfoContactListUpdateTarget);
+            outSourceCompanyInfo.setOutSourceCompanyContact(supplierContactStr);
+        }
+
+        outSourceCompanyInfo.setCreateTime(createTime);
+        outSourceCompanyInfo.setStatus(true);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        outSourceCompanyInfo.setUpdateTime(Timestamp.valueOf(sdf.format(new Date())));
+        // 修改委外资料
         outSourceCompanyInfoRepository.save(outSourceCompanyInfo);
     }
 

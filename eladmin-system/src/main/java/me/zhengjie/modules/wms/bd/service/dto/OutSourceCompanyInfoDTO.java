@@ -32,6 +32,14 @@ public class OutSourceCompanyInfoDTO implements Serializable {
     // 备注
     private String remark;
 
+    // 首要联系人姓名
+    private String firstContactName;
+
+    // 首要联系人手机
+    private String firstContactMobile;
+
+    // 首要联系人地址
+    private String firstContactAddress;
 
     private Boolean status;
 }

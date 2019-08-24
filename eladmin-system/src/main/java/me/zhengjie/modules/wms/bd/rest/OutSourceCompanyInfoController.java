@@ -3,6 +3,7 @@ package me.zhengjie.modules.wms.bd.rest;
 import me.zhengjie.aop.log.Log;
 import me.zhengjie.modules.wms.bd.domain.OutSourceCompanyInfo;
 import me.zhengjie.modules.wms.bd.request.CreateOutSourceCompanyInfoRequest;
+import me.zhengjie.modules.wms.bd.request.UpdateOutSourceCompanyInfoRequest;
 import me.zhengjie.modules.wms.bd.service.OutSourceCompanyInfoService;
 import me.zhengjie.modules.wms.bd.service.dto.OutSourceCompanyInfoDTO;
 import me.zhengjie.modules.wms.bd.service.dto.OutSourceCompanyInfoQueryCriteria;
@@ -15,6 +16,9 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.annotations.*;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 /**
 * @author jie
 * @date 2019-08-03
@@ -26,6 +30,16 @@ public class OutSourceCompanyInfoController {
 
     @Autowired
     private OutSourceCompanyInfoService outSourceCompanyInfoService;
+
+    @Log("初始化委外公司编号")
+    @ApiOperation(value = "初始化委外公司编号")
+    @GetMapping(value = "/initOutSourceCompanyCode")
+    @PreAuthorize("hasAnyRole('ADMIN','BDSUPPLIERINFO_ALL','BDSUPPLIERINFO_SELECT')")
+    public ResponseEntity initOutSourceCompanyCode(){
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS");//设置日期格式
+        String supplierCode = "WW"+ LocalDateTime.now().format(fmt);
+        return new ResponseEntity(supplierCode,HttpStatus.OK);
+    }
 
     @Log("分页查询委外公司资料列表")
     @ApiOperation(value = "分页查询委外公司资料列表")
@@ -67,8 +81,8 @@ public class OutSourceCompanyInfoController {
     @ApiOperation(value = "修改委外公司资料")
     @PutMapping(value = "/outSourceCompanyInfo")
     @PreAuthorize("hasAnyRole('ADMIN','BDOUTSOURCECOMPANYINFO_ALL','BDOUTSOURCECOMPANYINFO_EDIT')")
-    public ResponseEntity update(@Validated @RequestBody OutSourceCompanyInfo resources){
-        outSourceCompanyInfoService.update(resources);
+    public ResponseEntity update(@RequestBody UpdateOutSourceCompanyInfoRequest updateOutSourceCompanyInfoRequest){
+        outSourceCompanyInfoService.update(updateOutSourceCompanyInfoRequest);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 

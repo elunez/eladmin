@@ -2,7 +2,9 @@ package me.zhengjie.modules.wms.bd.service;
 
 import me.zhengjie.modules.wms.bd.domain.OutSourceCompanyInfo;
 import me.zhengjie.modules.wms.bd.request.CreateOutSourceCompanyInfoRequest;
+import me.zhengjie.modules.wms.bd.request.UpdateOutSourceCompanyInfoRequest;
 import me.zhengjie.modules.wms.bd.service.dto.OutSourceCompanyInfoDTO;
+import me.zhengjie.modules.wms.bd.service.dto.OutSourceCompanyInfoDetailDTO;
 import me.zhengjie.modules.wms.bd.service.dto.OutSourceCompanyInfoQueryCriteria;
 //import org.springframework.cache.annotation.CacheConfig;
 //import org.springframework.cache.annotation.CacheEvict;
@@ -39,7 +41,7 @@ public interface OutSourceCompanyInfoService {
      * @return
      */
     //@Cacheable(key = "#p0")
-    OutSourceCompanyInfoDTO findById(Long id);
+    OutSourceCompanyInfoDetailDTO findById(Long id);
 
     /**
      * create
@@ -47,14 +49,14 @@ public interface OutSourceCompanyInfoService {
      * @return
      */
     //@CacheEvict(allEntries = true)
-    OutSourceCompanyInfoDTO create(CreateOutSourceCompanyInfoRequest createOutSourceCompanyInfoRequest);
+    OutSourceCompanyInfoDetailDTO create(CreateOutSourceCompanyInfoRequest createOutSourceCompanyInfoRequest);
 
     /**
      * update
-     * @param resources
+     * @param updateOutSourceCompanyInfoRequest
      */
     //@CacheEvict(allEntries = true)
-    void update(OutSourceCompanyInfo resources);
+    void update(UpdateOutSourceCompanyInfoRequest updateOutSourceCompanyInfoRequest);
 
     /**
      * delete
