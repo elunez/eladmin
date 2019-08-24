@@ -95,7 +95,7 @@ public class OutSourceCompanyInfoServiceImpl implements OutSourceCompanyInfoServ
                         OutSourceCompanyInfo outSourceCompanyInfo = outSourceCompanyInfoOptional.get();
                         if(null != outSourceCompanyInfo){
                             String outSourceCompanyJsonStr = outSourceCompanyInfo.getOutSourceCompanyContact();
-                            List<OutSourceCompanyContact> outSourceCompanyContactList = new Gson().fromJson(outSourceCompanyJsonStr,new TypeToken<ArrayList<CustomerContact>>() {}.getType());
+                            List<OutSourceCompanyContact> outSourceCompanyContactList = new Gson().fromJson(outSourceCompanyJsonStr,new TypeToken<ArrayList<OutSourceCompanyContact>>() {}.getType());
                             if(!CollectionUtils.isEmpty(outSourceCompanyContactList)){
                                 for(OutSourceCompanyContact outSourceCompanyContact : outSourceCompanyContactList){
                                     if(outSourceCompanyContact.getFirstTag() == 1){
