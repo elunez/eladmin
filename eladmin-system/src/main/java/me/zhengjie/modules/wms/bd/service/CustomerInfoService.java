@@ -1,7 +1,10 @@
 package me.zhengjie.modules.wms.bd.service;
 
 import me.zhengjie.modules.wms.bd.domain.CustomerInfo;
+import me.zhengjie.modules.wms.bd.request.CreateCustomerInfoRequest;
+import me.zhengjie.modules.wms.bd.request.UpdateCustomerInfoRequest;
 import me.zhengjie.modules.wms.bd.service.dto.CustomerInfoDTO;
+import me.zhengjie.modules.wms.bd.service.dto.CustomerInfoDetailDTO;
 import me.zhengjie.modules.wms.bd.service.dto.CustomerInfoQueryCriteria;
 //import org.springframework.cache.annotation.CacheConfig;
 //import org.springframework.cache.annotation.CacheEvict;
@@ -38,22 +41,22 @@ public interface CustomerInfoService {
      * @return
      */
     //@Cacheable(key = "#p0")
-    CustomerInfoDTO findById(Long id);
+    CustomerInfoDetailDTO findById(Long id);
 
     /**
      * create
-     * @param resources
+     * @param createCustomerInfoRequest
      * @return
      */
     //@CacheEvict(allEntries = true)
-    CustomerInfoDTO create(CustomerInfo resources);
+    CustomerInfoDTO create(CreateCustomerInfoRequest createCustomerInfoRequest);
 
     /**
      * update
-     * @param resources
+     * @param updateCustomerInfoRequest
      */
     //@CacheEvict(allEntries = true)
-    void update(CustomerInfo resources);
+    void update(UpdateCustomerInfoRequest updateCustomerInfoRequest);
 
     /**
      * delete

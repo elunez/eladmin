@@ -2,6 +2,8 @@ package me.zhengjie.modules.wms.bd.rest;
 
 import me.zhengjie.aop.log.Log;
 import me.zhengjie.modules.wms.bd.domain.CustomerInfo;
+import me.zhengjie.modules.wms.bd.request.CreateCustomerInfoRequest;
+import me.zhengjie.modules.wms.bd.request.UpdateCustomerInfoRequest;
 import me.zhengjie.modules.wms.bd.service.CustomerInfoService;
 import me.zhengjie.modules.wms.bd.service.dto.CustomerInfoQueryCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,16 +53,16 @@ public class CustomerInfoController {
     @ApiOperation(value = "新增客户信息")
     @PostMapping(value = "/customerInfo")
     @PreAuthorize("hasAnyRole('ADMIN','BDCUSTOMERINFO_ALL','BDCUSTOMERINFO_CREATE')")
-    public ResponseEntity create(@Validated @RequestBody CustomerInfo resources){
-        return new ResponseEntity(customerInfoService.create(resources),HttpStatus.CREATED);
+    public ResponseEntity create(@RequestBody CreateCustomerInfoRequest createCustomerInfoRequest){
+        return new ResponseEntity(customerInfoService.create(createCustomerInfoRequest),HttpStatus.CREATED);
     }
 
     @Log("修改客户信息")
     @ApiOperation(value = "修改客户信息")
     @PutMapping(value = "/customerInfo/update")
     @PreAuthorize("hasAnyRole('ADMIN','BDCUSTOMERINFO_ALL','BDCUSTOMERINFO_EDIT')")
-    public ResponseEntity update(@Validated @RequestBody CustomerInfo resources){
-        customerInfoService.update(resources);
+    public ResponseEntity update(@RequestBody UpdateCustomerInfoRequest updateCustomerInfoRequest){
+        customerInfoService.update(updateCustomerInfoRequest);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 

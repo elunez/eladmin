@@ -35,9 +35,4 @@ public class CustomerInfoDTO implements Serializable {
     // 状态
     private Boolean status;
 
-    // 客户地址地址数组[{“province”:””,”city”:””,”area”:””,”address_detail”:””,”sort”:””}]
-    private String customerAddress;
-
-    // 客户联系人[{“sort”:””,”name”:””,”mobile”:””,”phone”:””,”email”:””,”qq”:””,”weixin”:””,”firstTag”:””}]firstTag 0:非首要联系人 1:首要联系人
-    private String customerContact;
 }
