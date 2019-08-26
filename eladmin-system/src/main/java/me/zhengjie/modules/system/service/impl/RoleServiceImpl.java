@@ -10,6 +10,7 @@ import me.zhengjie.modules.system.service.dto.RoleQueryCriteria;
 import me.zhengjie.modules.system.service.dto.RoleSmallDTO;
 import me.zhengjie.modules.system.service.mapper.RoleMapper;
 import me.zhengjie.modules.system.service.mapper.RoleSmallMapper;
+import me.zhengjie.utils.FileUtil;
 import me.zhengjie.utils.PageUtil;
 import me.zhengjie.utils.QueryHelp;
 import me.zhengjie.utils.ValidationUtil;
@@ -19,6 +20,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -42,6 +45,11 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public Object queryAll(Pageable pageable) {
         return roleMapper.toDto(roleRepository.findAll(pageable).getContent());
+    }
+
+    @Override
+    public List<RoleDTO> queryAll(RoleQueryCriteria criteria) {
+        return roleMapper.toDto(roleRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder)));
     }
 
     @Override

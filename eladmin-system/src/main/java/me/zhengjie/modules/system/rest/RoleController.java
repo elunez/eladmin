@@ -5,7 +5,6 @@ import me.zhengjie.aop.log.Log;
 import me.zhengjie.modules.system.domain.Role;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.modules.system.service.RoleService;
-import me.zhengjie.modules.system.service.dto.MenuQueryCriteria;
 import me.zhengjie.modules.system.service.dto.RoleQueryCriteria;
 import me.zhengjie.modules.system.service.dto.RoleSmallDTO;
 import me.zhengjie.utils.SecurityUtils;

@@ -9,6 +9,9 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
 
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
+
 /**
  * @author Zheng Jie
  * @date 2018-11-23
@@ -80,4 +83,9 @@ public interface UserService {
 
     @Cacheable(keyGenerator = "keyGenerator")
     Object queryAll(UserQueryCriteria criteria, Pageable pageable);
+
+    @Cacheable(keyGenerator = "keyGenerator")
+    List<UserDTO> queryAll(UserQueryCriteria criteria);
+
+    void download(List<UserDTO> queryAll, HttpServletResponse response);
 }

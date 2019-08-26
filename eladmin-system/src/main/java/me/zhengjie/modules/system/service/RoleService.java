@@ -10,6 +10,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Set;
 
@@ -86,6 +87,7 @@ public interface RoleService {
      * @param pageable
      * @return
      */
+    @Cacheable(keyGenerator = "keyGenerator")
     Object queryAll(Pageable pageable);
 
     /**
@@ -94,5 +96,14 @@ public interface RoleService {
      * @param criteria
      * @return
      */
+    @Cacheable(keyGenerator = "keyGenerator")
     Object queryAll(RoleQueryCriteria criteria, Pageable pageable);
+
+    /**
+     * queryAll
+     * @param criteria
+     * @return
+     */
+    @Cacheable(keyGenerator = "keyGenerator")
+    List<RoleDTO> queryAll(RoleQueryCriteria criteria);
 }

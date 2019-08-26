@@ -155,6 +155,11 @@
             <artifactId>ip2region</artifactId>
             <version>1.7.2</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>3.17</version>
+        </dependency>
 
         <!-- fastjson -->
         <dependency>

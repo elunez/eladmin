@@ -1,10 +1,17 @@
 package me.zhengjie.utils;
 
+import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.poi.excel.ExcelUtil;
+import cn.hutool.poi.excel.ExcelWriter;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.text.DecimalFormat;
+import java.util.List;
+import java.util.Map;
 
 /**
  * File工具类，扩展 hutool 工具包
@@ -138,5 +145,33 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
         os.close();
         ins.close();
         return file;
+    }
+
+    /**
+     * 导出excel
+     * @param list
+     * @return
+     * @throws Exception
+     */
+    public static void downloadExcel(List<Map<String, Object>> list, HttpServletResponse response){
+        // 通过工具类创建writer
+        ExcelWriter writer = ExcelUtil.getWriter();
+        // 一次性写出内容，使用默认样式，强制输出标题
+        writer.write(list, true);
+        //response为HttpServletResponse对象
+        response.setContentType("application/vnd.ms-excel;charset=utf-8");
+        //test.xls是弹出下载对话框的文件名，不能为中文，中文请自行编码
+        response.setHeader("Content-Disposition","attachment;filename=file.xls");
+        ServletOutputStream out= null;
+        try {
+            out = response.getOutputStream();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        writer.flush(out, true);
+        // 关闭writer，释放内存
+        writer.close();
+        //此处记得关闭输出Servlet流
+        IoUtil.close(out);
     }
 }
