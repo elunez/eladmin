@@ -40,9 +40,9 @@ public class UpdateProductInfoRequest implements Serializable {
     private Long unitPrice;
 
     // 产品库存预警
-    private List<ProductInventoryWarning> productInventoryWarningList;
+    private List<ProductInventoryWarning> productInventoryWarning;
 
     // 产品期初设置
-    private List<ProductInitialSetup> productInitialSetupList;
+    private List<ProductInitialSetup> productInitialSetup;
 
 }

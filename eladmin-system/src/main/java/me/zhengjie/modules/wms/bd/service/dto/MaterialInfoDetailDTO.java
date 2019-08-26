@@ -13,10 +13,10 @@ import java.util.List;
 * @date 2019-08-03
 */
 @Data
-public class MaterialInfoDetailDTO extends ProductInfoDTO implements Serializable {
+public class MaterialInfoDetailDTO extends MaterialInfoDTO implements Serializable {
 
-    private List<MaterialInventoryWarning> materialInventoryWarningList;
+    private List<MaterialInventoryWarning> materialInventoryWarning;
 
-    private List<MaterialInitialSetup> materialInitialSetupList;
+    private List<MaterialInitialSetup> materialInitialSetup;
 
 }

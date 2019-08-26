@@ -3,6 +3,7 @@ package me.zhengjie.modules.wms.bd.rest;
 import me.zhengjie.aop.log.Log;
 import me.zhengjie.modules.wms.bd.domain.MaterialInfo;
 import me.zhengjie.modules.wms.bd.request.CreateMaterialInfoRequest;
+import me.zhengjie.modules.wms.bd.request.UpdateMaterialInfoRequest;
 import me.zhengjie.modules.wms.bd.service.MaterialInfoService;
 import me.zhengjie.modules.wms.bd.service.dto.MaterialInfoQueryCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,8 +63,8 @@ public class MaterialInfoController {
     @Log("修改物料资料")
     @ApiOperation(value = "修改物料资料")
     @PutMapping(value = "/materialInfo/update")
-    public ResponseEntity update(@Validated @RequestBody MaterialInfo resources){
-        materialInfoService.update(resources);
+    public ResponseEntity update(@RequestBody UpdateMaterialInfoRequest updateMaterialInfoRequest){
+        materialInfoService.update(updateMaterialInfoRequest);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 

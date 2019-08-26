@@ -157,13 +157,13 @@ public class ProductInfoServiceImpl implements ProductInfoService {
         ProductInfo productInfo = new ProductInfo();
         BeanUtils.copyProperties(createProductInfoRequest, productInfo);
         productInfo.setStatus(true);
-        List<ProductInventoryWarning> productInventoryWarningList = createProductInfoRequest.getProductInventoryWarningList();
+        List<ProductInventoryWarning> productInventoryWarningList = createProductInfoRequest.getProductInventoryWarning();
         if(!CollectionUtils.isEmpty(productInventoryWarningList)){
             String productInventoryWarningStr = new Gson().toJson(productInventoryWarningList);
             productInfo.setProductInventoryWarning(productInventoryWarningStr);
             productInfoDetailDTO.setProductInventoryWarningList(productInventoryWarningList);
         }
-        List<ProductInitialSetup> productInitialSetupList = createProductInfoRequest.getProductInitialSetupList();
+        List<ProductInitialSetup> productInitialSetupList = createProductInfoRequest.getProductInitialSetup();
         if(!CollectionUtils.isEmpty(productInitialSetupList)){
             String productInitialSetupStr = new Gson().toJson(productInitialSetupList);
             productInfo.setProductInitialSetup(productInitialSetupStr);
@@ -211,9 +211,9 @@ public class ProductInfoServiceImpl implements ProductInfoService {
 
 
         // 产品资料-仓库预警修改目标
-        List<ProductInventoryWarning> productInventoryWarningListTarget = updateProductInfoRequest.getProductInventoryWarningList();
+        List<ProductInventoryWarning> productInventoryWarningListTarget = updateProductInfoRequest.getProductInventoryWarning();
         // 产品资料-期初设置修改目标
-        List<ProductInitialSetup> productInitialSetupListTarget = updateProductInfoRequest.getProductInitialSetupList();
+        List<ProductInitialSetup> productInitialSetupListTarget = updateProductInfoRequest.getProductInitialSetup();
 
         ProductInfo productInfo = productInfoRepository.findByIdAndStatusTrue(productInfoId);
 

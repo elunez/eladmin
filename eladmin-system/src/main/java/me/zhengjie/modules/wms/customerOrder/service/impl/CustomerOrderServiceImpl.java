@@ -69,7 +69,16 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
     public CustomerOrderDTO findById(Long id) {
         Optional<CustomerOrder> sCustomerOrder = customerOrderRepository.findById(id);
         ValidationUtil.isNull(sCustomerOrder,"SCustomerOrder","id",id);
-        return customerOrderMapper.toDto(sCustomerOrder.get());
+        CustomerOrder customerOrder = sCustomerOrder.get();
+        if(null == customerOrder){
+            throw new BadRequestException("客户订单不存在!");
+        }
+        CustomerOrderDTO customerOrderDTO = customerOrderMapper.toDto(customerOrder);
+
+        List<CustomerOrderProduct> customerOrderProductList = customerOrderProductRepository.findByCustomerOrderIdAndStatusTrue(customerOrder.getId());
+        List<CustomerOrderProductDTO> customerOrderProductDTOList = customerOrderProductMapper.toDto(customerOrderProductList);
+        customerOrderDTO.setCustomerOrderProductList(customerOrderProductDTOList);
+        return customerOrderDTO;
     }
 
     @Override

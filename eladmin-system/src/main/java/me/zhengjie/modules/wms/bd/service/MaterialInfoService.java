@@ -2,6 +2,7 @@ package me.zhengjie.modules.wms.bd.service;
 
 import me.zhengjie.modules.wms.bd.domain.MaterialInfo;
 import me.zhengjie.modules.wms.bd.request.CreateMaterialInfoRequest;
+import me.zhengjie.modules.wms.bd.request.UpdateMaterialInfoRequest;
 import me.zhengjie.modules.wms.bd.service.dto.MaterialInfoDTO;
 import me.zhengjie.modules.wms.bd.service.dto.MaterialInfoDetailDTO;
 import me.zhengjie.modules.wms.bd.service.dto.MaterialInfoQueryCriteria;
@@ -52,10 +53,10 @@ public interface MaterialInfoService {
 
     /**
      * update
-     * @param resources
+     * @param updateMaterialInfoRequest
      */
     //@CacheEvict(allEntries = true)
-    void update(MaterialInfo resources);
+    void update(UpdateMaterialInfoRequest updateMaterialInfoRequest);
 
     /**
      * delete

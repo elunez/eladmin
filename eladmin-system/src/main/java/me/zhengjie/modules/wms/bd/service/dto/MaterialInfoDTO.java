@@ -24,6 +24,9 @@ public class MaterialInfoDTO implements Serializable {
     // 物料名称
     private String name;
 
+    // 物料编码
+    private String materialCode;
+
     // 物料规格
     private String specifications;
 
@@ -33,14 +36,7 @@ public class MaterialInfoDTO implements Serializable {
     // 所属计量单位名称
     private String measureUnitName;
 
-    // 产品库存预警[{“sort”:””,”ware_house_code”:””,”ware_house_name”:””,”minimum_inventory”:””,”highest_inventory”:””}]
-    private String materialInventoryWarning;
-
-    // 产品期初设置[{“sort”:””,”ware_house_code”:””,”ware_house_name”:””,“initial_setup_numer”:””,“initial_setup_total_price”:””}]
-    private String materialInitialSetup;
-
     // 物料期初合计期初总价格
-
     private Long materialInitialSetupTotalPrice;
 
     // 物料期初合计总数量

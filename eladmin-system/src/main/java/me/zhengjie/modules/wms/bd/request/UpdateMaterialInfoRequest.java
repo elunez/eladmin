@@ -13,7 +13,10 @@ import java.util.List;
  * @date 2019-08-24
  */
 @Data
-public class CreateMaterialInfoRequest implements Serializable {
+public class UpdateMaterialInfoRequest implements Serializable {
+
+    private Long id;
+
     // 所属物料分类主键
     private Long materialCategoryId;
 

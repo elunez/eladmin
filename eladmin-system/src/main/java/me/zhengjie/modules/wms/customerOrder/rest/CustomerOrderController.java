@@ -69,4 +69,10 @@ public class CustomerOrderController {
         String supplierCode = "DD"+ LocalDateTime.now().format(fmt);
         return new ResponseEntity(supplierCode,HttpStatus.OK);
     }
+
+    @Log("查看客户订单详情")
+    @GetMapping(value = "/customerOrder/{id}")
+    public ResponseEntity getCustomerOrderInfo(@PathVariable Long id){
+        return new ResponseEntity(customerOrderService.findById(id), HttpStatus.OK);
+    }
 }
