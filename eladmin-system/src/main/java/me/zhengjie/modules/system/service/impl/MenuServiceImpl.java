@@ -92,6 +92,8 @@ public class MenuServiceImpl implements MenuService {
         menu.setIFrame(resources.getIFrame());
         menu.setPid(resources.getPid());
         menu.setSort(resources.getSort());
+        menu.setCache(resources.getCache());
+        menu.setHidden(resources.getHidden());
         menuRepository.save(menu);
     }
 
@@ -158,6 +160,7 @@ public class MenuServiceImpl implements MenuService {
                 MenuVo menuVo = new MenuVo();
                 menuVo.setName(menuDTO.getName());
                 menuVo.setPath(menuDTO.getPath());
+                menuVo.setHidden(menuDTO.getHidden());
 
                 // 如果不是外链
                 if(!menuDTO.getIFrame()){
@@ -169,7 +172,7 @@ public class MenuServiceImpl implements MenuService {
                         menuVo.setComponent(menuDTO.getComponent());
                     }
                 }
-                menuVo.setMeta(new MenuMetaVo(menuDTO.getName(),menuDTO.getIcon()));
+                menuVo.setMeta(new MenuMetaVo(menuDTO.getName(),menuDTO.getIcon(),!menuDTO.getCache()));
                 if(menuDTOList!=null && menuDTOList.size()!=0){
                     menuVo.setAlwaysShow(true);
                     menuVo.setRedirect("noredirect");

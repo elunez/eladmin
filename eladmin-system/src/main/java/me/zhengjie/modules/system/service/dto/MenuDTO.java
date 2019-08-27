@@ -27,6 +27,10 @@ public class MenuDTO {
 
     private Boolean iFrame;
 
+    private Boolean cache;
+
+    private Boolean hidden;
+
     private String icon;
 
     private List<MenuDTO> children;
