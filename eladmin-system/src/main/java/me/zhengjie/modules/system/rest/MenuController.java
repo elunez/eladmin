@@ -16,7 +16,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author Zheng Jie
@@ -90,14 +92,10 @@ public class MenuController {
     @PreAuthorize("hasAnyRole('ADMIN','MENU_ALL','MENU_DELETE')")
     public ResponseEntity delete(@PathVariable Long id){
         List<Menu> menuList = menuService.findByPid(id);
-
-        // 特殊情况，对级联删除进行处理
-        for (Menu menu : menuList) {
-            roleService.untiedMenu(menu);
-            menuService.delete(menu.getId());
-        }
-        roleService.untiedMenu(menuService.findOne(id));
-        menuService.delete(id);
+        Set<Menu> menuSet = new HashSet<>();
+        menuSet.add(menuService.findOne(id));
+        menuSet = menuService.getDeleteMenus(menuList, menuSet);
+        menuService.delete(menuSet);
         return new ResponseEntity(HttpStatus.OK);
     }
 }

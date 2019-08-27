@@ -10,6 +10,7 @@ import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.exception.EntityExistException;
 import me.zhengjie.modules.system.repository.MenuRepository;
 import me.zhengjie.modules.system.service.MenuService;
+import me.zhengjie.modules.system.service.RoleService;
 import me.zhengjie.modules.system.service.dto.MenuDTO;
 import me.zhengjie.modules.system.service.dto.MenuQueryCriteria;
 import me.zhengjie.modules.system.service.dto.RoleSmallDTO;
@@ -33,6 +34,9 @@ public class MenuServiceImpl implements MenuService {
 
     @Autowired
     private MenuMapper menuMapper;
+
+    @Autowired
+    private RoleService roleService;
 
     @Override
     public List queryAll(MenuQueryCriteria criteria){
@@ -114,8 +118,25 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
-    public void delete(Long id) {
-        menuRepository.deleteById(id);
+    public Set<Menu> getDeleteMenus(List<Menu> menuList, Set<Menu> menuSet) {
+        // 递归找出待删除的菜单
+        for (Menu menu1 : menuList) {
+            menuSet.add(menu1);
+            List<Menu> menus = menuRepository.findByPid(menu1.getId());
+            if(menus!=null && menus.size()!=0){
+                getDeleteMenus(menus, menuSet);
+            }
+        }
+        return menuSet;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void delete(Set<Menu> menuSet) {
+        for (Menu menu : menuSet) {
+            roleService.untiedMenu(menu);
+            menuRepository.deleteById(menu.getId());
+        }
     }
 
     @Override
