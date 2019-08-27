@@ -31,6 +31,8 @@ public class MenuDTO {
 
     private Boolean hidden;
 
+    private String componentName;
+
     private String icon;
 
     private List<MenuDTO> children;

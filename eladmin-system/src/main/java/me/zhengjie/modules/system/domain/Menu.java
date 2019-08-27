@@ -40,6 +40,9 @@ public class Menu implements Serializable {
 
     private String component;
 
+    @Column(unique = true)
+    private String componentName;
+
     private String icon;
 
     @Column(columnDefinition = "bit(1) default 0")

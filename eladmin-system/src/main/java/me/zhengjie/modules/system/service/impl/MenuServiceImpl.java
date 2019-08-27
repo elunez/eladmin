@@ -1,5 +1,7 @@
 package me.zhengjie.modules.system.service.impl;
 
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import me.zhengjie.modules.system.domain.Menu;
 import me.zhengjie.modules.system.domain.vo.MenuMetaVo;
@@ -13,6 +15,7 @@ import me.zhengjie.modules.system.service.dto.MenuQueryCriteria;
 import me.zhengjie.modules.system.service.dto.RoleSmallDTO;
 import me.zhengjie.modules.system.service.mapper.MenuMapper;
 import me.zhengjie.utils.QueryHelp;
+import me.zhengjie.utils.StringUtils;
 import me.zhengjie.utils.ValidationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -58,6 +61,11 @@ public class MenuServiceImpl implements MenuService {
         if(menuRepository.findByName(resources.getName()) != null){
             throw new EntityExistException(Menu.class,"name",resources.getName());
         }
+        if(StringUtils.isNotBlank(resources.getComponentName())){
+            if(menuRepository.findByComponentName(resources.getComponentName()) != null){
+                throw new EntityExistException(Menu.class,"componentName",resources.getComponentName());
+            }
+        }
         if(resources.getIFrame()){
             if (!(resources.getPath().toLowerCase().startsWith("http://")||resources.getPath().toLowerCase().startsWith("https://"))) {
                 throw new BadRequestException("外链必须以http://或者https://开头");
@@ -85,6 +93,13 @@ public class MenuServiceImpl implements MenuService {
         if(menu1 != null && !menu1.getId().equals(menu.getId())){
             throw new EntityExistException(Menu.class,"name",resources.getName());
         }
+
+        if(StringUtils.isNotBlank(resources.getComponentName())){
+            menu1 = menuRepository.findByComponentName(resources.getComponentName());
+            if(menu1 != null && !menu1.getId().equals(menu.getId())){
+                throw new EntityExistException(Menu.class,"componentName",resources.getComponentName());
+            }
+        }
         menu.setName(resources.getName());
         menu.setComponent(resources.getComponent());
         menu.setPath(resources.getPath());
@@ -94,6 +109,7 @@ public class MenuServiceImpl implements MenuService {
         menu.setSort(resources.getSort());
         menu.setCache(resources.getCache());
         menu.setHidden(resources.getHidden());
+        menu.setComponentName(resources.getComponentName());
         menuRepository.save(menu);
     }
 
@@ -158,7 +174,7 @@ public class MenuServiceImpl implements MenuService {
             if (menuDTO!=null){
                 List<MenuDTO> menuDTOList = menuDTO.getChildren();
                 MenuVo menuVo = new MenuVo();
-                menuVo.setName(menuDTO.getName());
+                menuVo.setName(ObjectUtil.isNotEmpty(menuDTO.getComponentName()) ? menuDTO.getComponentName() : RandomUtil.randomString(5));
                 menuVo.setPath(menuDTO.getPath());
                 menuVo.setHidden(menuDTO.getHidden());
 
