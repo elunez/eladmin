@@ -1,5 +1,8 @@
 package me.zhengjie.utils;
 
+import me.zhengjie.exception.BadRequestException;
+import org.hibernate.exception.ConstraintViolationException;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
@@ -24,5 +27,16 @@ public class ThrowableUtil {
         } finally {
             pw.close();
         }
+    }
+
+    public static void throwForeignKeyException(Throwable e, String msg){
+        Throwable t = e.getCause();
+        while ((t != null) && !(t instanceof ConstraintViolationException)) {
+            t = t.getCause();
+        }
+        if (t instanceof ConstraintViolationException) {
+            throw new BadRequestException(msg);
+        }
+        throw new BadRequestException("删除失败：" + t.getMessage());
     }
 }

@@ -1,6 +1,5 @@
 package me.zhengjie.modules.system.service.impl;
 
-import me.zhengjie.modules.system.domain.Menu;
 import me.zhengjie.modules.system.domain.Role;
 import me.zhengjie.exception.EntityExistException;
 import me.zhengjie.modules.system.repository.RoleRepository;
@@ -10,7 +9,6 @@ import me.zhengjie.modules.system.service.dto.RoleQueryCriteria;
 import me.zhengjie.modules.system.service.dto.RoleSmallDTO;
 import me.zhengjie.modules.system.service.mapper.RoleMapper;
 import me.zhengjie.modules.system.service.mapper.RoleSmallMapper;
-import me.zhengjie.utils.FileUtil;
 import me.zhengjie.utils.PageUtil;
 import me.zhengjie.utils.QueryHelp;
 import me.zhengjie.utils.ValidationUtil;
@@ -20,8 +18,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -112,13 +108,15 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public void untiedMenu(Menu menu) {
-        Set<Role> roles = roleRepository.findByMenus_Id(menu.getId());
-        for (Role role : roles) {
-            menu.getRoles().remove(role);
-            role.getMenus().remove(menu);
-            roleRepository.save(role);
-        }
+    @Transactional(rollbackFor = Exception.class)
+    public void untiedMenu(Long id) {
+        roleRepository.untiedMenu(id);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void untiedPermission(Long id) {
+        roleRepository.untiedPermission(id);
     }
 
     @Override

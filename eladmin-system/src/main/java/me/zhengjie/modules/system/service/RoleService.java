@@ -1,6 +1,5 @@
 package me.zhengjie.modules.system.service;
 
-import me.zhengjie.modules.system.domain.Menu;
 import me.zhengjie.modules.system.domain.Role;
 import me.zhengjie.modules.system.service.dto.RoleDTO;
 import me.zhengjie.modules.system.service.dto.RoleQueryCriteria;
@@ -10,7 +9,6 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Set;
 
@@ -80,7 +78,7 @@ public interface RoleService {
     void updateMenu(Role resources, RoleDTO roleDTO);
 
     @CacheEvict(allEntries = true)
-    void untiedMenu(Menu menu);
+    void untiedMenu(Long id);
 
     /**
      * queryAll
@@ -106,4 +104,7 @@ public interface RoleService {
      */
     @Cacheable(keyGenerator = "keyGenerator")
     List<RoleDTO> queryAll(RoleQueryCriteria criteria);
+
+    @CacheEvict(allEntries = true)
+    void untiedPermission(Long id);
 }

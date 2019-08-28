@@ -7,6 +7,7 @@ import me.zhengjie.modules.system.domain.Dept;
 import me.zhengjie.modules.system.service.DeptService;
 import me.zhengjie.modules.system.service.dto.DeptDTO;
 import me.zhengjie.modules.system.service.dto.DeptQueryCriteria;
+import me.zhengjie.utils.ThrowableUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -63,7 +64,11 @@ public class DeptController {
     @DeleteMapping(value = "/dept/{id}")
     @PreAuthorize("hasAnyRole('ADMIN','DEPT_ALL','DEPT_DELETE')")
     public ResponseEntity delete(@PathVariable Long id){
-        deptService.delete(id);
+        try {
+            deptService.delete(id);
+        }catch (Throwable e){
+            ThrowableUtil.throwForeignKeyException(e, "该部门存在岗位或者角色关联，请取消关联后再试");
+        }
         return new ResponseEntity(HttpStatus.OK);
     }
 }

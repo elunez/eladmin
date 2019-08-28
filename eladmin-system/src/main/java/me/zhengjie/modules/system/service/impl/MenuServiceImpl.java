@@ -134,7 +134,7 @@ public class MenuServiceImpl implements MenuService {
     @Transactional(rollbackFor = Exception.class)
     public void delete(Set<Menu> menuSet) {
         for (Menu menu : menuSet) {
-            roleService.untiedMenu(menu);
+            roleService.untiedMenu(menu.getId());
             menuRepository.deleteById(menu.getId());
         }
     }
