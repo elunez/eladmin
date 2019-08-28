@@ -10,6 +10,7 @@ import me.zhengjie.service.mapper.LogErrorMapper;
 import me.zhengjie.service.mapper.LogSmallMapper;
 import me.zhengjie.utils.PageUtil;
 import me.zhengjie.utils.QueryHelp;
+import me.zhengjie.utils.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,6 +93,7 @@ public class LogServiceImpl implements LogService {
                 e.printStackTrace();
             }
         }
+        log.setAddress(StringUtils.getCityInfo(log.getRequestIp()));
         log.setMethod(methodName);
         log.setUsername(username);
         log.setParams(params + " }");

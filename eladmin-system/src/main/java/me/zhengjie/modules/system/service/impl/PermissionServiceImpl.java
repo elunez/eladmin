@@ -5,8 +5,8 @@ import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.exception.EntityExistException;
 import me.zhengjie.modules.system.repository.PermissionRepository;
 import me.zhengjie.modules.system.service.PermissionService;
-import me.zhengjie.modules.system.service.dto.CommonQueryCriteria;
 import me.zhengjie.modules.system.service.dto.PermissionDTO;
+import me.zhengjie.modules.system.service.dto.PermissionQueryCriteria;
 import me.zhengjie.modules.system.service.mapper.PermissionMapper;
 import me.zhengjie.utils.QueryHelp;
 import me.zhengjie.utils.ValidationUtil;
@@ -31,7 +31,7 @@ public class PermissionServiceImpl implements PermissionService {
     private PermissionMapper permissionMapper;
 
     @Override
-    public List<PermissionDTO> queryAll(CommonQueryCriteria criteria) {
+    public List<PermissionDTO> queryAll(PermissionQueryCriteria criteria) {
         return permissionMapper.toDto(permissionRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder)));
     }
 

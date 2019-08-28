@@ -30,6 +30,12 @@ public @interface Query {
      */
     Join join() default Join.LEFT;
 
+    /**
+     * 多字段模糊搜索，仅支持String类型字段，多个用逗号隔开, 如@Query(blurry = "email,username")
+     * @return
+     */
+    String blurry() default "";
+
     enum Type {
         /** jie 2019/6/4 相等 */
         EQUAL

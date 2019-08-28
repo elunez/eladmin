@@ -1,8 +1,6 @@
 package me.zhengjie.utils;
 
-import com.qiniu.common.Zone;
-import com.qiniu.storage.Configuration;
-
+import com.qiniu.storage.Region;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -26,20 +24,19 @@ public class QiNiuUtil {
      * @param zone
      * @return
      */
-    public static Configuration getConfiguration(String zone){
+    public static Region getRegion(String zone){
 
         if(HUAD.equals(zone)){
-            return new Configuration(Zone.zone0());
+            return Region.huadong();
         } else if(HUAB.equals(zone)){
-            return new Configuration(Zone.zone1());
+            return Region.huabei();
         } else if(HUAN.equals(zone)){
-            return new Configuration(Zone.zone2());
+            return Region.huanan();
         } else if (BEIM.equals(zone)){
-            return new Configuration(Zone.zoneNa0());
-
+            return Region.beimei();
             // 否则就是东南亚
         } else {
-            return new Configuration(Zone.zoneAs0());
+            return Region.qvmHuadong();
         }
     }
 

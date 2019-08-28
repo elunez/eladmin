@@ -48,8 +48,6 @@ public class RedisServiceImpl implements RedisService {
         return page;
     }
 
-
-
     @Override
     public void delete(String key) {
         redisTemplate.delete(key);
