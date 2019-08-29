@@ -39,7 +39,7 @@ public class InvoiceDTO implements Serializable {
     private String saleInvoiceCode;
 
     // 状态
-    private Integer status;
+    private Boolean status;
 
     // 备注
     private String remark;

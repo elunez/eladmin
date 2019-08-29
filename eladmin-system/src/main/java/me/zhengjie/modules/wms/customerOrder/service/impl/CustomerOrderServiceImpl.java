@@ -1,6 +1,9 @@
 package me.zhengjie.modules.wms.customerOrder.service.impl;
 
 import me.zhengjie.exception.BadRequestException;
+import me.zhengjie.modules.wms.bd.domain.CustomerInfo;
+import me.zhengjie.modules.wms.bd.repository.CustomerInfoRepository;
+import me.zhengjie.modules.wms.bd.service.mapper.CustomerInfoMapper;
 import me.zhengjie.modules.wms.customerOrder.domain.CustomerOrderProduct;
 import me.zhengjie.modules.wms.customerOrder.repository.CustomerOrderRepository;
 import me.zhengjie.modules.wms.customerOrder.request.UpdateCustomerOrderRequest;
@@ -54,6 +57,12 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
     @Autowired
     private CustomerOrderProductMapper customerOrderProductMapper;
 
+    @Autowired
+    private CustomerInfoMapper customerInfoMapper;
+
+    @Autowired
+    private CustomerInfoRepository customerInfoRepository;
+
     @Override
     public Object queryAll(CustomerOrderQueryCriteria criteria, Pageable pageable){
         Page<CustomerOrder> page = customerOrderRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable);
@@ -84,18 +93,33 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public CustomerOrderDTO create(CreateCustomerOrderRequest createCustomerOrderRequest) {
-        CustomerOrder customerOrder = new CustomerOrder();
-        BeanUtils.copyProperties(createCustomerOrderRequest, customerOrder);
-        customerOrder.setStatus(true);
-        //插入客户订单
-        customerOrderRepository.save(customerOrder);
-        customerOrder= customerOrderRepository.findByCustomerOrderCodeAndStatusTrue(createCustomerOrderRequest.getCustomerOrderCode());
-
         //插入客户订单对应的产品信息
         List<CustomerOrderProductRequest> customerOrderProductRequestList = createCustomerOrderRequest.getCustomerOrderProductList();
         if(CollectionUtils.isEmpty(customerOrderProductRequestList)){
             throw new BadRequestException("订单产品不能为空!");
         }
+
+        CustomerOrder customerOrder = new CustomerOrder();
+        BeanUtils.copyProperties(createCustomerOrderRequest, customerOrder);
+        customerOrder.setStatus(true);
+
+
+        Long customerId = createCustomerOrderRequest.getCustomerId();
+        if(null == customerId){
+            throw new BadRequestException("客户不能为空!");
+        }
+
+        Optional<CustomerInfo> customerInfoOptional = customerInfoRepository.findById(customerId);
+        if(null == customerInfoOptional || null == customerInfoOptional.get()){
+            throw new BadRequestException("客户不存在!");
+        }
+        CustomerInfo customerInfo = customerInfoOptional.get();
+
+        customerOrder.setCustomerName(customerInfo.getCustomerName());
+
+        //插入客户订单
+        customerOrderRepository.save(customerOrder);
+        customerOrder= customerOrderRepository.findByCustomerOrderCodeAndStatusTrue(createCustomerOrderRequest.getCustomerOrderCode());
 
         List<CustomerOrderProduct> customerOrderProductList = new ArrayList<>();
         for(CustomerOrderProductRequest customerOrderProductRequest : customerOrderProductRequestList){

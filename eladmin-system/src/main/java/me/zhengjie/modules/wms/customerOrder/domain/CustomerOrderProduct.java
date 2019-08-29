@@ -30,7 +30,7 @@ public class CustomerOrderProduct implements Serializable {
 
     // 产品名称
     @Column(name = "product_name")
-    private Long productName;
+    private String productName;
 
     // 规格
     @Column(name = "specifications")

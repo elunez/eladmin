@@ -21,7 +21,7 @@ public class InvoiceProductDTO implements Serializable {
     private Timestamp updateStatus;
 
     // 状态
-    private Integer status;
+    private Boolean status;
 
     // 产品主键
     private Long productId;

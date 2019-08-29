@@ -3,10 +3,14 @@ package me.zhengjie.modules.wms.invoice.service.impl;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.modules.wms.bd.domain.CustomerInfo;
 import me.zhengjie.modules.wms.bd.repository.CustomerInfoRepository;
+import me.zhengjie.modules.wms.customerOrder.domain.CustomerOrder;
+import me.zhengjie.modules.wms.customerOrder.domain.CustomerOrderProduct;
+import me.zhengjie.modules.wms.customerOrder.service.dto.CustomerOrderProductDTO;
 import me.zhengjie.modules.wms.invoice.domain.Invoice;
 import me.zhengjie.modules.wms.invoice.domain.InvoiceProduct;
 import me.zhengjie.modules.wms.invoice.repository.InvoiceProductRepository;
 import me.zhengjie.modules.wms.invoice.request.CreateInvoiceRequest;
+import me.zhengjie.modules.wms.invoice.request.UpdateInvoiceRequest;
 import me.zhengjie.modules.wms.invoice.service.dto.InvoiceDetailDTO;
 import me.zhengjie.modules.wms.invoice.service.dto.InvoiceProductDTO;
 import me.zhengjie.modules.wms.invoice.service.mapper.InvoiceProductMapper;
@@ -22,8 +26,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import me.zhengjie.utils.PageUtil;
@@ -141,17 +150,63 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void update(Invoice resources) {
-        Optional<Invoice> optionalSInvoice = invoiceRepository.findById(resources.getId());
-        ValidationUtil.isNull( optionalSInvoice,"SInvoice","id",resources.getId());
-        Invoice invoice = optionalSInvoice.get();
-        invoice.copy(resources);
+    public void update(UpdateInvoiceRequest updateInvoiceRequest) {
+        Invoice invoice = new Invoice();
+        BeanUtils.copyProperties(updateInvoiceRequest, invoice);
+        // 修改发货单概要信息
         invoiceRepository.save(invoice);
+
+        // 修改产品信息之前，查询该订单中原来的产品信息，key为产品code
+        List<InvoiceProduct> invoiceProductListBeforeUpdate = invoiceProductRepository.findByInvoiceIdAndStatusTrue(invoice.getId());
+        Map<String, InvoiceProduct> invoiceProductMapBefore = invoiceProductListBeforeUpdate.stream().collect(Collectors.toMap(InvoiceProduct::getProductCode, Function.identity()));
+
+        List<InvoiceProductDTO> invoiceProductRequestList = updateInvoiceRequest.getInvoiceProductList();
+        if(CollectionUtils.isEmpty(invoiceProductRequestList)){
+            throw new BadRequestException("发货单产品不能为空!");
+        }
+
+        Map<String, InvoiceProductDTO> invoiceProductMapAfter = invoiceProductRequestList.stream().collect(Collectors.toMap(InvoiceProductDTO::getProductCode, Function.identity()));
+
+        //需要将订单中原来订单对应的产品删除了的数据
+        List<String> deleteTargetList = new ArrayList<>();
+        //比较量个map中，key不一样的数据
+        for(Map.Entry<String, InvoiceProduct> entry:invoiceProductMapBefore.entrySet()){
+            String productCode = entry.getKey();
+            //修改后的map记录对应的key在原来中是否存在
+            InvoiceProductDTO invoiceProductDTOTemp = invoiceProductMapAfter.get(productCode);
+            if(null == invoiceProductDTOTemp){
+                deleteTargetList.add(entry.getKey());
+            }
+
+        }
+
+
+        List<InvoiceProduct> invoiceProductList = new ArrayList<>();
+        for(InvoiceProductDTO invoiceProductDTO : invoiceProductRequestList){
+            InvoiceProduct invoiceProduct = new InvoiceProduct();
+            BeanUtils.copyProperties(invoiceProductDTO, invoiceProduct);
+            invoiceProduct.setInvoiceId(invoice.getId());
+            invoiceProduct.setStatus(true);
+        }
+        invoiceProductRepository.saveAll(invoiceProductList);
+
+        /**
+         * 场景描述:
+         * 1.刚开始新增了 a b c三种产品
+         * 2.修改的时候删除了 a c两种产品
+         * 3.所以需要查修改前数据库中有的产品，再比较修改传过来的产品数据，如果修改后的在原来里面没有，需要将原来里面对应的删除
+         */
+        if(!CollectionUtils.isEmpty(deleteTargetList)){
+            for(String prductCode : deleteTargetList){
+                invoiceProductRepository.deleteByProductCodeAndInvoiceId(prductCode, invoice.getId());
+            }
+        }
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void delete(Long id) {
-        invoiceRepository.deleteById(id);
+        invoiceRepository.deleteInvoice(id);
+        invoiceProductRepository.deleteInvoiceProduct(id);
     }
 }

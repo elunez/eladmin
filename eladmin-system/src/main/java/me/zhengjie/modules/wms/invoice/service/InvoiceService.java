@@ -2,6 +2,7 @@ package me.zhengjie.modules.wms.invoice.service;
 
 import me.zhengjie.modules.wms.invoice.domain.Invoice;
 import me.zhengjie.modules.wms.invoice.request.CreateInvoiceRequest;
+import me.zhengjie.modules.wms.invoice.request.UpdateInvoiceRequest;
 import me.zhengjie.modules.wms.invoice.service.dto.InvoiceDTO;
 import me.zhengjie.modules.wms.invoice.service.dto.InvoiceDetailDTO;
 import me.zhengjie.modules.wms.invoice.service.dto.InvoiceQueryCriteria;
@@ -52,10 +53,10 @@ public interface InvoiceService {
 
     /**
      * update
-     * @param resources
+     * @param updateInvoiceRequest
      */
     //@CacheEvict(allEntries = true)
-    void update(Invoice resources);
+    void update(UpdateInvoiceRequest updateInvoiceRequest);
 
     /**
      * delete

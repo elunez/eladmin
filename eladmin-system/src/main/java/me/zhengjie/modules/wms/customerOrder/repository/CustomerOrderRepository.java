@@ -27,6 +27,6 @@ public interface CustomerOrderRepository extends JpaRepository<CustomerOrder, Lo
      * @param customerOrderCode
      * @return
      */
-    @Query(value = "select * from s_customer_order where customerOrderCode = ?1  and status = 1", nativeQuery = true)
+    @Query(value = "select * from s_customer_order where customer_order_code = ?1  and status = 1", nativeQuery = true)
     CustomerOrder findByCustomerOrderCodeAndStatusTrue(String customerOrderCode);
 }

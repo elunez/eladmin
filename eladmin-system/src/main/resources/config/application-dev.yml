@@ -4,8 +4,8 @@ spring:
     druid:
       type: com.alibaba.druid.pool.DruidDataSource
       driverClassName: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
-      url: jdbc:log4jdbc:mysql://rm-2ze4a3l502a15dg50qo.mysql.rds.aliyuncs.com:3306/eladmin?serverTimezone=Asia/Shanghai&characterEncoding=utf8&useSSL=false
-      username: tenjeu
+      url: jdbc:log4jdbc:mysql://47.103.159.227:3306/eladmin?serverTimezone=Asia/Shanghai&characterEncoding=utf8&useSSL=false
+      username: root
       password: starrysky622209Qwe!
 
 

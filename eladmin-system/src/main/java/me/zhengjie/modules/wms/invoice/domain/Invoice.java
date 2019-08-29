@@ -57,7 +57,7 @@ public class Invoice implements Serializable {
 
     // 状态
     @Column(name = "status")
-    private Integer status;
+    private Boolean status;
 
     // 备注
     @Column(name = "remark")

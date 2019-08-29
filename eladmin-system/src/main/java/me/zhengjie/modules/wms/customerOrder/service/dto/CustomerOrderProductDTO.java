@@ -21,7 +21,7 @@ public class CustomerOrderProductDTO {
     private Long productId;
 
     // 产品名称
-    private Long productName;
+    private String productName;
 
     // 规格
     private String specifications;

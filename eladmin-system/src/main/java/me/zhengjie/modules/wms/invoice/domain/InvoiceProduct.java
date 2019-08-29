@@ -31,7 +31,7 @@ public class InvoiceProduct implements Serializable {
 
     // 状态
     @Column(name = "status")
-    private Integer status;
+    private Boolean status;
 
     // 产品主键
     @Column(name = "product_id",nullable = false)
