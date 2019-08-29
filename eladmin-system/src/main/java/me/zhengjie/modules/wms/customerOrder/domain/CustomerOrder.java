@@ -3,6 +3,8 @@ package me.zhengjie.modules.wms.customerOrder.domain;
 import lombok.Data;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
+import org.hibernate.annotations.CreationTimestamp;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.io.Serializable;
@@ -83,10 +85,12 @@ public class CustomerOrder implements Serializable {
 
     // 创建时间
     @Column(name = "create_time")
+    @CreationTimestamp
     private Timestamp createTime;
 
     // 更新时间
     @Column(name = "update_time")
+    @CreationTimestamp
     private Timestamp updateTime;
 
     // 总额
