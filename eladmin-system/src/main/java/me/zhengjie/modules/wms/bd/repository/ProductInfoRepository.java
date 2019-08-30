@@ -19,6 +19,10 @@ public interface ProductInfoRepository extends JpaRepository<ProductInfo, Long>,
      */
     ProductInfo findByIdAndStatusTrue(long id);
 
+
+    ProductInfo findByProductCode(String productCode);
+
+
     /**
      * 删除产品资料
      * @param id

@@ -39,7 +39,7 @@ public class InvoiceProductDTO implements Serializable {
     private Long customerOrderNumber;
 
     // 实际发货单数量
-    private Long acutalInvoiceNumber;
+    private Long actualInvoiceNumber;
 
     // 瘦瘦金额
     private Long salePrice;

@@ -2,7 +2,11 @@ package me.zhengjie.modules.wms.customerOrder.service.impl;
 
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.modules.wms.bd.domain.CustomerInfo;
+import me.zhengjie.modules.wms.bd.domain.ProductInfo;
+import me.zhengjie.modules.wms.bd.domain.SupplierInfo;
 import me.zhengjie.modules.wms.bd.repository.CustomerInfoRepository;
+import me.zhengjie.modules.wms.bd.repository.ProductInfoRepository;
+import me.zhengjie.modules.wms.bd.service.dto.SupplierInfoDTO;
 import me.zhengjie.modules.wms.bd.service.mapper.CustomerInfoMapper;
 import me.zhengjie.modules.wms.customerOrder.domain.CustomerOrderProduct;
 import me.zhengjie.modules.wms.customerOrder.repository.CustomerOrderRepository;
@@ -20,6 +24,7 @@ import me.zhengjie.modules.wms.customerOrder.service.mapper.CustomerOrderMapper;
 import me.zhengjie.utils.ValidationUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,6 +41,11 @@ import org.springframework.data.domain.Pageable;
 import me.zhengjie.utils.PageUtil;
 import me.zhengjie.utils.QueryHelp;
 import org.springframework.util.CollectionUtils;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 /**
 * @author jie
@@ -63,10 +73,42 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
     @Autowired
     private CustomerInfoRepository customerInfoRepository;
 
+    @Autowired
+    private ProductInfoRepository productInfoRepository;
+
     @Override
     public Object queryAll(CustomerOrderQueryCriteria criteria, Pageable pageable){
-        Page<CustomerOrder> page = customerOrderRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable);
-        return PageUtil.toPage(page.map(customerOrderMapper::toDto));
+
+        Specification<CustomerOrder> specification = new Specification<CustomerOrder>() {
+            @Override
+            public Predicate toPredicate(Root<CustomerOrder> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+
+                List<Predicate> targetPredicateList = new ArrayList<>();
+
+                Predicate statusPredicate = criteriaBuilder.equal(root.get("status"), 1);
+                targetPredicateList.add(statusPredicate);
+
+                if(CollectionUtils.isEmpty(targetPredicateList)){
+                    return null;
+                }else{
+                    return criteriaBuilder.and(targetPredicateList.toArray(new Predicate[targetPredicateList.size()]));
+                }
+            }
+        };
+        Page<CustomerOrder> page = customerOrderRepository.findAll(specification, pageable);
+        Page<CustomerOrderDTO> customerOrderDTOPage = page.map(customerOrderMapper::toDto);
+        if(null != customerOrderDTOPage){
+            List<CustomerOrderDTO> customerOrderDTOList = customerOrderDTOPage.getContent();
+            if(!CollectionUtils.isEmpty(customerOrderDTOList)){
+                for(CustomerOrderDTO customerOrderDTO : customerOrderDTOList){
+                    List<CustomerOrderProduct> customerOrderProductList = customerOrderProductRepository.findByCustomerOrderIdAndStatusTrue(customerOrderDTO.getId());
+                    List<CustomerOrderProductDTO> customerOrderProductDTOList = customerOrderProductMapper.toDto(customerOrderProductList);
+                    customerOrderDTO.setCustomerOrderProductList(customerOrderProductDTOList);
+                }
+            }
+        }
+
+        return PageUtil.toPage(customerOrderDTOPage);
     }
 
     @Override
@@ -127,6 +169,9 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
             BeanUtils.copyProperties(customerOrderProductRequest, customerOrderProduct);
             customerOrderProduct.setCustomerOrderId(customerOrder.getId());
             customerOrderProduct.setStatus(true);
+            ProductInfo productInfo = productInfoRepository.findByProductCode(customerOrderProductRequest.getProductCode());
+            customerOrderProduct.setProductId(productInfo.getId());
+            customerOrderProductList.add(customerOrderProduct);
         }
 
         customerOrderProductRepository.saveAll(customerOrderProductList);

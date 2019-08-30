@@ -3,6 +3,8 @@ package me.zhengjie.modules.wms.invoice.domain;
 import lombok.Data;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
+import org.hibernate.annotations.CreationTimestamp;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.io.Serializable;
@@ -23,10 +25,12 @@ public class InvoiceProduct implements Serializable {
 
     // 创建时间
     @Column(name = "create_status")
+    @CreationTimestamp
     private Timestamp createStatus;
 
     // 更新时间
     @Column(name = "update_status")
+    @CreationTimestamp
     private Timestamp updateStatus;
 
     // 状态
@@ -54,8 +58,8 @@ public class InvoiceProduct implements Serializable {
     private Long customerOrderNumber;
 
     // 实际发货单数量
-    @Column(name = "acutal_invoice_number",nullable = false)
-    private Long acutalInvoiceNumber;
+    @Column(name = "actual_invoice_number",nullable = false)
+    private Long actualInvoiceNumber;
 
     // 瘦瘦金额
     @Column(name = "sale_price")
