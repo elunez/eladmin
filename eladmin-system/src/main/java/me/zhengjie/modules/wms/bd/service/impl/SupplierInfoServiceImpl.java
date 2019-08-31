@@ -65,7 +65,7 @@ public class SupplierInfoServiceImpl implements SupplierInfoService {
     private SupplierCategoryRepository supplierCategoryRepository;
 
     @Override
-    public Object queryAll(SupplierInfoQueryCriteria criteria, Pageable pageable){
+    public Object   queryAll(SupplierInfoQueryCriteria criteria, Pageable pageable){
         Specification<SupplierInfo> specification = new Specification<SupplierInfo>() {
             @Override
             public Predicate toPredicate(Root<SupplierInfo> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {

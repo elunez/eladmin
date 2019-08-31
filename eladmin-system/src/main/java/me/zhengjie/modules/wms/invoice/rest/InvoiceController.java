@@ -22,7 +22,7 @@ import java.time.format.DateTimeFormatter;
 * @author jie
 * @date 2019-08-27
 */
-@Api(tags = "SInvoice管理")
+@Api(tags = "发货单管理")
 @RestController
 @RequestMapping("api")
 public class InvoiceController {
@@ -32,18 +32,18 @@ public class InvoiceController {
 
     @Log("分页查询销售发货单")
     @ApiOperation(value = "分页查询销售发货单")
-    @GetMapping(value = "/querySaleInvoicePage")
+    @GetMapping(value = "/queryInvoicePage")
     @PreAuthorize("hasAnyRole('ADMIN','SINVOICE_ALL','SINVOICE_SELECT')")
-    public ResponseEntity querySaleInvoicePage(InvoiceQueryCriteria criteria, Pageable pageable){
+    public ResponseEntity queryInvoicePage(InvoiceQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity(invoiceService.queryAll(criteria,pageable),HttpStatus.OK);
     }
 
 
     @Log("查询销售发货单列表")
     @ApiOperation(value = "查询销售发货单列表")
-    @GetMapping(value = "/querySaleInvoiceList")
+    @GetMapping(value = "/queryInvoiceList")
     @PreAuthorize("hasAnyRole('ADMIN','SINVOICE_ALL','SINVOICE_SELECT')")
-    public ResponseEntity querySaleInvoiceList(InvoiceQueryCriteria criteria){
+    public ResponseEntity queryInvoiceList(InvoiceQueryCriteria criteria){
         return new ResponseEntity(invoiceService.queryAll(criteria),HttpStatus.OK);
     }
 
@@ -79,5 +79,11 @@ public class InvoiceController {
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS");//设置日期格式
         String supplierCode = "INVOICE"+ LocalDateTime.now().format(fmt);
         return new ResponseEntity(supplierCode,HttpStatus.OK);
+    }
+
+    @Log("查看发货单详情")
+    @GetMapping(value = "/invoice/{id}")
+    public ResponseEntity getInvoiceInfo(@PathVariable Long id){
+        return new ResponseEntity(invoiceService.findById(id), HttpStatus.OK);
     }
 }

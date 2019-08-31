@@ -2,7 +2,9 @@ package me.zhengjie.modules.wms.invoice.service.impl;
 
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.modules.wms.bd.domain.CustomerInfo;
+import me.zhengjie.modules.wms.bd.domain.ProductInfo;
 import me.zhengjie.modules.wms.bd.repository.CustomerInfoRepository;
+import me.zhengjie.modules.wms.bd.repository.ProductInfoRepository;
 import me.zhengjie.modules.wms.customerOrder.domain.CustomerOrder;
 import me.zhengjie.modules.wms.customerOrder.domain.CustomerOrderProduct;
 import me.zhengjie.modules.wms.customerOrder.service.dto.CustomerOrderProductDTO;
@@ -62,6 +64,9 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Autowired
     private InvoiceProductRepository invoiceProductRepository;
+
+    @Autowired
+    private ProductInfoRepository productInfoRepository;
 
     @Override
     public Object queryAll(InvoiceQueryCriteria criteria, Pageable pageable){
@@ -136,6 +141,15 @@ public class InvoiceServiceImpl implements InvoiceService {
 
         for(InvoiceProduct invoiceProduct : invoiceProductRequestList){
             invoiceProduct.setInvoiceId(invoice.getId());
+            String productCode = invoiceProduct.getProductCode();
+            if(StringUtils.isEmpty(productCode)){
+                throw new BadRequestException("产品编号不能为空!");
+            }
+            ProductInfo productInfo = productInfoRepository.findByProductCode(productCode);
+            if(null == productInfo){
+                throw new BadRequestException("产品编号" + productInfo.getProductCode() + "对应的产品不存在!");
+            }
+            invoiceProduct.setProductId(productInfo.getId());
             invoiceProductRepository.save(invoiceProduct);
         }
 

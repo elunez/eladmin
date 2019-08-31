@@ -1,5 +1,9 @@
 package me.zhengjie.modules.wms.sr.productCount.service.impl;
 
+import me.zhengjie.exception.BadRequestException;
+import me.zhengjie.modules.wms.bd.domain.ProductInfo;
+import me.zhengjie.modules.wms.bd.repository.ProductInfoRepository;
+import me.zhengjie.modules.wms.bd.service.mapper.ProductInfoMapper;
 import me.zhengjie.modules.wms.sr.productCount.domain.ProductCount;
 import me.zhengjie.utils.ValidationUtil;
 import me.zhengjie.modules.wms.sr.productCount.repository.ProductCountRepository;
@@ -31,6 +35,12 @@ public class ProductCountServiceImpl implements ProductCountService {
     @Autowired
     private ProductCountMapper productCountMapper;
 
+    @Autowired
+    private ProductInfoMapper productInfoMapper;
+
+    @Autowired
+    private ProductInfoRepository productInfoRepository;
+
     @Override
     public Object queryAll(ProductCountQueryCriteria criteria, Pageable pageable){
         Page<ProductCount> page = productCountRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable);
@@ -52,6 +62,19 @@ public class ProductCountServiceImpl implements ProductCountService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public ProductCountDTO create(ProductCount resources) {
+        Long productId = resources.getProductId();
+        if(null == productId){
+            throw new BadRequestException("产品主键不能为空!");
+        }
+        Optional<ProductInfo> productInfoOptional = productInfoRepository.findById(productId);
+        if(null == productInfoOptional){
+            throw new BadRequestException("产品不存在 !");
+        }
+        ProductInfo productInfo = productInfoOptional.get();
+        if(null == productInfo){
+            throw new BadRequestException("产品不存在 !");
+        }
+        resources.setProductName(productInfo.getName());
         return productCountMapper.toDto(productCountRepository.save(resources));
     }
 
