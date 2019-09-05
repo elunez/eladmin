@@ -166,24 +166,26 @@ public class MenuServiceImpl implements MenuService {
     @Override
     public Map buildTree(List<MenuDTO> menuDTOS) {
         List<MenuDTO> trees = new ArrayList<MenuDTO>();
-
+        Set<Long> ids = new HashSet<>();
         for (MenuDTO menuDTO : menuDTOS) {
-
-            if ("0".equals(menuDTO.getPid().toString())) {
+            if (menuDTO.getPid() == 0) {
                 trees.add(menuDTO);
             }
-
             for (MenuDTO it : menuDTOS) {
                 if (it.getPid().equals(menuDTO.getId())) {
                     if (menuDTO.getChildren() == null) {
                         menuDTO.setChildren(new ArrayList<MenuDTO>());
                     }
                     menuDTO.getChildren().add(it);
+                    ids.add(it.getId());
                 }
             }
         }
         Map map = new HashMap();
-        map.put("content",trees.size() == 0?menuDTOS:trees);
+        if(trees.size() == 0){
+            trees = menuDTOS.stream().filter(s -> !ids.contains(s.getId())).collect(Collectors.toList());
+        }
+        map.put("content",trees);
         map.put("totalElements",menuDTOS!=null?menuDTOS.size():0);
         return map;
     }
@@ -201,7 +203,7 @@ public class MenuServiceImpl implements MenuService {
 
                 // 如果不是外链
                 if(!menuDTO.getIFrame()){
-                    if(menuDTO.getPid().equals(0L)){
+                    if(menuDTO.getPid() == 0){
                         //一级目录需要加斜杠，不然访问 会跳转404页面
                         menuVo.setPath("/" + menuDTO.getPath());
                         menuVo.setComponent(StrUtil.isEmpty(menuDTO.getComponent())?"Layout":menuDTO.getComponent());
@@ -215,7 +217,7 @@ public class MenuServiceImpl implements MenuService {
                     menuVo.setRedirect("noredirect");
                     menuVo.setChildren(buildMenus(menuDTOList));
                     // 处理是一级菜单并且没有子菜单的情况
-                } else if(menuDTO.getPid().equals(0L)){
+                } else if(menuDTO.getPid() == 0){
                     MenuVo menuVo1 = new MenuVo();
                     menuVo1.setMeta(menuVo.getMeta());
                     // 非外链
