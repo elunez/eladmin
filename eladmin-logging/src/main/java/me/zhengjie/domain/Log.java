@@ -54,6 +54,9 @@ public class Log  implements Serializable {
     @Column(name = "request_ip")
     private String requestIp;
 
+    @Column(name = "address")
+    private String address;
+
     /**
      * 请求耗时
      */

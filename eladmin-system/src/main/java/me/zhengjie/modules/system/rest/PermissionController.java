@@ -4,8 +4,9 @@ import me.zhengjie.aop.log.Log;
 import me.zhengjie.modules.system.domain.Permission;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.modules.system.service.PermissionService;
-import me.zhengjie.modules.system.service.dto.CommonQueryCriteria;
 import me.zhengjie.modules.system.service.dto.PermissionDTO;
+import me.zhengjie.modules.system.service.dto.PermissionQueryCriteria;
+import me.zhengjie.modules.system.service.mapper.PermissionMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +14,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author Zheng Jie
@@ -25,6 +28,9 @@ public class PermissionController {
 
     @Autowired
     private PermissionService permissionService;
+
+    @Autowired
+    private PermissionMapper permissionMapper;
 
     private static final String ENTITY_NAME = "permission";
 
@@ -41,7 +47,7 @@ public class PermissionController {
     @Log("查询权限")
     @GetMapping(value = "/permissions")
     @PreAuthorize("hasAnyRole('ADMIN','PERMISSION_ALL','PERMISSION_SELECT')")
-    public ResponseEntity getPermissions(CommonQueryCriteria criteria){
+    public ResponseEntity getPermissions(PermissionQueryCriteria criteria){
         List<PermissionDTO> permissionDTOS = permissionService.queryAll(criteria);
         return new ResponseEntity(permissionService.buildTree(permissionDTOS),HttpStatus.OK);
     }
@@ -68,7 +74,11 @@ public class PermissionController {
     @DeleteMapping(value = "/permissions/{id}")
     @PreAuthorize("hasAnyRole('ADMIN','PERMISSION_ALL','PERMISSION_DELETE')")
     public ResponseEntity delete(@PathVariable Long id){
-        permissionService.delete(id);
+        List<Permission> permissions = permissionService.findByPid(id);
+        Set<Permission> permissionSet = new HashSet<>();
+        permissionSet.add(permissionMapper.toEntity(permissionService.findById(id)));
+        permissionSet = permissionService.getDeletePermission(permissions, permissionSet);
+        permissionService.delete(permissionSet);
         return new ResponseEntity(HttpStatus.OK);
     }
 }

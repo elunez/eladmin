@@ -27,6 +27,8 @@ public class LogSmallDTO implements Serializable {
      */
     private Long time;
 
+    private String address;
+
     /**
      * 创建日期
      */

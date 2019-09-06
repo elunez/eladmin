@@ -34,7 +34,7 @@ public class LogController {
     @GetMapping(value = "/logs/user")
     public ResponseEntity getUserLogs(LogQueryCriteria criteria, Pageable pageable){
         criteria.setLogType("INFO");
-        criteria.setUsername(SecurityUtils.getUsername());
+        criteria.setBlurry(SecurityUtils.getUsername());
         return new ResponseEntity(logService.queryAllByUser(criteria,pageable), HttpStatus.OK);
     }
 

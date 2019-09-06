@@ -1,9 +1,8 @@
 package me.zhengjie.modules.system.service;
 
-import me.zhengjie.modules.system.domain.Menu;
 import me.zhengjie.modules.system.domain.Role;
-import me.zhengjie.modules.system.service.dto.CommonQueryCriteria;
 import me.zhengjie.modules.system.service.dto.RoleDTO;
+import me.zhengjie.modules.system.service.dto.RoleQueryCriteria;
 import me.zhengjie.modules.system.service.dto.RoleSmallDTO;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
@@ -79,13 +78,14 @@ public interface RoleService {
     void updateMenu(Role resources, RoleDTO roleDTO);
 
     @CacheEvict(allEntries = true)
-    void untiedMenu(Menu menu);
+    void untiedMenu(Long id);
 
     /**
      * queryAll
      * @param pageable
      * @return
      */
+    @Cacheable(keyGenerator = "keyGenerator")
     Object queryAll(Pageable pageable);
 
     /**
@@ -94,5 +94,17 @@ public interface RoleService {
      * @param criteria
      * @return
      */
-    Object queryAll(CommonQueryCriteria criteria, Pageable pageable);
+    @Cacheable(keyGenerator = "keyGenerator")
+    Object queryAll(RoleQueryCriteria criteria, Pageable pageable);
+
+    /**
+     * queryAll
+     * @param criteria
+     * @return
+     */
+    @Cacheable(keyGenerator = "keyGenerator")
+    List<RoleDTO> queryAll(RoleQueryCriteria criteria);
+
+    @CacheEvict(allEntries = true)
+    void untiedPermission(Long id);
 }
