@@ -8,6 +8,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
@@ -67,11 +68,10 @@ public interface UserService {
 
     /**
      * 修改头像
-     * @param username
-     * @param url
+     * @param file
      */
     @CacheEvict(allEntries = true)
-    void updateAvatar(String username, String url);
+    void updateAvatar(MultipartFile file);
 
     /**
      * 修改邮箱
