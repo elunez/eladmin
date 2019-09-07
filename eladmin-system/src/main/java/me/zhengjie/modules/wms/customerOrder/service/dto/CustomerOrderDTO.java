@@ -64,9 +64,11 @@ public class CustomerOrderDTO implements Serializable {
 
     // 创建时间
     private Timestamp createTime;
+    private String createTimeStr;
 
     // 更新时间
     private Timestamp updateTime;
+    private String updateTimeStr;
 
     // 总额
     private Long totalMoney;

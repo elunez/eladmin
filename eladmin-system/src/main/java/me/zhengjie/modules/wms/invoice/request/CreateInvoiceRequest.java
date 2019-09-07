@@ -34,6 +34,9 @@ public class CreateInvoiceRequest implements Serializable {
     // 物流公司
     private String logisticsCompany;
 
+    // 物流编号
+    private String logisticsCode;
+
     // 销售发货单号
     private String saleInvoiceCode;
 

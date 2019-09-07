@@ -75,6 +75,12 @@ public class ProductCountServiceImpl implements ProductCountService {
             throw new BadRequestException("产品不存在 !");
         }
         resources.setProductName(productInfo.getName());
+        //验证产品库存统计是否存在
+
+        ProductCount productCountTemp = productCountRepository.findByProductId(productId);
+        if(null != productCountTemp){
+            throw new BadRequestException("该产品统计记录已经存在 !");
+        }
         return productCountMapper.toDto(productCountRepository.save(resources));
     }
 

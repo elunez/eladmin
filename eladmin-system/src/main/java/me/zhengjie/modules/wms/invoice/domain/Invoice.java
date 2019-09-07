@@ -3,6 +3,8 @@ package me.zhengjie.modules.wms.invoice.domain;
 import lombok.Data;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
+import org.hibernate.annotations.CreationTimestamp;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.io.Serializable;
@@ -22,9 +24,11 @@ public class Invoice implements Serializable {
     private Long id;
 
     @Column(name = "create_time")
+    @CreationTimestamp
     private Timestamp createTime;
 
     @Column(name = "update_time")
+    @CreationTimestamp
     private Timestamp updateTime;
 
     // 客户订单编号
@@ -50,6 +54,10 @@ public class Invoice implements Serializable {
     // 物流公司
     @Column(name = "logistics_company")
     private String logisticsCompany;
+
+    // 物流单号
+    @Column(name = "logistics_code")
+    private String logisticsCode;
 
     // 销售发货单号
     @Column(name = "sale_invoice_code")

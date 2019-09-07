@@ -66,7 +66,7 @@ public class InvoiceController {
 
     @Log("删除销售发货单")
     @ApiOperation(value = "删除销售发货单")
-    @DeleteMapping(value = "/sInvoice/{id}")
+    @DeleteMapping(value = "/invoice/{id}")
     @PreAuthorize("hasAnyRole('ADMIN','SINVOICE_ALL','SINVOICE_DELETE')")
     public ResponseEntity delete(@PathVariable Long id){
         invoiceService.delete(id);

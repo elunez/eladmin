@@ -9,4 +9,6 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 * @date 2019-08-29
 */
 public interface ProductCountRepository extends JpaRepository<ProductCount, Long>, JpaSpecificationExecutor {
+
+    ProductCount findByProductId(Long productId);
 }

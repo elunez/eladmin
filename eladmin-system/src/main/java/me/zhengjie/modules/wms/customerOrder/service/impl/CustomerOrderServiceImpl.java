@@ -29,6 +29,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -103,6 +105,8 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
                 for(CustomerOrderDTO customerOrderDTO : customerOrderDTOList){
                     List<CustomerOrderProduct> customerOrderProductList = customerOrderProductRepository.findByCustomerOrderIdAndStatusTrue(customerOrderDTO.getId());
                     List<CustomerOrderProductDTO> customerOrderProductDTOList = customerOrderProductMapper.toDto(customerOrderProductList);
+                    Timestamp createTime = customerOrderDTO.getCreateTime();
+                    customerOrderDTO.setCreateTimeStr(new SimpleDateFormat("yyyy-MM-dd").format(createTime));
                     customerOrderDTO.setCustomerOrderProductList(customerOrderProductDTOList);
                 }
             }

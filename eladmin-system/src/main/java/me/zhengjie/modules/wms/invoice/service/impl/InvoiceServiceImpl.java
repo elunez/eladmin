@@ -7,6 +7,7 @@ import me.zhengjie.modules.wms.bd.repository.CustomerInfoRepository;
 import me.zhengjie.modules.wms.bd.repository.ProductInfoRepository;
 import me.zhengjie.modules.wms.customerOrder.domain.CustomerOrder;
 import me.zhengjie.modules.wms.customerOrder.domain.CustomerOrderProduct;
+import me.zhengjie.modules.wms.customerOrder.service.dto.CustomerOrderDTO;
 import me.zhengjie.modules.wms.customerOrder.service.dto.CustomerOrderProductDTO;
 import me.zhengjie.modules.wms.invoice.domain.Invoice;
 import me.zhengjie.modules.wms.invoice.domain.InvoiceProduct;
@@ -24,10 +25,13 @@ import me.zhengjie.modules.wms.invoice.service.dto.InvoiceQueryCriteria;
 import me.zhengjie.modules.wms.invoice.service.mapper.InvoiceMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -41,6 +45,11 @@ import me.zhengjie.utils.PageUtil;
 import me.zhengjie.utils.QueryHelp;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 /**
 * @author jie
@@ -70,13 +79,59 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     public Object queryAll(InvoiceQueryCriteria criteria, Pageable pageable){
-        Page<Invoice> page = invoiceRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable);
-        return PageUtil.toPage(page.map(invoiceMapper::toDto));
+        Specification<Invoice> specification = new Specification<Invoice>() {
+            @Override
+            public Predicate toPredicate(Root<Invoice> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+
+                List<Predicate> targetPredicateList = new ArrayList<>();
+
+                Predicate statusPredicate = criteriaBuilder.equal(root.get("status"), 1);
+                targetPredicateList.add(statusPredicate);
+
+                if(CollectionUtils.isEmpty(targetPredicateList)){
+                    return null;
+                }else{
+                    return criteriaBuilder.and(targetPredicateList.toArray(new Predicate[targetPredicateList.size()]));
+                }
+            }
+        };
+        Page<Invoice> page = invoiceRepository.findAll(specification,pageable);
+        Page<InvoiceDTO> invoiceDTOPage = page.map(invoiceMapper::toDto);
+        if(null != invoiceDTOPage){
+            List<InvoiceDTO> invoiceDTOList = invoiceDTOPage.getContent();
+            if(!CollectionUtils.isEmpty(invoiceDTOList)){
+                for(InvoiceDTO invoiceDTO : invoiceDTOList){
+                    Timestamp createTime = invoiceDTO.getCreateTime();
+                    invoiceDTO.setCreateTimeStr(new SimpleDateFormat("yyyy-MM-dd").format(createTime));
+                }
+            }
+        }
+        return PageUtil.toPage(invoiceDTOPage);
     }
 
     @Override
     public Object queryAll(InvoiceQueryCriteria criteria){
-        return invoiceMapper.toDto(invoiceRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder)));
+
+        Specification<Invoice> specification = new Specification<Invoice>() {
+            @Override
+            public Predicate toPredicate(Root<Invoice> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+
+                List<Predicate> targetPredicateList = new ArrayList<>();
+
+                Predicate statusPredicate = criteriaBuilder.equal(root.get("status"), 1);
+                targetPredicateList.add(statusPredicate);
+
+                if(CollectionUtils.isEmpty(targetPredicateList)){
+                    return null;
+                }else{
+                    return criteriaBuilder.and(targetPredicateList.toArray(new Predicate[targetPredicateList.size()]));
+                }
+            }
+        };
+
+        List invoiceLIst = invoiceRepository.findAll(specification);
+        List<InvoiceDTO> invoiceDtoList = invoiceMapper.toDto(invoiceLIst);
+        return invoiceDtoList;
     }
 
     @Override
@@ -122,6 +177,8 @@ public class InvoiceServiceImpl implements InvoiceService {
             throw new BadRequestException("客户不存在!");
         }
 
+        invoice.setCustomerName(customerInfo.getCustomerName());
+
         // 销售发货单号
         String saleInvoiceCode = createInvoiceRequest.getSaleInvoiceCode();
         if(StringUtils.isEmpty(saleInvoiceCode)){
@@ -134,6 +191,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         }
 
         BeanUtils.copyProperties(createInvoiceRequest, invoice);
+        invoice.setStatus(true);
         invoiceRepository.save(invoice);
         invoice = invoiceRepository.findBySaleInvoiceCode(saleInvoiceCode);
         InvoiceDTO invoiceDTO = invoiceMapper.toDto(invoice);

@@ -1,6 +1,12 @@
 package me.zhengjie.modules.wms.invoice.service.dto;
 
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
+
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.sql.Timestamp;
 import java.io.Serializable;
 
@@ -16,8 +22,13 @@ public class InvoiceDTO implements Serializable {
 
     private Timestamp createTime;
 
+    private String createTimeStr;
+
     private Timestamp updateTime;
 
+    private String updateTimeStr;
+
+    // 客户订单编号
     private String customerOrderCode;
 
     // 收货地址
@@ -35,6 +46,9 @@ public class InvoiceDTO implements Serializable {
     // 物流公司
     private String logisticsCompany;
 
+    // 物流单号
+    private String logisticsCode;
+
     // 销售发货单号
     private String saleInvoiceCode;
 
@@ -43,4 +57,8 @@ public class InvoiceDTO implements Serializable {
 
     // 备注
     private String remark;
+
+    private Long customerId;
+
+    private String customerName;
 }
