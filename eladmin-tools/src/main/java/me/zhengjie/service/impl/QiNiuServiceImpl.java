@@ -94,6 +94,7 @@ public class QiNiuServiceImpl implements QiNiuService {
             DefaultPutRet putRet = new Gson().fromJson(response.bodyString(), DefaultPutRet.class);
             //存入数据库
             QiniuContent qiniuContent = new QiniuContent();
+            qiniuContent.setSuffix(FileUtil.getExtensionName(putRet.key));
             qiniuContent.setBucket(qiniuConfig.getBucket());
             qiniuContent.setType(qiniuConfig.getType());
             qiniuContent.setKey(FileUtil.getFileNameNoEx(putRet.key));
@@ -169,6 +170,7 @@ public class QiNiuServiceImpl implements QiNiuService {
                 if(qiniuContentRepository.findByKey(FileUtil.getFileNameNoEx(item.key)) == null){
                     qiniuContent = new QiniuContent();
                     qiniuContent.setSize(FileUtil.getSize(Integer.parseInt(item.fsize+"")));
+                    qiniuContent.setSuffix(FileUtil.getExtensionName(item.key));
                     qiniuContent.setKey(FileUtil.getFileNameNoEx(item.key));
                     qiniuContent.setType(config.getType());
                     qiniuContent.setBucket(config.getBucket());

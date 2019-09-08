@@ -42,6 +42,8 @@ public class QiniuContent implements Serializable {
      */
     private String url;
 
+    private String suffix;
+
     /**
      * 空间类型：公开/私有
      */
