@@ -137,7 +137,7 @@ public class QiNiuServiceImpl implements QiNiuService {
         Auth auth = Auth.create(config.getAccessKey(), config.getSecretKey());
         BucketManager bucketManager = new BucketManager(auth, cfg);
         try {
-            bucketManager.delete(content.getBucket(), content.getKey());
+            bucketManager.delete(content.getBucket(), content.getKey() + "." + content.getSuffix());
             qiniuContentRepository.delete(content);
         } catch (QiniuException ex) {
             qiniuContentRepository.delete(content);
