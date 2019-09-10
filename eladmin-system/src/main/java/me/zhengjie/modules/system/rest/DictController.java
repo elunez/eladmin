@@ -4,7 +4,6 @@ import me.zhengjie.aop.log.Log;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.modules.system.domain.Dict;
 import me.zhengjie.modules.system.service.DictService;
-import me.zhengjie.modules.system.service.dto.DictDTO;
 import me.zhengjie.modules.system.service.dto.DictQueryCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;

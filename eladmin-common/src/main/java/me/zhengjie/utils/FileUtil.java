@@ -1,13 +1,12 @@
 package me.zhengjie.utils;
 
+import cn.hutool.core.codec.Base64;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.ExcelWriter;
 import me.zhengjie.exception.BadRequestException;
 import org.springframework.web.multipart.MultipartFile;
-import sun.misc.BASE64Encoder;
-
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
@@ -187,7 +186,7 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
         byte[] buffer = new byte[(int)file.length()];
         inputFile.read(buffer);
         inputFile.close();
-        base64=new BASE64Encoder().encode(buffer);
+        base64=new Base64().encode(buffer);
         String encoded = base64.replaceAll("[\\s*\t\n\r]", "");
         return encoded;
     }
