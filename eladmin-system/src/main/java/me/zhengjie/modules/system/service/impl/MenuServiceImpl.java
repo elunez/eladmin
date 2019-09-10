@@ -197,15 +197,13 @@ public class MenuServiceImpl implements MenuService {
             if (menuDTO!=null){
                 List<MenuDTO> menuDTOList = menuDTO.getChildren();
                 MenuVo menuVo = new MenuVo();
-                menuVo.setName(ObjectUtil.isNotEmpty(menuDTO.getComponentName()) ? menuDTO.getComponentName() : RandomUtil.randomString(5));
-                menuVo.setPath(menuDTO.getPath());
+                menuVo.setName(ObjectUtil.isNotEmpty(menuDTO.getComponentName())  ? menuDTO.getComponentName() : menuDTO.getName());
+                // 一级目录需要加斜杠，不然会报警告
+                menuVo.setPath(menuDTO.getPid() == 0 ? "/" + menuDTO.getPath() :menuDTO.getPath());
                 menuVo.setHidden(menuDTO.getHidden());
-
                 // 如果不是外链
                 if(!menuDTO.getIFrame()){
                     if(menuDTO.getPid() == 0){
-                        //一级目录需要加斜杠，不然访问 会跳转404页面
-                        menuVo.setPath("/" + menuDTO.getPath());
                         menuVo.setComponent(StrUtil.isEmpty(menuDTO.getComponent())?"Layout":menuDTO.getComponent());
                     }else if(!StrUtil.isEmpty(menuDTO.getComponent())){
                         menuVo.setComponent(menuDTO.getComponent());

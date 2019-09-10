@@ -17,7 +17,7 @@
         <module>eladmin-generator</module>
     </modules>
 
-    <name>el-admin</name>
+    <name>EL-ADMIN后台管理系统</name>
     <url>http://auauz.net</url>
 
     <parent>

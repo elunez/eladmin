@@ -10,6 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>eladmin-system</artifactId>
+    <name>核心模块</name>
 
     <properties>
         <jjwt.version>0.9.1</jjwt.version>

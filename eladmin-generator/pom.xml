@@ -10,6 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>eladmin-generator</artifactId>
+    <name>代码生成模块</name>
 
     <properties>
         <configuration.version>1.9</configuration.version>

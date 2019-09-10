@@ -11,7 +11,7 @@
  Target Server Version : 50562
  File Encoding         : 65001
 
- Date: 27/08/2019 15:46:59
+ Date: 07/09/2019 21:59:47
 */
 
 SET NAMES utf8mb4;
@@ -77,7 +77,7 @@ CREATE TABLE `dict`  (
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '字典名称',
   `remark` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '描述',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of dict
@@ -85,6 +85,7 @@ CREATE TABLE `dict`  (
 INSERT INTO `dict` VALUES (1, 'user_status', '用户状态');
 INSERT INTO `dict` VALUES (4, 'dept_status', '部门状态');
 INSERT INTO `dict` VALUES (5, 'job_status', '岗位状态');
+INSERT INTO `dict` VALUES (6, 'tt', 'tt');
 
 -- ----------------------------
 -- Table structure for dict_detail
@@ -99,7 +100,7 @@ CREATE TABLE `dict_detail`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `FK5tpkputc6d9nboxojdbgnpmyb`(`dict_id`) USING BTREE,
   CONSTRAINT `FK5tpkputc6d9nboxojdbgnpmyb` FOREIGN KEY (`dict_id`) REFERENCES `dict` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 15 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 16 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of dict_detail
@@ -110,6 +111,7 @@ INSERT INTO `dict_detail` VALUES (11, '正常', 'true', '1', 4);
 INSERT INTO `dict_detail` VALUES (12, '停用', 'false', '2', 4);
 INSERT INTO `dict_detail` VALUES (13, '正常', 'true', '1', 5);
 INSERT INTO `dict_detail` VALUES (14, '停用', 'false', '2', 5);
+INSERT INTO `dict_detail` VALUES (15, 'f', 'fdaf', '1', 6);
 
 -- ----------------------------
 -- Table structure for email_config
@@ -144,7 +146,7 @@ CREATE TABLE `gen_config`  (
 -- ----------------------------
 -- Records of gen_config
 -- ----------------------------
-INSERT INTO `gen_config` VALUES (1, 'Zheng Jie', b'0', 'eladmin-system', 'me.zhengjie.modules.test', 'E:\\workspace\\me\\front\\eladmin-qt\\src\\views\\test', 'E:\\workspace\\me\\front\\eladmin-qt\\src\\api', NULL);
+INSERT INTO `gen_config` VALUES (1, 'Zheng Jie', b'0', 'eladmin-tools', 'me.zhengjie', 'E:\\workspace\\me\\front\\eladmin-qt\\src\\views\\tools\\storage\\local', 'E:\\workspace\\me\\front\\eladmin-qt\\src\\api', NULL);
 
 -- ----------------------------
 -- Table structure for job
@@ -160,7 +162,7 @@ CREATE TABLE `job`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `FKmvhj0rogastlctflsxf1d6k3i`(`dept_id`) USING BTREE,
   CONSTRAINT `FKmvhj0rogastlctflsxf1d6k3i` FOREIGN KEY (`dept_id`) REFERENCES `dept` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 24 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 20 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of job
@@ -171,10 +173,24 @@ INSERT INTO `job` VALUES (10, '产品经理', b'0', '2019-03-29 14:55:51', 4, 2)
 INSERT INTO `job` VALUES (11, '全栈开发', b'1', '2019-03-31 13:39:30', 6, 2);
 INSERT INTO `job` VALUES (12, '软件测试', b'1', '2019-03-31 13:39:43', 5, 2);
 INSERT INTO `job` VALUES (19, '董事长', b'1', '2019-03-31 14:58:15', 1, 1);
-INSERT INTO `job` VALUES (20, 'test', b'1', '2019-06-25 08:50:52', 999, 1);
-INSERT INTO `job` VALUES (21, 'testtest', b'1', '2019-06-25 08:50:57', 999, 1);
-INSERT INTO `job` VALUES (22, 'testtesttest', b'1', '2019-06-25 08:51:01', 999, 1);
-INSERT INTO `job` VALUES (23, 'testtesttesttest', b'1', '2019-06-25 08:51:06', 999, 1);
+
+-- ----------------------------
+-- Table structure for local_storage
+-- ----------------------------
+DROP TABLE IF EXISTS `local_storage`;
+CREATE TABLE `local_storage`  (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `real_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '文件名',
+  `suffix` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '后缀',
+  `path` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '路径',
+  `type` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '类型',
+  `size` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '大小',
+  `operate` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '操作人',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建日期',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '修改日期',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 20 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for log
@@ -193,7 +209,7 @@ CREATE TABLE `log`  (
   `username` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `address` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 12921 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 13914 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for menu
@@ -212,8 +228,9 @@ CREATE TABLE `menu`  (
   `cache` bit(1) NULL DEFAULT b'0',
   `hidden` bit(1) NULL DEFAULT b'0',
   `component_name` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '-',
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 41 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `FKqcf9gem97gqa5qjm4d3elcqt5`(`pid`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 40 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of menu
@@ -233,7 +250,7 @@ INSERT INTO `menu` VALUES (14, '2018-12-27 10:13:09', b'0', '邮件工具', 'too
 INSERT INTO `menu` VALUES (15, '2018-12-27 11:58:25', b'0', '富文本', 'components/Editor', 10, 52, 'fwb', 'tinymce', b'0', b'0', 'Editor');
 INSERT INTO `menu` VALUES (16, '2018-12-28 09:36:53', b'0', '图床管理', 'tools/picture/index', 36, 25, 'image', 'pictures', b'0', b'0', 'Pictures');
 INSERT INTO `menu` VALUES (17, '2018-12-28 15:09:49', b'1', '项目地址', '', 0, 0, 'github', 'https://github.com/elunez/eladmin', b'0', b'0', NULL);
-INSERT INTO `menu` VALUES (18, '2018-12-31 11:12:15', b'0', '七牛云存储', 'tools/qiniu/index', 36, 26, 'qiniu', 'qiniu', b'0', b'0', 'Qiniu');
+INSERT INTO `menu` VALUES (18, '2018-12-31 11:12:15', b'0', '存储管理', 'tools/storage/index', 36, 23, 'qiniu', 'storage', b'0', b'0', 'Storage');
 INSERT INTO `menu` VALUES (19, '2018-12-31 14:52:38', b'0', '支付宝工具', 'tools/aliPay/index', 36, 27, 'alipay', 'aliPay', b'0', b'0', 'AliPay');
 INSERT INTO `menu` VALUES (21, '2019-01-04 16:22:03', b'0', '多级菜单', '', 0, 900, 'menu', 'nested', b'0', b'0', NULL);
 INSERT INTO `menu` VALUES (22, '2019-01-04 16:23:29', b'0', '二级菜单1', 'nested/menu1/index', 21, 999, 'menu', 'menu1', b'0', b'0', NULL);
@@ -248,7 +265,7 @@ INSERT INTO `menu` VALUES (34, '2019-03-08 15:49:40', b'0', 'Yaml编辑器', 'co
 INSERT INTO `menu` VALUES (35, '2019-03-25 09:46:00', b'0', '部门管理', 'system/dept/index', 1, 6, 'dept', 'dept', b'0', b'0', 'Dept');
 INSERT INTO `menu` VALUES (36, '2019-03-29 10:57:35', b'0', '系统工具', '', 0, 20, 'sys-tools', 'sys-tools', b'0', b'0', NULL);
 INSERT INTO `menu` VALUES (37, '2019-03-29 13:51:18', b'0', '岗位管理', 'system/job/index', 1, 7, 'Steve-Jobs', 'job', b'0', b'0', 'Job');
-INSERT INTO `menu` VALUES (38, '2019-03-29 19:57:53', b'0', '接口文档', 'tools/swagger/index', 36, 23, 'swagger', 'swagger2', b'0', b'0', 'Swagger');
+INSERT INTO `menu` VALUES (38, '2019-03-29 19:57:53', b'0', '接口文档', 'tools/swagger/index', 36, 26, 'swagger', 'swagger2', b'0', b'0', 'Swagger');
 INSERT INTO `menu` VALUES (39, '2019-04-10 11:49:04', b'0', '字典管理', 'system/dict/index', 1, 8, 'dictionary', 'dict', b'0', b'0', 'Dict');
 
 -- ----------------------------
@@ -356,12 +373,13 @@ CREATE TABLE `qiniu_content`  (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'ID',
   `bucket` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'Bucket 识别符',
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '文件名称',
+  `suffix` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '文件后缀',
   `size` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '文件大小',
   `type` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '文件类型：私有或公开',
   `update_time` datetime NULL DEFAULT NULL COMMENT '上传或同步的时间',
   `url` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '文件url',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 49 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 20 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for quartz_job
@@ -403,7 +421,7 @@ CREATE TABLE `quartz_log`  (
   `params` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `time` bigint(20) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 29 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for role
@@ -446,6 +464,7 @@ INSERT INTO `roles_depts` VALUES (2, 5);
 INSERT INTO `roles_depts` VALUES (4, 6);
 INSERT INTO `roles_depts` VALUES (4, 7);
 INSERT INTO `roles_depts` VALUES (2, 8);
+INSERT INTO `roles_depts` VALUES (2, 9);
 
 -- ----------------------------
 -- Table structure for roles_menus
@@ -456,8 +475,8 @@ CREATE TABLE `roles_menus`  (
   `role_id` bigint(20) NOT NULL COMMENT '角色ID',
   PRIMARY KEY (`menu_id`, `role_id`) USING BTREE,
   INDEX `FKcngg2qadojhi3a651a5adkvbq`(`role_id`) USING BTREE,
-  CONSTRAINT `FKcngg2qadojhi3a651a5adkvbq` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  CONSTRAINT `FKq1knxf8ykt26we8k331naabjx` FOREIGN KEY (`menu_id`) REFERENCES `menu` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+  CONSTRAINT `FKo7wsmlrrxb2osfaoavp46rv2r` FOREIGN KEY (`menu_id`) REFERENCES `menu` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `FKtag324maketmxffly3pdyh193` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
@@ -568,7 +587,7 @@ INSERT INTO `roles_permissions` VALUES (2, 51);
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user`  (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'ID',
-  `avatar` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '头像地址',
+  `avatar_id` bigint(20) NULL DEFAULT NULL COMMENT '头像',
   `create_time` datetime NULL DEFAULT NULL COMMENT '创建日期',
   `email` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '邮箱',
   `enabled` bigint(20) NULL DEFAULT NULL COMMENT '状态：1启用、0禁用',
@@ -583,16 +602,30 @@ CREATE TABLE `user`  (
   UNIQUE INDEX `username`(`username`) USING BTREE,
   INDEX `FK5rwmryny6jthaaxkogownknqp`(`dept_id`) USING BTREE,
   INDEX `FKfftoc2abhot8f2wu6cl9a5iky`(`job_id`) USING BTREE,
+  INDEX `FKpq2dhypk2qgt68nauh2by22jb`(`avatar_id`) USING BTREE,
   CONSTRAINT `FK5rwmryny6jthaaxkogownknqp` FOREIGN KEY (`dept_id`) REFERENCES `dept` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  CONSTRAINT `FKfftoc2abhot8f2wu6cl9a5iky` FOREIGN KEY (`job_id`) REFERENCES `job` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+  CONSTRAINT `FKfftoc2abhot8f2wu6cl9a5iky` FOREIGN KEY (`job_id`) REFERENCES `job` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `FKpq2dhypk2qgt68nauh2by22jb` FOREIGN KEY (`avatar_id`) REFERENCES `user_avatar` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES (1, 'https://i.loli.net/2019/04/04/5ca5b971e1548.jpeg', '2018-08-23 09:11:56', 'admin@eladmin.net', 1, 'e10adc3949ba59abbe56e057f20f883e', 'admin', '2019-05-18 17:34:21', 2, '18888888888', 11);
-INSERT INTO `user` VALUES (3, 'https://aurora-1255840532.cos.ap-chengdu.myqcloud.com/8918a306ea314404835a9196585c4b75.jpeg', '2018-12-27 20:05:26', 'test@eladmin.net', 1, 'e10adc3949ba59abbe56e057f20f883e', 'test', '2019-04-01 09:15:24', 2, '17777777777', 12);
-INSERT INTO `user` VALUES (5, 'https://aurora-1255840532.cos.ap-chengdu.myqcloud.com/8918a306ea314404835a9196585c4b75.jpeg', '2019-04-02 10:07:12', 'hr@eladmin.net', 1, 'e10adc3949ba59abbe56e057f20f883e', 'hr', NULL, 11, '15555555555', 8);
+INSERT INTO `user` VALUES (1, NULL, '2018-08-23 09:11:56', 'admin@eladmin.net', 1, 'e10adc3949ba59abbe56e057f20f883e', 'admin', '2019-05-18 17:34:21', 2, '18888888888', 11);
+INSERT INTO `user` VALUES (3, NULL, '2018-12-27 20:05:26', 'test@eladmin.net', 1, 'e10adc3949ba59abbe56e057f20f883e', 'test', '2019-04-01 09:15:24', 2, '17777777777', 12);
+INSERT INTO `user` VALUES (5, NULL, '2019-04-02 10:07:12', 'hr@eladmin.net', 1, 'e10adc3949ba59abbe56e057f20f883e', 'hr', NULL, 11, '15555555555', 8);
+
+-- ----------------------------
+-- Table structure for user_avatar
+-- ----------------------------
+DROP TABLE IF EXISTS `user_avatar`;
+CREATE TABLE `user_avatar`  (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `real_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `path` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `size` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for users_roles
@@ -603,8 +636,8 @@ CREATE TABLE `users_roles`  (
   `role_id` bigint(20) NOT NULL COMMENT '角色ID',
   PRIMARY KEY (`user_id`, `role_id`) USING BTREE,
   INDEX `FKq4eq273l04bpu4efj0jd0jb98`(`role_id`) USING BTREE,
-  CONSTRAINT `users_roles_ibfk_1` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  CONSTRAINT `users_roles_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+  CONSTRAINT `FKgd3iendaoyh04b95ykqise6qh` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `FKt4v0rrweyk393bdgt107vdx0x` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
@@ -627,7 +660,7 @@ CREATE TABLE `verification_code`  (
   `value` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '接收邮箱或者手机号码',
   `scenes` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '业务名称：如重置邮箱、重置密码等',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for visits
@@ -642,6 +675,6 @@ CREATE TABLE `visits`  (
   `week_day` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `UK_11aksgq87euk9bcyeesfs4vtp`(`date`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 81 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 89 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 SET FOREIGN_KEY_CHECKS = 1;

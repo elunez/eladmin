@@ -155,8 +155,7 @@ public class UserController {
      */
     @PostMapping(value = "/users/updateAvatar")
     public ResponseEntity updateAvatar(@RequestParam MultipartFile file){
-        Picture picture = pictureService.upload(file, SecurityUtils.getUsername());
-        userService.updateAvatar(SecurityUtils.getUsername(),picture.getUrl());
+        userService.updateAvatar(file);
         return new ResponseEntity(HttpStatus.OK);
     }
 
