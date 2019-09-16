@@ -40,7 +40,7 @@ public class QueryHelp {
                     String attributeName = isBlank(propName) ? field.getName() : propName;
                     Class<?> fieldType = field.getType();
                     Object val = field.get(query);
-                    if (ObjectUtil.isNull(val)) {
+                    if (ObjectUtil.isNull(val) || "".equals(val)) {
                         continue;
                     }
                     Join join = null;
