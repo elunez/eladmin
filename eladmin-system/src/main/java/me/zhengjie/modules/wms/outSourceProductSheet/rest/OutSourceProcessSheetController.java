@@ -15,6 +15,9 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.annotations.*;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 /**
 * @author jie
 * @date 2019-08-17
@@ -59,5 +62,14 @@ public class OutSourceProcessSheetController {
     public ResponseEntity delete(@PathVariable Long id){
         outSourceProcessSheetService.delete(id);
         return new ResponseEntity(HttpStatus.OK);
+    }
+
+
+    @Log("初始化委外加工单编号")
+    @GetMapping(value = "/initOutSourceProcessSheetCode")
+    public ResponseEntity initOutSourceProcessSheetCode(){
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS");//设置日期格式
+        String supplierCode = "OS"+ LocalDateTime.now().format(fmt);
+        return new ResponseEntity(supplierCode,HttpStatus.OK);
     }
 }

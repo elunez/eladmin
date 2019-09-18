@@ -3,6 +3,8 @@ package me.zhengjie.modules.wms.outSourceProductSheet.domain;
 import lombok.Data;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
+import org.hibernate.annotations.CreationTimestamp;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.io.Serializable;
@@ -27,10 +29,12 @@ public class OutSourceProcessSheet implements Serializable {
 
     // 创建时间
     @Column(name = "create_time")
+    @CreationTimestamp
     private Timestamp createTime;
 
     // 更新时间
     @Column(name = "update_time")
+    @CreationTimestamp
     private Timestamp updateTime;
 
     // 委外加工公司名称
