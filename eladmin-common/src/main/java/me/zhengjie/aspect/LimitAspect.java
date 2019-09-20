@@ -1,7 +1,7 @@
 package me.zhengjie.aspect;
 
 import com.google.common.collect.ImmutableList;
-import me.zhengjie.aop.limit.Limit;
+import me.zhengjie.annotation.Limit;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.utils.RequestHolder;
 import me.zhengjie.utils.StringUtils;
@@ -28,7 +28,7 @@ public class LimitAspect {
     private static final Logger logger = LoggerFactory.getLogger(LimitAspect.class);
 
 
-    @Pointcut("@annotation(me.zhengjie.aop.limit.Limit)")
+    @Pointcut("@annotation(me.zhengjie.annotation.Limit)")
     public void pointcut() {
     }
 
@@ -39,7 +39,6 @@ public class LimitAspect {
         Method signatureMethod = signature.getMethod();
         Limit limit = signatureMethod.getAnnotation(Limit.class);
         LimitType limitType = limit.limitType();
-        String name = limit.name();
         String key = limit.key();
         if (StringUtils.isEmpty(key)) {
             switch (limitType) {

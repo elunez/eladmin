@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -15,7 +14,7 @@ import java.util.Set;
 
 /**
  * 角色
- * @author jie
+ * @author Zheng Jie
  * @date 2018-11-22
  */
 @Entity

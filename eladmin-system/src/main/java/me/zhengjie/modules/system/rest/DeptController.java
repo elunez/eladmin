@@ -6,7 +6,7 @@ import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.modules.system.domain.Dept;
 import me.zhengjie.modules.system.service.DeptService;
 import me.zhengjie.modules.system.service.dto.DeptDTO;
-import me.zhengjie.modules.system.service.query.DeptQueryService;
+import me.zhengjie.modules.system.service.dto.DeptQueryCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,10 +14,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
-import java.util.Set;
 
 /**
-* @author jie
+* @author Zheng Jie
 * @date 2019-03-25
 */
 @RestController
@@ -28,9 +27,6 @@ public class DeptController {
     private DeptService deptService;
 
     @Autowired
-    private DeptQueryService deptQueryService;
-
-    @Autowired
     private DataScope dataScope;
 
     private static final String ENTITY_NAME = "dept";
@@ -38,10 +34,10 @@ public class DeptController {
     @Log("查询部门")
     @GetMapping(value = "/dept")
     @PreAuthorize("hasAnyRole('ADMIN','USER_ALL','USER_SELECT','DEPT_ALL','DEPT_SELECT')")
-    public ResponseEntity getDepts(DeptDTO resources){
+    public ResponseEntity getDepts(DeptQueryCriteria criteria){
         // 数据权限
-        Set<Long> deptIds = dataScope.getDeptIds();
-        List<DeptDTO> deptDTOS = deptQueryService.queryAll(resources, deptIds);
+        criteria.setIds(dataScope.getDeptIds());
+        List<DeptDTO> deptDTOS = deptService.queryAll(criteria);
         return new ResponseEntity(deptService.buildTree(deptDTOS),HttpStatus.OK);
     }
 

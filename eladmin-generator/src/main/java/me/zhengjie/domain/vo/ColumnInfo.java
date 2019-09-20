@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 /**
  * 列的数据信息
- * @author jie
+ * @author Zheng Jie
  * @date 2019-01-02
  */
 @Data
@@ -28,6 +28,9 @@ public class ColumnInfo {
 
     /** 数据库字段键类型 **/
     private Object columnKey;
+
+    /** 额外的参数 **/
+    private Object extra;
 
     /** 查询 1:模糊 2：精确 **/
     private String columnQuery;

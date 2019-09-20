@@ -2,7 +2,7 @@ package me.zhengjie.utils;
 
 /**
  * 常用静态常量
- * @author jie
+ * @author Zheng Jie
  * @date 2018-12-26
  */
 public class ElAdminConstant {
@@ -10,6 +10,11 @@ public class ElAdminConstant {
     public static final String RESET_PASS = "重置密码";
 
     public static final String RESET_MAIL = "重置邮箱";
+
+    /**
+     * 用于IP定位转换
+     */
+    public static final String REGION = "内网IP|内网IP";
 
     /**
      * 常用接口

@@ -2,6 +2,8 @@ package me.zhengjie.modules.system.service.impl;
 
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.modules.system.domain.Dept;
+import me.zhengjie.modules.system.service.dto.DeptQueryCriteria;
+import me.zhengjie.utils.QueryHelp;
 import me.zhengjie.utils.ValidationUtil;
 import me.zhengjie.modules.system.repository.DeptRepository;
 import me.zhengjie.modules.system.service.DeptService;
@@ -12,12 +14,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
-
 import java.util.*;
 import java.util.stream.Collectors;
 
 /**
-* @author jie
+* @author Zheng Jie
 * @date 2019-03-25
 */
 @Service
@@ -29,6 +30,11 @@ public class DeptServiceImpl implements DeptService {
 
     @Autowired
     private DeptMapper deptMapper;
+
+    @Override
+    public List<DeptDTO> queryAll(DeptQueryCriteria criteria) {
+        return deptMapper.toDto(deptRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder)));
+    }
 
     @Override
     public DeptDTO findById(Long id) {
@@ -43,9 +49,15 @@ public class DeptServiceImpl implements DeptService {
     }
 
     @Override
+    public Set<Dept> findByRoleIds(Long id) {
+        return deptRepository.findByRoles_Id(id);
+    }
+
+    @Override
     public Object buildTree(List<DeptDTO> deptDTOS) {
         Set<DeptDTO> trees = new LinkedHashSet<>();
         Set<DeptDTO> depts= new LinkedHashSet<>();
+        List<String> deptNames = deptDTOS.stream().map(DeptDTO::getName).collect(Collectors.toList());
         Boolean isChild;
         for (DeptDTO deptDTO : deptDTOS) {
             isChild = false;
@@ -61,9 +73,10 @@ public class DeptServiceImpl implements DeptService {
                     deptDTO.getChildren().add(it);
                 }
             }
-            if(isChild) {
+            if(isChild)
                 depts.add(deptDTO);
-            }
+            else if(!deptNames.contains(deptRepository.findNameById(deptDTO.getPid())))
+                depts.add(deptDTO);
         }
 
         if (CollectionUtils.isEmpty(trees)) {
@@ -92,9 +105,7 @@ public class DeptServiceImpl implements DeptService {
         }
         Optional<Dept> optionalDept = deptRepository.findById(resources.getId());
         ValidationUtil.isNull( optionalDept,"Dept","id",resources.getId());
-
         Dept dept = optionalDept.get();
-        // 此处需自己修改
         resources.setId(dept.getId());
         deptRepository.save(resources);
     }

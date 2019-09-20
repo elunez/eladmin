@@ -2,12 +2,14 @@ package me.zhengjie.modules.system.service;
 
 import me.zhengjie.modules.system.domain.Job;
 import me.zhengjie.modules.system.service.dto.JobDTO;
+import me.zhengjie.modules.system.service.dto.JobQueryCriteria;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Pageable;
 
 /**
-* @author jie
+* @author Zheng Jie
 * @date 2019-03-29
 */
 @CacheConfig(cacheNames = "job")
@@ -42,4 +44,12 @@ public interface JobService {
      */
     @CacheEvict(allEntries = true)
     void delete(Long id);
+
+    /**
+     * queryAll
+     * @param criteria
+     * @param pageable
+     * @return
+     */
+    Object queryAll(JobQueryCriteria criteria, Pageable pageable);
 }

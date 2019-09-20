@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 /**
  * 七牛云对象存储配置类
- * @author jie
+ * @author Zheng Jie
  * @date 2018-12-31
  */
 @Data
@@ -16,7 +16,6 @@ import java.io.Serializable;
 public class QiniuConfig implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     /**

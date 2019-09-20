@@ -11,7 +11,7 @@ import java.util.Date;
 import static org.quartz.TriggerBuilder.newTrigger;
 
 /**
- * @author jie
+ * @author Zheng Jie
  * @date 2019-01-07
  */
 @Slf4j
@@ -94,6 +94,7 @@ public class QuartzManage {
     public void deleteJob(QuartzJob quartzJob){
         try {
             JobKey jobKey = JobKey.jobKey(JOB_NAME + quartzJob.getId());
+            scheduler.pauseJob(jobKey);
             scheduler.deleteJob(jobKey);
         } catch (Exception e){
             log.error("删除定时任务失败", e);

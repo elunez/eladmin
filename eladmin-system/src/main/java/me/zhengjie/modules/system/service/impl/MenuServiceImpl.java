@@ -2,7 +2,6 @@ package me.zhengjie.modules.system.service.impl;
 
 import cn.hutool.core.util.StrUtil;
 import me.zhengjie.modules.system.domain.Menu;
-import me.zhengjie.modules.system.domain.Role;
 import me.zhengjie.modules.system.domain.vo.MenuMetaVo;
 import me.zhengjie.modules.system.domain.vo.MenuVo;
 import me.zhengjie.exception.BadRequestException;
@@ -10,7 +9,10 @@ import me.zhengjie.exception.EntityExistException;
 import me.zhengjie.modules.system.repository.MenuRepository;
 import me.zhengjie.modules.system.service.MenuService;
 import me.zhengjie.modules.system.service.dto.MenuDTO;
+import me.zhengjie.modules.system.service.dto.MenuQueryCriteria;
+import me.zhengjie.modules.system.service.dto.RoleSmallDTO;
 import me.zhengjie.modules.system.service.mapper.MenuMapper;
+import me.zhengjie.utils.QueryHelp;
 import me.zhengjie.utils.ValidationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,6 +32,11 @@ public class MenuServiceImpl implements MenuService {
     private MenuMapper menuMapper;
 
     @Override
+    public List queryAll(MenuQueryCriteria criteria){
+        return menuMapper.toDto(menuRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder)));
+    }
+
+    @Override
     public MenuDTO findById(long id) {
         Optional<Menu> menu = menuRepository.findById(id);
         ValidationUtil.isNull(menu,"Menu","id",id);
@@ -37,9 +44,9 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
-    public List<MenuDTO> findByRoles(List<Role> roles) {
+    public List<MenuDTO> findByRoles(List<RoleSmallDTO> roles) {
         Set<Menu> menus = new LinkedHashSet<>();
-        for (Role role : roles) {
+        for (RoleSmallDTO role : roles) {
             List<Menu> menus1 = menuRepository.findByRoles_IdOrderBySortAsc(role.getId()).stream().collect(Collectors.toList());
             menus.addAll(menus1);
         }

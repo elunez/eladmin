@@ -9,7 +9,7 @@ import java.sql.Timestamp;
 import java.io.Serializable;
 
 /**
-* @author jie
+* @author Zheng Jie
 * @date 2019-03-29
 */
 @Data
@@ -34,6 +34,11 @@ public class JobDTO implements Serializable {
     private Boolean enabled;
 
     private DeptDTO dept;
+
+    /**
+     * 如果分公司存在相同部门，则显示上级部门名称
+     */
+    private String deptSuperiorName;
 
     /**
      * 创建日期

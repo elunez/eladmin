@@ -4,7 +4,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
-* @author jie
+* @author Zheng Jie
 * @date 2019-04-10
 */
 @Data
@@ -26,9 +26,4 @@ public class DictDetailDTO implements Serializable {
      * 排序
      */
     private String sort;
-
-    /**
-     * 字典id
-     */
-    private String dictName;
 }

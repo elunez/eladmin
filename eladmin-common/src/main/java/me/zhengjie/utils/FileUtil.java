@@ -2,13 +2,13 @@ package me.zhengjie.utils;
 
 import cn.hutool.core.util.IdUtil;
 import org.springframework.web.multipart.MultipartFile;
-import java.io.File;
-import java.io.IOException;
+
+import java.io.*;
 import java.text.DecimalFormat;
 
 /**
  * File工具类，扩展 hutool 工具包
- * @author jie
+ * @author Zheng Jie
  * @date 2018-12-27
  */
 public class FileUtil extends cn.hutool.core.io.FileUtil {
@@ -115,5 +115,28 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
             resultSize = size + "B   ";
         }
         return resultSize;
+    }
+
+    /**
+     * inputStream 转 File
+     * @param ins
+     * @param name
+     * @return
+     * @throws Exception
+     */
+    public static File inputStreamToFile(InputStream ins, String name) throws Exception{
+        File file = new File(System.getProperty("java.io.tmpdir") + name);
+        if (file.exists()) {
+            return file;
+        }
+        OutputStream os = new FileOutputStream(file);
+        int bytesRead = 0;
+        byte[] buffer = new byte[8192];
+        while ((bytesRead = ins.read(buffer, 0, 8192)) != -1) {
+            os.write(buffer, 0, bytesRead);
+        }
+        os.close();
+        ins.close();
+        return file;
     }
 }

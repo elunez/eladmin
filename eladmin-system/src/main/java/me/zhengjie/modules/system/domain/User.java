@@ -3,7 +3,6 @@ package me.zhengjie.modules.system.domain;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -14,7 +13,7 @@ import java.util.Date;
 import java.util.Set;
 
 /**
- * @author jie
+ * @author Zheng Jie
  * @date 2018-11-22
  */
 @Entity

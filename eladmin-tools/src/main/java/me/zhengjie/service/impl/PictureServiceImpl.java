@@ -9,10 +9,10 @@ import me.zhengjie.domain.Picture;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.repository.PictureRepository;
 import me.zhengjie.service.PictureService;
-import me.zhengjie.utils.ElAdminConstant;
-import me.zhengjie.utils.FileUtil;
-import me.zhengjie.utils.ValidationUtil;
+import me.zhengjie.service.dto.PictureQueryCriteria;
+import me.zhengjie.utils.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.Optional;
 
 /**
- * @author jie
+ * @author Zheng Jie
  * @date 2018-12-27
  */
 @Slf4j
@@ -40,11 +40,15 @@ public class PictureServiceImpl implements PictureService {
     public static final String MSG = "msg";
 
     @Override
+    public Object queryAll(PictureQueryCriteria criteria, Pageable pageable){
+        return PageUtil.toPage(pictureRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable));
+    }
+
+    @Override
     @Transactional(rollbackFor = Throwable.class)
     public Picture upload(MultipartFile multipartFile, String username) {
         File file = FileUtil.toFile(multipartFile);
-
-        HashMap<String, Object> paramMap = new HashMap<>();
+        HashMap<String, Object> paramMap = new HashMap<>(1);
 
         paramMap.put("smfile", file);
         String result= HttpUtil.post(ElAdminConstant.Url.SM_MS_URL, paramMap);
@@ -61,7 +65,7 @@ public class PictureServiceImpl implements PictureService {
         picture.setFilename(FileUtil.getFileNameNoEx(multipartFile.getOriginalFilename())+"."+FileUtil.getExtensionName(multipartFile.getOriginalFilename()));
         pictureRepository.save(picture);
         //删除临时文件
-        FileUtil.deleteFile(file);
+        FileUtil.del(file);
         return picture;
 
     }

@@ -4,10 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import me.zhengjie.aop.log.Log;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.modules.quartz.domain.QuartzJob;
-import me.zhengjie.modules.quartz.domain.QuartzLog;
 import me.zhengjie.modules.quartz.service.QuartzJobService;
-import me.zhengjie.modules.quartz.service.query.QuartzJobQueryService;
-import me.zhengjie.modules.quartz.service.query.QuartzLogQueryService;
+import me.zhengjie.modules.quartz.service.dto.JobQueryCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -17,7 +15,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * @author jie
+ * @author Zheng Jie
  * @date 2019-01-07
  */
 @Slf4j
@@ -30,29 +28,17 @@ public class QuartzJobController {
     @Autowired
     private QuartzJobService quartzJobService;
 
-    @Autowired
-    private QuartzJobQueryService quartzJobQueryService;
-
-    @Autowired
-    private QuartzLogQueryService quartzLogQueryService;
-
     @Log("查询定时任务")
     @GetMapping(value = "/jobs")
     @PreAuthorize("hasAnyRole('ADMIN','JOB_ALL','JOB_SELECT')")
-    public ResponseEntity getJobs(QuartzJob resources, Pageable pageable){
-        return new ResponseEntity(quartzJobQueryService.queryAll(resources,pageable), HttpStatus.OK);
+    public ResponseEntity getJobs(JobQueryCriteria criteria, Pageable pageable){
+        return new ResponseEntity(quartzJobService.queryAll(criteria,pageable), HttpStatus.OK);
     }
 
-    /**
-     * 查询定时任务日志
-     * @param resources
-     * @param pageable
-     * @return
-     */
     @GetMapping(value = "/jobLogs")
     @PreAuthorize("hasAnyRole('ADMIN','JOB_ALL','JOB_SELECT')")
-    public ResponseEntity getJobLogs(QuartzLog resources, Pageable pageable){
-        return new ResponseEntity(quartzLogQueryService.queryAll(resources,pageable), HttpStatus.OK);
+    public ResponseEntity getJobLogs(JobQueryCriteria criteria, Pageable pageable){
+        return new ResponseEntity(quartzJobService.queryAllLog(criteria,pageable), HttpStatus.OK);
     }
 
     @Log("新增定时任务")

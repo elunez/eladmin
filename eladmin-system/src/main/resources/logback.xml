@@ -8,9 +8,6 @@
             <pattern>%black(%contextName-) %red(%d{yyyy-MM-dd HH:mm:ss}) %green([%thread]) %highlight(%-5level) %boldMagenta(%logger{36}) - %gray(%msg%n)</pattern>
             <charset>utf-8</charset>
         </encoder>
-
-        <!--添加我们自定义的filter-->
-        <filter class="me.zhengjie.modules.monitor.config.LogFilter"></filter>
     </appender>
 
     <!--普通日志输出到控制台-->

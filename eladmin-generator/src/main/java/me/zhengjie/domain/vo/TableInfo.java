@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 /**
  * 表的数据信息
- * @author jie
+ * @author Zheng Jie
  * @date 2019-01-02
  */
 @Data
@@ -19,4 +19,15 @@ public class TableInfo {
 
     /** 创建日期 **/
     private Object createTime;
+
+    // 数据库引擎
+    private Object engine;
+
+    // 编码集
+    private Object coding;
+
+    // 备注
+    private Object remark;
+
+
 }

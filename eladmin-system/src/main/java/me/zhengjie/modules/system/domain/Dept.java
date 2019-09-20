@@ -11,7 +11,7 @@ import java.io.Serializable;
 import java.util.Set;
 
 /**
-* @author jie
+* @author Zheng Jie
 * @date 2019-03-25
 */
 @Entity
@@ -45,13 +45,13 @@ public class Dept implements Serializable {
     @NotNull
     private Long pid;
 
+    @JsonIgnore
+    @ManyToMany(mappedBy = "depts")
+    private Set<Role> roles;
+
     @Column(name = "create_time")
     @CreationTimestamp
     private Timestamp createTime;
-
-    @ManyToMany(mappedBy = "depts")
-    @JsonIgnore
-    private Set<Role> roles;
 
     public @interface Update {}
 }

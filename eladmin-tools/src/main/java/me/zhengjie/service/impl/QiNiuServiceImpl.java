@@ -15,20 +15,19 @@ import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.repository.QiNiuConfigRepository;
 import me.zhengjie.repository.QiniuContentRepository;
 import me.zhengjie.service.QiNiuService;
-import me.zhengjie.utils.QiNiuUtil;
-import me.zhengjie.utils.FileUtil;
-import me.zhengjie.utils.ValidationUtil;
+import me.zhengjie.service.dto.QiniuQueryCriteria;
+import me.zhengjie.utils.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.util.Optional;
 
 /**
- * @author jie
+ * @author Zheng Jie
  * @date 2018-12-31
  */
 @Service
@@ -45,6 +44,11 @@ public class QiNiuServiceImpl implements QiNiuService {
     private Long maxSize;
 
     private final String TYPE = "公开";
+
+    @Override
+    public Object queryAll(QiniuQueryCriteria criteria, Pageable pageable){
+        return PageUtil.toPage(qiniuContentRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable));
+    }
 
     @Override
     public QiniuConfig find() {
@@ -80,7 +84,7 @@ public class QiNiuServiceImpl implements QiNiuService {
         /**
          * 构造一个带指定Zone对象的配置类
          */
-        Configuration cfg = QiNiuUtil.getConfiguration(qiniuConfig.getZone());
+        Configuration cfg = new Configuration(QiNiuUtil.getRegion(qiniuConfig.getZone()));
         UploadManager uploadManager = new UploadManager(cfg);
         Auth auth = Auth.create(qiniuConfig.getAccessKey(), qiniuConfig.getSecretKey());
         String upToken = auth.uploadToken(qiniuConfig.getBucket());
@@ -132,7 +136,7 @@ public class QiNiuServiceImpl implements QiNiuService {
     @Transactional(rollbackFor = Exception.class)
     public void delete(QiniuContent content, QiniuConfig config) {
         //构造一个带指定Zone对象的配置类
-        Configuration cfg = QiNiuUtil.getConfiguration(config.getZone());
+        Configuration cfg = new Configuration(QiNiuUtil.getRegion(config.getZone()));
         Auth auth = Auth.create(config.getAccessKey(), config.getSecretKey());
         BucketManager bucketManager = new BucketManager(auth, cfg);
         try {
@@ -150,7 +154,7 @@ public class QiNiuServiceImpl implements QiNiuService {
             throw new BadRequestException("请先添加相应配置，再操作");
         }
         //构造一个带指定Zone对象的配置类
-        Configuration cfg = QiNiuUtil.getConfiguration(config.getZone());
+        Configuration cfg = new Configuration(QiNiuUtil.getRegion(config.getZone()));
         Auth auth = Auth.create(config.getAccessKey(), config.getSecretKey());
         BucketManager bucketManager = new BucketManager(auth, cfg);
         //文件名前缀
@@ -177,7 +181,6 @@ public class QiNiuServiceImpl implements QiNiuService {
                 }
             }
         }
-
     }
 
     @Override

@@ -3,7 +3,7 @@ package me.zhengjie.rest;
 import me.zhengjie.aop.log.Log;
 import me.zhengjie.domain.Picture;
 import me.zhengjie.service.PictureService;
-import me.zhengjie.service.query.PictureQueryService;
+import me.zhengjie.service.dto.PictureQueryCriteria;
 import me.zhengjie.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -26,14 +26,11 @@ public class PictureController {
     @Autowired
     private PictureService pictureService;
 
-    @Autowired
-    private PictureQueryService pictureQueryService;
-
     @Log("查询图片")
     @PreAuthorize("hasAnyRole('ADMIN','PICTURE_ALL','PICTURE_SELECT')")
     @GetMapping(value = "/pictures")
-    public ResponseEntity getRoles(Picture resources, Pageable pageable){
-        return new ResponseEntity(pictureQueryService.queryAll(resources,pageable),HttpStatus.OK);
+    public ResponseEntity getRoles(PictureQueryCriteria criteria, Pageable pageable){
+        return new ResponseEntity(pictureService.queryAll(criteria,pageable),HttpStatus.OK);
     }
 
     /**
@@ -48,7 +45,7 @@ public class PictureController {
     public ResponseEntity upload(@RequestParam MultipartFile file){
         String userName = SecurityUtils.getUsername();
         Picture picture = pictureService.upload(file,userName);
-        Map map = new HashMap();
+        Map map = new HashMap(3);
         map.put("errno",0);
         map.put("id",picture.getId());
         map.put("data",new String[]{picture.getUrl()});

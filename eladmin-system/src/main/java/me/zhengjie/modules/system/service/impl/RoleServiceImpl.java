@@ -2,14 +2,20 @@ package me.zhengjie.modules.system.service.impl;
 
 import me.zhengjie.modules.system.domain.Menu;
 import me.zhengjie.modules.system.domain.Role;
-import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.exception.EntityExistException;
 import me.zhengjie.modules.system.repository.RoleRepository;
 import me.zhengjie.modules.system.service.RoleService;
 import me.zhengjie.modules.system.service.dto.RoleDTO;
+import me.zhengjie.modules.system.service.dto.RoleQueryCriteria;
+import me.zhengjie.modules.system.service.dto.RoleSmallDTO;
 import me.zhengjie.modules.system.service.mapper.RoleMapper;
+import me.zhengjie.modules.system.service.mapper.RoleSmallMapper;
+import me.zhengjie.utils.PageUtil;
+import me.zhengjie.utils.QueryHelp;
 import me.zhengjie.utils.ValidationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +23,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * @author jie
+ * @author Zheng Jie
  * @date 2018-12-03
  */
 @Service
@@ -29,6 +35,20 @@ public class RoleServiceImpl implements RoleService {
 
     @Autowired
     private RoleMapper roleMapper;
+
+    @Autowired
+    private RoleSmallMapper roleSmallMapper;
+
+    @Override
+    public Object queryAll(Pageable pageable) {
+        return roleMapper.toDto(roleRepository.findAll(pageable).getContent());
+    }
+
+    @Override
+    public Object queryAll(RoleQueryCriteria criteria, Pageable pageable) {
+        Page<Role> page = roleRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable);
+        return PageUtil.toPage(page.map(roleMapper::toDto));
+    }
 
     @Override
     public RoleDTO findById(long id) {
@@ -100,8 +120,8 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public List<Role> findByUsers_Id(Long id) {
-        return roleRepository.findByUsers_Id(id).stream().collect(Collectors.toList());
+    public List<RoleSmallDTO> findByUsers_Id(Long id) {
+        return roleSmallMapper.toDto(roleRepository.findByUsers_Id(id).stream().collect(Collectors.toList()));
     }
 
     @Override

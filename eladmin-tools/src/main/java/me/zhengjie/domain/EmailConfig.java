@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 /**
  * 邮件配置类，数据存覆盖式存入数据存
- * @author jie
+ * @author Zheng Jie
  * @date 2018-12-26
  */
 @Entity
@@ -17,7 +17,6 @@ import java.io.Serializable;
 public class EmailConfig implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     /**

@@ -7,7 +7,7 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 
 /**
- * @author jie
+ * @author Zheng Jie
  * @date 2019-01-14
  */
 @CacheConfig(cacheNames = "genConfig")
@@ -23,6 +23,7 @@ public interface GenConfigService {
     /**
      * update
      * @param genConfig
+     * @return
      */
     @CacheEvict(allEntries = true)
     GenConfig update(GenConfig genConfig);

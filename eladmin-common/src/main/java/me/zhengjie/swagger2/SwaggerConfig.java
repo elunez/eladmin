@@ -18,7 +18,7 @@ import java.util.List;
 
 /**
  * api页面 /swagger-ui.html
- * @author jie
+ * @author Zheng Jie
  * @date 2018-11-23
  */
 
@@ -54,8 +54,8 @@ public class SwaggerConfig {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("elune 接口文档")
-                .version("1.7")
+                .title("eladmin 接口文档")
+                .version("2.1")
                 .build();
     }
 

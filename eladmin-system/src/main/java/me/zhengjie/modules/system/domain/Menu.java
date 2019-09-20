@@ -9,10 +9,11 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Objects;
 import java.util.Set;
 
 /**
- * @author jie
+ * @author Zheng Jie
  * @date 2018-12-17
  */
 @Entity
@@ -61,4 +62,17 @@ public class Menu implements Serializable {
     private Timestamp createTime;
 
     public interface Update{}
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Menu menu = (Menu) o;
+        return Objects.equals(id, menu.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }
