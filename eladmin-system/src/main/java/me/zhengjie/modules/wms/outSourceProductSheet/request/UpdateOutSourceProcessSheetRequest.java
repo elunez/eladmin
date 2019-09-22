@@ -1,6 +1,7 @@
 package me.zhengjie.modules.wms.outSourceProductSheet.request;
 
 import lombok.Data;
+import me.zhengjie.modules.wms.outSourceProductSheet.service.dto.OutSourceProcessSheetProductDTO;
 
 import java.io.Serializable;
 import java.util.List;
@@ -11,6 +12,10 @@ import java.util.List;
  */
 @Data
 public class UpdateOutSourceProcessSheetRequest implements Serializable {
+
+    // 委外加工单主键
+    private Long id;
+
     // 委外加工公司名称
     private String outSourceCompanyName;
 
@@ -30,5 +35,5 @@ public class UpdateOutSourceProcessSheetRequest implements Serializable {
     private String outSourceProcessSheetCode;
 
     // 委外加工产品
-    private List<OutSourceProcessSheetProductRequest> outSourceProcessSheetProductList;
+    private List<OutSourceProcessSheetProductDTO> outSourceProcessSheetProductList;
 }

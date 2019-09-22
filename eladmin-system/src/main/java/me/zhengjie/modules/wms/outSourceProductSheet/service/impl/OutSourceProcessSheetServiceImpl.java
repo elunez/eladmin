@@ -1,6 +1,11 @@
 package me.zhengjie.modules.wms.outSourceProductSheet.service.impl;
 
 import me.zhengjie.exception.BadRequestException;
+import me.zhengjie.modules.wms.invoice.domain.Invoice;
+import me.zhengjie.modules.wms.invoice.domain.InvoiceProduct;
+import me.zhengjie.modules.wms.invoice.service.dto.InvoiceDTO;
+import me.zhengjie.modules.wms.invoice.service.dto.InvoiceDetailDTO;
+import me.zhengjie.modules.wms.invoice.service.dto.InvoiceProductDTO;
 import me.zhengjie.modules.wms.outSourceProductSheet.domain.OutSourceProcessSheet;
 import me.zhengjie.modules.wms.outSourceProductSheet.domain.OutSourceProcessSheetProduct;
 import me.zhengjie.modules.wms.outSourceProductSheet.repository.OutSourceProcessSheetProductRepository;
@@ -8,6 +13,7 @@ import me.zhengjie.modules.wms.outSourceProductSheet.request.CreateOutSourceProc
 import me.zhengjie.modules.wms.outSourceProductSheet.request.OutSourceProcessSheetProductRequest;
 import me.zhengjie.modules.wms.outSourceProductSheet.request.UpdateOutSourceProcessSheetRequest;
 import me.zhengjie.modules.wms.outSourceProductSheet.service.dto.OutSourceProcessSheetProductDTO;
+import me.zhengjie.modules.wms.outSourceProductSheet.service.mapper.OutSourceProcessSheetProductMapper;
 import me.zhengjie.utils.ValidationUtil;
 import me.zhengjie.modules.wms.outSourceProductSheet.repository.OutSourceProcessSheetRepository;
 import me.zhengjie.modules.wms.outSourceProductSheet.service.OutSourceProcessSheetService;
@@ -16,19 +22,29 @@ import me.zhengjie.modules.wms.outSourceProductSheet.service.dto.OutSourceProces
 import me.zhengjie.modules.wms.outSourceProductSheet.service.mapper.OutSourceProcessSheetMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import me.zhengjie.utils.PageUtil;
 import me.zhengjie.utils.QueryHelp;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 /**
 * @author jie
@@ -47,22 +63,70 @@ public class OutSourceProcessSheetServiceImpl implements OutSourceProcessSheetSe
     @Autowired
     private OutSourceProcessSheetMapper outSourceProcessSheetMapper;
 
+    @Autowired
+    private OutSourceProcessSheetProductMapper outSourceProcessSheetProductMapper;
+
     @Override
     public Object queryAll(OutSourceProcessSheetQueryCriteria criteria, Pageable pageable){
-        Page<OutSourceProcessSheet> page = outSourceProcessSheetRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable);
+        Specification<OutSourceProcessSheetProduct> specification = new Specification<OutSourceProcessSheetProduct>() {
+            @Override
+            public Predicate toPredicate(Root<OutSourceProcessSheetProduct> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+
+                List<Predicate> targetPredicateList = new ArrayList<>();
+
+                Predicate statusPredicate = criteriaBuilder.equal(root.get("status"), 1);
+                targetPredicateList.add(statusPredicate);
+
+                if(CollectionUtils.isEmpty(targetPredicateList)){
+                    return null;
+                }else{
+                    return criteriaBuilder.and(targetPredicateList.toArray(new Predicate[targetPredicateList.size()]));
+                }
+            }
+        };
+        Page<OutSourceProcessSheet> page = outSourceProcessSheetRepository.findAll(specification,pageable);
         return PageUtil.toPage(page.map(outSourceProcessSheetMapper::toDto));
     }
 
     @Override
     public Object queryAll(OutSourceProcessSheetQueryCriteria criteria){
-        return outSourceProcessSheetMapper.toDto(outSourceProcessSheetRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder)));
+        Specification<OutSourceProcessSheetProduct> specification = new Specification<OutSourceProcessSheetProduct>() {
+            @Override
+            public Predicate toPredicate(Root<OutSourceProcessSheetProduct> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+
+                List<Predicate> targetPredicateList = new ArrayList<>();
+
+                Predicate statusPredicate = criteriaBuilder.equal(root.get("status"), 1);
+                targetPredicateList.add(statusPredicate);
+
+                if(CollectionUtils.isEmpty(targetPredicateList)){
+                    return null;
+                }else{
+                    return criteriaBuilder.and(targetPredicateList.toArray(new Predicate[targetPredicateList.size()]));
+                }
+            }
+        };
+        return outSourceProcessSheetMapper.toDto(outSourceProcessSheetRepository.findAll(specification));
     }
 
     @Override
     public OutSourceProcessSheetDTO findById(Long id) {
-        Optional<OutSourceProcessSheet> sOutSourceProcessSheet = outSourceProcessSheetRepository.findById(id);
-        ValidationUtil.isNull(sOutSourceProcessSheet,"SOutSourceProcessSheet","id",id);
-        return outSourceProcessSheetMapper.toDto(sOutSourceProcessSheet.get());
+//        Optional<OutSourceProcessSheet> sOutSourceProcessSheet = outSourceProcessSheetRepository.findById(id);
+//        ValidationUtil.isNull(sOutSourceProcessSheet,"SOutSourceProcessSheet","id",id);
+//        return outSourceProcessSheetMapper.toDto(sOutSourceProcessSheet.get());
+
+
+        Optional<OutSourceProcessSheet> invoiceOptional = outSourceProcessSheetRepository.findById(id);
+        OutSourceProcessSheet outSourceProcessSheet = invoiceOptional.get();
+        OutSourceProcessSheetDTO outSourceProcessSheetDTO = outSourceProcessSheetMapper.toDto(outSourceProcessSheet);
+
+
+        List<OutSourceProcessSheetProduct> outSourceProcessSheetProductList = outSourceProcessSheetProductRepository.findByOutSourceProcessSheetIdAndStatusTrue(id);
+        if(!CollectionUtils.isEmpty(outSourceProcessSheetProductList)){
+            List<OutSourceProcessSheetProductDTO> outSourceProcessSheetProductDTOList = outSourceProcessSheetProductMapper.toDto(outSourceProcessSheetProductList);
+            outSourceProcessSheetDTO.setOutSourceProcessSheetProductList(outSourceProcessSheetProductDTOList);
+        }
+        return outSourceProcessSheetDTO;
     }
 
     @Override
@@ -116,6 +180,58 @@ public class OutSourceProcessSheetServiceImpl implements OutSourceProcessSheetSe
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void update(UpdateOutSourceProcessSheetRequest updateOutSourceProcessSheetRequest) {
+        OutSourceProcessSheet outSourceProcessSheet = new OutSourceProcessSheet();
+        BeanUtils.copyProperties(updateOutSourceProcessSheetRequest, outSourceProcessSheet);
+
+        outSourceProcessSheet.setStatus(true);
+
+        outSourceProcessSheetRepository.save(outSourceProcessSheet);
+
+        // 修改产品信息之前，查询该订单中原来的产品信息，key为产品code
+        List<OutSourceProcessSheetProduct> outSourceProcessSheetProductListBeforeUpdate = outSourceProcessSheetProductRepository.findByOutSourceProcessSheetIdAndStatusTrue(outSourceProcessSheet.getId());
+        Map<String, OutSourceProcessSheetProduct> outSourceProcessSheetProductMapBefore = outSourceProcessSheetProductListBeforeUpdate.stream().collect(Collectors.toMap(OutSourceProcessSheetProduct::getProductCode, Function.identity()));
+
+        List<OutSourceProcessSheetProductDTO> outSourceProcessSheetProductRequestList = updateOutSourceProcessSheetRequest.getOutSourceProcessSheetProductList();
+        if(CollectionUtils.isEmpty(outSourceProcessSheetProductRequestList)){
+            throw new BadRequestException("委外加工单产品不能为空!");
+        }
+
+        Map<String, OutSourceProcessSheetProductDTO> invoiceProductMapAfter = outSourceProcessSheetProductRequestList.stream().collect(Collectors.toMap(OutSourceProcessSheetProductDTO::getProductCode, Function.identity()));
+
+        //需要将订单中原来订单对应的产品删除了的数据
+        List<String> deleteTargetList = new ArrayList<>();
+        //比较量个map中，key不一样的数据
+        for(Map.Entry<String, OutSourceProcessSheetProduct> entry:outSourceProcessSheetProductMapBefore.entrySet()){
+            String productCode = entry.getKey();
+            //修改后的map记录对应的key在原来中是否存在
+            OutSourceProcessSheetProductDTO outSourceProcessSheetProductDTOTemp = invoiceProductMapAfter.get(productCode);
+            if(null == outSourceProcessSheetProductDTOTemp){
+                deleteTargetList.add(entry.getKey());
+            }
+
+        }
+
+
+        List<OutSourceProcessSheetProduct> outSourceProcessSheetProductList = new ArrayList<>();
+        for(OutSourceProcessSheetProductDTO outSourceProcessSheetProductDTO : outSourceProcessSheetProductRequestList){
+            OutSourceProcessSheetProduct outSourceProcessSheetProduct = new OutSourceProcessSheetProduct();
+            BeanUtils.copyProperties(outSourceProcessSheetProductDTO, outSourceProcessSheetProduct);
+            outSourceProcessSheetProduct.setOutSourceProcessSheetId(outSourceProcessSheet.getId());
+            outSourceProcessSheetProduct.setStatus(true);
+        }
+        outSourceProcessSheetProductRepository.saveAll(outSourceProcessSheetProductList);
+
+        /**
+         * 场景描述:
+         * 1.刚开始新增了 a b c三种产品
+         * 2.修改的时候删除了 a c两种产品
+         * 3.所以需要查修改前数据库中有的产品，再比较修改传过来的产品数据，如果修改后的在原来里面没有，需要将原来里面对应的删除
+         */
+        if(!CollectionUtils.isEmpty(deleteTargetList)){
+            for(String prductCode : deleteTargetList){
+                outSourceProcessSheetProductRepository.deleteByProductCodeAndOutSourceProcessSheetId(prductCode, outSourceProcessSheet.getId());
+            }
+        }
 
     }
 

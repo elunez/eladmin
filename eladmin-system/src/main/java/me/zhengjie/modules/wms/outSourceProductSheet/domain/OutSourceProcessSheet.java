@@ -16,7 +16,8 @@ import java.io.Serializable;
 @Entity
 @Data
 @Table(name="s_out_source_process_sheet")
-public class OutSourceProcessSheet implements Serializable {
+public class
+OutSourceProcessSheet implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

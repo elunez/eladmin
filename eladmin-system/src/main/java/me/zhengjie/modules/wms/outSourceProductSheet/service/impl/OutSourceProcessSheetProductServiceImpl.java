@@ -1,5 +1,6 @@
 package me.zhengjie.modules.wms.outSourceProductSheet.service.impl;
 
+import me.zhengjie.modules.wms.bd.domain.CustomerInfo;
 import me.zhengjie.modules.wms.outSourceProductSheet.domain.OutSourceProcessSheetProduct;
 import me.zhengjie.utils.ValidationUtil;
 import me.zhengjie.modules.wms.outSourceProductSheet.repository.OutSourceProcessSheetProductRepository;
@@ -8,14 +9,24 @@ import me.zhengjie.modules.wms.outSourceProductSheet.service.dto.OutSourceProces
 import me.zhengjie.modules.wms.outSourceProductSheet.service.dto.OutSourceProcessSheetProductQueryCriteria;
 import me.zhengjie.modules.wms.outSourceProductSheet.service.mapper.OutSourceProcessSheetProductMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import me.zhengjie.utils.PageUtil;
 import me.zhengjie.utils.QueryHelp;
+import org.springframework.util.CollectionUtils;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 /**
 * @author jie
@@ -33,13 +44,46 @@ public class OutSourceProcessSheetProductServiceImpl implements OutSourceProcess
 
     @Override
     public Object queryAll(OutSourceProcessSheetProductQueryCriteria criteria, Pageable pageable){
-        Page<OutSourceProcessSheetProduct> page = outSourceProcessSheetProductRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable);
-        return PageUtil.toPage(page.map(outSourceProcessSheetProductMapper::toDto));
+        Specification<OutSourceProcessSheetProduct> specification = new Specification<OutSourceProcessSheetProduct>() {
+            @Override
+            public Predicate toPredicate(Root<OutSourceProcessSheetProduct> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+
+                List<Predicate> targetPredicateList = new ArrayList<>();
+
+                Predicate statusPredicate = criteriaBuilder.equal(root.get("status"), 1);
+                targetPredicateList.add(statusPredicate);
+
+                if(CollectionUtils.isEmpty(targetPredicateList)){
+                    return null;
+                }else{
+                    return criteriaBuilder.and(targetPredicateList.toArray(new Predicate[targetPredicateList.size()]));
+                }
+            }
+        };
+        Page<OutSourceProcessSheetProduct> page = outSourceProcessSheetProductRepository.findAll(specification,pageable);
+        Page<OutSourceProcessSheetProductDTO> outSourceProcessSheetProductDTOPage = page.map(outSourceProcessSheetProductMapper::toDto);
+        return PageUtil.toPage(outSourceProcessSheetProductDTOPage);
     }
 
     @Override
     public Object queryAll(OutSourceProcessSheetProductQueryCriteria criteria){
-        return outSourceProcessSheetProductMapper.toDto(outSourceProcessSheetProductRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder)));
+        Specification<OutSourceProcessSheetProduct> specification = new Specification<OutSourceProcessSheetProduct>() {
+            @Override
+            public Predicate toPredicate(Root<OutSourceProcessSheetProduct> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+
+                List<Predicate> targetPredicateList = new ArrayList<>();
+
+                Predicate statusPredicate = criteriaBuilder.equal(root.get("status"), 1);
+                targetPredicateList.add(statusPredicate);
+
+                if(CollectionUtils.isEmpty(targetPredicateList)){
+                    return null;
+                }else{
+                    return criteriaBuilder.and(targetPredicateList.toArray(new Predicate[targetPredicateList.size()]));
+                }
+            }
+        };
+        return outSourceProcessSheetProductMapper.toDto(outSourceProcessSheetProductRepository.findAll(specification));
     }
 
     @Override

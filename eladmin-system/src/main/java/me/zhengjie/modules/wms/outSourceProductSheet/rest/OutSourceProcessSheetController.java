@@ -72,4 +72,10 @@ public class OutSourceProcessSheetController {
         String supplierCode = "OS"+ LocalDateTime.now().format(fmt);
         return new ResponseEntity(supplierCode,HttpStatus.OK);
     }
+
+    @Log("查看委外加工单")
+    @GetMapping(value = "/outSourceProcessSheet/{id}")
+    public ResponseEntity getOutSourceProcessSheet(@PathVariable Long id){
+        return new ResponseEntity(outSourceProcessSheetService.findById(id), HttpStatus.OK);
+    }
 }

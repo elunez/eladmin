@@ -139,6 +139,7 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public CustomerOrderDTO create(CreateCustomerOrderRequest createCustomerOrderRequest) {
+        Long totalMoney = 0L;
         //插入客户订单对应的产品信息
         List<CustomerOrderProductRequest> customerOrderProductRequestList = createCustomerOrderRequest.getCustomerOrderProductList();
         if(CollectionUtils.isEmpty(customerOrderProductRequestList)){
@@ -175,9 +176,16 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
             customerOrderProduct.setStatus(true);
             ProductInfo productInfo = productInfoRepository.findByProductCode(customerOrderProductRequest.getProductCode());
             customerOrderProduct.setProductId(productInfo.getId());
+            Long productNumber = customerOrderProduct.getProductNumber();
+            Long unitPrice = customerOrderProduct.getUnitPrice();
+            Long totalPrice = productNumber * unitPrice;
+            customerOrderProduct.setTotalPrice(totalPrice);
+            totalMoney = totalMoney + totalPrice;
             customerOrderProductList.add(customerOrderProduct);
         }
 
+        customerOrder.setTotalMoney(totalMoney);
+        customerOrderRepository.save(customerOrder);
         customerOrderProductRepository.saveAll(customerOrderProductList);
 
 
