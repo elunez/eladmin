@@ -259,6 +259,10 @@ public class InvoiceServiceImpl implements InvoiceService {
             BeanUtils.copyProperties(invoiceProductDTO, invoiceProduct);
             invoiceProduct.setInvoiceId(invoice.getId());
             invoiceProduct.setStatus(true);
+
+            if(!(!CollectionUtils.isEmpty(deleteTargetList) && deleteTargetList.contains(invoiceProductDTO.getId()))){
+                invoiceProductList.add(invoiceProduct);
+            }
         }
         invoiceProductRepository.saveAll(invoiceProductList);
 

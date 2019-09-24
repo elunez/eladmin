@@ -238,6 +238,9 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
             BeanUtils.copyProperties(customerOrderProductDTO, customerOrderProduct);
             customerOrderProduct.setCustomerOrderId(customerOrder.getId());
             customerOrderProduct.setStatus(true);
+            if(!(!CollectionUtils.isEmpty(deleteTargetList) && deleteTargetList.contains(customerOrderProductDTO.getId()))){
+                customerOrderProductList.add(customerOrderProduct);
+            }
         }
         customerOrderProductRepository.saveAll(customerOrderProductList);
 

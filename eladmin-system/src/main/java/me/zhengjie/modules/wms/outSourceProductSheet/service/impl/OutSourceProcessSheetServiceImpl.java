@@ -218,6 +218,10 @@ public class OutSourceProcessSheetServiceImpl implements OutSourceProcessSheetSe
             BeanUtils.copyProperties(outSourceProcessSheetProductDTO, outSourceProcessSheetProduct);
             outSourceProcessSheetProduct.setOutSourceProcessSheetId(outSourceProcessSheet.getId());
             outSourceProcessSheetProduct.setStatus(true);
+
+            if(!(!CollectionUtils.isEmpty(deleteTargetList) && deleteTargetList.contains(outSourceProcessSheetProductDTO.getId()))){
+                outSourceProcessSheetProductList.add(outSourceProcessSheetProduct);
+            }
         }
         outSourceProcessSheetProductRepository.saveAll(outSourceProcessSheetProductList);
 
