@@ -67,7 +67,7 @@ public interface PermissionService {
      * @param permissionDTOS
      * @return
      */
-    @Cacheable(keyGenerator = "keyGenerator")
+    @Cacheable
     Object buildTree(List<PermissionDTO> permissionDTOS);
 
     /**
@@ -75,7 +75,7 @@ public interface PermissionService {
      * @param criteria
      * @return
      */
-    @Cacheable(keyGenerator = "keyGenerator")
+    @Cacheable
     List<PermissionDTO> queryAll(PermissionQueryCriteria criteria);
 
     Set<Permission> getDeletePermission(List<Permission> permissions, Set<Permission> permissionSet);

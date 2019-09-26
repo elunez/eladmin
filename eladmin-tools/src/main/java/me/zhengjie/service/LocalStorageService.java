@@ -22,7 +22,7 @@ public interface LocalStorageService {
     * @param pageable
     * @return
     */
-    @Cacheable(keyGenerator = "keyGenerator")
+    @Cacheable
     Object queryAll(LocalStorageQueryCriteria criteria, Pageable pageable);
 
     /**
@@ -30,7 +30,7 @@ public interface LocalStorageService {
     * @param criteria
     * @return
     */
-    @Cacheable(keyGenerator = "keyGenerator")
+    @Cacheable
     public Object queryAll(LocalStorageQueryCriteria criteria);
 
     /**

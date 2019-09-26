@@ -58,7 +58,7 @@ public interface RoleService {
     @Cacheable(key = "'findByUsers_Id:' + #p0")
     List<RoleSmallDTO> findByUsers_Id(Long id);
 
-    @Cacheable(keyGenerator = "keyGenerator")
+    @Cacheable
     Integer findByRoles(Set<Role> roles);
 
     /**
@@ -85,7 +85,7 @@ public interface RoleService {
      * @param pageable
      * @return
      */
-    @Cacheable(keyGenerator = "keyGenerator")
+    @Cacheable
     Object queryAll(Pageable pageable);
 
     /**
@@ -94,7 +94,7 @@ public interface RoleService {
      * @param criteria
      * @return
      */
-    @Cacheable(keyGenerator = "keyGenerator")
+    @Cacheable
     Object queryAll(RoleQueryCriteria criteria, Pageable pageable);
 
     /**
@@ -102,7 +102,7 @@ public interface RoleService {
      * @param criteria
      * @return
      */
-    @Cacheable(keyGenerator = "keyGenerator")
+    @Cacheable
     List<RoleDTO> queryAll(RoleQueryCriteria criteria);
 
     @CacheEvict(allEntries = true)

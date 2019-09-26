@@ -24,7 +24,7 @@ public interface QiNiuService {
      * @param pageable
      * @return
      */
-    @Cacheable(keyGenerator = "keyGenerator")
+    @Cacheable
     Object queryAll(QiniuQueryCriteria criteria, Pageable pageable);
 
     /**

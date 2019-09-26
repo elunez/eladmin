@@ -23,7 +23,7 @@ public interface MenuService {
      * @param criteria
      * @return
      */
-    @Cacheable(keyGenerator = "keyGenerator")
+    @Cacheable
     List<MenuDTO> queryAll(MenuQueryCriteria criteria);
 
     /**

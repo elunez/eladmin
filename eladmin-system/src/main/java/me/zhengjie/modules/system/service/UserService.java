@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -81,11 +82,11 @@ public interface UserService {
     @CacheEvict(allEntries = true)
     void updateEmail(String username, String email);
 
-    @Cacheable(keyGenerator = "keyGenerator")
+    @Cacheable
     Object queryAll(UserQueryCriteria criteria, Pageable pageable);
 
-    @Cacheable(keyGenerator = "keyGenerator")
+    @Cacheable
     List<UserDTO> queryAll(UserQueryCriteria criteria);
 
-    void download(List<UserDTO> queryAll, HttpServletResponse response);
+    void download(List<UserDTO> queryAll, HttpServletResponse response) throws IOException;
 }

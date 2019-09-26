@@ -180,7 +180,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void download(List<UserDTO> queryAll, HttpServletResponse response) {
+    public void download(List<UserDTO> queryAll, HttpServletResponse response) throws IOException {
         List<Map<String, Object>> list = new ArrayList<>();
         for (UserDTO userDTO : queryAll) {
             List roles = userDTO.getRoles().stream().map(RoleSmallDTO::getName).collect(Collectors.toList());

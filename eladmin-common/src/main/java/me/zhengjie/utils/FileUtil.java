@@ -3,6 +3,7 @@ package me.zhengjie.utils;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.poi.excel.BigExcelWriter;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.ExcelWriter;
 import me.zhengjie.exception.BadRequestException;
@@ -197,24 +198,20 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
      * @return
      * @throws Exception
      */
-    public static void downloadExcel(List<Map<String, Object>> list, HttpServletResponse response){
-        // 通过工具类创建writer
-        ExcelWriter writer = ExcelUtil.getWriter();
+    public static void downloadExcel(List<Map<String, Object>> list, HttpServletResponse response) throws IOException {
+        String tempPath =System.getProperty("java.io.tmpdir") + IdUtil.fastSimpleUUID() + ".xlsx";
+        File file = new File(tempPath);
+        BigExcelWriter writer= ExcelUtil.getBigWriter(file);
         // 一次性写出内容，使用默认样式，强制输出标题
         writer.write(list, true);
         //response为HttpServletResponse对象
-        response.setContentType("application/vnd.ms-excel;charset=utf-8");
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8");
         //test.xls是弹出下载对话框的文件名，不能为中文，中文请自行编码
-        response.setHeader("Content-Disposition","attachment;filename=file.xls");
-        ServletOutputStream out= null;
-        try {
-            out = response.getOutputStream();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        response.setHeader("Content-Disposition","attachment;filename=file.xlsx");
+        ServletOutputStream out=response.getOutputStream();
+        // 终止后删除临时文件
+        file.deleteOnExit();
         writer.flush(out, true);
-        // 关闭writer，释放内存
-        writer.close();
         //此处记得关闭输出Servlet流
         IoUtil.close(out);
     }
