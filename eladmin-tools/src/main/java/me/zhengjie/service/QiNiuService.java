@@ -8,6 +8,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -23,7 +24,7 @@ public interface QiNiuService {
      * @param pageable
      * @return
      */
-    @Cacheable(keyGenerator = "keyGenerator")
+    @Cacheable
     Object queryAll(QiniuQueryCriteria criteria, Pageable pageable);
 
     /**
@@ -89,4 +90,7 @@ public interface QiNiuService {
      */
     @CacheEvict(allEntries = true)
     void deleteAll(Long[] ids, QiniuConfig config);
+
+    @CacheEvict(allEntries = true)
+    void update(String type);
 }

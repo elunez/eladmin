@@ -24,6 +24,13 @@ public interface MenuRepository extends JpaRepository<Menu, Long>, JpaSpecificat
     Menu findByName(String name);
 
     /**
+     * findByName
+     * @param name
+     * @return
+     */
+    Menu findByComponentName(String name);
+
+    /**
      * findByPid
      * @param pid
      * @return

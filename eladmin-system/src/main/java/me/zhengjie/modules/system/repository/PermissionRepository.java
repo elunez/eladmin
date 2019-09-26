@@ -1,13 +1,9 @@
 package me.zhengjie.modules.system.repository;
 
 import me.zhengjie.modules.system.domain.Permission;
-import me.zhengjie.modules.system.domain.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-
-import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 /**
  * @author Zheng Jie

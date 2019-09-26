@@ -1,6 +1,5 @@
 package me.zhengjie.modules.system.service.impl;
 
-import me.zhengjie.modules.system.domain.Menu;
 import me.zhengjie.modules.system.domain.Role;
 import me.zhengjie.exception.EntityExistException;
 import me.zhengjie.modules.system.repository.RoleRepository;
@@ -42,6 +41,11 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public Object queryAll(Pageable pageable) {
         return roleMapper.toDto(roleRepository.findAll(pageable).getContent());
+    }
+
+    @Override
+    public List<RoleDTO> queryAll(RoleQueryCriteria criteria) {
+        return roleMapper.toDto(roleRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder)));
     }
 
     @Override
@@ -104,13 +108,15 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public void untiedMenu(Menu menu) {
-        Set<Role> roles = roleRepository.findByMenus_Id(menu.getId());
-        for (Role role : roles) {
-            menu.getRoles().remove(role);
-            role.getMenus().remove(menu);
-            roleRepository.save(role);
-        }
+    @Transactional(rollbackFor = Exception.class)
+    public void untiedMenu(Long id) {
+        roleRepository.untiedMenu(id);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void untiedPermission(Long id) {
+        roleRepository.untiedPermission(id);
     }
 
     @Override

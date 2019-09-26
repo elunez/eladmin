@@ -26,6 +26,8 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -54,6 +56,13 @@ public class UserController {
 
     @Autowired
     private VerificationCodeService verificationCodeService;
+
+    @Log("导出用户数据")
+    @GetMapping(value = "/users/download")
+    @PreAuthorize("hasAnyRole('ADMIN','USER_ALL','USER_SELECT')")
+    public void update(HttpServletResponse response, UserQueryCriteria criteria) throws IOException {
+        userService.download(userService.queryAll(criteria), response);
+    }
 
     @Log("查询用户")
     @GetMapping(value = "/users")
@@ -147,8 +156,7 @@ public class UserController {
      */
     @PostMapping(value = "/users/updateAvatar")
     public ResponseEntity updateAvatar(@RequestParam MultipartFile file){
-        Picture picture = pictureService.upload(file, SecurityUtils.getUsername());
-        userService.updateAvatar(SecurityUtils.getUsername(),picture.getUrl());
+        userService.updateAvatar(file);
         return new ResponseEntity(HttpStatus.OK);
     }
 

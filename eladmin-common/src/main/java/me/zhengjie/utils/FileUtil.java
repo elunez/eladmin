@@ -1,10 +1,21 @@
 package me.zhengjie.utils;
 
+import cn.hutool.core.codec.Base64;
+import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.poi.excel.BigExcelWriter;
+import cn.hutool.poi.excel.ExcelUtil;
+import cn.hutool.poi.excel.ExcelWriter;
+import me.zhengjie.exception.BadRequestException;
 import org.springframework.web.multipart.MultipartFile;
-
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * File工具类，扩展 hutool 工具包
@@ -100,7 +111,7 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
      * @param size
      * @return
      */
-    public static String getSize(int size){
+    public static String getSize(long size){
         String resultSize = "";
         if (size / GB >= 1) {
             //如果当前Byte的值大于等于1GB
@@ -138,5 +149,92 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
         os.close();
         ins.close();
         return file;
+    }
+
+    /**
+     * 将文件名解析成文件的上传路径
+     *
+     * @param file
+     * @param filePath
+     * @return 上传到服务器的文件名
+     */
+    public static File upload(MultipartFile file, String filePath) {
+        Date date = new Date();
+        SimpleDateFormat format = new SimpleDateFormat("yyyyMMddhhmmssS");
+        String name = getFileNameNoEx(file.getOriginalFilename());
+        String suffix = getExtensionName(file.getOriginalFilename());
+        String nowStr = "-" + format.format(date);
+        try {
+            String fileName = name + nowStr + "." + suffix;
+            String path = filePath + fileName;
+            File dest = new File(path);
+            // 检测是否存在目录
+            if (!dest.getParentFile().exists()) {
+                dest.getParentFile().mkdirs();// 新建文件夹
+            }
+            String d = dest.getPath();
+            file.transferTo(dest);// 文件写入
+            return dest;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static String fileToBase64(File file) throws Exception {
+        FileInputStream inputFile = new FileInputStream(file);
+        String base64 =null;
+        byte[] buffer = new byte[(int)file.length()];
+        inputFile.read(buffer);
+        inputFile.close();
+        base64=new Base64().encode(buffer);
+        String encoded = base64.replaceAll("[\\s*\t\n\r]", "");
+        return encoded;
+    }
+
+    /**
+     * 导出excel
+     * @param list
+     * @return
+     * @throws Exception
+     */
+    public static void downloadExcel(List<Map<String, Object>> list, HttpServletResponse response) throws IOException {
+        String tempPath =System.getProperty("java.io.tmpdir") + IdUtil.fastSimpleUUID() + ".xlsx";
+        File file = new File(tempPath);
+        BigExcelWriter writer= ExcelUtil.getBigWriter(file);
+        // 一次性写出内容，使用默认样式，强制输出标题
+        writer.write(list, true);
+        //response为HttpServletResponse对象
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8");
+        //test.xls是弹出下载对话框的文件名，不能为中文，中文请自行编码
+        response.setHeader("Content-Disposition","attachment;filename=file.xlsx");
+        ServletOutputStream out=response.getOutputStream();
+        // 终止后删除临时文件
+        file.deleteOnExit();
+        writer.flush(out, true);
+        //此处记得关闭输出Servlet流
+        IoUtil.close(out);
+    }
+
+    public static String getFileType(String type) {
+        String documents = "txt doc pdf ppt pps xlsx xls";
+        String music = "mp3 wav wma mpa ram ra aac aif m4a";
+        String video = "avi mpg mpe mpeg asf wmv mov qt rm mp4 flv m4v webm ogv ogg";
+        String image = "bmp dib pcp dif wmf gif jpg tif eps psd cdr iff tga pcd mpt png jpeg";
+        if(image.indexOf(type) != -1){
+            return "图片";
+        } else if(documents.indexOf(type) != -1){
+            return "文档";
+        } else if(music.indexOf(type) != -1){
+            return "音乐";
+        } else if(video.indexOf(type) != -1){
+            return "视频";
+        } else return "其他";
+    }
+
+    public static void checkSize(long maxSize, long size) {
+        if(size > (maxSize * 1024 * 1024)){
+            throw new BadRequestException("文件超出规定大小");
+        }
     }
 }

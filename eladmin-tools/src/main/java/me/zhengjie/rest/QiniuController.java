@@ -38,6 +38,7 @@ public class QiniuController {
     @PutMapping(value = "/qiNiuConfig")
     public ResponseEntity emailConfig(@Validated @RequestBody QiniuConfig qiniuConfig){
         qiNiuService.update(qiniuConfig);
+        qiNiuService.update(qiniuConfig.getType());
         return new ResponseEntity(HttpStatus.OK);
     }
 

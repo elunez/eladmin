@@ -22,7 +22,7 @@ public interface DeptService {
      * @param criteria
      * @return
      */
-    @Cacheable(keyGenerator = "keyGenerator")
+    @Cacheable
     List<DeptDTO> queryAll(DeptQueryCriteria criteria);
 
     /**
@@ -60,7 +60,7 @@ public interface DeptService {
      * @param deptDTOS
      * @return
      */
-    @Cacheable(keyGenerator = "keyGenerator")
+    @Cacheable
     Object buildTree(List<DeptDTO> deptDTOS);
 
     /**
@@ -68,7 +68,7 @@ public interface DeptService {
      * @param pid
      * @return
      */
-    @Cacheable(keyGenerator = "keyGenerator")
+    @Cacheable
     List<Dept> findByPid(long pid);
 
     Set<Dept> findByRoleIds(Long id);

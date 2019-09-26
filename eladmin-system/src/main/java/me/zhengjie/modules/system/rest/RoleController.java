@@ -5,10 +5,11 @@ import me.zhengjie.aop.log.Log;
 import me.zhengjie.modules.system.domain.Role;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.modules.system.service.RoleService;
-import me.zhengjie.modules.system.service.dto.MenuQueryCriteria;
 import me.zhengjie.modules.system.service.dto.RoleQueryCriteria;
 import me.zhengjie.modules.system.service.dto.RoleSmallDTO;
 import me.zhengjie.utils.SecurityUtils;
+import me.zhengjie.utils.ThrowableUtil;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -16,6 +17,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.TransactionSystemException;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import java.util.Collections;
@@ -107,7 +109,11 @@ public class RoleController {
     @DeleteMapping(value = "/roles/{id}")
     @PreAuthorize("hasAnyRole('ADMIN','ROLES_ALL','ROLES_DELETE')")
     public ResponseEntity delete(@PathVariable Long id){
-        roleService.delete(id);
+        try {
+            roleService.delete(id);
+        }catch (Throwable e){
+            ThrowableUtil.throwForeignKeyException(e, "该角色存在用户关联，请取消关联后再试");
+        }
         return new ResponseEntity(HttpStatus.OK);
     }
 }

@@ -58,13 +58,24 @@ public class QueryHelp {
                         continue;
                     }
                     if (ObjectUtil.isNotEmpty(joinName)) {
-                        switch (q.join()) {
-                            case LEFT:
-                                join = root.join(joinName, JoinType.LEFT);
-                                break;
-                            case RIGHT:
-                                join = root.join(joinName, JoinType.RIGHT);
-                                break;
+                        String[] joinNames = joinName.split(">");
+                        for (String name : joinNames) {
+                            switch (q.join()) {
+                                case LEFT:
+                                    if(ObjectUtil.isNotEmpty(join)){
+                                        join = join.join(name, JoinType.LEFT);
+                                    } else {
+                                        join = root.join(name, JoinType.LEFT);
+                                    }
+                                    break;
+                                case RIGHT:
+                                    if(ObjectUtil.isNotEmpty(join)){
+                                        join = join.join(name, JoinType.RIGHT);
+                                    } else {
+                                        join = root.join(name, JoinType.RIGHT);
+                                    }
+                                    break;
+                            }
                         }
                     }
                     switch (q.type()) {

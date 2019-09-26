@@ -1,5 +1,7 @@
 package me.zhengjie.modules.system.service.impl;
 
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import me.zhengjie.modules.system.domain.Menu;
 import me.zhengjie.modules.system.domain.vo.MenuMetaVo;
@@ -8,11 +10,13 @@ import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.exception.EntityExistException;
 import me.zhengjie.modules.system.repository.MenuRepository;
 import me.zhengjie.modules.system.service.MenuService;
+import me.zhengjie.modules.system.service.RoleService;
 import me.zhengjie.modules.system.service.dto.MenuDTO;
 import me.zhengjie.modules.system.service.dto.MenuQueryCriteria;
 import me.zhengjie.modules.system.service.dto.RoleSmallDTO;
 import me.zhengjie.modules.system.service.mapper.MenuMapper;
 import me.zhengjie.utils.QueryHelp;
+import me.zhengjie.utils.StringUtils;
 import me.zhengjie.utils.ValidationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,6 +34,9 @@ public class MenuServiceImpl implements MenuService {
 
     @Autowired
     private MenuMapper menuMapper;
+
+    @Autowired
+    private RoleService roleService;
 
     @Override
     public List queryAll(MenuQueryCriteria criteria){
@@ -58,6 +65,11 @@ public class MenuServiceImpl implements MenuService {
         if(menuRepository.findByName(resources.getName()) != null){
             throw new EntityExistException(Menu.class,"name",resources.getName());
         }
+        if(StringUtils.isNotBlank(resources.getComponentName())){
+            if(menuRepository.findByComponentName(resources.getComponentName()) != null){
+                throw new EntityExistException(Menu.class,"componentName",resources.getComponentName());
+            }
+        }
         if(resources.getIFrame()){
             if (!(resources.getPath().toLowerCase().startsWith("http://")||resources.getPath().toLowerCase().startsWith("https://"))) {
                 throw new BadRequestException("外链必须以http://或者https://开头");
@@ -85,6 +97,13 @@ public class MenuServiceImpl implements MenuService {
         if(menu1 != null && !menu1.getId().equals(menu.getId())){
             throw new EntityExistException(Menu.class,"name",resources.getName());
         }
+
+        if(StringUtils.isNotBlank(resources.getComponentName())){
+            menu1 = menuRepository.findByComponentName(resources.getComponentName());
+            if(menu1 != null && !menu1.getId().equals(menu.getId())){
+                throw new EntityExistException(Menu.class,"componentName",resources.getComponentName());
+            }
+        }
         menu.setName(resources.getName());
         menu.setComponent(resources.getComponent());
         menu.setPath(resources.getPath());
@@ -92,12 +111,32 @@ public class MenuServiceImpl implements MenuService {
         menu.setIFrame(resources.getIFrame());
         menu.setPid(resources.getPid());
         menu.setSort(resources.getSort());
+        menu.setCache(resources.getCache());
+        menu.setHidden(resources.getHidden());
+        menu.setComponentName(resources.getComponentName());
         menuRepository.save(menu);
     }
 
     @Override
-    public void delete(Long id) {
-        menuRepository.deleteById(id);
+    public Set<Menu> getDeleteMenus(List<Menu> menuList, Set<Menu> menuSet) {
+        // 递归找出待删除的菜单
+        for (Menu menu1 : menuList) {
+            menuSet.add(menu1);
+            List<Menu> menus = menuRepository.findByPid(menu1.getId());
+            if(menus!=null && menus.size()!=0){
+                getDeleteMenus(menus, menuSet);
+            }
+        }
+        return menuSet;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void delete(Set<Menu> menuSet) {
+        for (Menu menu : menuSet) {
+            roleService.untiedMenu(menu.getId());
+            menuRepository.deleteById(menu.getId());
+        }
     }
 
     @Override
@@ -127,24 +166,26 @@ public class MenuServiceImpl implements MenuService {
     @Override
     public Map buildTree(List<MenuDTO> menuDTOS) {
         List<MenuDTO> trees = new ArrayList<MenuDTO>();
-
+        Set<Long> ids = new HashSet<>();
         for (MenuDTO menuDTO : menuDTOS) {
-
-            if ("0".equals(menuDTO.getPid().toString())) {
+            if (menuDTO.getPid() == 0) {
                 trees.add(menuDTO);
             }
-
             for (MenuDTO it : menuDTOS) {
                 if (it.getPid().equals(menuDTO.getId())) {
                     if (menuDTO.getChildren() == null) {
                         menuDTO.setChildren(new ArrayList<MenuDTO>());
                     }
                     menuDTO.getChildren().add(it);
+                    ids.add(it.getId());
                 }
             }
         }
         Map map = new HashMap();
-        map.put("content",trees.size() == 0?menuDTOS:trees);
+        if(trees.size() == 0){
+            trees = menuDTOS.stream().filter(s -> !ids.contains(s.getId())).collect(Collectors.toList());
+        }
+        map.put("content",trees);
         map.put("totalElements",menuDTOS!=null?menuDTOS.size():0);
         return map;
     }
@@ -156,26 +197,25 @@ public class MenuServiceImpl implements MenuService {
             if (menuDTO!=null){
                 List<MenuDTO> menuDTOList = menuDTO.getChildren();
                 MenuVo menuVo = new MenuVo();
-                menuVo.setName(menuDTO.getName());
-                menuVo.setPath(menuDTO.getPath());
-
+                menuVo.setName(ObjectUtil.isNotEmpty(menuDTO.getComponentName())  ? menuDTO.getComponentName() : menuDTO.getName());
+                // 一级目录需要加斜杠，不然会报警告
+                menuVo.setPath(menuDTO.getPid() == 0 ? "/" + menuDTO.getPath() :menuDTO.getPath());
+                menuVo.setHidden(menuDTO.getHidden());
                 // 如果不是外链
                 if(!menuDTO.getIFrame()){
-                    if(menuDTO.getPid().equals(0L)){
-                        //一级目录需要加斜杠，不然访问 会跳转404页面
-                        menuVo.setPath("/" + menuDTO.getPath());
+                    if(menuDTO.getPid() == 0){
                         menuVo.setComponent(StrUtil.isEmpty(menuDTO.getComponent())?"Layout":menuDTO.getComponent());
                     }else if(!StrUtil.isEmpty(menuDTO.getComponent())){
                         menuVo.setComponent(menuDTO.getComponent());
                     }
                 }
-                menuVo.setMeta(new MenuMetaVo(menuDTO.getName(),menuDTO.getIcon()));
+                menuVo.setMeta(new MenuMetaVo(menuDTO.getName(),menuDTO.getIcon(),!menuDTO.getCache()));
                 if(menuDTOList!=null && menuDTOList.size()!=0){
                     menuVo.setAlwaysShow(true);
                     menuVo.setRedirect("noredirect");
                     menuVo.setChildren(buildMenus(menuDTOList));
                     // 处理是一级菜单并且没有子菜单的情况
-                } else if(menuDTO.getPid().equals(0L)){
+                } else if(menuDTO.getPid() == 0){
                     MenuVo menuVo1 = new MenuVo();
                     menuVo1.setMeta(menuVo.getMeta());
                     // 非外链
