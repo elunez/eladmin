@@ -11,7 +11,7 @@
  Target Server Version : 50562
  File Encoding         : 65001
 
- Date: 07/09/2019 21:59:47
+ Date: 26/09/2019 17:41:39
 */
 
 SET NAMES utf8mb4;
@@ -85,7 +85,6 @@ CREATE TABLE `dict`  (
 INSERT INTO `dict` VALUES (1, 'user_status', '用户状态');
 INSERT INTO `dict` VALUES (4, 'dept_status', '部门状态');
 INSERT INTO `dict` VALUES (5, 'job_status', '岗位状态');
-INSERT INTO `dict` VALUES (6, 'tt', 'tt');
 
 -- ----------------------------
 -- Table structure for dict_detail
@@ -111,7 +110,6 @@ INSERT INTO `dict_detail` VALUES (11, '正常', 'true', '1', 4);
 INSERT INTO `dict_detail` VALUES (12, '停用', 'false', '2', 4);
 INSERT INTO `dict_detail` VALUES (13, '正常', 'true', '1', 5);
 INSERT INTO `dict_detail` VALUES (14, '停用', 'false', '2', 5);
-INSERT INTO `dict_detail` VALUES (15, 'f', 'fdaf', '1', 6);
 
 -- ----------------------------
 -- Table structure for email_config
@@ -146,7 +144,7 @@ CREATE TABLE `gen_config`  (
 -- ----------------------------
 -- Records of gen_config
 -- ----------------------------
-INSERT INTO `gen_config` VALUES (1, 'Zheng Jie', b'0', 'eladmin-tools', 'me.zhengjie', 'E:\\workspace\\me\\front\\eladmin-qt\\src\\views\\tools\\storage\\local', 'E:\\workspace\\me\\front\\eladmin-qt\\src\\api', NULL);
+INSERT INTO `gen_config` VALUES (1, 'Zheng Jie', b'0', 'eladmin-system', 'me.zhengjie.test', 'E:\\workspace\\me\\front\\eladmin-qt\\src\\views\\test1111', 'E:\\workspace\\me\\front\\eladmin-qt\\src\\api', NULL);
 
 -- ----------------------------
 -- Table structure for job
@@ -209,7 +207,7 @@ CREATE TABLE `log`  (
   `username` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `address` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 13914 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 14269 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for menu
@@ -279,7 +277,7 @@ CREATE TABLE `permission`  (
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '名称',
   `pid` int(11) NOT NULL COMMENT '上级权限',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 55 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 60 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of permission
@@ -332,6 +330,11 @@ INSERT INTO `permission` VALUES (51, '字典查询', '2019-04-10 16:25:16', 'DIC
 INSERT INTO `permission` VALUES (52, '字典创建', '2019-04-10 16:25:29', 'DICT_CREATE', 50);
 INSERT INTO `permission` VALUES (53, '字典编辑', '2019-04-10 16:27:19', 'DICT_EDIT', 50);
 INSERT INTO `permission` VALUES (54, '字典删除', '2019-04-10 16:27:30', 'DICT_DELETE', 50);
+INSERT INTO `permission` VALUES (55, '文件管理', '2019-09-08 12:31:54', 'LOCALSTORAGE_ALL', 0);
+INSERT INTO `permission` VALUES (56, '文件搜索', '2019-09-08 12:40:53', 'LOCALSTORAGE_SELECT', 55);
+INSERT INTO `permission` VALUES (57, '文件上传', '2019-09-08 12:41:05', 'LOCALSTORAGE_CREATE', 55);
+INSERT INTO `permission` VALUES (58, '文件编辑', '2019-09-08 12:41:19', 'LOCALSTORAGE_EDIT', 55);
+INSERT INTO `permission` VALUES (59, '文件删除', '2019-09-08 12:41:29', 'LOCALSTORAGE_DELETE', 55);
 
 -- ----------------------------
 -- Table structure for picture
@@ -348,7 +351,7 @@ CREATE TABLE `picture`  (
   `username` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '用户名称',
   `width` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '图片宽度',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for qiniu_config
@@ -373,13 +376,13 @@ CREATE TABLE `qiniu_content`  (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'ID',
   `bucket` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'Bucket 识别符',
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '文件名称',
-  `suffix` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '文件后缀',
   `size` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '文件大小',
   `type` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '文件类型：私有或公开',
   `update_time` datetime NULL DEFAULT NULL COMMENT '上传或同步的时间',
   `url` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '文件url',
+  `suffix` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 20 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 24 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for quartz_job
@@ -403,7 +406,7 @@ CREATE TABLE `quartz_job`  (
 -- ----------------------------
 INSERT INTO `quartz_job` VALUES (1, 'visitsTask', '0 0 0 * * ?', b'0', '更新访客记录', 'run', NULL, '每日0点创建新的访客记录', '2019-01-08 14:53:31');
 INSERT INTO `quartz_job` VALUES (2, 'testTask', '0/5 * * * * ?', b'1', '测试1', 'run1', 'test', '带参测试，多参使用json', '2019-08-22 14:08:29');
-INSERT INTO `quartz_job` VALUES (3, 'testTask', '0/5 * * * * ?', b'1', '测试', 'run', '', '不带参测试', '2019-08-22 14:08:28');
+INSERT INTO `quartz_job` VALUES (3, 'testTask', '0/5 * * * * ?', b'1', '测试', 'run', '', '不带参测试', '2019-09-26 16:44:39');
 
 -- ----------------------------
 -- Table structure for quartz_log
@@ -421,7 +424,7 @@ CREATE TABLE `quartz_log`  (
   `params` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `time` bigint(20) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 51 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for role
@@ -675,6 +678,6 @@ CREATE TABLE `visits`  (
   `week_day` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `UK_11aksgq87euk9bcyeesfs4vtp`(`date`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 89 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 96 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 SET FOREIGN_KEY_CHECKS = 1;
