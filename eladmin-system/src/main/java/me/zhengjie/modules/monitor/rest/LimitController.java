@@ -1,6 +1,7 @@
 package me.zhengjie.modules.monitor.rest;
 
 import me.zhengjie.annotation.Limit;
+import me.zhengjie.modules.security.annotation.AnonymousAccess;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,6 +22,7 @@ public class LimitController {
      */
     @Limit(key = "test", period = 60, count = 10, name = "testLimit", prefix = "limit")
     @GetMapping("/limit")
+    @AnonymousAccess
     public int testLimit() {
         return ATOMIC_INTEGER.incrementAndGet();
     }
