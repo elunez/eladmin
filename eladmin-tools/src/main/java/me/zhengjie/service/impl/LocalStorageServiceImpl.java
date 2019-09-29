@@ -63,7 +63,9 @@ public class LocalStorageServiceImpl implements LocalStorageService {
     public LocalStorageDTO create(String name, MultipartFile multipartFile) {
         FileUtil.checkSize(maxSize, multipartFile.getSize());
         String suffix = FileUtil.getExtensionName(multipartFile.getOriginalFilename());
-        String type = FileUtil.getFileTypeByMimeType(suffix);
+        // 可自行选择方式
+//        String type = FileUtil.getFileTypeByMimeType(suffix);
+        String type = FileUtil.getFileType(suffix);
         File file = FileUtil.upload(multipartFile, path + type +  File.separator);
         try {
             name = StringUtils.isBlank(name) ? FileUtil.getFileNameNoEx(multipartFile.getOriginalFilename()) : name;
