@@ -8,6 +8,8 @@ import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.ExcelWriter;
 import me.zhengjie.exception.BadRequestException;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.activation.MimetypesFileTypeMap;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
@@ -231,7 +233,12 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
             return "视频";
         } else return "其他";
     }
-
+    public static String getFileTypeByMimeType(String type) {
+//        URLConnection.guessContentTypeFromName("." + type)
+//        way 2 new MimetypesFileTypeMap().getContentType("."+ "txt")
+        String mimeType = new MimetypesFileTypeMap().getContentType("." + type);
+         return mimeType.split("\\/")[0];
+    }
     public static void checkSize(long maxSize, long size) {
         if(size > (maxSize * 1024 * 1024)){
             throw new BadRequestException("文件超出规定大小");
