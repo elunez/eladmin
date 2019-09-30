@@ -92,13 +92,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
+
+        // 搜寻 匿名标记 url： PreAuthorize("hasAnyRole('ROLE_ANONYMOUS')") 和 AnonymousAccess
         Map<RequestMappingInfo, HandlerMethod> handlerMethodMap = applicationContext.getBean(RequestMappingHandlerMapping.class).getHandlerMethods();
         Set<String> anonymousUrls = new HashSet<>();
         for (Map.Entry<RequestMappingInfo, HandlerMethod> infoEntry : handlerMethodMap.entrySet()) {
             HandlerMethod handlerMethod = infoEntry.getValue();
             AnonymousAccess anonymousAccess = handlerMethod.getMethodAnnotation(AnonymousAccess.class);
             PreAuthorize preAuthorize = handlerMethod.getMethodAnnotation(PreAuthorize.class);
-            // PreAuthorize("hasAnyRole('ROLE_ANONYMOUS')") 和 AnonymousAccess
             if (null != preAuthorize && preAuthorize.value().contains("ROLE_ANONYMOUS")) {
                 anonymousUrls.addAll(infoEntry.getKey().getPatternsCondition().getPatterns());
             } else if (null != anonymousAccess && null == preAuthorize) {
@@ -140,8 +141,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/*/api-docs").anonymous()
                 // swagger end
 
-                // 接口限流测试
-                .antMatchers("/test/**").anonymous()
                 // 文件
                 .antMatchers("/avatar/**").anonymous()
                 .antMatchers("/file/**").anonymous()
@@ -150,8 +149,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.OPTIONS, "/**").anonymous()
 
                 .antMatchers("/druid/**").anonymous()
-                // 自定义匿名访问所有url放行
-                .antMatchers(anonymousUrls.toArray(new String[0])).anonymous()
+                // 自定义匿名访问所有url放行 ： 允许 匿名和带权限以及登录用户访问
+                .antMatchers(anonymousUrls.toArray(new String[0])).permitAll()
                 // 所有请求都需要认证
                 .anyRequest().authenticated()
 
