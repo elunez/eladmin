@@ -112,7 +112,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 // 授权异常
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
-
+                // 禁用表单登陆
+                .formLogin().disable()
                 // 不创建会话
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
 
