@@ -1,35 +1,19 @@
-package me.zhengjie.modules.wms.outSourceProductSheet.domain;
+package me.zhengjie.modules.wms.outSourceProductSheet.request;
 
-import lombok.Data;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
+import lombok.Data;
+
 import javax.persistence.*;
-import java.sql.Timestamp;
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 /**
 * @author jie
 * @date 2019-10-01
 */
-@Entity
 @Data
-@Table(name="s_out_source_inspection_certificate_product")
-public class OutSourceInspectionCertificateProduct implements Serializable {
-
-    // 主键
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
-
-    @Column(name = "create_time")
-    private Timestamp createTime;
-
-    @Column(name = "update_time")
-    private Timestamp updateTime;
-
-    @Column(name = "status")
-    private Boolean status;
+public class OutSourceInspectionCertificateProductRequest implements Serializable {
 
     // 所属委外验收单
     @Column(name = "out_source_inspection_certificate_id")
@@ -47,7 +31,7 @@ public class OutSourceInspectionCertificateProduct implements Serializable {
     @Column(name = "remark")
     private String remark;
 
-    public void copy(OutSourceInspectionCertificateProduct source){
+    public void copy(OutSourceInspectionCertificateProductRequest source){
         BeanUtil.copyProperties(source,this, CopyOptions.create().setIgnoreNullValue(true));
     }
 }

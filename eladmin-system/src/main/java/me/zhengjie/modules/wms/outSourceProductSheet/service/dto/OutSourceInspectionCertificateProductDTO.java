@@ -6,6 +6,7 @@ import java.io.Serializable;
 
 
 /**
+ * 委外亚寿诞产品信息
 * @author jie
 * @date 2019-10-01
 */

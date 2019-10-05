@@ -49,6 +49,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 /**
+ * 委外加工单服务累
 * @author jie
 * @date 2019-08-17
 */
@@ -70,9 +71,9 @@ public class OutSourceProcessSheetServiceImpl implements OutSourceProcessSheetSe
 
     @Override
     public Object queryAll(OutSourceProcessSheetQueryCriteria criteria, Pageable pageable){
-        Specification<OutSourceProcessSheetProduct> specification = new Specification<OutSourceProcessSheetProduct>() {
+        Specification<OutSourceProcessSheet> specification = new Specification<OutSourceProcessSheet>() {
             @Override
-            public Predicate toPredicate(Root<OutSourceProcessSheetProduct> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+            public Predicate toPredicate(Root<OutSourceProcessSheet> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
 
                 List<Predicate> targetPredicateList = new ArrayList<>();
 
@@ -92,9 +93,9 @@ public class OutSourceProcessSheetServiceImpl implements OutSourceProcessSheetSe
 
     @Override
     public Object queryAll(OutSourceProcessSheetQueryCriteria criteria){
-        Specification<OutSourceProcessSheetProduct> specification = new Specification<OutSourceProcessSheetProduct>() {
+        Specification<OutSourceProcessSheet> specification = new Specification<OutSourceProcessSheet>() {
             @Override
-            public Predicate toPredicate(Root<OutSourceProcessSheetProduct> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+            public Predicate toPredicate(Root<OutSourceProcessSheet> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
 
                 List<Predicate> targetPredicateList = new ArrayList<>();
 

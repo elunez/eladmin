@@ -3,9 +3,11 @@ package me.zhengjie.modules.wms.outSourceProductSheet.service.dto;
 import lombok.Data;
 import java.sql.Timestamp;
 import java.io.Serializable;
+import java.util.List;
 
 
 /**
+ * 委外验收单信息
 * @author jie
 * @date 2019-10-01
 */
@@ -34,4 +36,7 @@ public class OutSourceInspectionCertificateDTO implements Serializable {
     private String outSourceInspectionCertificateCode;
 
     private String remark;
+
+    // 委外验收单产品信息
+    private List<OutSourceInspectionCertificateProductDTO> outSourceInspectionCertificateDTOList;
 }

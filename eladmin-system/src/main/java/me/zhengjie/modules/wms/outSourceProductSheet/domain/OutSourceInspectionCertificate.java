@@ -8,6 +8,7 @@ import java.sql.Timestamp;
 import java.io.Serializable;
 
 /**
+ * 委外验收单实体类
 * @author jie
 * @date 2019-10-01
 */
@@ -29,7 +30,7 @@ public class OutSourceInspectionCertificate implements Serializable {
     private Timestamp updateTime;
 
     @Column(name = "status")
-    private Integer status;
+    private Boolean status;
 
     // 所属委外加工单
     @Column(name = "out_source_process_sheet_id")

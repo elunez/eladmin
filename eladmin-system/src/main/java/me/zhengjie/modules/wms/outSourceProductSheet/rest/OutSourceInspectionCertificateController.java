@@ -2,6 +2,7 @@ package me.zhengjie.modules.wms.outSourceProductSheet.rest;
 
 import me.zhengjie.aop.log.Log;
 import me.zhengjie.modules.wms.outSourceProductSheet.domain.OutSourceInspectionCertificate;
+import me.zhengjie.modules.wms.outSourceProductSheet.request.CreateOutSourceInspectionCertificateRequest;
 import me.zhengjie.modules.wms.outSourceProductSheet.service.OutSourceInspectionCertificateService;
 import me.zhengjie.modules.wms.outSourceProductSheet.service.dto.OutSourceInspectionCertificateQueryCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,8 +38,8 @@ public class OutSourceInspectionCertificateController {
     @ApiOperation(value = "新增委外验收单")
     @PostMapping(value = "/outSourceInspectionCertificate")
     @PreAuthorize("hasAnyRole('ADMIN','SOUTSOURCEINSPECTIONCERTIFICATE_ALL','SOUTSOURCEINSPECTIONCERTIFICATE_CREATE')")
-    public ResponseEntity create(@Validated @RequestBody OutSourceInspectionCertificate resources){
-        return new ResponseEntity(outSourceInspectionCertificateService.create(resources),HttpStatus.CREATED);
+    public ResponseEntity create(@Validated @RequestBody CreateOutSourceInspectionCertificateRequest createOutSourceInspectionCertificateRequest){
+        return new ResponseEntity(outSourceInspectionCertificateService.create(createOutSourceInspectionCertificateRequest),HttpStatus.CREATED);
     }
 
     @Log("修改委外验收单")
