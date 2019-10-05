@@ -6,10 +6,7 @@ import me.zhengjie.modules.wms.outSourceProductSheet.domain.OutSourceInspectionC
 import me.zhengjie.modules.wms.outSourceProductSheet.domain.OutSourceProcessSheet;
 import me.zhengjie.modules.wms.outSourceProductSheet.domain.OutSourceProcessSheetProduct;
 import me.zhengjie.modules.wms.outSourceProductSheet.repository.OutSourceInspectionCertificateProductRepository;
-import me.zhengjie.modules.wms.outSourceProductSheet.request.CreateOutSourceInspectionCertificateRequest;
-import me.zhengjie.modules.wms.outSourceProductSheet.request.CreateOutSourceProcessSheetRequest;
-import me.zhengjie.modules.wms.outSourceProductSheet.request.OutSourceInspectionCertificateProductRequest;
-import me.zhengjie.modules.wms.outSourceProductSheet.request.OutSourceProcessSheetProductRequest;
+import me.zhengjie.modules.wms.outSourceProductSheet.request.*;
 import me.zhengjie.modules.wms.outSourceProductSheet.service.dto.*;
 import me.zhengjie.modules.wms.outSourceProductSheet.service.mapper.OutSourceInspectionCertificateProductMapper;
 import me.zhengjie.utils.ValidationUtil;
@@ -25,7 +22,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import me.zhengjie.utils.PageUtil;
@@ -167,12 +168,63 @@ public class OutSourceInspectionCertificateServiceImpl implements OutSourceInspe
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void update(OutSourceInspectionCertificate resources) {
-        Optional<OutSourceInspectionCertificate> optionalSOutSourceInspectionCertificate = outSourceInspectionCertificateRepository.findById(resources.getId());
-        ValidationUtil.isNull( optionalSOutSourceInspectionCertificate,"SOutSourceInspectionCertificate","id",resources.getId());
-        OutSourceInspectionCertificate outSourceInspectionCertificate = optionalSOutSourceInspectionCertificate.get();
-        outSourceInspectionCertificate.copy(resources);
+    public void update(UpdateOutSourceInspectionCertificateRequest updateOutSourceInspectionCertificateRequest) {
+        OutSourceInspectionCertificate outSourceInspectionCertificate = new OutSourceInspectionCertificate();
+        BeanUtils.copyProperties(updateOutSourceInspectionCertificateRequest, outSourceInspectionCertificate);
+
+        outSourceInspectionCertificate.setStatus(true);
+
         outSourceInspectionCertificateRepository.save(outSourceInspectionCertificate);
+
+        // 修改产品信息之前，查询该订单中原来的产品信息，key为产品code
+        List<OutSourceInspectionCertificateProduct> outSourceInspectionCertificateProductListBeforeUpdate = outSourceInspectionCertificateProductRepository.queryByOutSourceInspectionCertificateIdAndStatusTrue(outSourceInspectionCertificate.getId());
+        Map<String, OutSourceInspectionCertificateProduct> outSourceInspectionCertificateProductMapBefore = outSourceInspectionCertificateProductListBeforeUpdate.stream().collect(Collectors.toMap(OutSourceInspectionCertificateProduct::getProductCode, Function.identity()));
+
+        List<OutSourceInspectionCertificateProductDTO> outSourceInspectionCertificateProductRequestList = updateOutSourceInspectionCertificateRequest.getOutSourceInspectionCertificateProductList();
+        if(CollectionUtils.isEmpty(outSourceInspectionCertificateProductRequestList)){
+            throw new BadRequestException("委外验收单产品不能为空!");
+        }
+
+        Map<String, OutSourceInspectionCertificateProductDTO> invoiceProductMapAfter = outSourceInspectionCertificateProductRequestList.stream().collect(Collectors.toMap(OutSourceInspectionCertificateProductDTO::getProductCode, Function.identity()));
+
+        //需要将订单中原来订单对应的产品删除了的数据
+        List<String> deleteTargetList = new ArrayList<>();
+        //比较量个map中，key不一样的数据
+        for(Map.Entry<String, OutSourceInspectionCertificateProduct> entry:outSourceInspectionCertificateProductMapBefore.entrySet()){
+            String productCode = entry.getKey();
+            //修改后的map记录对应的key在原来中是否存在
+            OutSourceInspectionCertificateProductDTO outSourceInspectionCertificateProductDTOTemp = invoiceProductMapAfter.get(productCode);
+            if(null == outSourceInspectionCertificateProductDTOTemp){
+                deleteTargetList.add(entry.getKey());
+            }
+
+        }
+
+
+        List<OutSourceInspectionCertificateProduct> outSourceInspectionCertificateProductList = new ArrayList<>();
+        for(OutSourceInspectionCertificateProductDTO outSourceInspectionCertificateProductDTO : outSourceInspectionCertificateProductRequestList){
+            OutSourceInspectionCertificateProduct outSourceInspectionCertificateProduct = new OutSourceInspectionCertificateProduct();
+            BeanUtils.copyProperties(outSourceInspectionCertificateProductDTO, outSourceInspectionCertificateProduct);
+            outSourceInspectionCertificateProduct.setOutSourceInspectionCertificateId(outSourceInspectionCertificate.getId());
+            outSourceInspectionCertificateProduct.setStatus(true);
+
+            if(!(!CollectionUtils.isEmpty(deleteTargetList) && deleteTargetList.contains(outSourceInspectionCertificateProductDTO.getId()))){
+                outSourceInspectionCertificateProductList.add(outSourceInspectionCertificateProduct);
+            }
+        }
+        outSourceInspectionCertificateProductRepository.saveAll(outSourceInspectionCertificateProductList);
+
+        /**
+         * 场景描述:
+         * 1.刚开始新增了 a b c三种产品
+         * 2.修改的时候删除了 a c两种产品
+         * 3.所以需要查修改前数据库中有的产品，再比较修改传过来的产品数据，如果修改后的在原来里面没有，需要将原来里面对应的删除
+         */
+        if(!CollectionUtils.isEmpty(deleteTargetList)){
+            for(String prductCode : deleteTargetList){
+                outSourceInspectionCertificateProductRepository.deleteByProductCodeAndOutSourceInspectionCertificateId(prductCode, outSourceInspectionCertificate.getId());
+            }
+        }
     }
 
     @Override

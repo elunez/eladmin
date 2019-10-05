@@ -2,6 +2,7 @@ package me.zhengjie.modules.wms.outSourceProductSheet.service;
 
 import me.zhengjie.modules.wms.outSourceProductSheet.domain.OutSourceInspectionCertificate;
 import me.zhengjie.modules.wms.outSourceProductSheet.request.CreateOutSourceInspectionCertificateRequest;
+import me.zhengjie.modules.wms.outSourceProductSheet.request.UpdateOutSourceInspectionCertificateRequest;
 import me.zhengjie.modules.wms.outSourceProductSheet.service.dto.OutSourceInspectionCertificateDTO;
 import me.zhengjie.modules.wms.outSourceProductSheet.service.dto.OutSourceInspectionCertificateQueryCriteria;
 //import org.springframework.cache.annotation.CacheConfig;
@@ -51,10 +52,10 @@ public interface OutSourceInspectionCertificateService {
 
     /**
      * update
-     * @param resources
+     * @param updateOutSourceInspectionCertificateRequest
      */
     //@CacheEvict(allEntries = true)
-    void update(OutSourceInspectionCertificate resources);
+    void update(UpdateOutSourceInspectionCertificateRequest updateOutSourceInspectionCertificateRequest);
 
     /**
      * delete
