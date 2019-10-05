@@ -6,10 +6,8 @@ import me.zhengjie.annotation.Query;
 
 /**
 * @author jie
-* @date 2019-08-17
+* @date 2019-10-01
 */
 @Data
-public class OutSourceProcessSheetProductQueryCriteria {
-
-    private Long outSOurceProcessSheetId;
+public class OutSourceInspectionCertificateQueryCriteria {
 }

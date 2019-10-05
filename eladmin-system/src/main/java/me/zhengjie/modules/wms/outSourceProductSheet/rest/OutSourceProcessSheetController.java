@@ -3,8 +3,11 @@ package me.zhengjie.modules.wms.outSourceProductSheet.rest;
 import me.zhengjie.aop.log.Log;
 import me.zhengjie.modules.wms.outSourceProductSheet.domain.OutSourceProcessSheet;
 import me.zhengjie.modules.wms.outSourceProductSheet.request.CreateOutSourceProcessSheetRequest;
+import me.zhengjie.modules.wms.outSourceProductSheet.request.QueryOutSourceProcessSheetProductRequest;
 import me.zhengjie.modules.wms.outSourceProductSheet.request.UpdateOutSourceProcessSheetRequest;
+import me.zhengjie.modules.wms.outSourceProductSheet.service.OutSourceProcessSheetProductService;
 import me.zhengjie.modules.wms.outSourceProductSheet.service.OutSourceProcessSheetService;
+import me.zhengjie.modules.wms.outSourceProductSheet.service.dto.OutSourceProcessSheetProductQueryCriteria;
 import me.zhengjie.modules.wms.outSourceProductSheet.service.dto.OutSourceProcessSheetQueryCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -29,6 +32,9 @@ public class OutSourceProcessSheetController {
 
     @Autowired
     private OutSourceProcessSheetService outSourceProcessSheetService;
+
+    @Autowired
+    private OutSourceProcessSheetProductService outSourceProcessSheetProductService;
 
     @Log("分页查询委外加工单")
     @ApiOperation(value = "分页查询委外加工单")
@@ -77,5 +83,11 @@ public class OutSourceProcessSheetController {
     @GetMapping(value = "/outSourceProcessSheet/{id}")
     public ResponseEntity getOutSourceProcessSheet(@PathVariable Long id){
         return new ResponseEntity(outSourceProcessSheetService.findById(id), HttpStatus.OK);
+    }
+
+    @Log("查看委外加工单产品信息")
+    @GetMapping(value = "/outSourceProcessSheet/outSourceProcessSheetProduct")
+    public ResponseEntity queryOutSourceProcessSheetProductList(OutSourceProcessSheetProductQueryCriteria criteria){
+        return new ResponseEntity(outSourceProcessSheetProductService.queryAll(criteria), HttpStatus.OK);
     }
 }

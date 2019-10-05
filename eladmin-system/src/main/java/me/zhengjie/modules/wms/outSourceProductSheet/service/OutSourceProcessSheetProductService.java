@@ -8,6 +8,8 @@ import me.zhengjie.modules.wms.outSourceProductSheet.service.dto.OutSourceProces
 //import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 /**
 * @author jie
 * @date 2019-08-17
@@ -39,6 +41,14 @@ public interface OutSourceProcessSheetProductService {
      */
     //@Cacheable(key = "#p0")
     OutSourceProcessSheetProductDTO findById(Long id);
+
+
+    /**
+     * 查询委外加工单产品信息
+     * @param outSourceProcessSheetProductId
+     * @return
+     */
+    List<OutSourceProcessSheetProductDTO> findByOutSourceProcessSheetProductId(Long outSourceProcessSheetProductId);
 
     /**
      * create

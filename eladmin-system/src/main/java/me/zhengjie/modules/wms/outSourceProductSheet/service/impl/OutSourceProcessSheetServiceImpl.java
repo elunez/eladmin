@@ -11,6 +11,7 @@ import me.zhengjie.modules.wms.outSourceProductSheet.domain.OutSourceProcessShee
 import me.zhengjie.modules.wms.outSourceProductSheet.repository.OutSourceProcessSheetProductRepository;
 import me.zhengjie.modules.wms.outSourceProductSheet.request.CreateOutSourceProcessSheetRequest;
 import me.zhengjie.modules.wms.outSourceProductSheet.request.OutSourceProcessSheetProductRequest;
+import me.zhengjie.modules.wms.outSourceProductSheet.request.QueryOutSourceProcessSheetProductRequest;
 import me.zhengjie.modules.wms.outSourceProductSheet.request.UpdateOutSourceProcessSheetRequest;
 import me.zhengjie.modules.wms.outSourceProductSheet.service.dto.OutSourceProcessSheetProductDTO;
 import me.zhengjie.modules.wms.outSourceProductSheet.service.mapper.OutSourceProcessSheetProductMapper;
@@ -23,6 +24,7 @@ import me.zhengjie.modules.wms.outSourceProductSheet.service.mapper.OutSourcePro
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -121,7 +123,7 @@ public class OutSourceProcessSheetServiceImpl implements OutSourceProcessSheetSe
         OutSourceProcessSheetDTO outSourceProcessSheetDTO = outSourceProcessSheetMapper.toDto(outSourceProcessSheet);
 
 
-        List<OutSourceProcessSheetProduct> outSourceProcessSheetProductList = outSourceProcessSheetProductRepository.findByOutSourceProcessSheetIdAndStatusTrue(id);
+        List<OutSourceProcessSheetProduct> outSourceProcessSheetProductList = outSourceProcessSheetProductRepository.queryByOutSourceProcessSheetIdAndStatusTrue(id);
         if(!CollectionUtils.isEmpty(outSourceProcessSheetProductList)){
             List<OutSourceProcessSheetProductDTO> outSourceProcessSheetProductDTOList = outSourceProcessSheetProductMapper.toDto(outSourceProcessSheetProductList);
             outSourceProcessSheetDTO.setOutSourceProcessSheetProductList(outSourceProcessSheetProductDTOList);
@@ -188,7 +190,7 @@ public class OutSourceProcessSheetServiceImpl implements OutSourceProcessSheetSe
         outSourceProcessSheetRepository.save(outSourceProcessSheet);
 
         // 修改产品信息之前，查询该订单中原来的产品信息，key为产品code
-        List<OutSourceProcessSheetProduct> outSourceProcessSheetProductListBeforeUpdate = outSourceProcessSheetProductRepository.findByOutSourceProcessSheetIdAndStatusTrue(outSourceProcessSheet.getId());
+        List<OutSourceProcessSheetProduct> outSourceProcessSheetProductListBeforeUpdate = outSourceProcessSheetProductRepository.queryByOutSourceProcessSheetIdAndStatusTrue(outSourceProcessSheet.getId());
         Map<String, OutSourceProcessSheetProduct> outSourceProcessSheetProductMapBefore = outSourceProcessSheetProductListBeforeUpdate.stream().collect(Collectors.toMap(OutSourceProcessSheetProduct::getProductCode, Function.identity()));
 
         List<OutSourceProcessSheetProductDTO> outSourceProcessSheetProductRequestList = updateOutSourceProcessSheetRequest.getOutSourceProcessSheetProductList();
@@ -244,4 +246,5 @@ public class OutSourceProcessSheetServiceImpl implements OutSourceProcessSheetSe
     public void delete(Long id) {
         outSourceProcessSheetRepository.deleteById(id);
     }
+
 }

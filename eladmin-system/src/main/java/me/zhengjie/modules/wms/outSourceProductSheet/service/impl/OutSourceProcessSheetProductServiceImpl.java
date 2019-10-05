@@ -76,6 +76,13 @@ public class OutSourceProcessSheetProductServiceImpl implements OutSourceProcess
                 Predicate statusPredicate = criteriaBuilder.equal(root.get("status"), 1);
                 targetPredicateList.add(statusPredicate);
 
+                Long outSOurceProcessSheetId = criteria.getOutSOurceProcessSheetId();
+                if(null != outSOurceProcessSheetId){
+                    Predicate outSOurceProcessSheetIdPredicate = criteriaBuilder.equal(root.get("outSOurceProcessSheetId"), 1);
+                    targetPredicateList.add(outSOurceProcessSheetIdPredicate);
+                }
+
+
                 if(CollectionUtils.isEmpty(targetPredicateList)){
                     return null;
                 }else{
@@ -91,6 +98,11 @@ public class OutSourceProcessSheetProductServiceImpl implements OutSourceProcess
         Optional<OutSourceProcessSheetProduct> sOutSourceProcessSheetProduct = outSourceProcessSheetProductRepository.findById(id);
         ValidationUtil.isNull(sOutSourceProcessSheetProduct,"SOutSourceProcessSheetProduct","id",id);
         return outSourceProcessSheetProductMapper.toDto(sOutSourceProcessSheetProduct.get());
+    }
+
+    @Override
+    public List<OutSourceProcessSheetProductDTO> findByOutSourceProcessSheetProductId(Long outSourceProcessSheetProductId) {
+        return null;
     }
 
     @Override

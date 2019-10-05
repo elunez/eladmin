@@ -2,6 +2,7 @@ package me.zhengjie.modules.wms.outSourceProductSheet.service;
 
 import me.zhengjie.modules.wms.outSourceProductSheet.domain.OutSourceProcessSheet;
 import me.zhengjie.modules.wms.outSourceProductSheet.request.CreateOutSourceProcessSheetRequest;
+import me.zhengjie.modules.wms.outSourceProductSheet.request.QueryOutSourceProcessSheetProductRequest;
 import me.zhengjie.modules.wms.outSourceProductSheet.request.UpdateOutSourceProcessSheetRequest;
 import me.zhengjie.modules.wms.outSourceProductSheet.service.dto.OutSourceProcessSheetDTO;
 import me.zhengjie.modules.wms.outSourceProductSheet.service.dto.OutSourceProcessSheetQueryCriteria;
@@ -9,6 +10,7 @@ import me.zhengjie.modules.wms.outSourceProductSheet.service.dto.OutSourceProces
 //import org.springframework.cache.annotation.CacheEvict;
 //import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 
 /**
 * @author jie
@@ -63,4 +65,5 @@ public interface OutSourceProcessSheetService {
      */
     //@CacheEvict(allEntries = true)
     void delete(Long id);
+
 }
