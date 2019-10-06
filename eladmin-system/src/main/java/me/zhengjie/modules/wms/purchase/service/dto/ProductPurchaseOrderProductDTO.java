@@ -44,7 +44,7 @@ public class ProductPurchaseOrderProductDTO implements Serializable {
     // 更新时间
     private Timestamp updateTime;
 
-    private Integer status;
+    private Boolean status;
 
     // 产品编号
     private String productCode;

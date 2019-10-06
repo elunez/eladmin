@@ -41,7 +41,7 @@ public class ConsumablesPurchaseOrderProductDTO implements Serializable {
     // 更新时间
     private Timestamp updateTime;
 
-    private Integer status;
+    private Boolean status;
 
     // 耗材编号
     private String consumablesCode;

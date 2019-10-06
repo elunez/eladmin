@@ -1,5 +1,6 @@
 package me.zhengjie.modules.wms.outSourceProductSheet.service.dto;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import lombok.Data;
 import java.sql.Timestamp;
 import java.io.Serializable;
@@ -21,7 +22,7 @@ public class OutSourceInspectionCertificateDTO implements Serializable {
 
     private Timestamp updateTime;
 
-    private Integer status;
+    private Boolean status;
 
     // 所属委外加工单
     private Long outSourceProcessSheetId;

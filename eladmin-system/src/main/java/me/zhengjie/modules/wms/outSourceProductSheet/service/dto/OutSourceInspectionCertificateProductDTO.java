@@ -20,7 +20,7 @@ public class OutSourceInspectionCertificateProductDTO implements Serializable {
 
     private Timestamp updateTime;
 
-    private Integer status;
+    private Boolean status;
 
     // 所属委外验收单
     private Long outSourceInspectionCertificateId;

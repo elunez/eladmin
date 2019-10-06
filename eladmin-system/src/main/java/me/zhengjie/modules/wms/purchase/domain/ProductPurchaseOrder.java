@@ -37,7 +37,7 @@ public class ProductPurchaseOrder implements Serializable {
 
     // 状态
     @Column(name = "status")
-    private Integer status;
+    private Boolean status;
 
     // 审核状态
     @Column(name = "audit_status")

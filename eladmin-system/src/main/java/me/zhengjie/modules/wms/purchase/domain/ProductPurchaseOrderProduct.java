@@ -62,7 +62,7 @@ public class ProductPurchaseOrderProduct implements Serializable {
     private Timestamp updateTime;
 
     @Column(name = "status")
-    private Integer status;
+    private Boolean status;
 
     // 产品编号
     @Column(name = "product_code")

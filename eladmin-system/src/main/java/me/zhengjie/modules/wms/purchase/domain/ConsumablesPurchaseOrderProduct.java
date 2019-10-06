@@ -58,7 +58,7 @@ public class ConsumablesPurchaseOrderProduct implements Serializable {
     private Timestamp updateTime;
 
     @Column(name = "status")
-    private Integer status;
+    private Boolean status;
 
     // 耗材编号
     @Column(name = "consumables_code")

@@ -25,7 +25,7 @@ public class ProductPurchaseOrderDTO implements Serializable {
     private String purchaseUserName;
 
     // 状态
-    private Integer status;
+    private Boolean status;
 
     // 审核状态
     private Integer auditStatus;
