@@ -29,11 +29,20 @@ public class ConsumablesPurchaseOrderController {
     private ConsumablesPurchaseOrderService consumablesPurchaseOrderService;
 
     @Log("分页查询耗材采购单")
-    @ApiOperation(value = "查询ConsumablesPurchaseOrder")
-    @GetMapping(value = "/consumablesPurchaseOrder")
+    @ApiOperation(value = "分页查询耗材采购单")
+    @GetMapping(value = "/queryConsumablesPurchaseOrderPageList")
     @PreAuthorize("hasAnyRole('ADMIN','CONSUMABLESPURCHASEORDER_ALL','CONSUMABLESPURCHASEORDER_SELECT')")
-    public ResponseEntity getConsumablesPurchaseOrders(ConsumablesPurchaseOrderQueryCriteria criteria, Pageable pageable){
+    public ResponseEntity queryConsumablesPurchaseOrderPageList(ConsumablesPurchaseOrderQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity(consumablesPurchaseOrderService.queryAll(criteria,pageable),HttpStatus.OK);
+    }
+
+
+    @Log("查询耗材采购单列表")
+    @ApiOperation(value = "查询耗材采购单列表")
+    @GetMapping(value = "/queryConsumablesPurchaseOrderList")
+    @PreAuthorize("hasAnyRole('ADMIN','CONSUMABLESPURCHASEORDER_ALL','CONSUMABLESPURCHASEORDER_SELECT')")
+    public ResponseEntity queryConsumablesPurchaseOrderList(ConsumablesPurchaseOrderQueryCriteria criteria){
+        return new ResponseEntity(consumablesPurchaseOrderService.queryAll(criteria),HttpStatus.OK);
     }
 
     @Log("新增耗材采购单")

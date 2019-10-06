@@ -1,14 +1,26 @@
 package me.zhengjie.modules.wms.purchase.service.impl;
 
+import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.modules.wms.bd.domain.MeasureUnit;
+import me.zhengjie.modules.wms.outSourceProductSheet.domain.OutSourceProcessSheet;
+import me.zhengjie.modules.wms.outSourceProductSheet.domain.OutSourceProcessSheetProduct;
+import me.zhengjie.modules.wms.outSourceProductSheet.request.OutSourceProcessSheetProductRequest;
+import me.zhengjie.modules.wms.outSourceProductSheet.service.dto.OutSourceProcessSheetDTO;
+import me.zhengjie.modules.wms.outSourceProductSheet.service.dto.OutSourceProcessSheetProductDTO;
 import me.zhengjie.modules.wms.purchase.domain.ProductPurchaseOrder;
+import me.zhengjie.modules.wms.purchase.domain.ProductPurchaseOrderProduct;
+import me.zhengjie.modules.wms.purchase.repository.ProductPurchaseOrderProductRepository;
 import me.zhengjie.modules.wms.purchase.request.CreateProductPurchaseOrderRequest;
+import me.zhengjie.modules.wms.purchase.request.ProductPurchaseOrderProductRequest;
+import me.zhengjie.modules.wms.purchase.service.dto.ProductPurchaseOrderProductDTO;
+import me.zhengjie.modules.wms.purchase.service.mapper.ProductPurchaseOrderProductMapper;
 import me.zhengjie.utils.ValidationUtil;
 import me.zhengjie.modules.wms.purchase.repository.ProductPurchaseOrderRepository;
 import me.zhengjie.modules.wms.purchase.service.ProductPurchaseOrderService;
 import me.zhengjie.modules.wms.purchase.service.dto.ProductPurchaseOrderDTO;
 import me.zhengjie.modules.wms.purchase.service.dto.ProductPurchaseOrderQueryCriteria;
 import me.zhengjie.modules.wms.purchase.service.mapper.ProductPurchaseOrderMapper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -23,6 +35,7 @@ import org.springframework.data.domain.Pageable;
 import me.zhengjie.utils.PageUtil;
 import me.zhengjie.utils.QueryHelp;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -42,6 +55,12 @@ public class ProductPurchaseOrderServiceImpl implements ProductPurchaseOrderServ
 
     @Autowired
     private ProductPurchaseOrderMapper productPurchaseOrderMapper;
+
+    @Autowired
+    private ProductPurchaseOrderProductRepository productPurchaseOrderProductRepository;
+
+    @Autowired
+    private ProductPurchaseOrderProductMapper productPurchaseOrderProductMapper;
 
     @Override
     public Object queryAll(ProductPurchaseOrderQueryCriteria criteria, Pageable pageable){
@@ -101,8 +120,49 @@ public class ProductPurchaseOrderServiceImpl implements ProductPurchaseOrderServ
     @Override
     @Transactional(rollbackFor = Exception.class)
     public ProductPurchaseOrderDTO create(CreateProductPurchaseOrderRequest createProductPurchaseOrderRequest) {
+        ProductPurchaseOrder productPurchaseOrder = new ProductPurchaseOrder();
+        BeanUtils.copyProperties(createProductPurchaseOrderRequest, productPurchaseOrder);
 
-        return null;
+        String productPurchaseOrderCode = productPurchaseOrder.getProductPurchaseOrderCode();
+        if(!StringUtils.hasLength(productPurchaseOrderCode)){
+            throw new BadRequestException("产品采购单单据编号不能为空!");
+        }
+
+        productPurchaseOrder.setStatus(true);
+        // 新增产品采购单
+        productPurchaseOrderRepository.save(productPurchaseOrder);
+
+        productPurchaseOrder = productPurchaseOrderRepository.findByProductPurchaseOrderCode(productPurchaseOrder.getProductPurchaseOrderCode());
+
+        // 新增产品采购单产品信息
+        List<ProductPurchaseOrderProductRequest> productPurchaseOrderProductRequestRequestList = createProductPurchaseOrderRequest.getProductPurchaseOrderProductList();
+        if(CollectionUtils.isEmpty(productPurchaseOrderProductRequestRequestList)){
+            throw new BadRequestException("产品采购单产品信息不能为空!");
+        }
+
+        for(ProductPurchaseOrderProductRequest productPurchaseOrderProductRequest : productPurchaseOrderProductRequestRequestList){
+            ProductPurchaseOrderProduct productPurchaseOrderProduct = new ProductPurchaseOrderProduct();
+            BeanUtils.copyProperties(productPurchaseOrderProductRequest, productPurchaseOrderProduct);
+            productPurchaseOrderProduct.setStatus(true);
+            productPurchaseOrderProduct.setProductPurchaseOrderId(productPurchaseOrder.getId());
+            productPurchaseOrderProductRepository.save(productPurchaseOrderProduct);
+        }
+
+
+        ProductPurchaseOrderDTO productPurchaseOrderDTO = productPurchaseOrderMapper.toDto(productPurchaseOrder);
+
+        List<ProductPurchaseOrderProduct> productPurchaseOrderProductList = productPurchaseOrderProductRepository.queryByProductPurchaseOrderIdAndStatusTrue(productPurchaseOrder.getId());
+        if(!CollectionUtils.isEmpty(productPurchaseOrderProductList)){
+            List<ProductPurchaseOrderProductDTO> productPurchaseOrderProductDTOList = new ArrayList<>();
+            for(ProductPurchaseOrderProduct productPurchaseOrderProduct : productPurchaseOrderProductList){
+                ProductPurchaseOrderProductDTO productPurchaseOrderProductDTO = new ProductPurchaseOrderProductDTO();
+                BeanUtils.copyProperties(productPurchaseOrderProduct, productPurchaseOrderProductDTO);
+                productPurchaseOrderProductDTOList.add(productPurchaseOrderProductDTO);
+            }
+            productPurchaseOrderDTO.setProductPurchaseOrderProductList(productPurchaseOrderProductDTOList);
+        }
+
+        return productPurchaseOrderDTO;
     }
 
     @Override
