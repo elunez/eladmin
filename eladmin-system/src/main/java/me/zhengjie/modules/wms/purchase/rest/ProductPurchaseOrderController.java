@@ -2,6 +2,7 @@ package me.zhengjie.modules.wms.purchase.rest;
 
 import me.zhengjie.aop.log.Log;
 import me.zhengjie.modules.wms.purchase.domain.ProductPurchaseOrder;
+import me.zhengjie.modules.wms.purchase.request.AuditProductPurchaseOrderRequest;
 import me.zhengjie.modules.wms.purchase.request.CreateProductPurchaseOrderRequest;
 import me.zhengjie.modules.wms.purchase.service.ProductPurchaseOrderService;
 import me.zhengjie.modules.wms.purchase.service.dto.ProductPurchaseOrderQueryCriteria;
@@ -61,6 +62,16 @@ public class ProductPurchaseOrderController {
     @PreAuthorize("hasAnyRole('ADMIN','PRODUCTPURCHASEORDER_ALL','PRODUCTPURCHASEORDER_DELETE')")
     public ResponseEntity delete(@PathVariable Long id){
         productPurchaseOrderService.delete(id);
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+
+    @Log("审核产品采购单")
+    @ApiOperation(value = "审核产品采购单")
+    @PostMapping(value = "/auditProductPurchaseOrder")
+    @PreAuthorize("hasAnyRole('ADMIN','PRODUCTPURCHASEORDER_ALL','PRODUCTPURCHASEORDER_DELETE')")
+    public ResponseEntity auditProductPurchaseOrder(@Validated @RequestBody AuditProductPurchaseOrderRequest auditProductPurchaseOrderRequest){
+        productPurchaseOrderService.auditProductPurchaseOrder(auditProductPurchaseOrderRequest);
         return new ResponseEntity(HttpStatus.OK);
     }
 

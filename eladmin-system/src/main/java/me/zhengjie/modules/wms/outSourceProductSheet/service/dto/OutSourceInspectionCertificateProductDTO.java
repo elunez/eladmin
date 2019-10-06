@@ -1,6 +1,8 @@
 package me.zhengjie.modules.wms.outSourceProductSheet.service.dto;
 
 import lombok.Data;
+
+import javax.persistence.Column;
 import java.sql.Timestamp;
 import java.io.Serializable;
 
@@ -32,4 +34,14 @@ public class OutSourceInspectionCertificateProductDTO implements Serializable {
     private String productName;
 
     private String remark;
+
+    // 产品个数
+    private Integer productNumber;
+
+    // 合格数量
+    private Integer qualifiedNumber;
+
+    // 报废数量
+    private Integer scrapNumber;
+
 }

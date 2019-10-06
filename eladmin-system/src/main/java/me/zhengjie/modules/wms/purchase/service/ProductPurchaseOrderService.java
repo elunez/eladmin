@@ -1,6 +1,7 @@
 package me.zhengjie.modules.wms.purchase.service;
 
 import me.zhengjie.modules.wms.purchase.domain.ProductPurchaseOrder;
+import me.zhengjie.modules.wms.purchase.request.AuditProductPurchaseOrderRequest;
 import me.zhengjie.modules.wms.purchase.request.CreateProductPurchaseOrderRequest;
 import me.zhengjie.modules.wms.purchase.service.dto.ProductPurchaseOrderDTO;
 import me.zhengjie.modules.wms.purchase.service.dto.ProductPurchaseOrderQueryCriteria;
@@ -62,4 +63,10 @@ public interface ProductPurchaseOrderService {
      */
     //@CacheEvict(allEntries = true)
     void delete(Long id);
+
+    /**
+     *
+     * @param auditProductPurchaseOrderRequest
+     */
+    void auditProductPurchaseOrder(AuditProductPurchaseOrderRequest auditProductPurchaseOrderRequest);
 }

@@ -72,6 +72,7 @@ public class OutSourceProcessSheetController {
 
 
     @Log("初始化委外加工单编号")
+    @ApiOperation(value = "初始化委外加工单编号")
     @GetMapping(value = "/initOutSourceProcessSheetCode")
     public ResponseEntity initOutSourceProcessSheetCode(){
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS");//设置日期格式
@@ -80,13 +81,15 @@ public class OutSourceProcessSheetController {
     }
 
     @Log("查看委外加工单")
+    @ApiOperation(value = "查看委外加工单")
     @GetMapping(value = "/outSourceProcessSheet/{id}")
     public ResponseEntity getOutSourceProcessSheet(@PathVariable Long id){
         return new ResponseEntity(outSourceProcessSheetService.findById(id), HttpStatus.OK);
     }
 
     @Log("查看委外加工单产品信息")
-    @GetMapping(value = "/outSourceProcessSheet/outSourceProcessSheetProduct")
+    @ApiOperation(value = "查看委外加工单产品信息")
+    @GetMapping(value = "/queryOutSourceProcessSheetProductList")
     public ResponseEntity queryOutSourceProcessSheetProductList(OutSourceProcessSheetProductQueryCriteria criteria){
         return new ResponseEntity(outSourceProcessSheetProductService.queryAll(criteria), HttpStatus.OK);
     }

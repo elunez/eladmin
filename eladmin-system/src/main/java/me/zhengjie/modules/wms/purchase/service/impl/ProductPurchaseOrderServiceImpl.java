@@ -10,6 +10,7 @@ import me.zhengjie.modules.wms.outSourceProductSheet.service.dto.OutSourceProces
 import me.zhengjie.modules.wms.purchase.domain.ProductPurchaseOrder;
 import me.zhengjie.modules.wms.purchase.domain.ProductPurchaseOrderProduct;
 import me.zhengjie.modules.wms.purchase.repository.ProductPurchaseOrderProductRepository;
+import me.zhengjie.modules.wms.purchase.request.AuditProductPurchaseOrderRequest;
 import me.zhengjie.modules.wms.purchase.request.CreateProductPurchaseOrderRequest;
 import me.zhengjie.modules.wms.purchase.request.ProductPurchaseOrderProductRequest;
 import me.zhengjie.modules.wms.purchase.service.dto.ProductPurchaseOrderProductDTO;
@@ -28,6 +29,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -179,5 +181,31 @@ public class ProductPurchaseOrderServiceImpl implements ProductPurchaseOrderServ
     @Transactional(rollbackFor = Exception.class)
     public void delete(Long id) {
         productPurchaseOrderRepository.deleteById(id);
+    }
+
+    /**
+     * 审核产品采购单
+     * @param auditProductPurchaseOrderRequest
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void auditProductPurchaseOrder(AuditProductPurchaseOrderRequest auditProductPurchaseOrderRequest) {
+        Long id = auditProductPurchaseOrderRequest.getId();
+        Long auditUserId = auditProductPurchaseOrderRequest.getAuditUserId();
+        String auditUserName = auditProductPurchaseOrderRequest.getAuditUserName();
+        String auditOpinion = auditProductPurchaseOrderRequest.getAuditOpinion();
+
+        Optional<ProductPurchaseOrder> optionalProductPurchaseOrder = productPurchaseOrderRepository.findById(id);
+
+        ValidationUtil.isNull( optionalProductPurchaseOrder,"ProductPurchaseOrder","id",id);
+        ProductPurchaseOrder productPurchaseOrder = optionalProductPurchaseOrder.get();
+        productPurchaseOrder.setAuditUserId(auditUserId);
+        productPurchaseOrder.setAuditUserName(auditUserName);
+        productPurchaseOrder.setAuditOpinion(auditOpinion);
+        Date auditDate = new Date();
+        productPurchaseOrder.setAuditTime(auditDate);
+        productPurchaseOrderRepository.save(productPurchaseOrder);
+
+
     }
 }

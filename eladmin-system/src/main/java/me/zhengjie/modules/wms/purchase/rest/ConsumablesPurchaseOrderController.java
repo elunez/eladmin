@@ -2,6 +2,8 @@ package me.zhengjie.modules.wms.purchase.rest;
 
 import me.zhengjie.aop.log.Log;
 import me.zhengjie.modules.wms.purchase.domain.ConsumablesPurchaseOrder;
+import me.zhengjie.modules.wms.purchase.request.AuditConsumablesPurchaseOrderRequest;
+import me.zhengjie.modules.wms.purchase.request.AuditProductPurchaseOrderRequest;
 import me.zhengjie.modules.wms.purchase.service.ConsumablesPurchaseOrderService;
 import me.zhengjie.modules.wms.purchase.service.dto.ConsumablesPurchaseOrderQueryCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,6 +70,15 @@ public class ConsumablesPurchaseOrderController {
     @PreAuthorize("hasAnyRole('ADMIN','CONSUMABLESPURCHASEORDER_ALL','CONSUMABLESPURCHASEORDER_DELETE')")
     public ResponseEntity delete(@PathVariable Long id){
         consumablesPurchaseOrderService.delete(id);
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @Log("审核耗材采购单")
+    @ApiOperation(value = "审核耗材采购单")
+    @PostMapping(value = "/auditConsumablesPurchaseOrder")
+    @PreAuthorize("hasAnyRole('ADMIN','PRODUCTPURCHASEORDER_ALL','PRODUCTPURCHASEORDER_DELETE')")
+    public ResponseEntity auditConsumablesPurchaseOrder(@Validated @RequestBody AuditConsumablesPurchaseOrderRequest auditConsumablesPurchaseOrderRequest){
+        consumablesPurchaseOrderService.auditConsumablesPurchaseOrder(auditConsumablesPurchaseOrderRequest);
         return new ResponseEntity(HttpStatus.OK);
     }
 

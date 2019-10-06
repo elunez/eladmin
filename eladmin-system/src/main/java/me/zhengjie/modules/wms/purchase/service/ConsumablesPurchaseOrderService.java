@@ -1,6 +1,7 @@
 package me.zhengjie.modules.wms.purchase.service;
 
 import me.zhengjie.modules.wms.purchase.domain.ConsumablesPurchaseOrder;
+import me.zhengjie.modules.wms.purchase.request.AuditConsumablesPurchaseOrderRequest;
 import me.zhengjie.modules.wms.purchase.service.dto.ConsumablesPurchaseOrderDTO;
 import me.zhengjie.modules.wms.purchase.service.dto.ConsumablesPurchaseOrderQueryCriteria;
 //import org.springframework.cache.annotation.CacheConfig;
@@ -61,4 +62,7 @@ public interface ConsumablesPurchaseOrderService {
      */
     //@CacheEvict(allEntries = true)
     void delete(Long id);
+
+
+    void auditConsumablesPurchaseOrder(AuditConsumablesPurchaseOrderRequest auditConsumablesPurchaseOrderRequest);
 }

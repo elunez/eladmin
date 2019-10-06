@@ -76,10 +76,10 @@ public class OutSourceProcessSheetProductServiceImpl implements OutSourceProcess
                 Predicate statusPredicate = criteriaBuilder.equal(root.get("status"), 1);
                 targetPredicateList.add(statusPredicate);
 
-                Long outSOurceProcessSheetId = criteria.getOutSOurceProcessSheetId();
-                if(null != outSOurceProcessSheetId){
-                    Predicate outSOurceProcessSheetIdPredicate = criteriaBuilder.equal(root.get("outSOurceProcessSheetId"), 1);
-                    targetPredicateList.add(outSOurceProcessSheetIdPredicate);
+                Long outSourceProcessSheetId = criteria.getOutSourceProcessSheetId();
+                if(null != outSourceProcessSheetId){
+                    Predicate outSourceProcessSheetIdPredicate = criteriaBuilder.equal(root.get("outSourceProcessSheetId"), 1);
+                    targetPredicateList.add(outSourceProcessSheetIdPredicate);
                 }
 
 

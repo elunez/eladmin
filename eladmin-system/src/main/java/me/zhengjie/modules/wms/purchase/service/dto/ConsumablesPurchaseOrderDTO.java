@@ -3,6 +3,8 @@ package me.zhengjie.modules.wms.purchase.service.dto;
 import lombok.Data;
 import java.sql.Timestamp;
 import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -37,4 +39,10 @@ public class ConsumablesPurchaseOrderDTO implements Serializable {
 
     // 耗材采购单单据编号
     private String consumablesPurchaseOrderCode;
+
+    private String auditOpinion;
+
+    private Date auditTime;
+
+    private List<ConsumablesPurchaseOrderProductDTO> consumablesPurchaseOrderProductList;
 }

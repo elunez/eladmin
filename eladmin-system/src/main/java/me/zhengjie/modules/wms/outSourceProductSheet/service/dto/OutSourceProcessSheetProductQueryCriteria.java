@@ -11,5 +11,5 @@ import me.zhengjie.annotation.Query;
 @Data
 public class OutSourceProcessSheetProductQueryCriteria {
 
-    private Long outSOurceProcessSheetId;
+    private Long outSourceProcessSheetId;
 }

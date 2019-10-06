@@ -2,6 +2,8 @@ package me.zhengjie.modules.wms.purchase.service.impl;
 
 import me.zhengjie.modules.wms.purchase.domain.ConsumablesPurchaseOrder;
 import me.zhengjie.modules.wms.purchase.domain.ProductPurchaseOrder;
+import me.zhengjie.modules.wms.purchase.request.AuditConsumablesPurchaseOrderRequest;
+import me.zhengjie.modules.wms.purchase.request.AuditProductPurchaseOrderRequest;
 import me.zhengjie.utils.ValidationUtil;
 import me.zhengjie.modules.wms.purchase.repository.ConsumablesPurchaseOrderRepository;
 import me.zhengjie.modules.wms.purchase.service.ConsumablesPurchaseOrderService;
@@ -14,7 +16,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -111,6 +115,33 @@ public class ConsumablesPurchaseOrderServiceImpl implements ConsumablesPurchaseO
         ConsumablesPurchaseOrder consumablesPurchaseOrder = optionalConsumablesPurchaseOrder.get();
         consumablesPurchaseOrder.copy(resources);
         consumablesPurchaseOrderRepository.save(consumablesPurchaseOrder);
+    }
+
+
+    /**
+     * 审核耗材采购单
+     * @param auditConsumablesPurchaseOrderRequest
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void auditConsumablesPurchaseOrder(AuditConsumablesPurchaseOrderRequest auditConsumablesPurchaseOrderRequest) {
+        Long id = auditConsumablesPurchaseOrderRequest.getId();
+        Long auditUserId = auditConsumablesPurchaseOrderRequest.getAuditUserId();
+        String auditUserName = auditConsumablesPurchaseOrderRequest.getAuditUserName();
+        String auditOpinion = auditConsumablesPurchaseOrderRequest.getAuditOpinion();
+
+        Optional<ConsumablesPurchaseOrder> optionalProductPurchaseOrder = consumablesPurchaseOrderRepository.findById(id);
+
+        ValidationUtil.isNull( optionalProductPurchaseOrder,"ProductPurchaseOrder","id",id);
+        ConsumablesPurchaseOrder consumablesPurchaseOrder = optionalProductPurchaseOrder.get();
+        consumablesPurchaseOrder.setAuditUserId(auditUserId);
+        consumablesPurchaseOrder.setAuditUserName(auditUserName);
+        consumablesPurchaseOrder.setAuditOpinion(auditOpinion);
+        Date date = new Date();
+        consumablesPurchaseOrder.setAuditTime(date);
+        consumablesPurchaseOrderRepository.save(consumablesPurchaseOrder);
+
+
     }
 
     @Override

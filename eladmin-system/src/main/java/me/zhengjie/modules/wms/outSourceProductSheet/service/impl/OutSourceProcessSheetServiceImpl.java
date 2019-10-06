@@ -98,6 +98,13 @@ public class OutSourceProcessSheetServiceImpl implements OutSourceProcessSheetSe
                 for(OutSourceProcessSheetDTO outSourceProcessSheetDTO : outSourceProcessSheetDTOList){
                     Timestamp createTime = outSourceProcessSheetDTO.getCreateTime();
                     outSourceProcessSheetDTO.setCreateTimeStr(new SimpleDateFormat("yyyy-MM-dd").format(createTime));
+
+                    // 查询对应的委外加工单的产品信息
+                    List<OutSourceProcessSheetProduct> outSourceProcessSheetProductList = outSourceProcessSheetProductRepository.queryByOutSourceProcessSheetIdAndStatusTrue(outSourceProcessSheetDTO.getId());
+                    if(!CollectionUtils.isEmpty(outSourceProcessSheetProductList)){
+                        List<OutSourceProcessSheetProductDTO> outSourceProcessSheetProductDTOList = outSourceProcessSheetProductMapper.toDto(outSourceProcessSheetProductList);
+                        outSourceProcessSheetDTO.setOutSourceProcessSheetProductList(outSourceProcessSheetProductDTOList);
+                    }
                 }
             }
         }
@@ -197,7 +204,9 @@ public class OutSourceProcessSheetServiceImpl implements OutSourceProcessSheetSe
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void update(UpdateOutSourceProcessSheetRequest updateOutSourceProcessSheetRequest) {
-        OutSourceProcessSheet outSourceProcessSheet = new OutSourceProcessSheet();
+        Long outSourceProcessSheetId = updateOutSourceProcessSheetRequest.getId();
+        Optional<OutSourceProcessSheet> outSourceProcessSheetOptional = outSourceProcessSheetRepository.findById(outSourceProcessSheetId);
+        OutSourceProcessSheet outSourceProcessSheet = outSourceProcessSheetOptional.get();
         BeanUtils.copyProperties(updateOutSourceProcessSheetRequest, outSourceProcessSheet);
 
         outSourceProcessSheet.setStatus(true);

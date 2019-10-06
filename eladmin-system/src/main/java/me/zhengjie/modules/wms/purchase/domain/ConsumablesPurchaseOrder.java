@@ -6,6 +6,7 @@ import cn.hutool.core.bean.copier.CopyOptions;
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
 * @author jie
@@ -53,6 +54,14 @@ public class ConsumablesPurchaseOrder implements Serializable {
     // 耗材采购单单据编号
     @Column(name = "consumables_purchase_order_code")
     private String consumablesPurchaseOrderCode;
+
+    // 审核时间
+    @Column(name = "audit_time")
+    private Date auditTime;
+
+    // 审核意见
+    @Column(name = "audit_opinion")
+    private String auditOpinion;
 
     public void copy(ConsumablesPurchaseOrder source){
         BeanUtil.copyProperties(source,this, CopyOptions.create().setIgnoreNullValue(true));

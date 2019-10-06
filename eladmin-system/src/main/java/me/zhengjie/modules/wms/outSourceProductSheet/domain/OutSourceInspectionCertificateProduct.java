@@ -51,6 +51,18 @@ public class OutSourceInspectionCertificateProduct implements Serializable {
     @Column(name = "remark")
     private String remark;
 
+    // 产品个数
+    @Column(name = "product_number")
+    private Integer productNumber;
+
+    // 合格数量
+    @Column(name = "qualified_number")
+    private Integer qualifiedNumber;
+
+    // 报废数量
+    @Column(name = "scrap_number")
+    private Integer scrapNumber;
+
     public void copy(OutSourceInspectionCertificateProduct source){
         BeanUtil.copyProperties(source,this, CopyOptions.create().setIgnoreNullValue(true));
     }

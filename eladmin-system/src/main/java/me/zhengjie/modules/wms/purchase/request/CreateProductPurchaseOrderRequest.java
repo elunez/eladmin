@@ -20,15 +20,10 @@ public class CreateProductPurchaseOrderRequest implements Serializable {
     //  采购人姓名
     private String purchaseUserName;
 
-    // 审核人主键
-    private Long auditUserId;
-
-    // 审核人姓名
-    private String auditUserName;
-
     // 产品采购单单据编号
     private String productPurchaseOrderCode;
 
+    // 产品采购单商品信息
     private List<ProductPurchaseOrderProductRequest> productPurchaseOrderProductList;
 
     public void copy(CreateProductPurchaseOrderRequest source){

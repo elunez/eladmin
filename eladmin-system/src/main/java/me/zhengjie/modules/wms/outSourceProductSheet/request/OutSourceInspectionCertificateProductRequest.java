@@ -16,20 +16,21 @@ import java.sql.Timestamp;
 public class OutSourceInspectionCertificateProductRequest implements Serializable {
 
     // 所属委外验收单
-    @Column(name = "out_source_inspection_certificate_id")
     private Long outSourceInspectionCertificateId;
 
-    @Column(name = "product_code")
     private String productCode;
 
-    @Column(name = "product_id")
     private Long productId;
 
-    @Column(name = "product_name")
     private String productName;
 
-    @Column(name = "remark")
     private String remark;
+
+    // 合格数量
+    private Integer qualifiedNumber;
+
+    // 报废数量
+    private Integer scrapNumber;
 
     public void copy(OutSourceInspectionCertificateProductRequest source){
         BeanUtil.copyProperties(source,this, CopyOptions.create().setIgnoreNullValue(true));

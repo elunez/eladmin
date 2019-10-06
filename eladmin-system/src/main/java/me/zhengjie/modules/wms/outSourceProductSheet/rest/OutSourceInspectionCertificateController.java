@@ -15,6 +15,9 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.annotations.*;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 /**
 * @author jie
 * @date 2019-10-01
@@ -27,13 +30,22 @@ public class OutSourceInspectionCertificateController {
     @Autowired
     private OutSourceInspectionCertificateService outSourceInspectionCertificateService;
 
-    @Log("查询委外验收单")
-    @ApiOperation(value = "查询委外验收单")
-    @GetMapping(value = "/outSourceInspectionCertificate")
+    @Log("分页查询委外验收单")
+    @ApiOperation(value = "分页查询委外验收单")
+    @GetMapping(value = "/queryOutSourceInspectionCertificatePageList")
     @PreAuthorize("hasAnyRole('ADMIN','SOUTSOURCEINSPECTIONCERTIFICATE_ALL','SOUTSOURCEINSPECTIONCERTIFICATE_SELECT')")
-    public ResponseEntity getOutSourceInspectionCertificates(OutSourceInspectionCertificateQueryCriteria criteria, Pageable pageable){
+    public ResponseEntity queryOutSourceInspectionCertificatePageList(OutSourceInspectionCertificateQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity(outSourceInspectionCertificateService.queryAll(criteria,pageable),HttpStatus.OK);
     }
+
+    @Log("查询委外验收单列表")
+    @ApiOperation(value = "查询委外验收单列表")
+    @GetMapping(value = "/queryOutSourceInspectionCertificateList")
+    @PreAuthorize("hasAnyRole('ADMIN','SOUTSOURCEINSPECTIONCERTIFICATE_ALL','SOUTSOURCEINSPECTIONCERTIFICATE_SELECT')")
+    public ResponseEntity queryOutSourceInspectionCertificateList(OutSourceInspectionCertificateQueryCriteria criteria, Pageable pageable){
+        return new ResponseEntity(outSourceInspectionCertificateService.queryAll(criteria,pageable),HttpStatus.OK);
+    }
+
 
     @Log("新增委外验收单")
     @ApiOperation(value = "新增委外验收单")
@@ -62,9 +74,19 @@ public class OutSourceInspectionCertificateController {
     }
 
     @Log("查看委外验收单详情")
+    @ApiOperation(value = "查看委外验收单详情")
     @GetMapping(value = "/outSourceInspectionCertificate/{id}")
     public ResponseEntity getOutSourceInspectionCertificate(@PathVariable Long id){
         return new ResponseEntity(outSourceInspectionCertificateService.findById(id), HttpStatus.OK);
+    }
+
+    @Log("初始化委外验收单编号")
+    @ApiOperation(value = "初始化委外验收单编号")
+    @GetMapping(value = "/initOutSourceInspectionCertificateCode")
+    public ResponseEntity initOutSourceInspectionCertificateCode(){
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS");//设置日期格式
+        String supplierCode = "OIC"+ LocalDateTime.now().format(fmt);
+        return new ResponseEntity(supplierCode,HttpStatus.OK);
     }
 
 }
