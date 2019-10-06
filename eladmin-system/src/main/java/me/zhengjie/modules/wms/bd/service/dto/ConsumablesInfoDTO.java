@@ -21,5 +21,8 @@ public class ConsumablesInfoDTO implements Serializable {
     // 耗材名称
     private String consumablesName;
 
+    // 耗材编码
+    private String consumablesCode;
+
     private Boolean status;
 }

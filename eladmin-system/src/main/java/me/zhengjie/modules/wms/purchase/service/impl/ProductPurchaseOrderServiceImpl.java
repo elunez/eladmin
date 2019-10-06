@@ -2,6 +2,7 @@ package me.zhengjie.modules.wms.purchase.service.impl;
 
 import me.zhengjie.modules.wms.bd.domain.MeasureUnit;
 import me.zhengjie.modules.wms.purchase.domain.ProductPurchaseOrder;
+import me.zhengjie.modules.wms.purchase.request.CreateProductPurchaseOrderRequest;
 import me.zhengjie.utils.ValidationUtil;
 import me.zhengjie.modules.wms.purchase.repository.ProductPurchaseOrderRepository;
 import me.zhengjie.modules.wms.purchase.service.ProductPurchaseOrderService;
@@ -99,8 +100,9 @@ public class ProductPurchaseOrderServiceImpl implements ProductPurchaseOrderServ
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ProductPurchaseOrderDTO create(ProductPurchaseOrder resources) {
-        return productPurchaseOrderMapper.toDto(productPurchaseOrderRepository.save(resources));
+    public ProductPurchaseOrderDTO create(CreateProductPurchaseOrderRequest createProductPurchaseOrderRequest) {
+
+        return null;
     }
 
     @Override

@@ -1,6 +1,7 @@
 package me.zhengjie.modules.wms.purchase.service;
 
 import me.zhengjie.modules.wms.purchase.domain.ProductPurchaseOrder;
+import me.zhengjie.modules.wms.purchase.request.CreateProductPurchaseOrderRequest;
 import me.zhengjie.modules.wms.purchase.service.dto.ProductPurchaseOrderDTO;
 import me.zhengjie.modules.wms.purchase.service.dto.ProductPurchaseOrderQueryCriteria;
 //import org.springframework.cache.annotation.CacheConfig;
@@ -42,11 +43,11 @@ public interface ProductPurchaseOrderService {
 
     /**
      * create
-     * @param resources
+     * @param createProductPurchaseOrderRequest
      * @return
      */
     //@CacheEvict(allEntries = true)
-    ProductPurchaseOrderDTO create(ProductPurchaseOrder resources);
+    ProductPurchaseOrderDTO create(CreateProductPurchaseOrderRequest createProductPurchaseOrderRequest);
 
     /**
      * update

@@ -29,6 +29,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -88,7 +90,19 @@ public class OutSourceProcessSheetServiceImpl implements OutSourceProcessSheetSe
             }
         };
         Page<OutSourceProcessSheet> page = outSourceProcessSheetRepository.findAll(specification,pageable);
-        return PageUtil.toPage(page.map(outSourceProcessSheetMapper::toDto));
+
+        Page<OutSourceProcessSheetDTO> outSourceProcessSheetDTOPage = page.map(outSourceProcessSheetMapper::toDto);
+        if(null != outSourceProcessSheetDTOPage){
+            List<OutSourceProcessSheetDTO> outSourceProcessSheetDTOList = outSourceProcessSheetDTOPage.getContent();
+            if(!CollectionUtils.isEmpty(outSourceProcessSheetDTOList)){
+                for(OutSourceProcessSheetDTO outSourceProcessSheetDTO : outSourceProcessSheetDTOList){
+                    Timestamp createTime = outSourceProcessSheetDTO.getCreateTime();
+                    outSourceProcessSheetDTO.setCreateTimeStr(new SimpleDateFormat("yyyy-MM-dd").format(createTime));
+                }
+            }
+        }
+        Map map = PageUtil.toPage(outSourceProcessSheetDTOPage);
+        return map;
     }
 
     @Override

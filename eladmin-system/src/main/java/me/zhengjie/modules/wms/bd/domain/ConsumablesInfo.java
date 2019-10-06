@@ -35,6 +35,10 @@ public class ConsumablesInfo implements Serializable {
     @Column(name = "consumables_name")
     private String consumablesName;
 
+    // 耗材编号
+    @Column(name = "consumables_code")
+    private String consumablesCode;
+
     @Column(name = "status")
     private Boolean status;
 

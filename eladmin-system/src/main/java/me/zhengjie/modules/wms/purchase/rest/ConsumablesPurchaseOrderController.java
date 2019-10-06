@@ -13,11 +13,14 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.annotations.*;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 /**
 * @author jie
 * @date 2019-10-06
 */
-@Api(tags = "ConsumablesPurchaseOrder管理")
+@Api(tags = "耗材采购管理")
 @RestController
 @RequestMapping("api")
 public class ConsumablesPurchaseOrderController {
@@ -25,7 +28,7 @@ public class ConsumablesPurchaseOrderController {
     @Autowired
     private ConsumablesPurchaseOrderService consumablesPurchaseOrderService;
 
-    @Log("查询ConsumablesPurchaseOrder")
+    @Log("分页查询耗材采购单")
     @ApiOperation(value = "查询ConsumablesPurchaseOrder")
     @GetMapping(value = "/consumablesPurchaseOrder")
     @PreAuthorize("hasAnyRole('ADMIN','CONSUMABLESPURCHASEORDER_ALL','CONSUMABLESPURCHASEORDER_SELECT')")
@@ -33,16 +36,16 @@ public class ConsumablesPurchaseOrderController {
         return new ResponseEntity(consumablesPurchaseOrderService.queryAll(criteria,pageable),HttpStatus.OK);
     }
 
-    @Log("新增ConsumablesPurchaseOrder")
-    @ApiOperation(value = "新增ConsumablesPurchaseOrder")
+    @Log("新增耗材采购单")
+    @ApiOperation(value = "新增耗材采购单")
     @PostMapping(value = "/consumablesPurchaseOrder")
     @PreAuthorize("hasAnyRole('ADMIN','CONSUMABLESPURCHASEORDER_ALL','CONSUMABLESPURCHASEORDER_CREATE')")
     public ResponseEntity create(@Validated @RequestBody ConsumablesPurchaseOrder resources){
         return new ResponseEntity(consumablesPurchaseOrderService.create(resources),HttpStatus.CREATED);
     }
 
-    @Log("修改ConsumablesPurchaseOrder")
-    @ApiOperation(value = "修改ConsumablesPurchaseOrder")
+    @Log("修改耗材采购单")
+    @ApiOperation(value = "修改耗材采购单")
     @PutMapping(value = "/consumablesPurchaseOrder")
     @PreAuthorize("hasAnyRole('ADMIN','CONSUMABLESPURCHASEORDER_ALL','CONSUMABLESPURCHASEORDER_EDIT')")
     public ResponseEntity update(@Validated @RequestBody ConsumablesPurchaseOrder resources){
@@ -50,12 +53,20 @@ public class ConsumablesPurchaseOrderController {
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
-    @Log("删除ConsumablesPurchaseOrder")
-    @ApiOperation(value = "删除ConsumablesPurchaseOrder")
+    @Log("删除耗材采购单")
+    @ApiOperation(value = "删除耗材采购单")
     @DeleteMapping(value = "/consumablesPurchaseOrder/{id}")
     @PreAuthorize("hasAnyRole('ADMIN','CONSUMABLESPURCHASEORDER_ALL','CONSUMABLESPURCHASEORDER_DELETE')")
     public ResponseEntity delete(@PathVariable Long id){
         consumablesPurchaseOrderService.delete(id);
         return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @Log("初始化耗材采购单编号")
+    @GetMapping(value = "/initConsumablesPurchaseOrderCode")
+    public ResponseEntity initConsumablesPurchaseOrderCode(){
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS");//设置日期格式
+        String supplierCode = "CP"+ LocalDateTime.now().format(fmt);
+        return new ResponseEntity(supplierCode,HttpStatus.OK);
     }
 }

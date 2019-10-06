@@ -3,6 +3,7 @@ package me.zhengjie.modules.wms.purchase.service.dto;
 import lombok.Data;
 import java.sql.Timestamp;
 import java.io.Serializable;
+import java.util.List;
 
 
 /**
@@ -36,4 +37,7 @@ public class ProductPurchaseOrderDTO implements Serializable {
     private String auditUserName;
 
     private String productPurchaseOrderCode;
+
+    //产品采购单产品信息
+    private List<ProductPurchaseOrderProductDTO> productPurchaseOrderProductList;
 }

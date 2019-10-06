@@ -50,6 +50,7 @@ public class ProductPurchaseOrder implements Serializable {
     @Column(name = "audit_user_name")
     private String auditUserName;
 
+    // 产品采购单单据编号
     @Column(name = "product_purchase_order_code")
     private String productPurchaseOrderCode;
 

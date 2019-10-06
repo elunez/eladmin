@@ -7,6 +7,7 @@ import java.util.List;
 
 
 /**
+ * 委外加工单
 * @author jie
 * @date 2019-08-17
 */
@@ -20,6 +21,8 @@ public class OutSourceProcessSheetDTO implements Serializable {
 
     // 创建时间
     private Timestamp createTime;
+
+    private String createTimeStr;
 
     // 更新时间
     private Timestamp updateTime;
