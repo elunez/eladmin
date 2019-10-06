@@ -71,6 +71,13 @@ public class OutSourceInspectionCertificateServiceImpl implements OutSourceInspe
                 Predicate statusPredicate = criteriaBuilder.equal(root.get("status"), 1);
                 targetPredicateList.add(statusPredicate);
 
+
+                String outSourceProcessSheetCode = criteria.getOutSourceProcessSheetCode();
+                if(!StringUtils.isEmpty(outSourceProcessSheetCode)){
+                    Predicate outSourceProcessSheetCodePredicate = criteriaBuilder.like(root.get("outSourceProcessSheetCode"), "%"+ outSourceProcessSheetCode + "%");
+                    targetPredicateList.add(outSourceProcessSheetCodePredicate);
+                }
+
                 if(CollectionUtils.isEmpty(targetPredicateList)){
                     return null;
                 }else{
@@ -113,7 +120,7 @@ public class OutSourceInspectionCertificateServiceImpl implements OutSourceInspe
         List<OutSourceInspectionCertificateProduct> outSourceInspectionCertificateProductList = outSourceInspectionCertificateProductRepository.queryByOutSourceInspectionCertificateIdAndStatusTrue(id);
         if(!CollectionUtils.isEmpty(outSourceInspectionCertificateProductList)){
             List<OutSourceInspectionCertificateProductDTO> outSourceInspectionCertificateProductDTOList = outSourceInspectionCertificateProductMapper.toDto(outSourceInspectionCertificateProductList);
-            outSourceInspectionCertificateDTO.setOutSourceInspectionCertificateDTOList(outSourceInspectionCertificateProductDTOList);
+            outSourceInspectionCertificateDTO.setOutSourceInspectionCertificateProductList(outSourceInspectionCertificateProductDTOList);
         }
         return outSourceInspectionCertificateDTO;
     }
@@ -160,7 +167,7 @@ public class OutSourceInspectionCertificateServiceImpl implements OutSourceInspe
                 BeanUtils.copyProperties(outSourceInspectionCertificateProduct, outSourceInspectionCertificateProductDTO);
                 outSourceInspectionCertificateProductDTOList.add(outSourceInspectionCertificateProductDTO);
             }
-            outSourceInspectionCertificateDTO.setOutSourceInspectionCertificateDTOList(outSourceInspectionCertificateProductDTOList);
+            outSourceInspectionCertificateDTO.setOutSourceInspectionCertificateProductList(outSourceInspectionCertificateProductDTOList);
         }
 
         return outSourceInspectionCertificateDTO;

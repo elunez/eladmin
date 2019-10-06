@@ -37,8 +37,8 @@ public class OutSourceInspectionCertificate implements Serializable {
     private Boolean status;
 
     // 所属委外加工单
-    @Column(name = "out_source_process_sheet_id")
-    private Long outSourceProcessSheetId;
+    @Column(name = "out_source_process_sheet_code")
+    private String outSourceProcessSheetCode;
 
     // 制单人
     @Column(name = "make_people_id")

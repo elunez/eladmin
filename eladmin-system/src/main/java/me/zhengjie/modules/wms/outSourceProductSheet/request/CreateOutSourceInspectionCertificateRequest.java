@@ -18,7 +18,7 @@ public class CreateOutSourceInspectionCertificateRequest implements Serializable
 
 
     // 所属委外加工单
-    private Long outSourceProcessSheetId;
+    private String outSourceProcessSheetCode;
 
     // 制单人
     private Long makePeopleId;

@@ -18,7 +18,8 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class JwtUser implements UserDetails {
 
-    @JsonIgnore
+//    @JsonIgnore
+    // TODO userId
     private final Long id;
 
     private final String username;

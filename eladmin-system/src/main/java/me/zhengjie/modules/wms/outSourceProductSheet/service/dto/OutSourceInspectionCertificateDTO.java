@@ -25,7 +25,7 @@ public class OutSourceInspectionCertificateDTO implements Serializable {
     private Boolean status;
 
     // 所属委外加工单
-    private Long outSourceProcessSheetId;
+    private String outSourceProcessSheetCode;
 
     // 制单人
     private Long makePeopleId;
@@ -39,5 +39,5 @@ public class OutSourceInspectionCertificateDTO implements Serializable {
     private String remark;
 
     // 委外验收单产品信息
-    private List<OutSourceInspectionCertificateProductDTO> outSourceInspectionCertificateDTOList;
+    private List<OutSourceInspectionCertificateProductDTO> outSourceInspectionCertificateProductList;
 }

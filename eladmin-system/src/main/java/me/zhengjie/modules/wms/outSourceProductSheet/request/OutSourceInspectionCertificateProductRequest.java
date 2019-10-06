@@ -24,6 +24,8 @@ public class OutSourceInspectionCertificateProductRequest implements Serializabl
 
     private String productName;
 
+    private Integer productNumber;
+
     private String remark;
 
     // 合格数量
