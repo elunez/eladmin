@@ -114,9 +114,18 @@ public class ProductPurchaseOrderServiceImpl implements ProductPurchaseOrderServ
 
     @Override
     public ProductPurchaseOrderDTO findById(Long id) {
-        Optional<ProductPurchaseOrder> productPurchaseOrder = productPurchaseOrderRepository.findById(id);
-        ValidationUtil.isNull(productPurchaseOrder,"ProductPurchaseOrder","id",id);
-        return productPurchaseOrderMapper.toDto(productPurchaseOrder.get());
+
+        Optional<ProductPurchaseOrder> invoiceOptional = productPurchaseOrderRepository.findById(id);
+        ProductPurchaseOrder productPurchaseOrder = invoiceOptional.get();
+        ProductPurchaseOrderDTO productPurchaseOrderDTO = productPurchaseOrderMapper.toDto(productPurchaseOrder);
+
+
+        List<ProductPurchaseOrderProduct> productPurchaseOrderProductList = productPurchaseOrderProductRepository.queryByProductPurchaseOrderIdAndStatusTrue(id);
+        if(!CollectionUtils.isEmpty(productPurchaseOrderProductList)){
+            List<ProductPurchaseOrderProductDTO> productPurchaseOrderProductDTOList = productPurchaseOrderProductMapper.toDto(productPurchaseOrderProductList);
+            productPurchaseOrderDTO.setProductPurchaseOrderProductList(productPurchaseOrderProductDTOList);
+        }
+        return productPurchaseOrderDTO;
     }
 
     @Override

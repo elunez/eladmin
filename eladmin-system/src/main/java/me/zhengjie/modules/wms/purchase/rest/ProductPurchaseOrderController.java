@@ -82,4 +82,11 @@ public class ProductPurchaseOrderController {
         String supplierCode = "PP"+ LocalDateTime.now().format(fmt);
         return new ResponseEntity(supplierCode,HttpStatus.OK);
     }
+
+    @Log("查看产品采购详情")
+    @ApiOperation(value = "查看产品采购详情")
+    @GetMapping(value = "/productPurchaseOrder/{id}")
+    public ResponseEntity getOutSourceInspectionCertificate(@PathVariable Long id){
+        return new ResponseEntity(productPurchaseOrderService.findById(id), HttpStatus.OK);
+    }
 }

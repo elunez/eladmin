@@ -4,6 +4,7 @@ import me.zhengjie.aop.log.Log;
 import me.zhengjie.modules.wms.purchase.domain.ConsumablesPurchaseOrder;
 import me.zhengjie.modules.wms.purchase.request.AuditConsumablesPurchaseOrderRequest;
 import me.zhengjie.modules.wms.purchase.request.AuditProductPurchaseOrderRequest;
+import me.zhengjie.modules.wms.purchase.request.CreateConsumablesPurchaseOrderRequest;
 import me.zhengjie.modules.wms.purchase.service.ConsumablesPurchaseOrderService;
 import me.zhengjie.modules.wms.purchase.service.dto.ConsumablesPurchaseOrderQueryCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,8 +52,8 @@ public class ConsumablesPurchaseOrderController {
     @ApiOperation(value = "新增耗材采购单")
     @PostMapping(value = "/consumablesPurchaseOrder")
     @PreAuthorize("hasAnyRole('ADMIN','CONSUMABLESPURCHASEORDER_ALL','CONSUMABLESPURCHASEORDER_CREATE')")
-    public ResponseEntity create(@Validated @RequestBody ConsumablesPurchaseOrder resources){
-        return new ResponseEntity(consumablesPurchaseOrderService.create(resources),HttpStatus.CREATED);
+    public ResponseEntity create(@Validated @RequestBody CreateConsumablesPurchaseOrderRequest createConsumablesPurchaseOrderRequest){
+        return new ResponseEntity(consumablesPurchaseOrderService.create(createConsumablesPurchaseOrderRequest),HttpStatus.CREATED);
     }
 
     @Log("修改耗材采购单")
