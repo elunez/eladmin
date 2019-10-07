@@ -23,4 +23,6 @@ public class AuditConsumablesPurchaseOrderRequest {
     // 审核人姓名
     private String auditUserName;
 
+    private String auditStatus;
+
 }

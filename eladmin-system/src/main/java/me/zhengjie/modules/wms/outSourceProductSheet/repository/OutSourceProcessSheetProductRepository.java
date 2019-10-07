@@ -24,6 +24,6 @@ public interface OutSourceProcessSheetProductRepository extends JpaRepository<Ou
     List<OutSourceProcessSheetProduct> queryByOutSourceProcessSheetIdAndStatusTrue(Long outSourceProcessSheetId);
 
     @Modifying
-    @Query(value = "delete s_out_source_process_sheet_product  where product_code = ?1 and out_source_process_sheet_id = ?2", nativeQuery = true)
+    @Query(value = "delete from s_out_source_process_sheet_product  where product_code = ?1 and out_source_process_sheet_id = ?2", nativeQuery = true)
     void deleteByProductCodeAndOutSourceProcessSheetId(String productCode, Long outSourceProcessSheetId);
 }

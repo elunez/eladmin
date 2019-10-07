@@ -3,6 +3,7 @@ package me.zhengjie.modules.wms.purchase.service;
 import me.zhengjie.modules.wms.purchase.domain.ProductPurchaseOrder;
 import me.zhengjie.modules.wms.purchase.request.AuditProductPurchaseOrderRequest;
 import me.zhengjie.modules.wms.purchase.request.CreateProductPurchaseOrderRequest;
+import me.zhengjie.modules.wms.purchase.request.UpdateProductPurchaseOrderRequest;
 import me.zhengjie.modules.wms.purchase.service.dto.ProductPurchaseOrderDTO;
 import me.zhengjie.modules.wms.purchase.service.dto.ProductPurchaseOrderQueryCriteria;
 //import org.springframework.cache.annotation.CacheConfig;
@@ -52,10 +53,10 @@ public interface ProductPurchaseOrderService {
 
     /**
      * update
-     * @param resources
+     * @param updateProductPurchaseOrderRequest
      */
     //@CacheEvict(allEntries = true)
-    void update(ProductPurchaseOrder resources);
+    void update(UpdateProductPurchaseOrderRequest updateProductPurchaseOrderRequest);
 
     /**
      * delete

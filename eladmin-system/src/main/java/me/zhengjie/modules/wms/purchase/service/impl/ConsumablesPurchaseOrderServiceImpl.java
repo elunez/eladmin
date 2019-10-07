@@ -1,6 +1,11 @@
 package me.zhengjie.modules.wms.purchase.service.impl;
 
 import me.zhengjie.exception.BadRequestException;
+import me.zhengjie.modules.wms.outSourceProductSheet.domain.OutSourceProcessSheet;
+import me.zhengjie.modules.wms.outSourceProductSheet.domain.OutSourceProcessSheetProduct;
+import me.zhengjie.modules.wms.outSourceProductSheet.service.dto.OutSourceProcessSheetDTO;
+import me.zhengjie.modules.wms.outSourceProductSheet.service.dto.OutSourceProcessSheetProductDTO;
+import me.zhengjie.modules.wms.purchase.cons.AuditStatus;
 import me.zhengjie.modules.wms.purchase.domain.ConsumablesPurchaseOrder;
 import me.zhengjie.modules.wms.purchase.domain.ConsumablesPurchaseOrderProduct;
 import me.zhengjie.modules.wms.purchase.domain.ProductPurchaseOrder;
@@ -20,11 +25,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.security.Timestamp;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import me.zhengjie.utils.PageUtil;
@@ -78,7 +84,23 @@ public class ConsumablesPurchaseOrderServiceImpl implements ConsumablesPurchaseO
         };
 
         Page<ConsumablesPurchaseOrder> page = consumablesPurchaseOrderRepository.findAll(specification, pageable);
-        return PageUtil.toPage(page.map(consumablesPurchaseOrderMapper::toDto));
+
+        Page<ConsumablesPurchaseOrderDTO> consumablesPurchaseOrderDTOPage = page.map(consumablesPurchaseOrderMapper::toDto);
+        if(null != consumablesPurchaseOrderDTOPage){
+            List<ConsumablesPurchaseOrderDTO> consumablesPurchaseOrderDTOList = consumablesPurchaseOrderDTOPage.getContent();
+            if(!CollectionUtils.isEmpty(consumablesPurchaseOrderDTOList)){
+                for(ConsumablesPurchaseOrderDTO consumablesPurchaseOrderDTO : consumablesPurchaseOrderDTOList){
+                    String auditStatusName = AuditStatus.getName(consumablesPurchaseOrderDTO.getAuditStatus());
+                    consumablesPurchaseOrderDTO.setAuditStatusName(auditStatusName);
+
+                    Timestamp createTime = consumablesPurchaseOrderDTO.getCreateTime();
+                    consumablesPurchaseOrderDTO.setCreateTimeStr(new SimpleDateFormat("yyyy-MM-dd").format(createTime));
+                }
+            }
+        }
+
+        Map map = PageUtil.toPage(consumablesPurchaseOrderDTOPage);
+        return map;
     }
 
     @Override
@@ -107,9 +129,18 @@ public class ConsumablesPurchaseOrderServiceImpl implements ConsumablesPurchaseO
 
     @Override
     public ConsumablesPurchaseOrderDTO findById(Long id) {
-        Optional<ConsumablesPurchaseOrder> consumablesPurchaseOrder = consumablesPurchaseOrderRepository.findById(id);
-        ValidationUtil.isNull(consumablesPurchaseOrder,"ConsumablesPurchaseOrder","id",id);
-        return consumablesPurchaseOrderMapper.toDto(consumablesPurchaseOrder.get());
+        Optional<ConsumablesPurchaseOrder> consumablesPurchaseOrderOptional = consumablesPurchaseOrderRepository.findById(id);
+        ConsumablesPurchaseOrder consumablesPurchaseOrder = consumablesPurchaseOrderOptional.get();
+        ConsumablesPurchaseOrderDTO consumablesPurchaseOrderDTO = consumablesPurchaseOrderMapper.toDto(consumablesPurchaseOrder);
+        consumablesPurchaseOrderDTO.setAuditStatusName(AuditStatus.getName(consumablesPurchaseOrder.getAuditStatus()));
+
+
+        List<ConsumablesPurchaseOrderProduct> consumablesPurchaseOrderProductList = consumablesPurchaseOrderProductRepository.queryByConsumablesPurchaseOrderIdAndStatusTrue(id);
+        if(!CollectionUtils.isEmpty(consumablesPurchaseOrderProductList)){
+            List<ConsumablesPurchaseOrderProductDTO> consumablesPurchaseOrderProductDTOList = consumablesPurchaseOrderProductMapper.toDto(consumablesPurchaseOrderProductList);
+            consumablesPurchaseOrderDTO.setConsumablesPurchaseOrderProductList(consumablesPurchaseOrderProductDTOList);
+        }
+        return consumablesPurchaseOrderDTO;
     }
 
     @Override
@@ -125,6 +156,7 @@ public class ConsumablesPurchaseOrderServiceImpl implements ConsumablesPurchaseO
 
         consumablesPurchaseOrder.setStatus(true);
         // 新增耗材采购单
+        consumablesPurchaseOrder.setAuditStatus(AuditStatus.AUDIT_STATUS_NO_AUDIT.getCode());
         consumablesPurchaseOrderRepository.save(consumablesPurchaseOrder);
 
         consumablesPurchaseOrder = consumablesPurchaseOrderRepository.findByConsumablesPurchaseOrderCode(consumablesPurchaseOrder.getConsumablesPurchaseOrderCode());
@@ -162,12 +194,60 @@ public class ConsumablesPurchaseOrderServiceImpl implements ConsumablesPurchaseO
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void update(ConsumablesPurchaseOrder resources) {
-        Optional<ConsumablesPurchaseOrder> optionalConsumablesPurchaseOrder = consumablesPurchaseOrderRepository.findById(resources.getId());
-        ValidationUtil.isNull( optionalConsumablesPurchaseOrder,"ConsumablesPurchaseOrder","id",resources.getId());
-        ConsumablesPurchaseOrder consumablesPurchaseOrder = optionalConsumablesPurchaseOrder.get();
-        consumablesPurchaseOrder.copy(resources);
-        consumablesPurchaseOrderRepository.save(consumablesPurchaseOrder);
+    public void update(UpdateConsumablesPurchaseOrderRequest updateConsumablesPurchaseOrderRequest) {
+        Long consumablesPurchaseOrderId = updateConsumablesPurchaseOrderRequest.getId();
+        Optional<ConsumablesPurchaseOrder> consumablesPurchaseOrderOptional = consumablesPurchaseOrderRepository.findById(consumablesPurchaseOrderId);
+        ConsumablesPurchaseOrder consumablesPurchaseOrder = consumablesPurchaseOrderOptional.get();
+
+        // 修改产品信息之前，查询该订单中原来的产品信息，key为产品code
+        List<ConsumablesPurchaseOrderProduct> consumablesPurchaseOrderProductListBeforeUpdate = consumablesPurchaseOrderProductRepository.queryByConsumablesPurchaseOrderIdAndStatusTrue(consumablesPurchaseOrder.getId());
+        Map<String, ConsumablesPurchaseOrderProduct> consumablesPurchaseOrderProductMapBefore = consumablesPurchaseOrderProductListBeforeUpdate.stream().collect(Collectors.toMap(ConsumablesPurchaseOrderProduct::getConsumablesCode, Function.identity()));
+
+        List<ConsumablesPurchaseOrderProductDTO> consumablesPurchaseOrderProductRequestList = updateConsumablesPurchaseOrderRequest.getConsumablesPurchaseOrderProductList();
+        if(CollectionUtils.isEmpty(consumablesPurchaseOrderProductRequestList)){
+            throw new BadRequestException("耗材采购单产品不能为空!");
+        }
+
+        Map<String, ConsumablesPurchaseOrderProductDTO> invoiceProductMapAfter = consumablesPurchaseOrderProductRequestList.stream().collect(Collectors.toMap(ConsumablesPurchaseOrderProductDTO::getConsumablesCode, Function.identity()));
+
+        //需要将订单中原来订单对应的产品删除了的数据
+        List<String> deleteTargetList = new ArrayList<>();
+        //比较量个map中，key不一样的数据
+        for(Map.Entry<String, ConsumablesPurchaseOrderProduct> entry:consumablesPurchaseOrderProductMapBefore.entrySet()){
+            String consumablesCode = entry.getKey();
+            //修改后的map记录对应的key在原来中是否存在
+            ConsumablesPurchaseOrderProductDTO consumablesPurchaseOrderProductDTOTemp = invoiceProductMapAfter.get(consumablesCode);
+            if(null == consumablesPurchaseOrderProductDTOTemp){
+                deleteTargetList.add(entry.getKey());
+            }
+
+        }
+
+
+        List<ConsumablesPurchaseOrderProduct> consumablesPurchaseOrderProductList = new ArrayList<>();
+        for(ConsumablesPurchaseOrderProductDTO consumablesPurchaseOrderProductDTO : consumablesPurchaseOrderProductRequestList){
+            ConsumablesPurchaseOrderProduct consumablesPurchaseOrderProduct = new ConsumablesPurchaseOrderProduct();
+            BeanUtils.copyProperties(consumablesPurchaseOrderProductDTO, consumablesPurchaseOrderProduct);
+            consumablesPurchaseOrderProduct.setConsumablesPurchaseOrderId(consumablesPurchaseOrder.getId());
+            consumablesPurchaseOrderProduct.setStatus(true);
+
+            if(!(!CollectionUtils.isEmpty(deleteTargetList) && deleteTargetList.contains(consumablesPurchaseOrderProductDTO.getId()))){
+                consumablesPurchaseOrderProductList.add(consumablesPurchaseOrderProduct);
+            }
+        }
+        consumablesPurchaseOrderProductRepository.saveAll(consumablesPurchaseOrderProductList);
+
+        /**
+         * 场景描述:
+         * 1.刚开始新增了 a b c三种产品
+         * 2.修改的时候删除了 a c两种产品
+         * 3.所以需要查修改前数据库中有的产品，再比较修改传过来的产品数据，如果修改后的在原来里面没有，需要将原来里面对应的删除
+         */
+        if(!CollectionUtils.isEmpty(deleteTargetList)){
+            for(String prductCode : deleteTargetList){
+                consumablesPurchaseOrderProductRepository.deleteByProductCodeAndConsumablesPurchaseOrderId(prductCode, consumablesPurchaseOrder.getId());
+            }
+        }
     }
 
 
@@ -182,6 +262,7 @@ public class ConsumablesPurchaseOrderServiceImpl implements ConsumablesPurchaseO
         Long auditUserId = auditConsumablesPurchaseOrderRequest.getAuditUserId();
         String auditUserName = auditConsumablesPurchaseOrderRequest.getAuditUserName();
         String auditOpinion = auditConsumablesPurchaseOrderRequest.getAuditOpinion();
+        String auditStatus = auditConsumablesPurchaseOrderRequest.getAuditStatus();
 
         Optional<ConsumablesPurchaseOrder> optionalProductPurchaseOrder = consumablesPurchaseOrderRepository.findById(id);
 
@@ -192,6 +273,7 @@ public class ConsumablesPurchaseOrderServiceImpl implements ConsumablesPurchaseO
         consumablesPurchaseOrder.setAuditOpinion(auditOpinion);
         Date date = new Date();
         consumablesPurchaseOrder.setAuditTime(date);
+        consumablesPurchaseOrder.setAuditStatus(auditStatus);
         consumablesPurchaseOrderRepository.save(consumablesPurchaseOrder);
 
 

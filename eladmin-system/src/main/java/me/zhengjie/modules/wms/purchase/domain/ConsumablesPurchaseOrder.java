@@ -3,6 +3,8 @@ package me.zhengjie.modules.wms.purchase.domain;
 import lombok.Data;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
+import org.hibernate.annotations.CreationTimestamp;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.io.Serializable;
@@ -23,9 +25,11 @@ public class ConsumablesPurchaseOrder implements Serializable {
     private Long id;
 
     @Column(name = "create_time")
+    @CreationTimestamp
     private Timestamp createTime;
 
     @Column(name = "update_time")
+    @CreationTimestamp
     private Timestamp updateTime;
 
     // 采购人主键
@@ -42,7 +46,7 @@ public class ConsumablesPurchaseOrder implements Serializable {
 
     // 审核状态
     @Column(name = "audit_status")
-    private Integer auditStatus;
+    private String auditStatus;
 
     @Column(name = "audit_user_id")
     private Long auditUserId;

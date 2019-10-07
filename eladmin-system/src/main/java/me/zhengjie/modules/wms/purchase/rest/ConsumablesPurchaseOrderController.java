@@ -5,6 +5,7 @@ import me.zhengjie.modules.wms.purchase.domain.ConsumablesPurchaseOrder;
 import me.zhengjie.modules.wms.purchase.request.AuditConsumablesPurchaseOrderRequest;
 import me.zhengjie.modules.wms.purchase.request.AuditProductPurchaseOrderRequest;
 import me.zhengjie.modules.wms.purchase.request.CreateConsumablesPurchaseOrderRequest;
+import me.zhengjie.modules.wms.purchase.request.UpdateConsumablesPurchaseOrderRequest;
 import me.zhengjie.modules.wms.purchase.service.ConsumablesPurchaseOrderService;
 import me.zhengjie.modules.wms.purchase.service.dto.ConsumablesPurchaseOrderQueryCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,8 +61,8 @@ public class ConsumablesPurchaseOrderController {
     @ApiOperation(value = "修改耗材采购单")
     @PutMapping(value = "/consumablesPurchaseOrder")
     @PreAuthorize("hasAnyRole('ADMIN','CONSUMABLESPURCHASEORDER_ALL','CONSUMABLESPURCHASEORDER_EDIT')")
-    public ResponseEntity update(@Validated @RequestBody ConsumablesPurchaseOrder resources){
-        consumablesPurchaseOrderService.update(resources);
+    public ResponseEntity update(@Validated @RequestBody UpdateConsumablesPurchaseOrderRequest updateConsumablesPurchaseOrderRequest){
+        consumablesPurchaseOrderService.update(updateConsumablesPurchaseOrderRequest);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
@@ -89,5 +90,12 @@ public class ConsumablesPurchaseOrderController {
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS");//设置日期格式
         String supplierCode = "CP"+ LocalDateTime.now().format(fmt);
         return new ResponseEntity(supplierCode,HttpStatus.OK);
+    }
+
+    @Log("查看耗材采购详情")
+    @ApiOperation(value = "查看产品采购详情")
+    @GetMapping(value = "/consumablesPurchaseOrder/{id}")
+    public ResponseEntity getOutSourceInspectionCertificate(@PathVariable Long id){
+        return new ResponseEntity(consumablesPurchaseOrderService.findById(id), HttpStatus.OK);
     }
 }

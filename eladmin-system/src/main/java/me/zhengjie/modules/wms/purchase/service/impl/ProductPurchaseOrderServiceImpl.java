@@ -1,18 +1,16 @@
 package me.zhengjie.modules.wms.purchase.service.impl;
 
 import me.zhengjie.exception.BadRequestException;
-import me.zhengjie.modules.wms.bd.domain.MeasureUnit;
-import me.zhengjie.modules.wms.outSourceProductSheet.domain.OutSourceProcessSheet;
-import me.zhengjie.modules.wms.outSourceProductSheet.domain.OutSourceProcessSheetProduct;
-import me.zhengjie.modules.wms.outSourceProductSheet.request.OutSourceProcessSheetProductRequest;
-import me.zhengjie.modules.wms.outSourceProductSheet.service.dto.OutSourceProcessSheetDTO;
-import me.zhengjie.modules.wms.outSourceProductSheet.service.dto.OutSourceProcessSheetProductDTO;
+import me.zhengjie.modules.wms.purchase.cons.AuditStatus;
+import me.zhengjie.modules.wms.purchase.domain.ConsumablesPurchaseOrder;
 import me.zhengjie.modules.wms.purchase.domain.ProductPurchaseOrder;
 import me.zhengjie.modules.wms.purchase.domain.ProductPurchaseOrderProduct;
 import me.zhengjie.modules.wms.purchase.repository.ProductPurchaseOrderProductRepository;
 import me.zhengjie.modules.wms.purchase.request.AuditProductPurchaseOrderRequest;
 import me.zhengjie.modules.wms.purchase.request.CreateProductPurchaseOrderRequest;
 import me.zhengjie.modules.wms.purchase.request.ProductPurchaseOrderProductRequest;
+import me.zhengjie.modules.wms.purchase.request.UpdateProductPurchaseOrderRequest;
+import me.zhengjie.modules.wms.purchase.service.dto.ConsumablesPurchaseOrderDTO;
 import me.zhengjie.modules.wms.purchase.service.dto.ProductPurchaseOrderProductDTO;
 import me.zhengjie.modules.wms.purchase.service.mapper.ProductPurchaseOrderProductMapper;
 import me.zhengjie.utils.ValidationUtil;
@@ -28,10 +26,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import me.zhengjie.utils.PageUtil;
@@ -85,7 +85,23 @@ public class ProductPurchaseOrderServiceImpl implements ProductPurchaseOrderServ
         };
 
         Page<ProductPurchaseOrder> page = productPurchaseOrderRepository.findAll(specification, pageable);
-        return PageUtil.toPage(page.map(productPurchaseOrderMapper::toDto));
+
+        Page<ProductPurchaseOrderDTO> productPurchaseOrderDTOPage = page.map(productPurchaseOrderMapper::toDto);
+        if(null != productPurchaseOrderDTOPage){
+            List<ProductPurchaseOrderDTO> productPurchaseOrderDTOList = productPurchaseOrderDTOPage.getContent();
+            if(!CollectionUtils.isEmpty(productPurchaseOrderDTOList)){
+                for(ProductPurchaseOrderDTO productPurchaseOrderDTO : productPurchaseOrderDTOList){
+                    String auditStatusName = AuditStatus.getName(productPurchaseOrderDTO.getAuditStatus());
+                    productPurchaseOrderDTO.setAuditStatusName(auditStatusName);
+
+                    Timestamp createTime = productPurchaseOrderDTO.getCreateTime();
+                    productPurchaseOrderDTO.setCreateTimeStr(new SimpleDateFormat("yyyy-MM-dd").format(createTime));
+                }
+            }
+        }
+
+        Map map = PageUtil.toPage(productPurchaseOrderDTOPage);
+        return map;
     }
 
     @Override
@@ -178,12 +194,61 @@ public class ProductPurchaseOrderServiceImpl implements ProductPurchaseOrderServ
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void update(ProductPurchaseOrder resources) {
-        Optional<ProductPurchaseOrder> optionalProductPurchaseOrder = productPurchaseOrderRepository.findById(resources.getId());
-        ValidationUtil.isNull( optionalProductPurchaseOrder,"ProductPurchaseOrder","id",resources.getId());
-        ProductPurchaseOrder productPurchaseOrder = optionalProductPurchaseOrder.get();
-        productPurchaseOrder.copy(resources);
-        productPurchaseOrderRepository.save(productPurchaseOrder);
+    public void update(UpdateProductPurchaseOrderRequest updateProductPurchaseOrderRequest) {
+        Long productPurchaseOrderId = updateProductPurchaseOrderRequest.getId();
+        Optional<ProductPurchaseOrder> productPurchaseOrderOptional = productPurchaseOrderRepository.findById(productPurchaseOrderId);
+        ProductPurchaseOrder productPurchaseOrder = productPurchaseOrderOptional.get();
+
+        // 修改产品信息之前，查询该采购中原来的产品信息
+        List<ProductPurchaseOrderProduct> productPurchaseOrderProductListBeforeUpdate = productPurchaseOrderProductRepository.queryByProductPurchaseOrderIdAndStatusTrue(productPurchaseOrder.getId());
+        // 将修改前产品采购单中的产品放到map中，key为产品code
+        Map<String, ProductPurchaseOrderProduct> productPurchaseOrderProductMapBefore = productPurchaseOrderProductListBeforeUpdate.stream().collect(Collectors.toMap(ProductPurchaseOrderProduct::getProductCode, Function.identity()));
+
+        List<ProductPurchaseOrderProductDTO> productPurchaseOrderProductRequestList = updateProductPurchaseOrderRequest.getProductPurchaseOrderProductList();
+        if(CollectionUtils.isEmpty(productPurchaseOrderProductRequestList)){
+            throw new BadRequestException("产品采购单产品不能为空!");
+        }
+
+        Map<String, ProductPurchaseOrderProductDTO> productPurchaseOrderProductMapAfter = productPurchaseOrderProductRequestList.stream().collect(Collectors.toMap(ProductPurchaseOrderProductDTO::getProductCode, Function.identity()));
+
+        //需要将订单中原来订单对应的产品删除了的数据
+        List<String> deleteTargetList = new ArrayList<>();
+        //比较量个map中，key不一样的数据
+        for(Map.Entry<String, ProductPurchaseOrderProduct> entry:productPurchaseOrderProductMapBefore.entrySet()){
+            String consumablesCode = entry.getKey();
+            //修改后的map记录对应的key在原来中是否存在
+            ProductPurchaseOrderProductDTO productPurchaseOrderProductDTOTemp = productPurchaseOrderProductMapAfter.get(consumablesCode);
+            if(null == productPurchaseOrderProductDTOTemp){
+                deleteTargetList.add(entry.getKey());
+            }
+
+        }
+
+
+        List<ProductPurchaseOrderProduct> productPurchaseOrderProductList = new ArrayList<>();
+        for(ProductPurchaseOrderProductDTO productPurchaseOrderProductDTO : productPurchaseOrderProductRequestList){
+            ProductPurchaseOrderProduct productPurchaseOrderProduct = new ProductPurchaseOrderProduct();
+            BeanUtils.copyProperties(productPurchaseOrderProductDTO, productPurchaseOrderProduct);
+            productPurchaseOrderProduct.setProductPurchaseOrderId(productPurchaseOrder.getId());
+            productPurchaseOrderProduct.setStatus(true);
+
+            if(!(!CollectionUtils.isEmpty(deleteTargetList) && deleteTargetList.contains(productPurchaseOrderProductDTO.getId()))){
+                productPurchaseOrderProductList.add(productPurchaseOrderProduct);
+            }
+        }
+        productPurchaseOrderProductRepository.saveAll(productPurchaseOrderProductList);
+
+        /**
+         * 场景描述:
+         * 1.刚开始新增了 a b c三种产品
+         * 2.修改的时候删除了 a c两种产品
+         * 3.所以需要查修改前数据库中有的产品，再比较修改传过来的产品数据，如果修改后的在原来里面没有，需要将原来里面对应的删除
+         */
+        if(!CollectionUtils.isEmpty(deleteTargetList)){
+            for(String prductCode : deleteTargetList){
+                productPurchaseOrderProductRepository.deleteByProductCodeAndProductPurchaseOrderId(prductCode, productPurchaseOrder.getId());
+            }
+        }
     }
 
     @Override
@@ -203,6 +268,7 @@ public class ProductPurchaseOrderServiceImpl implements ProductPurchaseOrderServ
         Long auditUserId = auditProductPurchaseOrderRequest.getAuditUserId();
         String auditUserName = auditProductPurchaseOrderRequest.getAuditUserName();
         String auditOpinion = auditProductPurchaseOrderRequest.getAuditOpinion();
+        String auditStatus = auditProductPurchaseOrderRequest.getAuditStatus();
 
         Optional<ProductPurchaseOrder> optionalProductPurchaseOrder = productPurchaseOrderRepository.findById(id);
 
@@ -213,6 +279,7 @@ public class ProductPurchaseOrderServiceImpl implements ProductPurchaseOrderServ
         productPurchaseOrder.setAuditOpinion(auditOpinion);
         Date auditDate = new Date();
         productPurchaseOrder.setAuditTime(auditDate);
+        productPurchaseOrder.setAuditStatus(auditStatus);
         productPurchaseOrderRepository.save(productPurchaseOrder);
 
 

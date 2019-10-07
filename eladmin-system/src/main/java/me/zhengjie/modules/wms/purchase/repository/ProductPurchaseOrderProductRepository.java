@@ -24,6 +24,6 @@ public interface ProductPurchaseOrderProductRepository extends JpaRepository<Pro
     List<ProductPurchaseOrderProduct> queryByProductPurchaseOrderIdAndStatusTrue(Long productPurchaseOrderId);
 
     @Modifying
-    @Query(value = "delete product_purchase_order_product  where product_code = ?1 and product_purchase_order_id = ?2", nativeQuery = true)
+    @Query(value = "delete from product_purchase_order_product  where product_code = ?1 and product_purchase_order_id = ?2", nativeQuery = true)
     void deleteByProductCodeAndProductPurchaseOrderId(String productCode, Long productPurchaseOrderId);
 }

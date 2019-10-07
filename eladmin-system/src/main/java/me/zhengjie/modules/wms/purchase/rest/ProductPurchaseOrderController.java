@@ -4,6 +4,7 @@ import me.zhengjie.aop.log.Log;
 import me.zhengjie.modules.wms.purchase.domain.ProductPurchaseOrder;
 import me.zhengjie.modules.wms.purchase.request.AuditProductPurchaseOrderRequest;
 import me.zhengjie.modules.wms.purchase.request.CreateProductPurchaseOrderRequest;
+import me.zhengjie.modules.wms.purchase.request.UpdateProductPurchaseOrderRequest;
 import me.zhengjie.modules.wms.purchase.service.ProductPurchaseOrderService;
 import me.zhengjie.modules.wms.purchase.service.dto.ProductPurchaseOrderQueryCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,8 +52,8 @@ public class ProductPurchaseOrderController {
     @ApiOperation(value = "修改产品采购")
     @PutMapping(value = "/productPurchaseOrder")
     @PreAuthorize("hasAnyRole('ADMIN','PRODUCTPURCHASEORDER_ALL','PRODUCTPURCHASEORDER_EDIT')")
-    public ResponseEntity update(@Validated @RequestBody ProductPurchaseOrder resources){
-        productPurchaseOrderService.update(resources);
+    public ResponseEntity update(@Validated @RequestBody UpdateProductPurchaseOrderRequest updateProductPurchaseOrderRequest){
+        productPurchaseOrderService.update(updateProductPurchaseOrderRequest);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 

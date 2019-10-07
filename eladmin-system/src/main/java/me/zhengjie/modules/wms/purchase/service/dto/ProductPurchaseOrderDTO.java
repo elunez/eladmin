@@ -18,6 +18,8 @@ public class ProductPurchaseOrderDTO implements Serializable {
 
     private Timestamp createTime;
 
+    private String createTimeStr;
+
     private Timestamp updateTime;
 
     // 采购人主键
@@ -30,7 +32,9 @@ public class ProductPurchaseOrderDTO implements Serializable {
     private Boolean status;
 
     // 审核状态
-    private Integer auditStatus;
+    private String auditStatus;
+
+    private String auditStatusName;
 
     private Long auditUserId;
 

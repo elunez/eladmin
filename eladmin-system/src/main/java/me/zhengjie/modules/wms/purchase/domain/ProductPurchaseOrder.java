@@ -46,7 +46,7 @@ public class ProductPurchaseOrder implements Serializable {
 
     // 审核状态
     @Column(name = "audit_status")
-    private Integer auditStatus;
+    private String auditStatus;
 
     @Column(name = "audit_user_id")
     private Long auditUserId;
