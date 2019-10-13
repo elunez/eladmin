@@ -1,5 +1,6 @@
 package me.zhengjie.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.qiniu.common.QiniuException;
 import com.qiniu.http.Response;
 import com.qiniu.storage.BucketManager;
@@ -8,7 +9,6 @@ import com.qiniu.storage.UploadManager;
 import com.qiniu.storage.model.DefaultPutRet;
 import com.qiniu.storage.model.FileInfo;
 import com.qiniu.util.Auth;
-import com.qiniu.util.Json;
 import me.zhengjie.domain.QiniuConfig;
 import me.zhengjie.domain.QiniuContent;
 import me.zhengjie.exception.BadRequestException;
@@ -97,8 +97,7 @@ public class QiNiuServiceImpl implements QiNiuService {
             Response response = uploadManager.put(file.getBytes(), key, upToken);
             //解析上传成功的结果
 
-//            DefaultPutRet putRet = new Gson().fromJson(response.bodyString(), DefaultPutRet.class);
-            DefaultPutRet putRet = Json.decode(response.bodyString(), DefaultPutRet.class);
+            DefaultPutRet putRet = JSON.parseObject(response.bodyString(), DefaultPutRet.class);
             //存入数据库
             QiniuContent qiniuContent = new QiniuContent();
             qiniuContent.setSuffix(FileUtil.getExtensionName(putRet.key));
