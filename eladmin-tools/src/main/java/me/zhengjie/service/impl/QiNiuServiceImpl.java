@@ -1,6 +1,6 @@
 package me.zhengjie.service.impl;
 
-import com.google.gson.Gson;
+import com.alibaba.fastjson.JSON;
 import com.qiniu.common.QiniuException;
 import com.qiniu.http.Response;
 import com.qiniu.storage.BucketManager;
@@ -16,7 +16,11 @@ import me.zhengjie.repository.QiNiuConfigRepository;
 import me.zhengjie.repository.QiniuContentRepository;
 import me.zhengjie.service.QiNiuService;
 import me.zhengjie.service.dto.QiniuQueryCriteria;
-import me.zhengjie.utils.*;
+import me.zhengjie.utils.FileUtil;
+import me.zhengjie.utils.PageUtil;
+import me.zhengjie.utils.QiNiuUtil;
+import me.zhengjie.utils.QueryHelp;
+import me.zhengjie.utils.ValidationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
 import java.util.Optional;
 
 /**
@@ -91,7 +96,8 @@ public class QiNiuServiceImpl implements QiNiuService {
             }
             Response response = uploadManager.put(file.getBytes(), key, upToken);
             //解析上传成功的结果
-            DefaultPutRet putRet = new Gson().fromJson(response.bodyString(), DefaultPutRet.class);
+
+            DefaultPutRet putRet = JSON.parseObject(response.bodyString(), DefaultPutRet.class);
             //存入数据库
             QiniuContent qiniuContent = new QiniuContent();
             qiniuContent.setSuffix(FileUtil.getExtensionName(putRet.key));
