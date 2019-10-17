@@ -136,7 +136,7 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
      * @throws Exception
      */
     public static File inputStreamToFile(InputStream ins, String name) throws Exception{
-        File file = new File(System.getProperty("java.io.tmpdir") + "/" + name);
+        File file = new File(System.getProperty("java.io.tmpdir") + File.separator + name);
         if (file.exists()) {
             return file;
         }
