@@ -69,3 +69,11 @@ generator:
 #是否开启 swagger-ui
 swagger:
   enabled: false
+
+# 文件存储路径
+file:
+  path: /home/eladmin/file/
+  avatar: /home/eladmin/avatar/
+  # 文件大小 /M
+  maxSize: 100
+  avatarMaxSize: 5

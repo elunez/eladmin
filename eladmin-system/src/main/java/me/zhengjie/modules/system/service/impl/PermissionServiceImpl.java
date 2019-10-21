@@ -5,6 +5,7 @@ import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.exception.EntityExistException;
 import me.zhengjie.modules.system.repository.PermissionRepository;
 import me.zhengjie.modules.system.service.PermissionService;
+import me.zhengjie.modules.system.service.RoleService;
 import me.zhengjie.modules.system.service.dto.PermissionDTO;
 import me.zhengjie.modules.system.service.dto.PermissionQueryCriteria;
 import me.zhengjie.modules.system.service.mapper.PermissionMapper;
@@ -29,6 +30,9 @@ public class PermissionServiceImpl implements PermissionService {
 
     @Autowired
     private PermissionMapper permissionMapper;
+
+    @Autowired
+    private RoleService roleService;
 
     @Override
     public List<PermissionDTO> queryAll(PermissionQueryCriteria criteria) {
@@ -75,13 +79,25 @@ public class PermissionServiceImpl implements PermissionService {
     }
 
     @Override
+    public Set<Permission> getDeletePermission(List<Permission> permissions, Set<Permission> permissionSet) {
+        // 递归找出待删除的菜单
+        for (Permission permission : permissions) {
+            permissionSet.add(permission);
+            List<Permission> permissionList = permissionRepository.findByPid(permission.getId());
+            if(permissionList!=null && permissionList.size()!=0){
+                getDeletePermission(permissionList, permissionSet);
+            }
+        }
+        return permissionSet;
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
-    public void delete(Long id) {
-        List<Permission> permissionList = permissionRepository.findByPid(id);
-        for (Permission permission : permissionList) {
+    public void delete(Set<Permission> permissions) {
+        for (Permission permission : permissions) {
+            roleService.untiedPermission(permission.getId());
             permissionRepository.delete(permission);
         }
-        permissionRepository.deleteById(id);
     }
 
     @Override

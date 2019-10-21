@@ -3,10 +3,12 @@ package ${package}.service;
 import ${package}.domain.${className};
 import ${package}.service.dto.${className}DTO;
 import ${package}.service.dto.${className}QueryCriteria;
-//import org.springframework.cache.annotation.CacheConfig;
-//import org.springframework.cache.annotation.CacheEvict;
-//import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
+import java.util.Map;
+import java.util.List;
 
 /**
 * @author ${author}
@@ -16,24 +18,24 @@ import org.springframework.data.domain.Pageable;
 public interface ${className}Service {
 
     /**
-    * queryAll 分页
+    * 查询数据分页
     * @param criteria
     * @param pageable
     * @return
     */
-    //@Cacheable(keyGenerator = "keyGenerator")
-    Object queryAll(${className}QueryCriteria criteria, Pageable pageable);
+    //@Cacheable
+    Map<String,Object> queryAll(${className}QueryCriteria criteria, Pageable pageable);
 
     /**
-    * queryAll 不分页
+    * 查询所有数据不分页
     * @param criteria
     * @return
     */
-    //@Cacheable(keyGenerator = "keyGenerator")
-    public Object queryAll(${className}QueryCriteria criteria);
+    //@Cacheable
+    List<${className}DTO> queryAll(${className}QueryCriteria criteria);
 
     /**
-     * findById
+     * 根据ID查询
      * @param ${pkChangeColName}
      * @return
      */
@@ -41,7 +43,7 @@ public interface ${className}Service {
     ${className}DTO findById(${pkColumnType} ${pkChangeColName});
 
     /**
-     * create
+     * 创建
      * @param resources
      * @return
      */
@@ -49,14 +51,14 @@ public interface ${className}Service {
     ${className}DTO create(${className} resources);
 
     /**
-     * update
+     * 编辑
      * @param resources
      */
     //@CacheEvict(allEntries = true)
     void update(${className} resources);
 
     /**
-     * delete
+     * 删除
      * @param ${pkChangeColName}
      */
     //@CacheEvict(allEntries = true)

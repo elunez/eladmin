@@ -47,6 +47,6 @@ public interface DictDetailService {
     @CacheEvict(allEntries = true)
     void delete(Long id);
 
-    @Cacheable(keyGenerator = "keyGenerator")
+    @Cacheable
     Map queryAll(DictDetailQueryCriteria criteria, Pageable pageable);
 }

@@ -37,7 +37,7 @@ public class PictureServiceImpl implements PictureService {
 
     public static final String CODE = "code";
 
-    public static final String MSG = "msg";
+    public static final String MSG = "message";
 
     @Override
     public Object queryAll(PictureQueryCriteria criteria, Pageable pageable){
@@ -56,7 +56,7 @@ public class PictureServiceImpl implements PictureService {
         JSONObject jsonObject = JSONUtil.parseObj(result);
         Picture picture = null;
         if(!jsonObject.get(CODE).toString().equals(SUCCESS)){
-            throw new BadRequestException(jsonObject.get(MSG).toString());
+            throw new BadRequestException(TranslatorUtil.translate(jsonObject.get(MSG).toString()));
         }
         //转成实体类
         picture = JSON.parseObject(jsonObject.get("data").toString(), Picture.class);

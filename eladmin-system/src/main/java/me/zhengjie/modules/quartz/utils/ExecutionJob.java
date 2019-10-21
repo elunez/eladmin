@@ -25,6 +25,7 @@ public class ExecutionJob extends QuartzJobBean {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    // 建议自定义线程池实现方式，该处仅供参考
     private ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     @Override
@@ -61,8 +62,7 @@ public class ExecutionJob extends QuartzJobBean {
             // 任务状态 0：成功 1：失败
             log.setIsSuccess(false);
             log.setExceptionDetail(ThrowableUtil.getStackTrace(e));
-            //出错就暂停任务
-            quartzManage.pauseJob(quartzJob);
+            quartzJob.setIsPause(false);
             //更新状态
             quartzJobService.updateIsPause(quartzJob);
         } finally {
