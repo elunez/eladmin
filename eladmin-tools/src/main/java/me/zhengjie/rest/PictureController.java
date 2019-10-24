@@ -45,7 +45,7 @@ public class PictureController {
     public ResponseEntity upload(@RequestParam MultipartFile file){
         String userName = SecurityUtils.getUsername();
         Picture picture = pictureService.upload(file,userName);
-        Map map = new HashMap(3);
+        Map<String,Object> map = new HashMap<>(3);
         map.put("errno",0);
         map.put("id",picture.getId());
         map.put("data",new String[]{picture.getUrl()});

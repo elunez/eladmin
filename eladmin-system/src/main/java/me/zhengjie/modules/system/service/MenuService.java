@@ -9,6 +9,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Zheng Jie
@@ -22,7 +23,7 @@ public interface MenuService {
      * @param criteria
      * @return
      */
-    @Cacheable(keyGenerator = "keyGenerator")
+    @Cacheable
     List<MenuDTO> queryAll(MenuQueryCriteria criteria);
 
     /**
@@ -49,11 +50,12 @@ public interface MenuService {
     void update(Menu resources);
 
     /**
-     * delete
-     * @param id
+     * getDeleteMenus
+     * @param menuList
+     * @param menuSet
+     * @return
      */
-    @CacheEvict(allEntries = true)
-    void delete(Long id);
+    Set<Menu> getDeleteMenus(List<Menu> menuList, Set<Menu> menuSet);
 
     /**
      * permission tree
@@ -92,4 +94,11 @@ public interface MenuService {
     Object buildMenus(List<MenuDTO> byRoles);
 
     Menu findOne(Long id);
+
+    /**
+     * delete
+     * @param menuSet
+     */
+    @CacheEvict(allEntries = true)
+    void delete(Set<Menu> menuSet);
 }

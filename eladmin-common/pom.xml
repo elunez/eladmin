@@ -5,10 +5,11 @@
     <parent>
         <artifactId>eladmin</artifactId>
         <groupId>me.zhengjie</groupId>
-        <version>2.1</version>
+        <version>2.2</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>eladmin-common</artifactId>
+    <name>公共模块</name>
 
 </project>

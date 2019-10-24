@@ -3,14 +3,14 @@ package me.zhengjie.redis;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.parser.ParserConfig;
 import lombok.extern.slf4j.Slf4j;
-import me.zhengjie.utils.StringUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.cache.Cache;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.cache.interceptor.CacheErrorHandler;
 import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -61,6 +61,7 @@ public class RedisConfig extends CachingConfigurerSupport {
         // 建议使用这种方式，小范围指定白名单
         ParserConfig.getGlobalInstance().addAccept("me.zhengjie.domain");
         ParserConfig.getGlobalInstance().addAccept("me.zhengjie.modules.system.service.dto");
+        ParserConfig.getGlobalInstance().addAccept("me.zhengjie.service.dto");
         ParserConfig.getGlobalInstance().addAccept("me.zhengjie.modules.system.domain");
         ParserConfig.getGlobalInstance().addAccept("me.zhengjie.modules.quartz.domain");
         ParserConfig.getGlobalInstance().addAccept("me.zhengjie.modules.monitor.domain");
@@ -73,8 +74,8 @@ public class RedisConfig extends CachingConfigurerSupport {
     }
 
     /**
-     * 自定义缓存key生成策略
-     * 使用方法 @Cacheable(keyGenerator="keyGenerator")
+     * 自定义缓存key生成策略，默认将使用该策略
+     * 使用方法 @Cacheable
      * @return
      */
     @Bean
@@ -90,4 +91,34 @@ public class RedisConfig extends CachingConfigurerSupport {
             return sb.toString();
         };
     }
+
+    @Bean
+    @Override
+    public CacheErrorHandler errorHandler() {
+        // 异常处理，当Redis发生异常时，打印日志，但是程序正常走
+        log.info("初始化 -> [{}]", "Redis CacheErrorHandler");
+        CacheErrorHandler cacheErrorHandler = new CacheErrorHandler() {
+            @Override
+            public void handleCacheGetError(RuntimeException e, Cache cache, Object key) {
+                log.error("Redis occur handleCacheGetError：key -> [{}]", key, e);
+            }
+
+            @Override
+            public void handleCachePutError(RuntimeException e, Cache cache, Object key, Object value) {
+                log.error("Redis occur handleCachePutError：key -> [{}]；value -> [{}]", key, value, e);
+            }
+
+            @Override
+            public void handleCacheEvictError(RuntimeException e, Cache cache, Object key) {
+                log.error("Redis occur handleCacheEvictError：key -> [{}]", key, e);
+            }
+
+            @Override
+            public void handleCacheClearError(RuntimeException e, Cache cache) {
+                log.error("Redis occur handleCacheClearError：", e);
+            }
+        };
+        return cacheErrorHandler;
+    }
+
 }

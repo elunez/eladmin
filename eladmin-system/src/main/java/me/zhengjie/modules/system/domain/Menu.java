@@ -34,12 +34,22 @@ public class Menu implements Serializable {
     @NotNull
     private Long sort;
 
+    @NotBlank
     @Column(name = "path")
     private String path;
 
     private String component;
 
+    @Column(unique = true,name = "component_name")
+    private String componentName;
+
     private String icon;
+
+    @Column(columnDefinition = "bit(1) default 0")
+    private Boolean cache;
+
+    @Column(columnDefinition = "bit(1) default 0")
+    private Boolean hidden;
 
     /**
      * 上级菜单ID

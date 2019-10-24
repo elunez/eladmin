@@ -1,10 +1,7 @@
 package me.zhengjie.utils;
 
 import org.springframework.data.domain.Page;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 分页工具
@@ -39,11 +36,9 @@ public class PageUtil extends cn.hutool.core.util.PageUtil {
      * @return
      */
     public static Map toPage(Page page) {
-        Map map = new HashMap();
-
+        Map<String,Object> map = new LinkedHashMap<>(2);
         map.put("content",page.getContent());
         map.put("totalElements",page.getTotalElements());
-
         return map;
     }
 
@@ -53,8 +48,7 @@ public class PageUtil extends cn.hutool.core.util.PageUtil {
      * @return
      */
     public static Map toPage(Object object, Object totalElements) {
-        Map map = new HashMap();
-
+        Map<String,Object> map = new LinkedHashMap<>(2);
         map.put("content",object);
         map.put("totalElements",totalElements);
 

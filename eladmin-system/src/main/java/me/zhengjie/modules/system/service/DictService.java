@@ -21,7 +21,7 @@ public interface DictService {
      * @param pageable
      * @return
      */
-    @Cacheable(keyGenerator = "keyGenerator")
+    @Cacheable
     Object queryAll(DictQueryCriteria dict, Pageable pageable);
 
     /**
