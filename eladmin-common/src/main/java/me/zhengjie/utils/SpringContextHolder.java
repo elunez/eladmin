@@ -7,21 +7,13 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
 /**
- * @author
+ * @author Jie
  * @date 2019-01-07
  */
 @Slf4j
 public class SpringContextHolder implements ApplicationContextAware, DisposableBean {
 
     private static ApplicationContext applicationContext = null;
-
-    /**
-     * 取得存储在静态变量中的ApplicationContext.
-     */
-    public static ApplicationContext getApplicationContext() {
-        assertContextInjected();
-        return applicationContext;
-    }
 
     /**
      * 从静态变量applicationContext中取得Bean, 自动转型为所赋值对象的类型.
@@ -53,14 +45,14 @@ public class SpringContextHolder implements ApplicationContextAware, DisposableB
     /**
      * 清除SpringContextHolder中的ApplicationContext为Null.
      */
-    public static void clearHolder() {
+    private static void clearHolder() {
         log.debug("清除SpringContextHolder中的ApplicationContext:"
                 + applicationContext);
         applicationContext = null;
     }
 
     @Override
-    public void destroy() throws Exception {
+    public void destroy(){
         SpringContextHolder.clearHolder();
     }
 

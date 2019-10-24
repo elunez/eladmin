@@ -1,5 +1,7 @@
 package me.zhengjie.modules.system.rest;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import me.zhengjie.aop.log.Log;
 import me.zhengjie.config.DataScope;
 import me.zhengjie.exception.BadRequestException;
@@ -8,7 +10,6 @@ import me.zhengjie.modules.system.service.DeptService;
 import me.zhengjie.modules.system.service.dto.DeptDTO;
 import me.zhengjie.modules.system.service.dto.DeptQueryCriteria;
 import me.zhengjie.utils.ThrowableUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,39 +22,46 @@ import java.util.List;
 * @date 2019-03-25
 */
 @RestController
-@RequestMapping("api")
+@Api(tags = "系统：部门管理")
+@RequestMapping("/api/dept")
 public class DeptController {
 
-    @Autowired
-    private DeptService deptService;
+    private final DeptService deptService;
 
-    @Autowired
-    private DataScope dataScope;
+    private final DataScope dataScope;
 
     private static final String ENTITY_NAME = "dept";
 
+    public DeptController(DeptService deptService, DataScope dataScope) {
+        this.deptService = deptService;
+        this.dataScope = dataScope;
+    }
+
     @Log("查询部门")
-    @GetMapping(value = "/dept")
+    @ApiOperation("查询部门")
+    @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN','USER_ALL','USER_SELECT','DEPT_ALL','DEPT_SELECT')")
     public ResponseEntity getDepts(DeptQueryCriteria criteria){
         // 数据权限
         criteria.setIds(dataScope.getDeptIds());
         List<DeptDTO> deptDTOS = deptService.queryAll(criteria);
-        return new ResponseEntity(deptService.buildTree(deptDTOS),HttpStatus.OK);
+        return new ResponseEntity<>(deptService.buildTree(deptDTOS),HttpStatus.OK);
     }
 
     @Log("新增部门")
-    @PostMapping(value = "/dept")
+    @ApiOperation("新增部门")
+    @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN','DEPT_ALL','DEPT_CREATE')")
     public ResponseEntity create(@Validated @RequestBody Dept resources){
         if (resources.getId() != null) {
             throw new BadRequestException("A new "+ ENTITY_NAME +" cannot already have an ID");
         }
-        return new ResponseEntity(deptService.create(resources),HttpStatus.CREATED);
+        return new ResponseEntity<>(deptService.create(resources),HttpStatus.CREATED);
     }
 
     @Log("修改部门")
-    @PutMapping(value = "/dept")
+    @ApiOperation("修改部门")
+    @PutMapping
     @PreAuthorize("hasAnyRole('ADMIN','DEPT_ALL','DEPT_EDIT')")
     public ResponseEntity update(@Validated(Dept.Update.class) @RequestBody Dept resources){
         deptService.update(resources);
@@ -61,7 +69,8 @@ public class DeptController {
     }
 
     @Log("删除部门")
-    @DeleteMapping(value = "/dept/{id}")
+    @ApiOperation("删除部门")
+    @DeleteMapping(value = "/{id}")
     @PreAuthorize("hasAnyRole('ADMIN','DEPT_ALL','DEPT_DELETE')")
     public ResponseEntity delete(@PathVariable Long id){
         try {

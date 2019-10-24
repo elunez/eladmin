@@ -10,7 +10,6 @@ import org.springframework.cache.annotation.Cacheable;
  * @author Zheng Jie
  * @date 2018-12-31
  */
-@CacheConfig(cacheNames = "alipay")
 public interface AlipayService {
 
     /**
@@ -35,7 +34,6 @@ public interface AlipayService {
      * 查询配置
      * @return AlipayConfig
      */
-    @Cacheable(key = "'1'")
     AlipayConfig find();
 
     /**
@@ -43,6 +41,5 @@ public interface AlipayService {
      * @param alipayConfig 支付宝配置
      * @return AlipayConfig
      */
-    @CachePut(key = "'1'")
     AlipayConfig update(AlipayConfig alipayConfig);
 }

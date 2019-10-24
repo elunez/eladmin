@@ -47,11 +47,6 @@ jwt:
   secret: mySecret
   # token 过期时间 6个小时
   expiration: 21000000
-  auth:
-    # 授权路径
-    path: /login
-    # 获取用户信息
-    account: /info
 
 #是否允许生成代码，生产环境设置为false
 generator:

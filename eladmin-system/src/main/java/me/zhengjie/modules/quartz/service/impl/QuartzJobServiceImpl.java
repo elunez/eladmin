@@ -11,31 +11,37 @@ import me.zhengjie.utils.PageUtil;
 import me.zhengjie.utils.QueryHelp;
 import me.zhengjie.utils.ValidationUtil;
 import org.quartz.CronExpression;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.Optional;
 
 /**
  * @author Zheng Jie
  * @date 2019-01-07
  */
 @Service(value = "quartzJobService")
+@CacheConfig(cacheNames = "quartzJob")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class QuartzJobServiceImpl implements QuartzJobService {
 
-    @Autowired
-    private QuartzJobRepository quartzJobRepository;
+    private final QuartzJobRepository quartzJobRepository;
 
-    @Autowired
-    private QuartzLogRepository quartzLogRepository;
+    private final QuartzLogRepository quartzLogRepository;
 
-    @Autowired
-    private QuartzManage quartzManage;
+    private final QuartzManage quartzManage;
+
+    public QuartzJobServiceImpl(QuartzJobRepository quartzJobRepository, QuartzLogRepository quartzLogRepository, QuartzManage quartzManage) {
+        this.quartzJobRepository = quartzJobRepository;
+        this.quartzLogRepository = quartzLogRepository;
+        this.quartzManage = quartzManage;
+    }
 
     @Override
+    @Cacheable
     public Object queryAll(JobQueryCriteria criteria, Pageable pageable){
         return PageUtil.toPage(quartzJobRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable));
     }
@@ -46,13 +52,15 @@ public class QuartzJobServiceImpl implements QuartzJobService {
     }
 
     @Override
+    @Cacheable(key = "#p0")
     public QuartzJob findById(Long id) {
-        Optional<QuartzJob> quartzJob = quartzJobRepository.findById(id);
-        ValidationUtil.isNull(quartzJob,"QuartzJob","id",id);
-        return quartzJob.get();
+        QuartzJob quartzJob = quartzJobRepository.findById(id).orElseGet(QuartzJob::new);
+        ValidationUtil.isNull(quartzJob.getId(),"QuartzJob","id",id);
+        return quartzJob;
     }
 
     @Override
+    @CacheEvict(allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     public QuartzJob create(QuartzJob resources) {
         if (!CronExpression.isValidExpression(resources.getCronExpression())){
@@ -64,6 +72,7 @@ public class QuartzJobServiceImpl implements QuartzJobService {
     }
 
     @Override
+    @CacheEvict(allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     public void update(QuartzJob resources) {
         if(resources.getId().equals(1L)){
@@ -77,6 +86,7 @@ public class QuartzJobServiceImpl implements QuartzJobService {
     }
 
     @Override
+    @CacheEvict(allEntries = true)
     public void updateIsPause(QuartzJob quartzJob) {
         if(quartzJob.getId().equals(1L)){
             throw new BadRequestException("该任务不可操作");
@@ -100,6 +110,7 @@ public class QuartzJobServiceImpl implements QuartzJobService {
     }
 
     @Override
+    @CacheEvict(allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     public void delete(QuartzJob quartzJob) {
         if(quartzJob.getId().equals(1L)){

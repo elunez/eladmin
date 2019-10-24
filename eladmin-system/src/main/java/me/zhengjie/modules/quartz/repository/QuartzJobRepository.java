@@ -9,11 +9,11 @@ import java.util.List;
  * @author Zheng Jie
  * @date 2019-01-07
  */
-public interface QuartzJobRepository extends JpaRepository<QuartzJob,Long>, JpaSpecificationExecutor {
+public interface QuartzJobRepository extends JpaRepository<QuartzJob,Long>, JpaSpecificationExecutor<QuartzJob> {
 
     /**
      * 查询启用的任务
-     * @return
+     * @return List
      */
     List<QuartzJob> findByIsPauseIsFalse();
 }

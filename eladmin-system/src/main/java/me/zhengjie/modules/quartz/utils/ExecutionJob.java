@@ -17,7 +17,7 @@ import java.util.concurrent.Future;
 
 /**
  * 参考人人开源，https://gitee.com/renrenio/renren-security
- * @author
+ * @author /
  * @date 2019-01-07
  */
 @Async
@@ -32,9 +32,8 @@ public class ExecutionJob extends QuartzJobBean {
     protected void executeInternal(JobExecutionContext context) {
         QuartzJob quartzJob = (QuartzJob) context.getMergedJobDataMap().get(QuartzJob.JOB_KEY);
         // 获取spring bean
-        QuartzLogRepository quartzLogRepository = SpringContextHolder.getBean("quartzLogRepository");
-        QuartzJobService quartzJobService = SpringContextHolder.getBean("quartzJobService");
-        QuartzManage quartzManage = SpringContextHolder.getBean("quartzManage");
+        QuartzLogRepository quartzLogRepository = SpringContextHolder.getBean(QuartzLogRepository.class);
+        QuartzJobService quartzJobService = SpringContextHolder.getBean(QuartzJobService.class);
 
         QuartzLog log = new QuartzLog();
         log.setJobName(quartzJob.getJobName());

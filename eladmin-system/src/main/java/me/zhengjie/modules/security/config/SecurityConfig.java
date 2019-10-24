@@ -25,23 +25,21 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    private JwtAuthenticationEntryPoint unauthorizedHandler;
+    private final JwtAuthenticationEntryPoint unauthorizedHandler;
 
-    @Autowired
-    private JwtUserDetailsService jwtUserDetailsService;
+    private final JwtUserDetailsService jwtUserDetailsService;
 
-    /**
-     * 自定义基于JWT的安全过滤器
-     */
-    @Autowired
-    JwtAuthorizationTokenFilter authenticationTokenFilter;
+    // 自定义基于JWT的安全过滤器
+    private final JwtAuthorizationTokenFilter authenticationTokenFilter;
 
     @Value("${jwt.header}")
     private String tokenHeader;
 
-    @Value("${jwt.auth.path}")
-    private String loginPath;
+    public SecurityConfig(JwtAuthenticationEntryPoint unauthorizedHandler, JwtUserDetailsService jwtUserDetailsService, JwtAuthorizationTokenFilter authenticationTokenFilter) {
+        this.unauthorizedHandler = unauthorizedHandler;
+        this.jwtUserDetailsService = jwtUserDetailsService;
+        this.authenticationTokenFilter = authenticationTokenFilter;
+    }
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
@@ -70,6 +68,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
 
+        String loginPath = "login";
         httpSecurity
 
                 // 禁用 CSRF
@@ -91,7 +90,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/**/*.js"
                 ).anonymous()
 
-                .antMatchers( HttpMethod.POST,"/auth/"+loginPath).anonymous()
+                .antMatchers( HttpMethod.POST,"/auth/"+ loginPath).anonymous()
                 .antMatchers("/auth/vCode").anonymous()
                 // 支付宝回调
                 .antMatchers("/api/aliPay/return").anonymous()

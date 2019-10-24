@@ -35,7 +35,7 @@ public class SwaggerConfig {
     @Bean
     public Docket createRestApi() {
         ParameterBuilder ticketPar = new ParameterBuilder();
-        List<Parameter> pars = new ArrayList<Parameter>();
+        List<Parameter> pars = new ArrayList<>();
         ticketPar.name(tokenHeader).description("token")
                 .modelRef(new ModelRef("string"))
                 .parameterType("header")

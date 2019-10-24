@@ -36,7 +36,7 @@ public class TranslatorUtil {
         }
     }
 
-    private static String parseResult(String inputJson) throws Exception {
+    private static String parseResult(String inputJson){
         JSONArray jsonArray2 = (JSONArray) new JSONArray(inputJson).get(0);
         StringBuilder result = new StringBuilder();
         for (Object o : jsonArray2) {

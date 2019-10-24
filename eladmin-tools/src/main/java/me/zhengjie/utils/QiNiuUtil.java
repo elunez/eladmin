@@ -21,6 +21,8 @@ public class QiNiuUtil {
 
     /**
      * 得到机房的对应关系
+     * @param zone 机房名称
+     * @return Region
      */
     public static Region getRegion(String zone){
 
@@ -40,6 +42,8 @@ public class QiNiuUtil {
 
     /**
      * 默认不指定key的情况下，以文件内容的hash值作为文件名
+     * @param file 文件名
+     * @return String
      */
     public static String getKey(String file){
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");

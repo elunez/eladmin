@@ -13,7 +13,6 @@ import me.zhengjie.utils.QueryHelp;
 import me.zhengjie.utils.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -29,16 +28,17 @@ import java.lang.reflect.Method;
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class LogServiceImpl implements LogService {
 
-    @Autowired
-    private LogRepository logRepository;
+    private final LogRepository logRepository;
 
-    @Autowired
-    private LogErrorMapper logErrorMapper;
+    private final LogErrorMapper logErrorMapper;
 
-    @Autowired
-    private LogSmallMapper logSmallMapper;
+    private final LogSmallMapper logSmallMapper;
 
-    private final String LOGINPATH = "login";
+    public LogServiceImpl(LogRepository logRepository, LogErrorMapper logErrorMapper, LogSmallMapper logSmallMapper) {
+        this.logRepository = logRepository;
+        this.logErrorMapper = logErrorMapper;
+        this.logSmallMapper = logSmallMapper;
+    }
 
     @Override
     public Object queryAll(LogQueryCriteria criteria, Pageable pageable){
@@ -63,32 +63,31 @@ public class LogServiceImpl implements LogService {
         Method method = signature.getMethod();
         me.zhengjie.aop.log.Log aopLog = method.getAnnotation(me.zhengjie.aop.log.Log.class);
 
-        // 描述
-        if (log != null) {
-            log.setDescription(aopLog.value());
-        }
-
         // 方法路径
         String methodName = joinPoint.getTarget().getClass().getName()+"."+signature.getName()+"()";
 
-        String params = "{";
+        StringBuilder params = new StringBuilder("{");
         //参数值
         Object[] argValues = joinPoint.getArgs();
         //参数名称
         String[] argNames = ((MethodSignature)joinPoint.getSignature()).getParameterNames();
         if(argValues != null){
             for (int i = 0; i < argValues.length; i++) {
-                params += " " + argNames[i] + ": " + argValues[i];
+                params.append(" ").append(argNames[i]).append(": ").append(argValues[i]);
             }
         }
-
-        // 获取IP地址
+        // 描述
+        if (log != null) {
+            log.setDescription(aopLog.value());
+        }
+        assert log != null;
         log.setRequestIp(ip);
 
+        String LOGINPATH = "login";
         if(LOGINPATH.equals(signature.getName())){
             try {
-                JSONObject jsonObject = new JSONObject(argValues[0]);
-                username = jsonObject.get("username").toString();
+                assert argValues != null;
+                username = new JSONObject(argValues[0]).get("username").toString();
             }catch (Exception e){
                 e.printStackTrace();
             }
@@ -96,12 +95,12 @@ public class LogServiceImpl implements LogService {
         log.setAddress(StringUtils.getCityInfo(log.getRequestIp()));
         log.setMethod(methodName);
         log.setUsername(username);
-        log.setParams(params + " }");
+        log.setParams(params.toString() + " }");
         logRepository.save(log);
     }
 
     @Override
     public Object findByErrDetail(Long id) {
-        return Dict.create().set("exception",logRepository.findExceptionById(id));
+        return Dict.create().set("exception",logRepository.findExceptionById(id).getExceptionDetail());
     }
 }

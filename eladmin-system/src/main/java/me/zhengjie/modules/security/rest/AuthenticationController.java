@@ -2,6 +2,8 @@ package me.zhengjie.modules.security.rest;
 
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.util.IdUtil;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import me.zhengjie.aop.log.Log;
 import me.zhengjie.exception.BadRequestException;
@@ -15,7 +17,6 @@ import me.zhengjie.utils.EncryptUtils;
 import me.zhengjie.modules.security.utils.JwtTokenUtil;
 import me.zhengjie.utils.SecurityUtils;
 import me.zhengjie.utils.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +24,6 @@ import org.springframework.security.authentication.AccountExpiredException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
@@ -34,29 +34,28 @@ import java.io.IOException;
  */
 @Slf4j
 @RestController
-@RequestMapping("auth")
+@RequestMapping("/auth")
+@Api(tags = "系统：系统授权接口")
 public class AuthenticationController {
 
     @Value("${jwt.header}")
     private String tokenHeader;
 
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
+    private final JwtTokenUtil jwtTokenUtil;
 
-    @Autowired
-    private RedisService redisService;
+    private final RedisService redisService;
 
-    @Autowired
-    @Qualifier("jwtUserDetailsService")
-    private UserDetailsService userDetailsService;
+    private final UserDetailsService userDetailsService;
 
-    /**
-     * 登录授权
-     * @param authorizationUser
-     * @return
-     */
+    public AuthenticationController(JwtTokenUtil jwtTokenUtil, RedisService redisService, @Qualifier("jwtUserDetailsService") UserDetailsService userDetailsService) {
+        this.jwtTokenUtil = jwtTokenUtil;
+        this.redisService = redisService;
+        this.userDetailsService = userDetailsService;
+    }
+
     @Log("用户登录")
-    @PostMapping(value = "${jwt.auth.path}")
+    @ApiOperation("登录授权")
+    @PostMapping(value = "/login")
     public ResponseEntity login(@Validated @RequestBody AuthorizationUser authorizationUser){
 
         // 查询验证码
@@ -86,21 +85,16 @@ public class AuthenticationController {
         return ResponseEntity.ok(new AuthenticationInfo(token,jwtUser));
     }
 
-    /**
-     * 获取用户信息
-     * @return
-     */
-    @GetMapping(value = "${jwt.auth.account}")
+    @ApiOperation("获取用户信息")
+    @GetMapping(value = "/info")
     public ResponseEntity getUserInfo(){
         JwtUser jwtUser = (JwtUser)userDetailsService.loadUserByUsername(SecurityUtils.getUsername());
         return ResponseEntity.ok(jwtUser);
     }
 
-    /**
-     * 获取验证码
-     */
-    @GetMapping(value = "vCode")
-    public ImgResult getCode(HttpServletResponse response) throws IOException {
+    @ApiOperation("获取验证码")
+    @GetMapping(value = "/vCode")
+    public ImgResult getCode() throws IOException {
 
         //生成随机字串
         String verifyCode = VerifyCodeUtils.generateVerifyCode(4);

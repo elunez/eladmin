@@ -1,7 +1,6 @@
 package me.zhengjie.modules.monitor.config;
 
 import me.zhengjie.modules.monitor.service.VisitsService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
@@ -13,8 +12,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class VisitsInitialization implements ApplicationRunner {
 
-    @Autowired
-    private VisitsService visitsService;
+    private final VisitsService visitsService;
+
+    public VisitsInitialization(VisitsService visitsService) {
+        this.visitsService = visitsService;
+    }
 
     @Override
     public void run(ApplicationArguments args) throws Exception {

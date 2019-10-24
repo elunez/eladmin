@@ -10,7 +10,7 @@ import org.mapstruct.ReportingPolicy;
 * @author Zheng Jie
 * @date 2019-03-25
 */
-@Mapper(componentModel = "spring",uses = {},unmappedTargetPolicy = ReportingPolicy.IGNORE)
+@Mapper(componentModel = "spring",unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface DeptMapper extends EntityMapper<DeptDTO, Dept> {
 
 }

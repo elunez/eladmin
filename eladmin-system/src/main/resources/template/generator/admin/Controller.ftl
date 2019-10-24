@@ -4,7 +4,6 @@ import me.zhengjie.aop.log.Log;
 import ${package}.domain.${className};
 import ${package}.service.${className}Service;
 import ${package}.service.dto.${className}QueryCriteria;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,40 +18,43 @@ import io.swagger.annotations.*;
 */
 @Api(tags = "${className}管理")
 @RestController
-@RequestMapping("api")
+@RequestMapping("/api/${changeClassName}")
 public class ${className}Controller {
 
-    @Autowired
-    private ${className}Service ${changeClassName}Service;
+    private final ${className}Service ${changeClassName}Service;
 
+    public ${className}Controller(${className}Service ${changeClassName}Service) {
+        this.${changeClassName}Service = ${changeClassName}Service;
+    }
+
+    @GetMapping
     @Log("查询${className}")
-    @ApiOperation(value = "查询${className}")
-    @GetMapping(value = "/${changeClassName}")
+    @ApiOperation("查询${className}")
     @PreAuthorize("hasAnyRole('ADMIN','${upperCaseClassName}_ALL','${upperCaseClassName}_SELECT')")
     public ResponseEntity get${className}s(${className}QueryCriteria criteria, Pageable pageable){
-        return new ResponseEntity(${changeClassName}Service.queryAll(criteria,pageable),HttpStatus.OK);
+        return new ResponseEntity<>(${changeClassName}Service.queryAll(criteria,pageable),HttpStatus.OK);
     }
 
+    @PostMapping
     @Log("新增${className}")
-    @ApiOperation(value = "新增${className}")
-    @PostMapping(value = "/${changeClassName}")
+    @ApiOperation("新增${className}")
     @PreAuthorize("hasAnyRole('ADMIN','${upperCaseClassName}_ALL','${upperCaseClassName}_CREATE')")
     public ResponseEntity create(@Validated @RequestBody ${className} resources){
-        return new ResponseEntity(${changeClassName}Service.create(resources),HttpStatus.CREATED);
+        return new ResponseEntity<>(${changeClassName}Service.create(resources),HttpStatus.CREATED);
     }
 
+    @PutMapping
     @Log("修改${className}")
-    @ApiOperation(value = "修改${className}")
-    @PutMapping(value = "/${changeClassName}")
+    @ApiOperation("修改${className}")
     @PreAuthorize("hasAnyRole('ADMIN','${upperCaseClassName}_ALL','${upperCaseClassName}_EDIT')")
     public ResponseEntity update(@Validated @RequestBody ${className} resources){
         ${changeClassName}Service.update(resources);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
+    @DeleteMapping(value = "/{${pkChangeColName}}")
     @Log("删除${className}")
-    @ApiOperation(value = "删除${className}")
-    @DeleteMapping(value = "/${changeClassName}/{${pkChangeColName}}")
+    @ApiOperation("删除${className}")
     @PreAuthorize("hasAnyRole('ADMIN','${upperCaseClassName}_ALL','${upperCaseClassName}_DELETE')")
     public ResponseEntity delete(@PathVariable ${pkColumnType} ${pkChangeColName}){
         ${changeClassName}Service.delete(${pkChangeColName});

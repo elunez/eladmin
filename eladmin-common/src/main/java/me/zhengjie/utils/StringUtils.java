@@ -18,25 +18,6 @@ import java.util.Date;
 public class StringUtils extends org.apache.commons.lang3.StringUtils {
 
     private static final char SEPARATOR = '_';
-    private static final String CHARSET_NAME = "UTF-8";
-
-    /**
-     * 是否包含字符串
-     *
-     * @param str  验证字符串
-     * @param strs 字符串组
-     * @return 包含返回true
-     */
-    static boolean inString(String str, String... strs) {
-        if (str != null) {
-            for (String s : strs) {
-                if (str.equals(trim(s))) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
 
     /**
      * 驼峰命名法工具
@@ -151,9 +132,9 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
             DbConfig config = new DbConfig();
             File file = FileUtil.inputStreamToFile(new ClassPathResource(path).getStream(), name);
             DbSearcher searcher = new DbSearcher(config, file.getPath());
-            Method method = null;
+            Method method;
             method = searcher.getClass().getMethod("btreeSearch", String.class);
-            DataBlock dataBlock = null;
+            DataBlock dataBlock;
             dataBlock = (DataBlock) method.invoke(searcher, ip);
             String address = dataBlock.getRegion().replace("0|","");
             if(address.charAt(address.length()-1) == '|'){

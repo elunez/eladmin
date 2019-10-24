@@ -9,7 +9,6 @@ import me.zhengjie.domain.vo.TradeVo;
 import me.zhengjie.service.AlipayService;
 import me.zhengjie.utils.AliPayStatusEnum;
 import me.zhengjie.utils.AlipayUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -27,7 +26,7 @@ import java.util.Map;
 @Slf4j
 @RestController
 @RequestMapping("/api/aliPay")
-@Api(tags = "支付宝支付管理")
+@Api(tags = "工具：支付宝管理")
 public class AliPayController {
 
     private final AlipayUtils alipayUtils;
@@ -45,6 +44,7 @@ public class AliPayController {
     }
 
     @Log("配置支付宝")
+    @ApiOperation("配置支付宝")
     @PutMapping
     public ResponseEntity payConfig(@Validated @RequestBody AlipayConfig alipayConfig){
         alipayConfig.setId(1L);
@@ -53,7 +53,7 @@ public class AliPayController {
     }
 
     @Log("支付宝PC网页支付")
-    @ApiOperation(value = "PC网页支付")
+    @ApiOperation("PC网页支付")
     @PostMapping(value = "/toPayAsPC")
     public ResponseEntity<String> toPayAsPC(@Validated@RequestBody TradeVo trade) throws Exception{
         AlipayConfig alipay = alipayService.find();
@@ -63,7 +63,7 @@ public class AliPayController {
     }
 
     @Log("支付宝手机网页支付")
-    @ApiOperation(value = "手机网页支付")
+    @ApiOperation("手机网页支付")
     @PostMapping(value = "/toPayAsWeb")
     public ResponseEntity<String> toPayAsWeb(@Validated @RequestBody TradeVo trade) throws Exception{
         AlipayConfig alipay = alipayService.find();
@@ -74,8 +74,8 @@ public class AliPayController {
 
     @ApiIgnore
     @GetMapping("/return")
-    @ApiOperation(value = "支付之后跳转的链接")
-    public ResponseEntity<String> returnPage(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    @ApiOperation("支付之后跳转的链接")
+    public ResponseEntity<String> returnPage(HttpServletRequest request, HttpServletResponse response){
         AlipayConfig alipay = alipayService.find();
         response.setContentType("text/html;charset=" + alipay.getCharset());
         //内容验签，防止黑客篡改参数
@@ -96,8 +96,8 @@ public class AliPayController {
 
     @ApiIgnore
     @RequestMapping("/notify")
-    @ApiOperation(value = "支付异步通知(要公网访问)，接收异步通知，检查通知内容app_id、out_trade_no、total_amount是否与请求中的一致，根据trade_status进行后续业务处理")
-    public ResponseEntity notify(HttpServletRequest request) throws Exception{
+    @ApiOperation("支付异步通知(要公网访问)，接收异步通知，检查通知内容app_id、out_trade_no、total_amount是否与请求中的一致，根据trade_status进行后续业务处理")
+    public ResponseEntity notify(HttpServletRequest request){
         AlipayConfig alipay = alipayService.find();
         Map<String, String[]> parameterMap = request.getParameterMap();
         //内容验签，防止黑客篡改参数
@@ -111,9 +111,9 @@ public class AliPayController {
             //付款金额
             String totalAmount = new String(request.getParameter("total_amount").getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
             //验证
-//            if(tradeStatus.equals(AliPayStatusEnum.SUCCESS.getValue())||tradeStatus.equals(AliPayStatusEnum.FINISHED.getValue())){
-//               // 验证通过后应该根据业务需要处理订单
-//            }
+            if(tradeStatus.equals(AliPayStatusEnum.SUCCESS.getValue())||tradeStatus.equals(AliPayStatusEnum.FINISHED.getValue())){
+               // 验证通过后应该根据业务需要处理订单
+            }
             return new ResponseEntity(HttpStatus.OK);
         }
         return new ResponseEntity(HttpStatus.BAD_REQUEST);

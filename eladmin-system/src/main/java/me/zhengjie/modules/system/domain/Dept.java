@@ -19,18 +19,12 @@ import java.util.Set;
 @Table(name="dept")
 public class Dept implements Serializable {
 
-    /**
-     * ID
-     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     @NotNull(groups = Update.class)
     private Long id;
 
-    /**
-     * 名称
-     */
     @Column(name = "name",nullable = false)
     @NotBlank
     private String name;
@@ -38,9 +32,6 @@ public class Dept implements Serializable {
     @NotNull
     private Boolean enabled;
 
-    /**
-     * 上级部门
-     */
     @Column(name = "pid",nullable = false)
     @NotNull
     private Long pid;

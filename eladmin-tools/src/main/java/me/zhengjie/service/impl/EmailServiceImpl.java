@@ -8,6 +8,9 @@ import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.repository.EmailRepository;
 import me.zhengjie.service.EmailService;
 import me.zhengjie.utils.EncryptUtils;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +21,7 @@ import java.util.Optional;
  * @date 2018-12-26
  */
 @Service
+@CacheConfig(cacheNames = "email")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class EmailServiceImpl implements EmailService {
 
@@ -28,6 +32,7 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
+    @CachePut(key = "'1'")
     @Transactional(rollbackFor = Exception.class)
     public EmailConfig update(EmailConfig emailConfig, EmailConfig old) {
         try {
@@ -42,6 +47,7 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
+    @Cacheable(key = "'1'")
     public EmailConfig find() {
         Optional<EmailConfig> emailConfig = emailRepository.findById(1L);
         return emailConfig.orElseGet(EmailConfig::new);

@@ -13,28 +13,28 @@ public interface RedisService {
 
     /**
      * findById
-     * @param key
-     * @return
+     * @param key 键
+     * @return /
      */
     Page findByKey(String key, Pageable pageable);
 
     /**
      * 查询验证码的值
-     * @param key
-     * @return
+     * @param key 键
+     * @return /
      */
     String getCodeVal(String key);
 
     /**
      * 保存验证码
-     * @param key
-     * @param val
+     * @param key 键
+     * @param val 值
      */
     void saveCode(String key, Object val);
 
     /**
      * delete
-     * @param key
+     * @param key 键
      */
     void delete(String key);
 

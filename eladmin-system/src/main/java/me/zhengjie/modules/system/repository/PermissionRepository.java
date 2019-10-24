@@ -9,19 +9,9 @@ import java.util.List;
  * @author Zheng Jie
  * @date 2018-12-03
  */
-public interface PermissionRepository extends JpaRepository<Permission, Long>, JpaSpecificationExecutor {
+public interface PermissionRepository extends JpaRepository<Permission, Long>, JpaSpecificationExecutor<Permission> {
 
-    /**
-     * findByName
-     * @param name
-     * @return
-     */
     Permission findByName(String name);
 
-    /**
-     * findByPid
-     * @param pid
-     * @return
-     */
     List<Permission> findByPid(long pid);
 }

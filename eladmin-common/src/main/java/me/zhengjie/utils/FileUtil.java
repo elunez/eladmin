@@ -11,6 +11,7 @@ import javax.activation.MimetypesFileTypeMap;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.security.MessageDigest;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -92,7 +93,7 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
      * 文件大小转换
      */
     public static String getSize(long size){
-        String resultSize = "";
+        String resultSize;
         if (size / GB >= 1) {
             //如果当前Byte的值大于等于1GB
             resultSize = DF.format(size / (float) GB) + "GB   ";
@@ -117,7 +118,7 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
             return file;
         }
         OutputStream os = new FileOutputStream(file);
-        int bytesRead = 0;
+        int bytesRead;
         byte[] buffer = new byte[8192];
         while ((bytesRead = ins.read(buffer, 0, 8192)) != -1) {
             os.write(buffer, 0, bytesRead);
@@ -144,7 +145,6 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
             if (!dest.getParentFile().exists()) {
                 dest.getParentFile().mkdirs();
             }
-            String d = dest.getPath();
             file.transferTo(dest);// 文件写入
             return dest;
         } catch (Exception e) {
@@ -155,7 +155,7 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
 
     public static String fileToBase64(File file) throws Exception {
         FileInputStream inputFile = new FileInputStream(file);
-        String base64 =null;
+        String base64;
         byte[] buffer = new byte[(int)file.length()];
         inputFile.read(buffer);
         inputFile.close();
@@ -210,4 +210,64 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
             throw new BadRequestException("文件超出规定大小");
         }
     }
+
+    /**
+     * 判断两个文件是否相同
+     */
+    public static boolean check(File file1, File file2) {
+        String img1Md5 = getMD5(file1);
+        String img2Md5 = getMD5(file2);
+        return img1Md5.equals(img2Md5);
+    }
+
+    /**
+     * 判断两个文件是否相同
+     */
+    public static boolean check(String file1Md5, String file2Md5) {
+        return file1Md5.equals(file2Md5);
+    }
+
+    private static byte[] getByte(File file) {
+        // 得到文件长度
+        byte[] b = new byte[(int) file.length()];
+        try {
+            InputStream in = new FileInputStream(file);
+            try {
+                in.read(b);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return b;
+    }
+
+    private static String getMD5(byte[] bytes) {
+        // 16进制字符
+        char[] hexDigits = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
+        try {
+            MessageDigest mdTemp = MessageDigest.getInstance("MD5");
+            mdTemp.update(bytes);
+            byte[] md = mdTemp.digest();
+            int j = md.length;
+            char[] str = new char[j * 2];
+            int k = 0;
+            // 移位 输出字符串
+            for (byte byte0 : md) {
+                str[k++] = hexDigits[byte0 >>> 4 & 0xf];
+                str[k++] = hexDigits[byte0 & 0xf];
+            }
+            return new String(str);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static String getMD5(File file) {
+        return getMD5(getByte(file));
+    }
+
 }

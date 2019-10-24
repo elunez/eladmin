@@ -24,8 +24,8 @@ import java.util.Map;
  */
 @Slf4j
 @RestController
-@RequestMapping("api")
-@Api(tags = "七牛云存储管理")
+@RequestMapping("/api/qiNiuContent")
+@Api(tags = "工具：七牛云存储管理")
 public class QiniuController {
 
     private final QiNiuService qiNiuService;
@@ -34,14 +34,14 @@ public class QiniuController {
         this.qiNiuService = qiNiuService;
     }
 
-    @GetMapping(value = "/qiNiuConfig")
+    @GetMapping(value = "/config")
     public ResponseEntity get(){
         return new ResponseEntity<>(qiNiuService.find(), HttpStatus.OK);
     }
 
     @Log("配置七牛云存储")
-    @ApiOperation(value = "配置七牛云存储")
-    @PutMapping(value = "/qiNiuConfig")
+    @ApiOperation("配置七牛云存储")
+    @PutMapping(value = "/config")
     public ResponseEntity emailConfig(@Validated @RequestBody QiniuConfig qiniuConfig){
         qiNiuService.update(qiniuConfig);
         qiNiuService.update(qiniuConfig.getType());
@@ -49,15 +49,15 @@ public class QiniuController {
     }
 
     @Log("查询文件")
-    @ApiOperation(value = "查询文件")
-    @GetMapping(value = "/qiNiuContent")
+    @ApiOperation("查询文件")
+    @GetMapping
     public ResponseEntity getRoles(QiniuQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity<>(qiNiuService.queryAll(criteria,pageable),HttpStatus.OK);
     }
 
     @Log("上传文件")
-    @ApiOperation(value = "上传文件")
-    @PostMapping(value = "/qiNiuContent")
+    @ApiOperation("上传文件")
+    @PostMapping
     public ResponseEntity upload(@RequestParam MultipartFile file){
         QiniuContent qiniuContent = qiNiuService.upload(file,qiNiuService.find());
         Map<String,Object> map = new HashMap<>(3);
@@ -68,16 +68,16 @@ public class QiniuController {
     }
 
     @Log("同步七牛云数据")
-    @ApiOperation(value = "同步七牛云数据")
-    @PostMapping(value = "/qiNiuContent/synchronize")
+    @ApiOperation("同步七牛云数据")
+    @PostMapping(value = "/synchronize")
     public ResponseEntity synchronize(){
         qiNiuService.synchronize(qiNiuService.find());
         return new ResponseEntity(HttpStatus.OK);
     }
 
     @Log("下载文件")
-    @ApiOperation(value = "下载文件")
-    @GetMapping(value = "/qiNiuContent/download/{id}")
+    @ApiOperation("下载文件")
+    @GetMapping(value = "/download/{id}")
     public ResponseEntity download(@PathVariable Long id){
         Map<String,Object> map = new HashMap<>(1);
         map.put("url", qiNiuService.download(qiNiuService.findByContentId(id),qiNiuService.find()));
@@ -85,16 +85,16 @@ public class QiniuController {
     }
 
     @Log("删除文件")
-    @ApiOperation(value = "删除文件")
-    @DeleteMapping(value = "/qiNiuContent/{id}")
+    @ApiOperation("删除文件")
+    @DeleteMapping(value = "/{id}")
     public ResponseEntity delete(@PathVariable Long id){
         qiNiuService.delete(qiNiuService.findByContentId(id),qiNiuService.find());
         return new ResponseEntity(HttpStatus.OK);
     }
 
     @Log("删除多张图片")
-    @ApiOperation(value = "删除多张图片")
-    @DeleteMapping(value = "/qiNiuContent")
+    @ApiOperation("删除多张图片")
+    @DeleteMapping
     public ResponseEntity deleteAll(@RequestBody Long[] ids) {
         qiNiuService.deleteAll(ids, qiNiuService.find());
         return new ResponseEntity(HttpStatus.OK);

@@ -19,9 +19,6 @@ public class EncryptUtils {
 
     /**
      * 对称加密
-     * @param source
-     * @return
-     * @throws Exception
      */
     public static String desEncrypt(String source) throws Exception {
         if (source == null || source.length() == 0){

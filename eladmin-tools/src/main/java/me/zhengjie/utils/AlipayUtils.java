@@ -1,6 +1,5 @@
 package me.zhengjie.utils;
 
-import cn.hutool.core.util.StrUtil;
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.internal.util.AlipaySignature;
 import me.zhengjie.domain.AlipayConfig;
@@ -9,7 +8,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -22,6 +20,7 @@ public class AlipayUtils {
 
     /**
      * 生成订单号
+     * @return String
      */
     public String getOrderCode() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -39,6 +38,9 @@ public class AlipayUtils {
 
     /**
      * 校验签名
+     * @param request HttpServletRequest
+     * @param alipay 阿里云配置
+     * @return boolean
      */
     public boolean rsaCheck(HttpServletRequest request, AlipayConfig alipay){
 
@@ -64,9 +66,5 @@ public class AlipayUtils {
         } catch (AlipayApiException e) {
             return false;
         }
-    }
-
-    public boolean isEmpty(String str){
-        return StrUtil.isEmpty(str);
     }
 }

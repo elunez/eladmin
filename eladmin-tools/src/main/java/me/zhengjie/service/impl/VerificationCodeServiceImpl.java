@@ -11,12 +11,10 @@ import me.zhengjie.domain.vo.EmailVo;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.repository.VerificationCodeRepository;
 import me.zhengjie.service.VerificationCodeService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.concurrent.*;
 
@@ -28,17 +26,20 @@ import java.util.concurrent.*;
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class VerificationCodeServiceImpl implements VerificationCodeService {
 
-    @Autowired
-    private VerificationCodeRepository verificationCodeRepository;
+    private final VerificationCodeRepository verificationCodeRepository;
 
     @Value("${code.expiration}")
     private Integer expiration;
 
+    public VerificationCodeServiceImpl(VerificationCodeRepository verificationCodeRepository) {
+        this.verificationCodeRepository = verificationCodeRepository;
+    }
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public EmailVo sendEmail(VerificationCode code) {
-        EmailVo emailVo = null;
-        String content = "";
+        EmailVo emailVo;
+        String content;
         VerificationCode verificationCode = verificationCodeRepository.findByScenesAndTypeAndValueAndStatusIsTrue(code.getScenes(),code.getType(),code.getValue());
         // 如果不存在有效的验证码，就创建一个新的
         TemplateEngine engine = TemplateUtil.createEngine(new TemplateConfig("template", TemplateConfig.ResourceMode.CLASSPATH));

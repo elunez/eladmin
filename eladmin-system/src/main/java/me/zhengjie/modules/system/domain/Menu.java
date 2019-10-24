@@ -51,15 +51,11 @@ public class Menu implements Serializable {
     @Column(columnDefinition = "bit(1) default 0")
     private Boolean hidden;
 
-    /**
-     * 上级菜单ID
-     */
+    // 上级菜单ID
     @Column(name = "pid",nullable = false)
     private Long pid;
 
-    /**
-     * 是否为外链 true/false
-     */
+    // 是否为外链 true/false
     @Column(name = "i_frame")
     private Boolean iFrame;
 

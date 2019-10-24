@@ -13,7 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class SecurityUtils {
 
     public static UserDetails getUserDetails() {
-        UserDetails userDetails = null;
+        UserDetails userDetails;
         try {
             userDetails = (UserDetails) org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         } catch (Exception e) {

@@ -112,7 +112,8 @@ public class QueryHelp {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
-        return cb.and(list.toArray(new Predicate[list.size()]));
+        int size = list.size();
+        return cb.and(list.toArray(new Predicate[size]));
     }
 
     @SuppressWarnings("unchecked")
@@ -124,8 +125,7 @@ public class QueryHelp {
         }
     }
 
-    @SuppressWarnings("unchecked")
-    public static boolean isBlank(final CharSequence cs) {
+    private static boolean isBlank(final CharSequence cs) {
         int strLen;
         if (cs == null || (strLen = cs.length()) == 0) {
             return true;
@@ -138,7 +138,6 @@ public class QueryHelp {
         return true;
     }
 
-    @SuppressWarnings("unchecked")
     private static List<Field> getAllFields(Class clazz, List<Field> fields) {
         if (clazz != null) {
             fields.addAll(Arrays.asList(clazz.getDeclaredFields()));
