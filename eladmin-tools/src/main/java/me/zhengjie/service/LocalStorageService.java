@@ -18,52 +18,56 @@ public interface LocalStorageService {
 
     /**
     * queryAll 分页
-    * @param criteria
-    * @param pageable
-    * @return
+    * @param criteria 条件参数
+    * @param pageable 分页参数
+    * @return Object
     */
     @Cacheable
     Object queryAll(LocalStorageQueryCriteria criteria, Pageable pageable);
 
     /**
     * queryAll 不分页
-    * @param criteria
-    * @return
+    * @param criteria 条件参数
+    * @return Object
     */
     @Cacheable
-    public Object queryAll(LocalStorageQueryCriteria criteria);
+    Object queryAll(LocalStorageQueryCriteria criteria);
 
     /**
      * findById
      * @param id
-     * @return
+     * @return LocalStorageDTO
      */
     @Cacheable(key = "#p0")
     LocalStorageDTO findById(Long id);
 
     /**
      * create
-     * @param name
-     * @param file
-     * @return
+     * @param name 文件名称
+     * @param file 文件资源
+     * @return LocalStorageDTO
      */
     @CacheEvict(allEntries = true)
     LocalStorageDTO create(String name, MultipartFile file);
 
     /**
      * update
-     * @param resources
+     * @param resources 资源实体
      */
     @CacheEvict(allEntries = true)
     void update(LocalStorage resources);
 
     /**
      * delete
-     * @param id
+     * @param id 文件ID
      */
     @CacheEvict(allEntries = true)
     void delete(Long id);
 
+    /**
+     * 多文件删除
+     * @param ids 文件数组
+     */
     @CacheEvict(allEntries = true)
     void deleteAll(Long[] ids);
 }

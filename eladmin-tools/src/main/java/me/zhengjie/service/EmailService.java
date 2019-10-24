@@ -16,24 +16,24 @@ public interface EmailService {
 
     /**
      * 更新邮件配置
-     * @param emailConfig
-     * @param old
-     * @return
+     * @param emailConfig 邮件配置
+     * @param old 旧的配置
+     * @return EmailConfig
      */
     @CachePut(key = "'1'")
     EmailConfig update(EmailConfig emailConfig, EmailConfig old);
 
     /**
      * 查询配置
-     * @return
+     * @return EmailConfig 邮件配置
      */
     @Cacheable(key = "'1'")
     EmailConfig find();
 
     /**
      * 发送邮件
-     * @param emailVo
-     * @param emailConfig
+     * @param emailVo 邮件发送的内容
+     * @param emailConfig 邮件配置
      * @throws Exception
      */
     @Async

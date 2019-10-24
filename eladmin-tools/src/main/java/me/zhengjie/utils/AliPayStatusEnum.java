@@ -27,11 +27,9 @@ public enum  AliPayStatusEnum {
      */
     CLOSED("交易关闭", "TRADE_CLOSED");
 
-    private String name;
     private String value;
 
     AliPayStatusEnum(String name, String value) {
-        this.name = name;
         this.value = value;
     }
 

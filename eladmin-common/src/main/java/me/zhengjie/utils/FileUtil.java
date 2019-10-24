@@ -44,8 +44,6 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
 
     /**
      * MultipartFile转File
-     * @param multipartFile
-     * @return
      */
     public static File toFile(MultipartFile multipartFile){
         // 获取文件名
@@ -65,21 +63,7 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
     }
 
     /**
-     * 删除
-     * @param files
-     */
-    public static void deleteFile(File... files) {
-        for (File file : files) {
-            if (file.exists()) {
-                file.delete();
-            }
-        }
-    }
-
-    /**
-     * 获取文件扩展名
-     * @param filename
-     * @return
+     * 获取文件扩展名，不带 .
      */
     public static String getExtensionName(String filename) {
         if ((filename != null) && (filename.length() > 0)) {
@@ -93,8 +77,6 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
 
     /**
      * Java文件操作 获取不带扩展名的文件名
-     * @param filename
-     * @return
      */
     public static String getFileNameNoEx(String filename) {
         if ((filename != null) && (filename.length() > 0)) {
@@ -108,8 +90,6 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
 
     /**
      * 文件大小转换
-     * @param size
-     * @return
      */
     public static String getSize(long size){
         String resultSize = "";
@@ -130,13 +110,9 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
 
     /**
      * inputStream 转 File
-     * @param ins
-     * @param name
-     * @return
-     * @throws Exception
      */
-    public static File inputStreamToFile(InputStream ins, String name) throws Exception{
-        File file = new File(System.getProperty("java.io.tmpdir") + name);
+    static File inputStreamToFile(InputStream ins, String name) throws Exception{
+        File file = new File(System.getProperty("java.io.tmpdir") + File.separator + name);
         if (file.exists()) {
             return file;
         }
@@ -153,10 +129,6 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
 
     /**
      * 将文件名解析成文件的上传路径
-     *
-     * @param file
-     * @param filePath
-     * @return 上传到服务器的文件名
      */
     public static File upload(MultipartFile file, String filePath) {
         Date date = new Date();
@@ -170,7 +142,7 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
             File dest = new File(path);
             // 检测是否存在目录
             if (!dest.getParentFile().exists()) {
-                dest.getParentFile().mkdirs();// 新建文件夹
+                dest.getParentFile().mkdirs();
             }
             String d = dest.getPath();
             file.transferTo(dest);// 文件写入
@@ -187,16 +159,12 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
         byte[] buffer = new byte[(int)file.length()];
         inputFile.read(buffer);
         inputFile.close();
-        base64=new Base64().encode(buffer);
-        String encoded = base64.replaceAll("[\\s*\t\n\r]", "");
-        return encoded;
+        base64=Base64.encode(buffer);
+        return base64.replaceAll("[\\s*\t\n\r]", "");
     }
 
     /**
      * 导出excel
-     * @param list
-     * @return
-     * @throws Exception
      */
     public static void downloadExcel(List<Map<String, Object>> list, HttpServletResponse response) throws IOException {
         String tempPath =System.getProperty("java.io.tmpdir") + IdUtil.fastSimpleUUID() + ".xlsx";
@@ -217,25 +185,26 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
     }
 
     public static String getFileType(String type) {
-        String documents = "txt doc pdf ppt pps xlsx xls";
+        String documents = "txt doc pdf ppt pps xlsx xls docx";
         String music = "mp3 wav wma mpa ram ra aac aif m4a";
         String video = "avi mpg mpe mpeg asf wmv mov qt rm mp4 flv m4v webm ogv ogg";
         String image = "bmp dib pcp dif wmf gif jpg tif eps psd cdr iff tga pcd mpt png jpeg";
-        if(image.indexOf(type) != -1){
+        if(image.contains(type)){
             return "图片";
-        } else if(documents.indexOf(type) != -1){
+        } else if(documents.contains(type)){
             return "文档";
-        } else if(music.indexOf(type) != -1){
+        } else if(music.contains(type)){
             return "音乐";
-        } else if(video.indexOf(type) != -1){
+        } else if(video.contains(type)){
             return "视频";
         } else return "其他";
     }
 
     public static String getFileTypeByMimeType(String type) {
         String mimeType = new MimetypesFileTypeMap().getContentType("." + type);
-        return mimeType.split("\\/")[0];
+        return mimeType.split("/")[0];
     }
+
     public static void checkSize(long maxSize, long size) {
         if(size > (maxSize * 1024 * 1024)){
             throw new BadRequestException("文件超出规定大小");

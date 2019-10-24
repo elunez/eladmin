@@ -30,14 +30,17 @@ import java.util.Optional;
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class PictureServiceImpl implements PictureService {
 
-    @Autowired
-    private PictureRepository pictureRepository;
+    private final PictureRepository pictureRepository;
 
-    public static final String SUCCESS = "success";
+    private static final String SUCCESS = "success";
 
-    public static final String CODE = "code";
+    private static final String CODE = "code";
 
-    public static final String MSG = "message";
+    private static final String MSG = "message";
+
+    public PictureServiceImpl(PictureRepository pictureRepository) {
+        this.pictureRepository = pictureRepository;
+    }
 
     @Override
     public Object queryAll(PictureQueryCriteria criteria, Pageable pageable){
@@ -60,7 +63,7 @@ public class PictureServiceImpl implements PictureService {
         }
         //转成实体类
         picture = JSON.parseObject(jsonObject.get("data").toString(), Picture.class);
-        picture.setSize(FileUtil.getSize(Integer.valueOf(picture.getSize())));
+        picture.setSize(FileUtil.getSize(Integer.parseInt(picture.getSize())));
         picture.setUsername(username);
         picture.setFilename(FileUtil.getFileNameNoEx(multipartFile.getOriginalFilename())+"."+FileUtil.getExtensionName(multipartFile.getOriginalFilename()));
         pictureRepository.save(picture);

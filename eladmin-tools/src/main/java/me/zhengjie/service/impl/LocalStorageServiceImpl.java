@@ -1,19 +1,16 @@
 package me.zhengjie.service.impl;
 
 import me.zhengjie.domain.LocalStorage;
-import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.utils.*;
 import me.zhengjie.repository.LocalStorageRepository;
 import me.zhengjie.service.LocalStorageService;
 import me.zhengjie.service.dto.LocalStorageDTO;
 import me.zhengjie.service.dto.LocalStorageQueryCriteria;
 import me.zhengjie.service.mapper.LocalStorageMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.io.File;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -28,17 +25,20 @@ import org.springframework.web.multipart.MultipartFile;
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class LocalStorageServiceImpl implements LocalStorageService {
 
-    @Autowired
-    private LocalStorageRepository localStorageRepository;
+    private final LocalStorageRepository localStorageRepository;
 
-    @Autowired
-    private LocalStorageMapper localStorageMapper;
+    private final LocalStorageMapper localStorageMapper;
 
     @Value("${file.path}")
     private String path;
 
     @Value("${file.maxSize}")
     private long maxSize;
+
+    public LocalStorageServiceImpl(LocalStorageRepository localStorageRepository, LocalStorageMapper localStorageMapper) {
+        this.localStorageRepository = localStorageRepository;
+        this.localStorageMapper = localStorageMapper;
+    }
 
     @Override
     public Object queryAll(LocalStorageQueryCriteria criteria, Pageable pageable){
@@ -83,11 +83,6 @@ public class LocalStorageServiceImpl implements LocalStorageService {
             FileUtil.del(file);
             throw e;
         }
-    }
-
-    public static void main(String[] args) {
-        File file = new File("C:\\Users\\Jie\\Pictures\\Saved Pictures\\demo1.jpg");
-        System.out.println(FileUtil.getType(file));
     }
 
     @Override

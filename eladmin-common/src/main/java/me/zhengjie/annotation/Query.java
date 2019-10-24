@@ -20,38 +20,35 @@ public @interface Query {
 
     /**
      * 连接查询的属性名，如User类中的dept
-     * @return
      */
     String joinName() default "";
 
     /**
      * 默认左连接
-     * @return
      */
     Join join() default Join.LEFT;
 
     /**
      * 多字段模糊搜索，仅支持String类型字段，多个用逗号隔开, 如@Query(blurry = "email,username")
-     * @return
      */
     String blurry() default "";
 
     enum Type {
-        /** jie 2019/6/4 相等 */
+        // jie 2019/6/4 相等
         EQUAL
-        /** Dong ZhaoYang 2017/8/7 大于等于 */
+        // Dong ZhaoYang 2017/8/7 大于等于
         , GREATER_THAN
-        /** Dong ZhaoYang 2017/8/7 小于等于 */
+        // Dong ZhaoYang 2017/8/7 小于等于
         , LESS_THAN
-        /** Dong ZhaoYang 2017/8/7 中模糊查询 */
+        // Dong ZhaoYang 2017/8/7 中模糊查询
         , INNER_LIKE
-        /** Dong ZhaoYang 2017/8/7 左模糊查询 */
+        // Dong ZhaoYang 2017/8/7 左模糊查询
         , LEFT_LIKE
-        /** Dong ZhaoYang 2017/8/7 右模糊查询 */
+        // Dong ZhaoYang 2017/8/7 右模糊查询
         , RIGHT_LIKE
-        /** Dong ZhaoYang 2017/8/7 小于 */
+        // Dong ZhaoYang 2017/8/7 小于
         , LESS_THAN_NQ
-        //** jie 2019/6/4 包含 */
+        // jie 2019/6/4 包含
         , IN
     }
 

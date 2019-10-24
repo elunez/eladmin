@@ -16,17 +16,17 @@ public interface PictureService {
 
     /**
      * 查询图片
-     * @param criteria
-     * @param pageable
-     * @return
+     * @param criteria 条件参数
+     * @param pageable 分页参数
+     * @return Object
      */
     @Cacheable
     Object queryAll(PictureQueryCriteria criteria, Pageable pageable);
 
     /**
      * 上传图片
-     * @param file
-     * @param username
+     * @param file 文件
+     * @param username 用户名
      * @return
      */
     @CacheEvict(allEntries = true)
@@ -34,7 +34,7 @@ public interface PictureService {
 
     /**
      * 根据ID查询
-     * @param id
+     * @param id 文件ID
      * @return
      */
     @Cacheable(key = "#p0")
@@ -42,14 +42,14 @@ public interface PictureService {
 
     /**
      * 删除图片
-     * @param picture
+     * @param picture 图片实体
      */
     @CacheEvict(allEntries = true)
     void delete(Picture picture);
 
     /**
      * 删除图片
-     * @param ids
+     * @param ids 文件ID数组
      */
     @CacheEvict(allEntries = true)
     void deleteAll(Long[] ids);

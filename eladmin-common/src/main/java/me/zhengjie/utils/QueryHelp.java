@@ -15,18 +15,12 @@ import java.util.*;
 @Slf4j
 public class QueryHelp {
 
-    /**
-     * @描述 :  转换为Predicate
-     * @作者 :  Dong ZhaoYang
-     * @日期 :  2017/8/7
-     * @时间 :  17:25
-     */
     @SuppressWarnings("unchecked")
     public static <R, Q> Predicate getPredicate(Root<R> root, Q query, CriteriaBuilder cb) {
         List<Predicate> list = new ArrayList<>();
 
         if(query == null){
-            return cb.and(list.toArray(new Predicate[list.size()]));
+            return cb.and(list.toArray(new Predicate[0]));
         }
         try {
             List<Field> fields = getAllFields(query.getClass(), new ArrayList<>());
@@ -62,14 +56,14 @@ public class QueryHelp {
                         for (String name : joinNames) {
                             switch (q.join()) {
                                 case LEFT:
-                                    if(ObjectUtil.isNotEmpty(join)){
+                                    if(ObjectUtil.isNotNull(join)){
                                         join = join.join(name, JoinType.LEFT);
                                     } else {
                                         join = root.join(name, JoinType.LEFT);
                                     }
                                     break;
                                 case RIGHT:
-                                    if(ObjectUtil.isNotEmpty(join)){
+                                    if(ObjectUtil.isNotNull(join)){
                                         join = join.join(name, JoinType.RIGHT);
                                     } else {
                                         join = root.join(name, JoinType.RIGHT);
@@ -137,7 +131,7 @@ public class QueryHelp {
             return true;
         }
         for (int i = 0; i < strLen; i++) {
-            if (Character.isWhitespace(cs.charAt(i)) == false) {
+            if (!Character.isWhitespace(cs.charAt(i))) {
                 return false;
             }
         }

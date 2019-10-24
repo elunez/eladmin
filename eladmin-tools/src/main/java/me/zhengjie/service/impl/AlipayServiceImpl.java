@@ -40,19 +40,13 @@ public class AlipayServiceImpl implements AlipayService {
 
         double money = Double.parseDouble(trade.getTotalAmount());
 
-        /**
-         * 创建API对应的request(电脑网页版)
-         */
+        // 创建API对应的request(电脑网页版)
         AlipayTradePagePayRequest request = new AlipayTradePagePayRequest();
 
-        /**
-         * 订单完成后返回的页面和异步通知地址
-         */
+        // 订单完成后返回的页面和异步通知地址
         request.setReturnUrl(alipay.getReturnUrl());
         request.setNotifyUrl(alipay.getNotifyUrl());
-        /**
-         *  填充订单参数
-         */
+        // 填充订单参数
         request.setBizContent("{" +
                 "    \"out_trade_no\":\""+trade.getOutTradeNo()+"\"," +
                 "    \"product_code\":\"FAST_INSTANT_TRADE_PAY\"," +
@@ -63,10 +57,7 @@ public class AlipayServiceImpl implements AlipayService {
                 "    \"sys_service_provider_id\":\""+alipay.getSysServiceProviderId()+"\"" +
                 "    }"+
                 "  }");//填充业务参数
-        /**
-         * 调用SDK生成表单
-         * 通过GET方式，口可以获取url
-         */
+        // 调用SDK生成表单, 通过GET方式，口可以获取url
         return alipayClient.pageExecute(request, "GET").getBody();
 
     }
@@ -82,20 +73,10 @@ public class AlipayServiceImpl implements AlipayService {
         if(money <= 0 || money >= 5000){
             throw new BadRequestException("测试金额过大");
         }
-
-        /**
-         * 创建API对应的request(手机网页版)
-         */
+        // 创建API对应的request(手机网页版)
         AlipayTradeWapPayRequest request = new AlipayTradeWapPayRequest();
-
-        /**
-         * 订单完成后返回的页面和异步通知地址
-         */
         request.setReturnUrl(alipay.getReturnUrl());
         request.setNotifyUrl(alipay.getNotifyUrl());
-        /**
-         *  填充订单参数
-         */
         request.setBizContent("{" +
                 "    \"out_trade_no\":\""+trade.getOutTradeNo()+"\"," +
                 "    \"product_code\":\"FAST_INSTANT_TRADE_PAY\"," +
@@ -106,21 +87,13 @@ public class AlipayServiceImpl implements AlipayService {
                 "    \"sys_service_provider_id\":\""+alipay.getSysServiceProviderId()+"\"" +
                 "    }"+
                 "  }");//填充业务参数
-        /**
-         * 调用SDK生成表单
-         * 通过GET方式，口可以获取url
-         */
         return alipayClient.pageExecute(request, "GET").getBody();
     }
 
     @Override
     public AlipayConfig find() {
         Optional<AlipayConfig> alipayConfig = alipayRepository.findById(1L);
-        if (alipayConfig.isPresent()){
-            return alipayConfig.get();
-        } else {
-            return new AlipayConfig();
-        }
+        return alipayConfig.orElseGet(AlipayConfig::new);
     }
 
     @Override
