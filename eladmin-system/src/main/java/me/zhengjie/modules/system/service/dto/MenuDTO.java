@@ -1,17 +1,17 @@
 package me.zhengjie.modules.system.service.dto;
 
-import lombok.Data;
-
-import java.sql.Timestamp;
+import lombok.Getter;
+import lombok.Setter;
+import me.zhengjie.base.BaseDTO;
 import java.util.List;
-import java.util.Set;
 
 /**
  * @author Zheng Jie
  * @date 2018-12-17
  */
-@Data
-public class MenuDTO {
+@Getter
+@Setter
+public class MenuDTO  extends BaseDTO {
 
     private Long id;
 
@@ -36,6 +36,4 @@ public class MenuDTO {
     private String icon;
 
     private List<MenuDTO> children;
-
-    private Timestamp createTime;
 }

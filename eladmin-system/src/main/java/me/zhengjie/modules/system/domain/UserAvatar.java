@@ -2,7 +2,10 @@ package me.zhengjie.modules.system.domain;
 
 import cn.hutool.core.util.ObjectUtil;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import me.zhengjie.base.BaseEntity;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -12,10 +15,11 @@ import java.sql.Timestamp;
  * @date 2019年9月7日 16:16:59
  */
 @Entity
-@Table(name = "user_avatar")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
-public class UserAvatar {
+@Table(name = "user_avatar")
+public class UserAvatar  extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

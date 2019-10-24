@@ -1,14 +1,16 @@
 package me.zhengjie.modules.system.service.dto;
 
-import lombok.Data;
-import java.io.Serializable;
+import lombok.Getter;
+import lombok.Setter;
+import me.zhengjie.base.BaseDTO;
 
 /**
 * @author Zheng Jie
 * @date 2019-04-10
 */
-@Data
-public class DictDetailDTO implements Serializable {
+@Getter
+@Setter
+public class DictDetailDTO  extends BaseDTO {
 
     private Long id;
 

@@ -1,20 +1,18 @@
 package me.zhengjie.modules.system.service.dto;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.sql.Timestamp;
-import java.io.Serializable;
+import me.zhengjie.base.BaseDTO;
 
 /**
 * @author Zheng Jie
 * @date 2019-03-29
 */
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
-public class JobDTO implements Serializable {
+public class JobDTO  extends BaseDTO {
 
     private Long id;
 
@@ -27,8 +25,6 @@ public class JobDTO implements Serializable {
     private DeptDTO dept;
 
     private String deptSuperiorName;
-
-    private Timestamp createTime;
 
     public JobDTO(String name, Boolean enabled) {
         this.name = name;

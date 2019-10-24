@@ -56,7 +56,7 @@ public class PictureServiceImpl implements PictureService {
     public Picture upload(MultipartFile multipartFile, String username) {
         File file = FileUtil.toFile(multipartFile);
         // 验证是否重复上传
-        Picture picture = pictureRepository.findByMd5Code(FileUtil.getMD5(file));
+        Picture picture = pictureRepository.findByMd5Code(FileUtil.getMd5(file));
         if(picture != null){
            return picture;
         }
@@ -70,7 +70,7 @@ public class PictureServiceImpl implements PictureService {
         picture = JSON.parseObject(jsonObject.get("data").toString(), Picture.class);
         picture.setSize(FileUtil.getSize(Integer.parseInt(picture.getSize())));
         picture.setUsername(username);
-        picture.setMd5Code(FileUtil.getMD5(file));
+        picture.setMd5Code(FileUtil.getMd5(file));
         picture.setFilename(FileUtil.getFileNameNoEx(multipartFile.getOriginalFilename())+"."+FileUtil.getExtensionName(multipartFile.getOriginalFilename()));
         pictureRepository.save(picture);
         //删除临时文件
@@ -97,7 +97,6 @@ public class PictureServiceImpl implements PictureService {
         } catch(Exception e){
             pictureRepository.delete(picture);
         }
-
     }
 
     @Override

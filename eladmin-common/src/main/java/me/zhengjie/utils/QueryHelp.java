@@ -69,6 +69,7 @@ public class QueryHelp {
                                         join = root.join(name, JoinType.RIGHT);
                                     }
                                     break;
+                                default: break;
                             }
                         }
                     }
@@ -105,6 +106,7 @@ public class QueryHelp {
                                 list.add(getExpression(attributeName,join,root).in((Collection<Long>) val));
                             }
                             break;
+                        default: break;
                     }
                 }
                 field.setAccessible(accessible);

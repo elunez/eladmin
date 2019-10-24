@@ -1,6 +1,9 @@
 package me.zhengjie.modules.system.domain;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import me.zhengjie.base.BaseEntity;
 import org.hibernate.annotations.*;
 import javax.persistence.*;
 import javax.persistence.Entity;
@@ -15,9 +18,10 @@ import java.io.Serializable;
 * @date 2019-03-29
 */
 @Entity
-@Data
+@Getter
+@Setter
 @Table(name="job")
-public class Job implements Serializable {
+public class Job  extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,10 +44,4 @@ public class Job implements Serializable {
     @OneToOne
     @JoinColumn(name = "dept_id")
     private Dept dept;
-
-    @Column(name = "create_time")
-    @CreationTimestamp
-    private Timestamp createTime;
-
-    public @interface Update {}
 }

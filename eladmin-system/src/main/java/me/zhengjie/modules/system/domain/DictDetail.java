@@ -1,6 +1,10 @@
 package me.zhengjie.modules.system.domain;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import me.zhengjie.base.BaseEntity;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -10,9 +14,10 @@ import java.io.Serializable;
 * @date 2019-04-10
 */
 @Entity
-@Data
+@Getter
+@Setter
 @Table(name="dict_detail")
-public class DictDetail implements Serializable {
+public class DictDetail  extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,6 +41,4 @@ public class DictDetail implements Serializable {
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "dict_id")
     private Dict dict;
-
-    public @interface Update {}
 }

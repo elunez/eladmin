@@ -1,4 +1,4 @@
-package me.zhengjie.mapper;
+package me.zhengjie.base;
 
 import java.util.List;
 
@@ -6,7 +6,7 @@ import java.util.List;
  * @author Zheng Jie
  * @date 2018-11-23
  */
-public interface EntityMapper<D, E> {
+public interface BaseMapper<D, E> {
 
     /**
      * DTO转Entity

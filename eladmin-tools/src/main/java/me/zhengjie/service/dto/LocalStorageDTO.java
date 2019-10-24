@@ -1,17 +1,16 @@
 package me.zhengjie.service.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
-import java.sql.Timestamp;
-import java.io.Serializable;
-
+import lombok.Getter;
+import lombok.Setter;
+import me.zhengjie.base.BaseDTO;
 
 /**
 * @author Zheng Jie
 * @date 2019-09-05
 */
-@Data
-public class LocalStorageDTO implements Serializable {
+@Getter
+@Setter
+public class LocalStorageDTO extends BaseDTO {
 
     // ID
     private Long id;
@@ -32,10 +31,4 @@ public class LocalStorageDTO implements Serializable {
 
     // 操作人
     private String operate;
-
-    // 创建日期
-    private Timestamp createTime;
-
-    // 修改日期
-    private Timestamp updateTime;
 }

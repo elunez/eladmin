@@ -38,6 +38,6 @@ public class StringUtilsTest {
 
     @Test
     public void testGetIP() {
-        assertEquals("127.0.0.1", getIP(new MockHttpServletRequest()));
+        assertEquals("127.0.0.1", getIp(new MockHttpServletRequest()));
     }
 }

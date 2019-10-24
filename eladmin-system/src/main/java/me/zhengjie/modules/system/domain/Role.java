@@ -3,6 +3,7 @@ package me.zhengjie.modules.system.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
+import me.zhengjie.base.BaseEntity;
 import org.hibernate.annotations.CreationTimestamp;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -21,7 +22,7 @@ import java.util.Set;
 @Table(name = "role")
 @Getter
 @Setter
-public class Role implements Serializable {
+public class Role  extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -58,20 +59,6 @@ public class Role implements Serializable {
     @ManyToMany
     @JoinTable(name = "roles_depts", joinColumns = {@JoinColumn(name = "role_id",referencedColumnName = "id")}, inverseJoinColumns = {@JoinColumn(name = "dept_id",referencedColumnName = "id")})
     private Set<Dept> depts;
-
-    @CreationTimestamp
-    @Column(name = "create_time")
-    private Timestamp createTime;
-
-    @Override
-    public String toString() {
-        return "Role{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", remark='" + remark + '\'' +
-                ", createDateTime=" + createTime +
-                '}';
-    }
 
     @Override
     public boolean equals(Object o) {

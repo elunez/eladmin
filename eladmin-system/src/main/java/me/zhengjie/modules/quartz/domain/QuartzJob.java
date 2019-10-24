@@ -1,13 +1,10 @@
 package me.zhengjie.modules.quartz.domain;
 
 import lombok.Data;
-import org.hibernate.annotations.UpdateTimestamp;
-
+import me.zhengjie.base.BaseEntity;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
-import java.sql.Timestamp;
 
 /**
  * @author Zheng Jie
@@ -16,7 +13,7 @@ import java.sql.Timestamp;
 @Data
 @Entity
 @Table(name = "quartz_job")
-public class QuartzJob implements Serializable {
+public class QuartzJob extends BaseEntity {
 
     public static final String JOB_KEY = "JOB_KEY";
 
@@ -56,11 +53,4 @@ public class QuartzJob implements Serializable {
     @Column(name = "remark")
     @NotBlank
     private String remark;
-
-    // 创建日期
-    @UpdateTimestamp
-    @Column(name = "update_time")
-    private Timestamp updateTime;
-
-    public interface Update{}
 }

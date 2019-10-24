@@ -145,7 +145,8 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
             if (!dest.getParentFile().exists()) {
                 dest.getParentFile().mkdirs();
             }
-            file.transferTo(dest);// 文件写入
+            // 文件写入
+            file.transferTo(dest);
             return dest;
         } catch (Exception e) {
             e.printStackTrace();
@@ -197,7 +198,9 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
             return "音乐";
         } else if(video.contains(type)){
             return "视频";
-        } else return "其他";
+        } else {
+            return "其他";
+        }
     }
 
     public static String getFileTypeByMimeType(String type) {
@@ -215,8 +218,8 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
      * 判断两个文件是否相同
      */
     public static boolean check(File file1, File file2) {
-        String img1Md5 = getMD5(file1);
-        String img2Md5 = getMD5(file2);
+        String img1Md5 = getMd5(file1);
+        String img2Md5 = getMd5(file2);
         return img1Md5.equals(img2Md5);
     }
 
@@ -244,7 +247,7 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
         return b;
     }
 
-    private static String getMD5(byte[] bytes) {
+    private static String getMd5(byte[] bytes) {
         // 16进制字符
         char[] hexDigits = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
         try {
@@ -266,8 +269,8 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
         return null;
     }
 
-    public static String getMD5(File file) {
-        return getMD5(getByte(file));
+    public static String getMd5(File file) {
+        return getMd5(getByte(file));
     }
 
 }

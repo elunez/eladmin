@@ -1,6 +1,6 @@
 package me.zhengjie.service.mapper;
 
-import me.zhengjie.mapper.EntityMapper;
+import me.zhengjie.base.BaseMapper;
 import me.zhengjie.domain.LocalStorage;
 import me.zhengjie.service.dto.LocalStorageDTO;
 import org.mapstruct.Mapper;
@@ -11,6 +11,6 @@ import org.mapstruct.ReportingPolicy;
 * @date 2019-09-05
 */
 @Mapper(componentModel = "spring",uses = {},unmappedTargetPolicy = ReportingPolicy.IGNORE)
-public interface LocalStorageMapper extends EntityMapper<LocalStorageDTO, LocalStorage> {
+public interface LocalStorageMapper extends BaseMapper<LocalStorageDTO, LocalStorage> {
 
 }

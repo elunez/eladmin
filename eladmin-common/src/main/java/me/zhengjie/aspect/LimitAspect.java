@@ -44,7 +44,7 @@ public class LimitAspect {
         String key = limit.key();
         if (StringUtils.isEmpty(key)) {
             if (limitType == LimitType.IP) {
-                key = StringUtils.getIP(request);
+                key = StringUtils.getIp(request);
             } else {
                 key = signatureMethod.getName();
             }

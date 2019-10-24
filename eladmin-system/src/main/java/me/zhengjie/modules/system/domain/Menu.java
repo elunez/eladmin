@@ -3,6 +3,7 @@ package me.zhengjie.modules.system.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
+import me.zhengjie.base.BaseEntity;
 import org.hibernate.annotations.CreationTimestamp;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -20,7 +21,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Table(name = "menu")
-public class Menu implements Serializable {
+public class Menu  extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -62,12 +63,6 @@ public class Menu implements Serializable {
     @ManyToMany(mappedBy = "menus")
     @JsonIgnore
     private Set<Role> roles;
-
-    @CreationTimestamp
-    @Column(name = "create_time")
-    private Timestamp createTime;
-
-    public interface Update{}
 
     @Override
     public boolean equals(Object o) {
