@@ -28,7 +28,6 @@ import java.time.Duration;
 @Slf4j
 @Configuration
 @EnableCaching
-// 自动配置
 @ConditionalOnClass(RedisOperations.class)
 @EnableConfigurationProperties(RedisProperties.class)
 public class RedisConfig extends CachingConfigurerSupport {
@@ -36,7 +35,6 @@ public class RedisConfig extends CachingConfigurerSupport {
     /**
      *  设置 redis 数据默认过期时间，默认1天
      *  设置@cacheable 序列化方式
-     * @return
      */
     @Bean
     public RedisCacheConfiguration redisCacheConfiguration(){
@@ -55,17 +53,16 @@ public class RedisConfig extends CachingConfigurerSupport {
         // value值的序列化采用fastJsonRedisSerializer
         template.setValueSerializer(fastJsonRedisSerializer);
         template.setHashValueSerializer(fastJsonRedisSerializer);
-
-        // 全局开启AutoType，不建议使用
-        // ParserConfig.getGlobalInstance().setAutoTypeSupport(true);
+        // 全局开启AutoType，这里方便开发，使用全局的方式
+        ParserConfig.getGlobalInstance().setAutoTypeSupport(true);
         // 建议使用这种方式，小范围指定白名单
-        ParserConfig.getGlobalInstance().addAccept("me.zhengjie.domain");
-        ParserConfig.getGlobalInstance().addAccept("me.zhengjie.modules.system.service.dto");
-        ParserConfig.getGlobalInstance().addAccept("me.zhengjie.service.dto");
-        ParserConfig.getGlobalInstance().addAccept("me.zhengjie.modules.system.domain");
-        ParserConfig.getGlobalInstance().addAccept("me.zhengjie.modules.quartz.domain");
-        ParserConfig.getGlobalInstance().addAccept("me.zhengjie.modules.monitor.domain");
-        ParserConfig.getGlobalInstance().addAccept("me.zhengjie.modules.security.security");
+//        ParserConfig.getGlobalInstance().addAccept("me.zhengjie.domain");
+//        ParserConfig.getGlobalInstance().addAccept("me.zhengjie.modules.system.service.dto");
+//        ParserConfig.getGlobalInstance().addAccept("me.zhengjie.service.dto");
+//        ParserConfig.getGlobalInstance().addAccept("me.zhengjie.modules.system.domain");
+//        ParserConfig.getGlobalInstance().addAccept("me.zhengjie.modules.quartz.domain");
+//        ParserConfig.getGlobalInstance().addAccept("me.zhengjie.modules.monitor.domain");
+//        ParserConfig.getGlobalInstance().addAccept("me.zhengjie.modules.security.security");
         // key的序列化采用StringRedisSerializer
         template.setKeySerializer(new StringRedisSerializer());
         template.setHashKeySerializer(new StringRedisSerializer());
@@ -75,8 +72,6 @@ public class RedisConfig extends CachingConfigurerSupport {
 
     /**
      * 自定义缓存key生成策略，默认将使用该策略
-     * 使用方法 @Cacheable
-     * @return
      */
     @Bean
     @Override
@@ -97,7 +92,7 @@ public class RedisConfig extends CachingConfigurerSupport {
     public CacheErrorHandler errorHandler() {
         // 异常处理，当Redis发生异常时，打印日志，但是程序正常走
         log.info("初始化 -> [{}]", "Redis CacheErrorHandler");
-        CacheErrorHandler cacheErrorHandler = new CacheErrorHandler() {
+        return new CacheErrorHandler() {
             @Override
             public void handleCacheGetError(RuntimeException e, Cache cache, Object key) {
                 log.error("Redis occur handleCacheGetError：key -> [{}]", key, e);
@@ -118,7 +113,6 @@ public class RedisConfig extends CachingConfigurerSupport {
                 log.error("Redis occur handleCacheClearError：", e);
             }
         };
-        return cacheErrorHandler;
     }
 
 }

@@ -21,7 +21,7 @@ class ApiError {
         timestamp = LocalDateTime.now();
     }
 
-    public ApiError(Integer status,String message) {
+    ApiError(Integer status, String message) {
         this();
         this.status = status;
         this.message = message;

@@ -2,15 +2,12 @@ package me.zhengjie.service.impl;
 
 import cn.hutool.extra.mail.Mail;
 import cn.hutool.extra.mail.MailAccount;
-import cn.hutool.extra.mail.MailUtil;
 import me.zhengjie.domain.EmailConfig;
 import me.zhengjie.domain.vo.EmailVo;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.repository.EmailRepository;
 import me.zhengjie.service.EmailService;
-import me.zhengjie.utils.ElAdminConstant;
 import me.zhengjie.utils.EncryptUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,8 +21,11 @@ import java.util.Optional;
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class EmailServiceImpl implements EmailService {
 
-    @Autowired
-    private EmailRepository emailRepository;
+    private final EmailRepository emailRepository;
+
+    public EmailServiceImpl(EmailRepository emailRepository) {
+        this.emailRepository = emailRepository;
+    }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -44,11 +44,7 @@ public class EmailServiceImpl implements EmailService {
     @Override
     public EmailConfig find() {
         Optional<EmailConfig> emailConfig = emailRepository.findById(1L);
-        if(emailConfig.isPresent()){
-            return emailConfig.get();
-        } else {
-            return new EmailConfig();
-        }
+        return emailConfig.orElseGet(EmailConfig::new);
     }
 
     @Override
@@ -57,9 +53,7 @@ public class EmailServiceImpl implements EmailService {
         if(emailConfig == null){
             throw new BadRequestException("请先配置，再操作");
         }
-        /**
-         * 封装
-         */
+        // 封装
         MailAccount account = new MailAccount();
         account.setHost(emailConfig.getHost());
         account.setPort(Integer.parseInt(emailConfig.getPort()));
@@ -71,15 +65,14 @@ public class EmailServiceImpl implements EmailService {
             throw new BadRequestException(e.getMessage());
         }
         account.setFrom(emailConfig.getUser()+"<"+emailConfig.getFromUser()+">");
-        //ssl方式发送
+        // ssl方式发送
         account.setSslEnable(true);
         String content = emailVo.getContent();
-        /**
-         * 发送
-         */
+        // 发送
         try {
+            int size = emailVo.getTos().size();
             Mail.create(account)
-                    .setTos(emailVo.getTos().toArray(new String[emailVo.getTos().size()]))
+                    .setTos(emailVo.getTos().toArray(new String[size]))
                     .setTitle(emailVo.getSubject())
                     .setContent(content)
                     .setHtml(true)

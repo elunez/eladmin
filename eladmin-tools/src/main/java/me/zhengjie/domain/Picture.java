@@ -32,9 +32,6 @@ public class Picture implements Serializable {
 
     private String width;
 
-    /**
-     * delete URl
-     */
     @Column(name = "delete_url")
     private String delete;
 

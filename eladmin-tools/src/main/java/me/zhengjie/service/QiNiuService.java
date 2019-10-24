@@ -20,16 +20,16 @@ public interface QiNiuService {
 
     /**
      * 查询文件
-     * @param criteria
-     * @param pageable
-     * @return
+     * @param criteria 条件参数
+     * @param pageable 分页参数
+     * @return Object
      */
     @Cacheable
     Object queryAll(QiniuQueryCriteria criteria, Pageable pageable);
 
     /**
      * 查配置
-     * @return
+     * @return Cacheable
      */
     @Cacheable(cacheNames = "qiNiuConfig", key = "'1'")
     QiniuConfig find();
@@ -37,7 +37,7 @@ public interface QiNiuService {
     /**
      * 修改配置
      * @param qiniuConfig
-     * @return
+     * @return QiniuConfig
      */
     @CachePut(cacheNames = "qiNiuConfig", key = "'1'")
     QiniuConfig update(QiniuConfig qiniuConfig);
@@ -46,7 +46,7 @@ public interface QiNiuService {
      * 上传文件
      * @param file
      * @param qiniuConfig
-     * @return
+     * @return QiniuContent
      */
     @CacheEvict(allEntries = true)
     QiniuContent upload(MultipartFile file, QiniuConfig qiniuConfig);
@@ -54,7 +54,7 @@ public interface QiNiuService {
     /**
      * 查询文件
      * @param id
-     * @return
+     * @return QiniuContent
      */
     @Cacheable(key = "'content:'+#p0")
     QiniuContent findByContentId(Long id);
@@ -63,34 +63,37 @@ public interface QiNiuService {
      * 下载文件
      * @param content
      * @param config
-     * @return
+     * @return String
      */
     String download(QiniuContent content, QiniuConfig config);
 
     /**
      * 删除文件
-     * @param content
-     * @param config
-     * @return
+     * @param content 文件
+     * @param config 配置
      */
     @CacheEvict(allEntries = true)
     void delete(QiniuContent content, QiniuConfig config);
 
     /**
      * 同步数据
-     * @param config
+     * @param config 配置
      */
     @CacheEvict(allEntries = true)
     void synchronize(QiniuConfig config);
 
     /**
      * 删除文件
-     * @param ids
-     * @param config
+     * @param ids 文件ID数组
+     * @param config 配置
      */
     @CacheEvict(allEntries = true)
     void deleteAll(Long[] ids, QiniuConfig config);
 
+    /**
+     * 更新数据
+     * @param type 类型
+     */
     @CacheEvict(allEntries = true)
     void update(String type);
 }
