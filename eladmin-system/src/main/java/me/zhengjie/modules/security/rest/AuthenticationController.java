@@ -1,7 +1,7 @@
 package me.zhengjie.modules.security.rest;
 
-import cn.hutool.core.codec.Base64;
 import cn.hutool.core.util.IdUtil;
+import com.wf.captcha.ArithmeticCaptcha;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +12,6 @@ import me.zhengjie.modules.security.security.AuthenticationInfo;
 import me.zhengjie.modules.security.security.AuthorizationUser;
 import me.zhengjie.modules.security.security.ImgResult;
 import me.zhengjie.modules.security.security.JwtUser;
-import me.zhengjie.modules.security.utils.VerifyCodeUtils;
 import me.zhengjie.utils.EncryptUtils;
 import me.zhengjie.modules.security.utils.JwtTokenUtil;
 import me.zhengjie.utils.SecurityUtils;
@@ -24,8 +23,6 @@ import org.springframework.security.authentication.AccountExpiredException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 
 /**
  * @author Zheng Jie
@@ -93,24 +90,16 @@ public class AuthenticationController {
     }
 
     @ApiOperation("获取验证码")
-    @GetMapping(value = "/vCode")
-    public ImgResult getCode() throws IOException {
-
-        //生成随机字串
-        String verifyCode = VerifyCodeUtils.generateVerifyCode(4);
+    @GetMapping(value = "/code")
+    public ImgResult getCode(){
+        // 算术类型 https://gitee.com/whvse/EasyCaptcha
+        ArithmeticCaptcha captcha = new ArithmeticCaptcha(111, 36);
+        // 几位数运算，默认是两位
+        captcha.setLen(2);
+        // 获取运算的结果：5
+        String result = captcha.text();
         String uuid = IdUtil.simpleUUID();
-        redisService.saveCode(uuid,verifyCode);
-        // 生成图片
-        int w = 111, h = 36;
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        VerifyCodeUtils.outputImage(w, h, stream, verifyCode);
-        try {
-            return new ImgResult(Base64.encode(stream.toByteArray()),uuid);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        } finally {
-            stream.close();
-        }
+        redisService.saveCode(uuid,result);
+        return new ImgResult(captcha.toBase64(),uuid);
     }
 }
