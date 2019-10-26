@@ -12,17 +12,19 @@ import me.zhengjie.modules.security.security.AuthInfo;
 import me.zhengjie.modules.security.security.AuthUser;
 import me.zhengjie.modules.security.security.ImgResult;
 import me.zhengjie.modules.security.security.JwtUser;
+import me.zhengjie.modules.security.service.OnlineUserService;
 import me.zhengjie.utils.EncryptUtils;
 import me.zhengjie.modules.security.utils.JwtTokenUtil;
 import me.zhengjie.utils.SecurityUtils;
 import me.zhengjie.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AccountExpiredException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Zheng Jie
@@ -35,25 +37,25 @@ import org.springframework.web.bind.annotation.*;
 @Api(tags = "系统：系统授权接口")
 public class AuthenticationController {
 
-    @Value("${jwt.header}")
-    private String tokenHeader;
-
     private final JwtTokenUtil jwtTokenUtil;
 
     private final RedisService redisService;
 
     private final UserDetailsService userDetailsService;
 
-    public AuthenticationController(JwtTokenUtil jwtTokenUtil, RedisService redisService, @Qualifier("jwtUserDetailsService") UserDetailsService userDetailsService) {
+    private final OnlineUserService onlineUserService;
+
+    public AuthenticationController(JwtTokenUtil jwtTokenUtil, RedisService redisService, @Qualifier("jwtUserDetailsService") UserDetailsService userDetailsService, OnlineUserService onlineUserService) {
         this.jwtTokenUtil = jwtTokenUtil;
         this.redisService = redisService;
         this.userDetailsService = userDetailsService;
+        this.onlineUserService = onlineUserService;
     }
 
     @Log("用户登录")
     @ApiOperation("登录授权")
     @PostMapping(value = "/login")
-    public ResponseEntity login(@Validated @RequestBody AuthUser authorizationUser){
+    public ResponseEntity login(@Validated @RequestBody AuthUser authorizationUser, HttpServletRequest request){
 
         // 查询验证码
         String code = redisService.getCodeVal(authorizationUser.getUuid());
@@ -74,10 +76,10 @@ public class AuthenticationController {
         if(!jwtUser.isEnabled()){
             throw new AccountExpiredException("账号已停用，请联系管理员");
         }
-
         // 生成令牌
         final String token = jwtTokenUtil.generateToken(jwtUser);
-
+        // 保存在线信息
+        onlineUserService.save(jwtUser, token, request);
         // 返回 token
         return ResponseEntity.ok(new AuthInfo(token,jwtUser));
     }
@@ -101,5 +103,12 @@ public class AuthenticationController {
         String uuid = IdUtil.simpleUUID();
         redisService.saveCode(uuid,result);
         return new ImgResult(captcha.toBase64(),uuid);
+    }
+
+    @ApiOperation("退出登录")
+    @DeleteMapping(value = "/logout")
+    public ResponseEntity logout(HttpServletRequest request){
+        onlineUserService.logout(jwtTokenUtil.getToken(request));
+        return new ResponseEntity(HttpStatus.OK);
     }
 }

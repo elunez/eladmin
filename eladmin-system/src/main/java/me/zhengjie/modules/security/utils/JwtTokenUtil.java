@@ -6,6 +6,8 @@ import me.zhengjie.modules.security.security.JwtUser;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+
+import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
@@ -101,6 +103,14 @@ public class JwtTokenUtil implements Serializable {
                 .setClaims(claims)
                 .signWith(SignatureAlgorithm.HS512, secret)
                 .compact();
+    }
+
+    public String getToken(HttpServletRequest request){
+        final String requestHeader = request.getHeader(tokenHeader);
+        if (requestHeader != null && requestHeader.startsWith("Bearer ")) {
+            return requestHeader.substring(7);
+        }
+        return null;
     }
 
     public Boolean validateToken(String token, UserDetails userDetails) {

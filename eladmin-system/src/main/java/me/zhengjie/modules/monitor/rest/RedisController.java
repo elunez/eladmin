@@ -48,7 +48,7 @@ public class RedisController {
     @ApiOperation("清空Redis缓存")
     @PreAuthorize("hasAnyRole('ADMIN','REDIS_ALL','REDIS_DELETE')")
     public ResponseEntity deleteAll(){
-        redisService.flushdb();
+        redisService.deleteAll();
         return new ResponseEntity(HttpStatus.OK);
     }
 }

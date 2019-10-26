@@ -38,7 +38,7 @@ public interface RedisService {
     void delete(String key);
 
     /**
-     * 清空所有缓存
+     * 清空缓存
      */
-    void flushdb();
+    void deleteAll();
 }

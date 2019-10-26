@@ -37,8 +37,8 @@ public class GeneratorController {
     @ApiOperation("查询数据库元数据")
     @GetMapping(value = "/tables")
     public ResponseEntity getTables(@RequestParam(defaultValue = "") String name,
-                                   @RequestParam(defaultValue = "0")Integer page,
-                                   @RequestParam(defaultValue = "10")Integer size){
+                                    @RequestParam(defaultValue = "0")Integer page,
+                                    @RequestParam(defaultValue = "10")Integer size){
         int[] startEnd = PageUtil.transToStartEnd(page+1, size);
         return new ResponseEntity<>(generatorService.getTables(name,startEnd), HttpStatus.OK);
     }

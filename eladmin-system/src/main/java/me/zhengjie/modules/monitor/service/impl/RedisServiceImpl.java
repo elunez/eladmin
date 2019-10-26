@@ -9,16 +9,17 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+
+import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * @author Zheng Jie
  * @date 2018-12-10
  */
 @Service
+@SuppressWarnings({"unchecked","all"})
 public class RedisServiceImpl implements RedisService {
 
     private final RedisTemplate redisTemplate;
@@ -31,18 +32,18 @@ public class RedisServiceImpl implements RedisService {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public Page<RedisVo> findByKey(String key, Pageable pageable){
         List<RedisVo> redisVos = new ArrayList<>();
         if(!"*".equals(key)){
             key = "*" + key + "*";
         }
-        for (Object s : Objects.requireNonNull(redisTemplate.keys(key))) {
+        Set<String> keys = redisTemplate.keys(key);
+        for (String s : keys) {
             // 过滤掉权限的缓存
-            if (s.toString().contains("role::loadPermissionByUser") || s.toString().contains("user::loadUserByUsername")) {
+            if (s.contains("role::loadPermissionByUser") || s.contains("user::loadUserByUsername") || s.contains("online:token")) {
                 continue;
             }
-            RedisVo redisVo = new RedisVo(s.toString(), Objects.requireNonNull(redisTemplate.opsForValue().get(s.toString())).toString());
+            RedisVo redisVo = new RedisVo(s, Objects.requireNonNull(redisTemplate.opsForValue().get(s)).toString());
             redisVos.add(redisVo);
         }
         return new PageImpl<RedisVo>(
@@ -52,14 +53,14 @@ public class RedisServiceImpl implements RedisService {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public void delete(String key) {
         redisTemplate.delete(key);
     }
 
     @Override
-    public void flushdb() {
-        Objects.requireNonNull(redisTemplate.getConnectionFactory()).getConnection().flushDb();
+    public void deleteAll() {
+        Set<String> keys = redisTemplate.keys(  "*");
+        redisTemplate.delete(keys.stream().filter(s -> !s.contains("online:token")).collect(Collectors.toList()));
     }
 
     @Override
@@ -72,7 +73,6 @@ public class RedisServiceImpl implements RedisService {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public void saveCode(String key, Object val) {
         redisTemplate.opsForValue().set(key,val);
         redisTemplate.expire(key,expiration, TimeUnit.MINUTES);

@@ -89,34 +89,34 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/**/*.js"
                 ).anonymous()
 
-                .antMatchers(HttpMethod.POST,"/auth/login").anonymous()
-                .antMatchers(HttpMethod.GET,"/auth/code").anonymous()
+                .antMatchers(HttpMethod.POST,"/auth/login").permitAll()
+                .antMatchers(HttpMethod.DELETE,"/auth/logout").permitAll()
+                .antMatchers(HttpMethod.GET,"/auth/code").permitAll()
                 // 支付宝回调
-                .antMatchers("/api/aliPay/return").anonymous()
-                .antMatchers("/api/aliPay/notify").anonymous()
+                .antMatchers("/api/aliPay/return").permitAll()
+                .antMatchers("/api/aliPay/notify").permitAll()
 
                 // swagger start
-                .antMatchers("/swagger-ui.html").anonymous()
-                .antMatchers("/swagger-resources/**").anonymous()
-                .antMatchers("/webjars/**").anonymous()
-                .antMatchers("/*/api-docs").anonymous()
+                .antMatchers("/swagger-ui.html").permitAll()
+                .antMatchers("/swagger-resources/**").permitAll()
+                .antMatchers("/webjars/**").permitAll()
+                .antMatchers("/*/api-docs").permitAll()
                 // swagger end
 
                 // 接口限流测试
-                .antMatchers("/test/**").anonymous()
+                .antMatchers("/test/**").permitAll()
                 // 文件
-                .antMatchers("/avatar/**").anonymous()
-                .antMatchers("/file/**").anonymous()
+                .antMatchers("/avatar/**").permitAll()
+                .antMatchers("/file/**").permitAll()
 
                 // 放行OPTIONS请求
-                .antMatchers(HttpMethod.OPTIONS, "/**").anonymous()
+                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
-                .antMatchers("/druid/**").anonymous()
+                .antMatchers("/druid/**").permitAll()
                 // 所有请求都需要认证
                 .anyRequest().authenticated()
                 // 防止iframe 造成跨域
                 .and().headers().frameOptions().disable();
-
         httpSecurity
                 .addFilterBefore(authenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
     }
