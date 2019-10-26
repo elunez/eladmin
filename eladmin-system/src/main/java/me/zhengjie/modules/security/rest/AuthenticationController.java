@@ -8,8 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import me.zhengjie.aop.log.Log;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.modules.monitor.service.RedisService;
-import me.zhengjie.modules.security.security.AuthenticationInfo;
-import me.zhengjie.modules.security.security.AuthorizationUser;
+import me.zhengjie.modules.security.security.AuthInfo;
+import me.zhengjie.modules.security.security.AuthUser;
 import me.zhengjie.modules.security.security.ImgResult;
 import me.zhengjie.modules.security.security.JwtUser;
 import me.zhengjie.utils.EncryptUtils;
@@ -53,7 +53,7 @@ public class AuthenticationController {
     @Log("用户登录")
     @ApiOperation("登录授权")
     @PostMapping(value = "/login")
-    public ResponseEntity login(@Validated @RequestBody AuthorizationUser authorizationUser){
+    public ResponseEntity login(@Validated @RequestBody AuthUser authorizationUser){
 
         // 查询验证码
         String code = redisService.getCodeVal(authorizationUser.getUuid());
@@ -79,7 +79,7 @@ public class AuthenticationController {
         final String token = jwtTokenUtil.generateToken(jwtUser);
 
         // 返回 token
-        return ResponseEntity.ok(new AuthenticationInfo(token,jwtUser));
+        return ResponseEntity.ok(new AuthInfo(token,jwtUser));
     }
 
     @ApiOperation("获取用户信息")

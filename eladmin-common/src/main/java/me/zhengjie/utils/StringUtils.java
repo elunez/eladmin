@@ -1,6 +1,8 @@
 package me.zhengjie.utils;
 
 import cn.hutool.core.io.resource.ClassPathResource;
+import eu.bitwalker.useragentutils.Browser;
+import eu.bitwalker.useragentutils.UserAgent;
 import org.lionsoul.ip2region.DataBlock;
 import org.lionsoul.ip2region.DbConfig;
 import org.lionsoul.ip2region.DbSearcher;
@@ -155,6 +157,12 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
             e.printStackTrace();
         }
         return "";
+    }
+
+    public static String getBrowser(HttpServletRequest request){
+        UserAgent userAgent = UserAgent.parseUserAgentString(request.getHeader("User-Agent"));
+        Browser browser = userAgent.getBrowser();
+        return browser.getName();
     }
 
     /**

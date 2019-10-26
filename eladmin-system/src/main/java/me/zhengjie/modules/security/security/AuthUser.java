@@ -11,7 +11,7 @@ import javax.validation.constraints.NotBlank;
  */
 @Getter
 @Setter
-public class AuthorizationUser {
+public class AuthUser {
 
     @NotBlank
     private String username;

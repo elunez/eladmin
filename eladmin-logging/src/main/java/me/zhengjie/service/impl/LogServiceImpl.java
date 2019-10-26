@@ -57,7 +57,7 @@ public class LogServiceImpl implements LogService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void save(String username, String ip, ProceedingJoinPoint joinPoint, Log log){
+    public void save(String username, String browser, String ip, ProceedingJoinPoint joinPoint, Log log){
 
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
@@ -96,6 +96,7 @@ public class LogServiceImpl implements LogService {
         log.setMethod(methodName);
         log.setUsername(username);
         log.setParams(params.toString() + " }");
+        log.setBrowser(browser);
         logRepository.save(log);
     }
 

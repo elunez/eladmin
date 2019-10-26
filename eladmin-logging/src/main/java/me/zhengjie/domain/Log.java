@@ -45,6 +45,8 @@ public class Log  implements Serializable {
     @Column(name = "address")
     private String address;
 
+    private String browser;
+
     // 请求耗时
     private Long time;
 

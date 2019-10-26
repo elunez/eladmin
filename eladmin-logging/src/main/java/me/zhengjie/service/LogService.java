@@ -17,7 +17,7 @@ public interface LogService {
     Object queryAllByUser(LogQueryCriteria criteria, Pageable pageable);
 
     @Async
-    void save(String username, String ip, ProceedingJoinPoint joinPoint, Log log);
+    void save(String username, String browser, String ip, ProceedingJoinPoint joinPoint, Log log);
 
     /**
      * 查询异常详情

@@ -25,6 +25,8 @@ public class LogErrorDTO implements Serializable {
     // 参数
     private String params;
 
+    private String browser;
+
     // 请求ip
     private String requestIp;
 

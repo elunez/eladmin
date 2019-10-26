@@ -22,6 +22,8 @@ public class LogSmallDTO implements Serializable {
 
     private String address;
 
+    private String browser;
+
     // 创建日期
     private Timestamp createTime;
 }
