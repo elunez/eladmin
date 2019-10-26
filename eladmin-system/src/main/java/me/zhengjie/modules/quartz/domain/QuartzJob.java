@@ -1,6 +1,7 @@
 package me.zhengjie.modules.quartz.domain;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import me.zhengjie.base.BaseEntity;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -10,7 +11,8 @@ import javax.validation.constraints.NotNull;
  * @author Zheng Jie
  * @date 2019-01-07
  */
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "quartz_job")
 public class QuartzJob extends BaseEntity {

@@ -29,6 +29,7 @@ public class ExecutionJob extends QuartzJobBean {
     private ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     @Override
+    @SuppressWarnings("unchecked")
     protected void executeInternal(JobExecutionContext context) {
         QuartzJob quartzJob = (QuartzJob) context.getMergedJobDataMap().get(QuartzJob.JOB_KEY);
         // 获取spring bean

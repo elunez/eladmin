@@ -10,7 +10,5 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
  */
 public interface PictureRepository extends JpaRepository<Picture,Long>, JpaSpecificationExecutor<Picture> {
 
-    Picture findByUrl(String url);
-
     Picture findByMd5Code(String code);
 }

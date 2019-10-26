@@ -28,6 +28,7 @@ public class GeneratorServiceImpl implements GeneratorService {
     private EntityManager em;
 
     @Override
+    @SuppressWarnings("all")
     public Object getTables(String name, int[] startEnd) {
         // 使用预编译防止sql注入
         String sql = "select table_name ,create_time , engine, table_collation, table_comment from information_schema.tables " +
@@ -49,6 +50,7 @@ public class GeneratorServiceImpl implements GeneratorService {
     }
 
     @Override
+    @SuppressWarnings("all")
     public Object getColumns(String name) {
         // 使用预编译防止sql注入
         String sql = "select column_name, is_nullable, data_type, column_comment, column_key, extra from information_schema.columns " +

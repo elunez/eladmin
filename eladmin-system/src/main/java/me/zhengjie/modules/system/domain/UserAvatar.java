@@ -1,14 +1,11 @@
 package me.zhengjie.modules.system.domain;
 
 import cn.hutool.core.util.ObjectUtil;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import me.zhengjie.base.BaseEntity;
-
 import javax.persistence.*;
-import java.sql.Timestamp;
 
 /**
  * @author Zheng Jie

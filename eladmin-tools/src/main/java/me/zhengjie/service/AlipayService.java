@@ -2,9 +2,6 @@ package me.zhengjie.service;
 
 import me.zhengjie.domain.AlipayConfig;
 import me.zhengjie.domain.vo.TradeVo;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
 
 /**
  * @author Zheng Jie

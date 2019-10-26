@@ -1,17 +1,13 @@
 package me.zhengjie.modules.system.domain;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import me.zhengjie.base.BaseEntity;
-import org.hibernate.annotations.*;
 import javax.persistence.*;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.sql.Timestamp;
-import java.io.Serializable;
 
 /**
 * @author Zheng Jie

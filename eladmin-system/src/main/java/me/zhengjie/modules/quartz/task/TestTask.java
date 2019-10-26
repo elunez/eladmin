@@ -1,7 +1,6 @@
 package me.zhengjie.modules.quartz.task;
 
 import lombok.extern.slf4j.Slf4j;
-import me.zhengjie.exception.BadRequestException;
 import org.springframework.stereotype.Component;
 
 /**
@@ -12,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 public class TestTask {
-
+    
     public void run(){
         log.info("执行成功");
     }

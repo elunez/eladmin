@@ -2,7 +2,6 @@ package me.zhengjie.aspect;
 
 import lombok.extern.slf4j.Slf4j;
 import me.zhengjie.domain.Log;
-import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.service.LogService;
 import me.zhengjie.utils.RequestHolder;
 import me.zhengjie.utils.SecurityUtils;
@@ -14,10 +13,7 @@ import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Zheng Jie
@@ -28,10 +24,13 @@ import javax.servlet.http.HttpServletRequest;
 @Slf4j
 public class LogAspect {
 
-    @Autowired
-    private LogService logService;
+    private final LogService logService;
 
     private long currentTime = 0L;
+
+    public LogAspect(LogService logService) {
+        this.logService = logService;
+    }
 
     /**
      * 配置切入点

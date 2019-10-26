@@ -1,6 +1,5 @@
 package me.zhengjie.modules.monitor.service;
 
-import me.zhengjie.modules.monitor.domain.vo.RedisVo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

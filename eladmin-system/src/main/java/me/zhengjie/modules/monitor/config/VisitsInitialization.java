@@ -19,7 +19,7 @@ public class VisitsInitialization implements ApplicationRunner {
     }
 
     @Override
-    public void run(ApplicationArguments args) throws Exception {
+    public void run(ApplicationArguments args){
         System.out.println("--------------- 初始化站点统计，如果存在今日统计则跳过 ---------------");
         visitsService.save();
         System.out.println("--------------- 初始化站点统计完成 ---------------");
