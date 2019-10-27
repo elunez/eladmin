@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
-import me.zhengjie.base.BaseDTO;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Set;
 
@@ -14,7 +14,7 @@ import java.util.Set;
  */
 @Getter
 @Setter
-public class UserDTO extends BaseDTO {
+public class UserDTO {
 
     @ApiModelProperty(hidden = true)
     private Long id;
@@ -43,4 +43,6 @@ public class UserDTO extends BaseDTO {
     private DeptSmallDTO dept;
 
     private Long deptId;
+
+    private Timestamp createTime;
 }

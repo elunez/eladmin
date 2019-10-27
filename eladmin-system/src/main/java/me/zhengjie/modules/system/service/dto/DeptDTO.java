@@ -3,8 +3,8 @@ package me.zhengjie.modules.system.service.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.Setter;
-import me.zhengjie.base.BaseDTO;
 import javax.validation.constraints.NotNull;
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -13,7 +13,7 @@ import java.util.List;
 */
 @Getter
 @Setter
-public class DeptDTO extends BaseDTO {
+public class DeptDTO{
 
     // ID
     private Long id;
@@ -29,6 +29,8 @@ public class DeptDTO extends BaseDTO {
 
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<DeptDTO> children;
+
+    private Timestamp createTime;
 
     public String getLabel() {
         return name;

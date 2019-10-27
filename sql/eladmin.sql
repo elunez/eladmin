@@ -11,7 +11,7 @@
  Target Server Version : 50562
  File Encoding         : 65001
 
- Date: 26/10/2019 23:45:00
+ Date: 27/10/2019 21:00:30
 */
 
 SET NAMES utf8mb4;
@@ -49,26 +49,23 @@ CREATE TABLE `dept`  (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'ID',
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '名称',
   `pid` bigint(20) NOT NULL COMMENT '上级部门',
-  `create_time` datetime NULL DEFAULT NULL,
   `enabled` bit(1) NOT NULL,
-  `is_delete` bit(1) NULL DEFAULT b'0',
-  `update_time` datetime NULL DEFAULT NULL,
+  `create_time` datetime NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of dept
 -- ----------------------------
-INSERT INTO `dept` VALUES (1, 'eladmin', 0, '2019-03-25 09:14:05', b'1', b'0', '2019-10-24 21:03:08');
-INSERT INTO `dept` VALUES (2, '研发部', 7, '2019-03-25 09:15:32', b'1', b'0', '2019-10-24 21:02:16');
-INSERT INTO `dept` VALUES (5, '运维部', 7, '2019-03-25 09:20:44', b'1', b'0', '2019-10-24 21:02:16');
-INSERT INTO `dept` VALUES (6, '测试部', 8, '2019-03-25 09:52:18', b'1', b'0', '2019-10-24 21:02:16');
-INSERT INTO `dept` VALUES (7, '华南分部', 1, '2019-03-25 11:04:50', b'1', b'0', '2019-10-24 21:02:16');
-INSERT INTO `dept` VALUES (8, '华北分部', 1, '2019-03-25 11:04:53', b'1', b'0', '2019-10-24 21:02:16');
-INSERT INTO `dept` VALUES (9, '财务部', 7, '2019-03-25 11:05:34', b'1', b'0', '2019-10-24 21:02:16');
-INSERT INTO `dept` VALUES (10, '行政部', 8, '2019-03-25 11:05:58', b'1', b'0', '2019-10-24 21:02:16');
-INSERT INTO `dept` VALUES (11, '人事部', 8, '2019-03-25 11:07:58', b'1', b'0', '2019-10-24 21:02:16');
-INSERT INTO `dept` VALUES (12, '市场部', 7, '2019-03-25 11:10:24', b'0', b'0', '2019-10-24 21:02:16');
+INSERT INTO `dept` VALUES (1, 'eladmin', 0, b'1', '2019-03-25 09:14:05');
+INSERT INTO `dept` VALUES (2, '研发部', 7, b'1', '2019-03-25 09:15:32');
+INSERT INTO `dept` VALUES (5, '运维部', 7, b'1', '2019-03-25 09:20:44');
+INSERT INTO `dept` VALUES (6, '测试部', 8, b'1', '2019-03-25 09:52:18');
+INSERT INTO `dept` VALUES (7, '华南分部', 1, b'1', '2019-03-25 11:04:50');
+INSERT INTO `dept` VALUES (8, '华北分部', 1, b'1', '2019-03-25 11:04:53');
+INSERT INTO `dept` VALUES (9, '财务部', 7, b'1', '2019-03-25 11:05:34');
+INSERT INTO `dept` VALUES (10, '行政部', 8, b'1', '2019-03-25 11:05:58');
+INSERT INTO `dept` VALUES (11, '人事部', 8, b'1', '2019-03-25 11:07:58');
 
 -- ----------------------------
 -- Table structure for dict
@@ -79,17 +76,15 @@ CREATE TABLE `dict`  (
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '字典名称',
   `remark` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '描述',
   `create_time` datetime NULL DEFAULT NULL,
-  `is_delete` bit(1) NULL DEFAULT b'0',
-  `update_time` datetime NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of dict
 -- ----------------------------
-INSERT INTO `dict` VALUES (1, 'user_status', '用户状态', NULL, b'0', NULL);
-INSERT INTO `dict` VALUES (4, 'dept_status', '部门状态', NULL, b'0', NULL);
-INSERT INTO `dict` VALUES (5, 'job_status', '岗位状态', NULL, b'0', NULL);
+INSERT INTO `dict` VALUES (1, 'user_status', '用户状态', '2019-10-27 20:31:36');
+INSERT INTO `dict` VALUES (4, 'dept_status', '部门状态', '2019-10-27 20:31:36');
+INSERT INTO `dict` VALUES (5, 'job_status', '岗位状态', '2019-10-27 20:31:36');
 
 -- ----------------------------
 -- Table structure for dict_detail
@@ -102,8 +97,6 @@ CREATE TABLE `dict_detail`  (
   `sort` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '排序',
   `dict_id` bigint(11) NULL DEFAULT NULL COMMENT '字典id',
   `create_time` datetime NULL DEFAULT NULL,
-  `is_delete` bit(1) NULL DEFAULT b'0',
-  `update_time` datetime NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `FK5tpkputc6d9nboxojdbgnpmyb`(`dict_id`) USING BTREE,
   CONSTRAINT `FK5tpkputc6d9nboxojdbgnpmyb` FOREIGN KEY (`dict_id`) REFERENCES `dict` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
@@ -112,12 +105,12 @@ CREATE TABLE `dict_detail`  (
 -- ----------------------------
 -- Records of dict_detail
 -- ----------------------------
-INSERT INTO `dict_detail` VALUES (1, '激活', 'true', '1', 1, NULL, b'0', '2019-10-24 21:02:16');
-INSERT INTO `dict_detail` VALUES (2, '锁定', 'false', '2', 1, NULL, b'0', '2019-10-24 21:02:16');
-INSERT INTO `dict_detail` VALUES (11, '正常', 'true', '1', 4, NULL, b'0', '2019-10-24 21:02:16');
-INSERT INTO `dict_detail` VALUES (12, '停用', 'false', '2', 4, NULL, b'0', '2019-10-24 21:02:16');
-INSERT INTO `dict_detail` VALUES (13, '正常', 'true', '1', 5, NULL, b'0', '2019-10-24 21:02:16');
-INSERT INTO `dict_detail` VALUES (14, '停用', 'false', '2', 5, NULL, b'0', '2019-10-24 21:02:16');
+INSERT INTO `dict_detail` VALUES (1, '激活', 'true', '1', 1, '2019-10-27 20:31:36');
+INSERT INTO `dict_detail` VALUES (2, '锁定', 'false', '2', 1, '2019-10-27 20:31:36');
+INSERT INTO `dict_detail` VALUES (11, '正常', 'true', '1', 4, '2019-10-27 20:31:36');
+INSERT INTO `dict_detail` VALUES (12, '停用', 'false', '2', 4, '2019-10-27 20:31:36');
+INSERT INTO `dict_detail` VALUES (13, '正常', 'true', '1', 5, '2019-10-27 20:31:36');
+INSERT INTO `dict_detail` VALUES (14, '停用', 'false', '2', 5, '2019-10-27 20:31:36');
 
 -- ----------------------------
 -- Table structure for email_config
@@ -162,24 +155,22 @@ CREATE TABLE `job`  (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `enabled` bit(1) NOT NULL,
-  `create_time` datetime NULL DEFAULT NULL,
   `sort` bigint(20) NOT NULL,
   `dept_id` bigint(20) NULL DEFAULT NULL,
-  `is_delete` bit(1) NULL DEFAULT b'0',
-  `update_time` datetime NULL DEFAULT NULL,
+  `create_time` datetime NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `FKmvhj0rogastlctflsxf1d6k3i`(`dept_id`) USING BTREE,
   CONSTRAINT `FKmvhj0rogastlctflsxf1d6k3i` FOREIGN KEY (`dept_id`) REFERENCES `dept` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 20 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of job
 -- ----------------------------
-INSERT INTO `job` VALUES (2, '董事长秘书', b'1', '2019-03-29 14:01:30', 2, 1, b'0', '2019-10-24 21:02:16');
-INSERT INTO `job` VALUES (8, '人事专员', b'1', '2019-03-29 14:52:28', 3, 11, b'0', '2019-10-24 21:02:16');
-INSERT INTO `job` VALUES (10, '产品经理', b'0', '2019-03-29 14:55:51', 4, 2, b'0', '2019-10-24 21:02:16');
-INSERT INTO `job` VALUES (11, '全栈开发', b'1', '2019-03-31 13:39:30', 6, 2, b'0', '2019-10-24 21:02:16');
-INSERT INTO `job` VALUES (12, '软件测试', b'1', '2019-03-31 13:39:43', 5, 2, b'0', '2019-10-24 21:02:16');
+INSERT INTO `job` VALUES (2, '董事长秘书', b'1', 2, 1, '2019-03-29 14:01:30');
+INSERT INTO `job` VALUES (8, '人事专员', b'1', 3, 11, '2019-03-29 14:52:28');
+INSERT INTO `job` VALUES (10, '产品经理', b'0', 4, 2, '2019-03-29 14:55:51');
+INSERT INTO `job` VALUES (11, '全栈开发', b'1', 6, 2, '2019-03-31 13:39:30');
+INSERT INTO `job` VALUES (12, '软件测试', b'1', 5, 2, '2019-03-31 13:39:43');
 
 -- ----------------------------
 -- Table structure for local_storage
@@ -195,10 +186,8 @@ CREATE TABLE `local_storage`  (
   `size` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '大小',
   `operate` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '操作人',
   `create_time` datetime NULL DEFAULT NULL COMMENT '创建日期',
-  `update_time` datetime NULL DEFAULT NULL COMMENT '修改日期',
-  `is_delete` bit(1) NULL DEFAULT b'0',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for log
@@ -218,7 +207,7 @@ CREATE TABLE `log`  (
   `address` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `browser` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 14909 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 15617 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for menu
@@ -226,7 +215,6 @@ CREATE TABLE `log`  (
 DROP TABLE IF EXISTS `menu`;
 CREATE TABLE `menu`  (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'ID',
-  `create_time` datetime NULL DEFAULT NULL COMMENT '创建日期',
   `i_frame` bit(1) NULL DEFAULT NULL COMMENT '是否外链',
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '菜单名称',
   `component` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '组件',
@@ -237,48 +225,46 @@ CREATE TABLE `menu`  (
   `cache` bit(1) NULL DEFAULT b'0',
   `hidden` bit(1) NULL DEFAULT b'0',
   `component_name` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '-',
-  `is_delete` bit(1) NULL DEFAULT b'0',
-  `update_time` datetime NULL DEFAULT NULL,
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建日期',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `FKqcf9gem97gqa5qjm4d3elcqt5`(`pid`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 42 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 43 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of menu
 -- ----------------------------
-INSERT INTO `menu` VALUES (1, '2018-12-18 15:11:29', b'0', '系统管理', NULL, 0, 1, 'system', 'system', b'0', b'0', NULL, b'0', '2019-10-24 21:02:16');
-INSERT INTO `menu` VALUES (2, '2018-12-18 15:14:44', b'0', '用户管理', 'system/user/index', 1, 2, 'peoples', 'user', b'0', b'0', 'User', b'0', '2019-10-24 21:02:16');
-INSERT INTO `menu` VALUES (3, '2018-12-18 15:16:07', b'0', '角色管理', 'system/role/index', 1, 3, 'role', 'role', b'0', b'0', 'Role', b'0', '2019-10-24 21:02:16');
-INSERT INTO `menu` VALUES (4, '2018-12-18 15:16:45', b'0', '权限管理', 'system/permission/index', 1, 4, 'permission', 'permission', b'0', b'0', 'Permission', b'0', '2019-10-24 21:02:16');
-INSERT INTO `menu` VALUES (5, '2018-12-18 15:17:28', b'0', '菜单管理', 'system/menu/index', 1, 5, 'menu', 'menu', b'0', b'0', 'Menu', b'0', '2019-10-24 21:02:16');
-INSERT INTO `menu` VALUES (6, '2018-12-18 15:17:48', b'0', '系统监控', NULL, 0, 10, 'monitor', 'monitor', b'0', b'0', NULL, b'0', '2019-10-24 21:02:16');
-INSERT INTO `menu` VALUES (7, '2018-12-18 15:18:26', b'0', '操作日志', 'monitor/log/index', 6, 11, 'log', 'logs', b'0', b'0', 'Log', b'0', '2019-10-26 19:17:04');
-INSERT INTO `menu` VALUES (8, '2018-12-18 15:19:01', b'0', '系统缓存', 'monitor/redis/index', 6, 13, 'redis', 'redis', b'0', b'0', 'Redis', b'0', '2019-10-24 21:02:16');
-INSERT INTO `menu` VALUES (9, '2018-12-18 15:19:34', b'0', 'SQL监控', 'monitor/sql/index', 6, 14, 'sqlMonitor', 'druid', b'0', b'0', 'Sql', b'0', '2019-10-24 21:02:16');
-INSERT INTO `menu` VALUES (10, '2018-12-19 13:38:16', b'0', '组件管理', NULL, 0, 50, 'zujian', 'components', b'0', b'0', NULL, b'0', '2019-10-24 21:02:16');
-INSERT INTO `menu` VALUES (11, '2018-12-19 13:38:49', b'0', '图标库', 'components/IconSelect', 10, 51, 'icon', 'icon', b'0', b'0', 'Icons', b'0', '2019-10-24 21:02:16');
-INSERT INTO `menu` VALUES (14, '2018-12-27 10:13:09', b'0', '邮件工具', 'tools/email/index', 36, 24, 'email', 'email', b'0', b'0', 'Email', b'0', '2019-10-24 21:02:16');
-INSERT INTO `menu` VALUES (15, '2018-12-27 11:58:25', b'0', '富文本', 'components/Editor', 10, 52, 'fwb', 'tinymce', b'0', b'0', 'Editor', b'0', '2019-10-24 21:02:16');
-INSERT INTO `menu` VALUES (16, '2018-12-28 09:36:53', b'0', '图床管理', 'tools/picture/index', 36, 25, 'image', 'pictures', b'0', b'0', 'Pictures', b'0', '2019-10-24 21:02:16');
-INSERT INTO `menu` VALUES (17, '2018-12-28 15:09:49', b'1', '项目地址', '', 0, 0, 'github', 'https://github.com/elunez/eladmin', b'0', b'0', NULL, b'0', '2019-10-24 21:02:16');
-INSERT INTO `menu` VALUES (18, '2018-12-31 11:12:15', b'0', '存储管理', 'tools/storage/index', 36, 23, 'qiniu', 'storage', b'0', b'0', 'Storage', b'0', '2019-10-24 21:02:16');
-INSERT INTO `menu` VALUES (19, '2018-12-31 14:52:38', b'0', '支付宝工具', 'tools/aliPay/index', 36, 27, 'alipay', 'aliPay', b'0', b'0', 'AliPay', b'0', '2019-10-24 21:02:16');
-INSERT INTO `menu` VALUES (21, '2019-01-04 16:22:03', b'0', '多级菜单', '', 0, 900, 'menu', 'nested', b'0', b'0', NULL, b'0', '2019-10-24 21:02:16');
-INSERT INTO `menu` VALUES (22, '2019-01-04 16:23:29', b'0', '二级菜单1', 'nested/menu1/index', 21, 999, 'menu', 'menu1', b'0', b'0', NULL, b'0', '2019-10-24 21:02:16');
-INSERT INTO `menu` VALUES (23, '2019-01-04 16:23:57', b'0', '二级菜单2', 'nested/menu2/index', 21, 999, 'menu', 'menu2', b'0', b'0', NULL, b'0', '2019-10-24 21:02:16');
-INSERT INTO `menu` VALUES (24, '2019-01-04 16:24:48', b'0', '三级菜单1', 'nested/menu1/menu1-1', 22, 999, 'menu', 'menu1-1', b'0', b'0', NULL, b'0', '2019-10-24 21:02:16');
-INSERT INTO `menu` VALUES (27, '2019-01-07 17:27:32', b'0', '三级菜单2', 'nested/menu1/menu1-2', 22, 999, 'menu', 'menu1-2', b'0', b'0', NULL, b'0', '2019-10-24 21:02:16');
-INSERT INTO `menu` VALUES (28, '2019-01-07 20:34:40', b'0', '定时任务', 'system/timing/index', 36, 21, 'timing', 'timing', b'0', b'0', 'Timing', b'0', '2019-10-24 21:02:16');
-INSERT INTO `menu` VALUES (30, '2019-01-11 15:45:55', b'0', '代码生成', 'generator/index', 36, 22, 'dev', 'generator', b'0', b'0', 'GeneratorIndex', b'0', '2019-10-24 21:02:16');
-INSERT INTO `menu` VALUES (32, '2019-01-13 13:49:03', b'0', '异常日志', 'monitor/log/errorLog', 6, 12, 'error', 'errorLog', b'0', b'0', 'ErrorLog', b'0', '2019-10-24 21:02:16');
-INSERT INTO `menu` VALUES (33, '2019-03-08 13:46:44', b'0', 'Markdown', 'components/MarkDown', 10, 53, 'markdown', 'markdown', b'0', b'0', 'Markdown', b'0', '2019-10-24 21:02:16');
-INSERT INTO `menu` VALUES (34, '2019-03-08 15:49:40', b'0', 'Yaml编辑器', 'components/YamlEdit', 10, 54, 'dev', 'yaml', b'0', b'0', 'YamlEdit', b'0', '2019-10-24 21:02:16');
-INSERT INTO `menu` VALUES (35, '2019-03-25 09:46:00', b'0', '部门管理', 'system/dept/index', 1, 6, 'dept', 'dept', b'0', b'0', 'Dept', b'0', '2019-10-24 21:02:16');
-INSERT INTO `menu` VALUES (36, '2019-03-29 10:57:35', b'0', '系统工具', '', 0, 20, 'sys-tools', 'sys-tools', b'0', b'0', NULL, b'0', '2019-10-24 21:02:16');
-INSERT INTO `menu` VALUES (37, '2019-03-29 13:51:18', b'0', '岗位管理', 'system/job/index', 1, 7, 'Steve-Jobs', 'job', b'0', b'0', 'Job', b'0', '2019-10-24 21:02:16');
-INSERT INTO `menu` VALUES (38, '2019-03-29 19:57:53', b'0', '接口文档', 'tools/swagger/index', 36, 26, 'swagger', 'swagger2', b'0', b'0', 'Swagger', b'0', '2019-10-24 21:02:16');
-INSERT INTO `menu` VALUES (39, '2019-04-10 11:49:04', b'0', '字典管理', 'system/dict/index', 1, 8, 'dictionary', 'dict', b'0', b'0', 'Dict', b'0', '2019-10-24 21:02:16');
-INSERT INTO `menu` VALUES (41, '2019-10-26 22:08:43', b'0', '在线用户', 'monitor/online/index', 6, 10, 'Steve-Jobs', 'online', b'0', b'0', 'OnlineUser', b'0', '2019-10-26 22:11:28');
+INSERT INTO `menu` VALUES (1, b'0', '系统管理', NULL, 0, 1, 'system', 'system', b'0', b'0', NULL, '2018-12-18 15:11:29');
+INSERT INTO `menu` VALUES (2, b'0', '用户管理', 'system/user/index', 1, 2, 'peoples', 'user', b'0', b'0', 'User', '2018-12-18 15:14:44');
+INSERT INTO `menu` VALUES (3, b'0', '角色管理', 'system/role/index', 1, 3, 'role', 'role', b'0', b'0', 'Role', '2018-12-18 15:16:07');
+INSERT INTO `menu` VALUES (4, b'0', '权限管理', 'system/permission/index', 1, 4, 'permission', 'permission', b'0', b'0', 'Permission', '2018-12-18 15:16:45');
+INSERT INTO `menu` VALUES (5, b'0', '菜单管理', 'system/menu/index', 1, 5, 'menu', 'menu', b'0', b'0', 'Menu', '2018-12-18 15:17:28');
+INSERT INTO `menu` VALUES (6, b'0', '系统监控', NULL, 0, 10, 'monitor', 'monitor', b'0', b'0', NULL, '2018-12-18 15:17:48');
+INSERT INTO `menu` VALUES (7, b'0', '操作日志', 'monitor/log/index', 6, 11, 'log', 'logs', b'0', b'0', 'Log', '2018-12-18 15:18:26');
+INSERT INTO `menu` VALUES (8, b'0', '系统缓存', 'monitor/redis/index', 6, 13, 'redis', 'redis', b'0', b'0', 'Redis', '2018-12-18 15:19:01');
+INSERT INTO `menu` VALUES (9, b'0', 'SQL监控', 'monitor/sql/index', 6, 14, 'sqlMonitor', 'druid', b'0', b'0', 'Sql', '2018-12-18 15:19:34');
+INSERT INTO `menu` VALUES (10, b'0', '组件管理', NULL, 0, 50, 'zujian', 'components', b'0', b'0', NULL, '2018-12-19 13:38:16');
+INSERT INTO `menu` VALUES (11, b'0', '图标库', 'components/IconSelect', 10, 51, 'icon', 'icon', b'0', b'0', 'Icons', '2018-12-19 13:38:49');
+INSERT INTO `menu` VALUES (14, b'0', '邮件工具', 'tools/email/index', 36, 24, 'email', 'email', b'0', b'0', 'Email', '2018-12-27 10:13:09');
+INSERT INTO `menu` VALUES (15, b'0', '富文本', 'components/Editor', 10, 52, 'fwb', 'tinymce', b'0', b'0', 'Editor', '2018-12-27 11:58:25');
+INSERT INTO `menu` VALUES (16, b'0', '图床管理', 'tools/picture/index', 36, 25, 'image', 'pictures', b'0', b'0', 'Pictures', '2018-12-28 09:36:53');
+INSERT INTO `menu` VALUES (18, b'0', '存储管理', 'tools/storage/index', 36, 23, 'qiniu', 'storage', b'0', b'0', 'Storage', '2018-12-31 11:12:15');
+INSERT INTO `menu` VALUES (19, b'0', '支付宝工具', 'tools/aliPay/index', 36, 27, 'alipay', 'aliPay', b'0', b'0', 'AliPay', '2018-12-31 14:52:38');
+INSERT INTO `menu` VALUES (21, b'0', '多级菜单', '', 0, 900, 'menu', 'nested', b'0', b'1', NULL, '2019-01-04 16:22:03');
+INSERT INTO `menu` VALUES (22, b'0', '二级菜单1', 'nested/menu1/index', 21, 999, 'menu', 'menu1', b'0', b'0', NULL, '2019-01-04 16:23:29');
+INSERT INTO `menu` VALUES (23, b'0', '二级菜单2', 'nested/menu2/index', 21, 999, 'menu', 'menu2', b'0', b'0', NULL, '2019-01-04 16:23:57');
+INSERT INTO `menu` VALUES (24, b'0', '三级菜单1', 'nested/menu1/menu1-1', 22, 999, 'menu', 'menu1-1', b'0', b'0', NULL, '2019-01-04 16:24:48');
+INSERT INTO `menu` VALUES (27, b'0', '三级菜单2', 'nested/menu1/menu1-2', 22, 999, 'menu', 'menu1-2', b'0', b'0', NULL, '2019-01-07 17:27:32');
+INSERT INTO `menu` VALUES (28, b'0', '定时任务', 'system/timing/index', 36, 21, 'timing', 'timing', b'0', b'0', 'Timing', '2019-01-07 20:34:40');
+INSERT INTO `menu` VALUES (30, b'0', '代码生成', 'generator/index', 36, 22, 'dev', 'generator', b'0', b'0', 'GeneratorIndex', '2019-01-11 15:45:55');
+INSERT INTO `menu` VALUES (32, b'0', '异常日志', 'monitor/log/errorLog', 6, 12, 'error', 'errorLog', b'0', b'0', 'ErrorLog', '2019-01-13 13:49:03');
+INSERT INTO `menu` VALUES (33, b'0', 'Markdown', 'components/MarkDown', 10, 53, 'markdown', 'markdown', b'0', b'0', 'Markdown', '2019-03-08 13:46:44');
+INSERT INTO `menu` VALUES (34, b'0', 'Yaml编辑器', 'components/YamlEdit', 10, 54, 'dev', 'yaml', b'0', b'0', 'YamlEdit', '2019-03-08 15:49:40');
+INSERT INTO `menu` VALUES (35, b'0', '部门管理', 'system/dept/index', 1, 6, 'dept', 'dept', b'0', b'0', 'Dept', '2019-03-25 09:46:00');
+INSERT INTO `menu` VALUES (36, b'0', '系统工具', '', 0, 20, 'sys-tools', 'sys-tools', b'0', b'0', NULL, '2019-03-29 10:57:35');
+INSERT INTO `menu` VALUES (37, b'0', '岗位管理', 'system/job/index', 1, 7, 'Steve-Jobs', 'job', b'0', b'0', 'Job', '2019-03-29 13:51:18');
+INSERT INTO `menu` VALUES (38, b'0', '接口文档', 'tools/swagger/index', 36, 26, 'swagger', 'swagger2', b'0', b'0', 'Swagger', '2019-03-29 19:57:53');
+INSERT INTO `menu` VALUES (39, b'0', '字典管理', 'system/dict/index', 1, 8, 'dictionary', 'dict', b'0', b'0', 'Dict', '2019-04-10 11:49:04');
+INSERT INTO `menu` VALUES (41, b'0', '在线用户', 'monitor/online/index', 6, 10, 'Steve-Jobs', 'online', b'0', b'0', 'OnlineUser', '2019-10-26 22:08:43');
 
 -- ----------------------------
 -- Table structure for permission
@@ -287,70 +273,68 @@ DROP TABLE IF EXISTS `permission`;
 CREATE TABLE `permission`  (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'ID',
   `alias` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '别名',
-  `create_time` datetime NULL DEFAULT NULL COMMENT '创建日期',
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '名称',
   `pid` int(11) NOT NULL COMMENT '上级权限',
-  `is_delete` bit(1) NULL DEFAULT b'0',
-  `update_time` datetime NULL DEFAULT NULL,
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建日期',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 61 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 60 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of permission
 -- ----------------------------
-INSERT INTO `permission` VALUES (1, '超级管理员', '2018-12-03 12:27:48', 'ADMIN', 0, b'0', '2019-10-24 21:00:50');
-INSERT INTO `permission` VALUES (2, '用户管理', '2018-12-03 12:28:19', 'USER_ALL', 0, b'0', '2019-10-24 21:00:50');
-INSERT INTO `permission` VALUES (3, '用户查询', '2018-12-03 12:31:35', 'USER_SELECT', 2, b'0', '2019-10-24 21:00:50');
-INSERT INTO `permission` VALUES (4, '用户创建', '2018-12-03 12:31:35', 'USER_CREATE', 2, b'0', '2019-10-24 21:00:50');
-INSERT INTO `permission` VALUES (5, '用户编辑', '2018-12-03 12:31:35', 'USER_EDIT', 2, b'0', '2019-10-24 21:00:50');
-INSERT INTO `permission` VALUES (6, '用户删除', '2018-12-03 12:31:35', 'USER_DELETE', 2, b'0', '2019-10-24 21:00:50');
-INSERT INTO `permission` VALUES (7, '角色管理', '2018-12-03 12:28:19', 'ROLES_ALL', 0, b'0', '2019-10-24 21:00:50');
-INSERT INTO `permission` VALUES (8, '角色查询', '2018-12-03 12:31:35', 'ROLES_SELECT', 7, b'0', '2019-10-24 21:00:50');
-INSERT INTO `permission` VALUES (10, '角色创建', '2018-12-09 20:10:16', 'ROLES_CREATE', 7, b'0', '2019-10-24 21:00:50');
-INSERT INTO `permission` VALUES (11, '角色编辑', '2018-12-09 20:10:42', 'ROLES_EDIT', 7, b'0', '2019-10-24 21:00:50');
-INSERT INTO `permission` VALUES (12, '角色删除', '2018-12-09 20:11:07', 'ROLES_DELETE', 7, b'0', '2019-10-24 21:00:50');
-INSERT INTO `permission` VALUES (13, '权限管理', '2018-12-09 20:11:37', 'PERMISSION_ALL', 0, b'0', '2019-10-24 21:00:50');
-INSERT INTO `permission` VALUES (14, '权限查询', '2018-12-09 20:11:55', 'PERMISSION_SELECT', 13, b'0', '2019-10-24 21:00:50');
-INSERT INTO `permission` VALUES (15, '权限创建', '2018-12-09 20:14:10', 'PERMISSION_CREATE', 13, b'0', '2019-10-24 21:00:50');
-INSERT INTO `permission` VALUES (16, '权限编辑', '2018-12-09 20:15:44', 'PERMISSION_EDIT', 13, b'0', '2019-10-24 21:00:50');
-INSERT INTO `permission` VALUES (17, '权限删除', '2018-12-09 20:15:59', 'PERMISSION_DELETE', 13, b'0', '2019-10-24 21:00:50');
-INSERT INTO `permission` VALUES (18, '缓存管理', '2018-12-17 13:53:25', 'REDIS_ALL', 0, b'0', '2019-10-24 21:00:50');
-INSERT INTO `permission` VALUES (20, '缓存查询', '2018-12-17 13:54:07', 'REDIS_SELECT', 18, b'0', '2019-10-24 21:00:50');
-INSERT INTO `permission` VALUES (22, '缓存删除', '2018-12-17 13:55:04', 'REDIS_DELETE', 18, b'0', '2019-10-24 21:00:50');
-INSERT INTO `permission` VALUES (23, '图床管理', '2018-12-27 20:31:49', 'PICTURE_ALL', 0, b'0', '2019-10-24 21:00:50');
-INSERT INTO `permission` VALUES (24, '查询图片', '2018-12-27 20:32:04', 'PICTURE_SELECT', 23, b'0', '2019-10-24 21:00:50');
-INSERT INTO `permission` VALUES (25, '上传图片', '2018-12-27 20:32:24', 'PICTURE_UPLOAD', 23, b'0', '2019-10-24 21:00:50');
-INSERT INTO `permission` VALUES (26, '删除图片', '2018-12-27 20:32:45', 'PICTURE_DELETE', 23, b'0', '2019-10-24 21:00:50');
-INSERT INTO `permission` VALUES (29, '菜单管理', '2018-12-28 17:34:31', 'MENU_ALL', 0, b'0', '2019-10-24 21:00:50');
-INSERT INTO `permission` VALUES (30, '菜单查询', '2018-12-28 17:34:41', 'MENU_SELECT', 29, b'0', '2019-10-24 21:00:50');
-INSERT INTO `permission` VALUES (31, '菜单创建', '2018-12-28 17:34:52', 'MENU_CREATE', 29, b'0', '2019-10-24 21:00:50');
-INSERT INTO `permission` VALUES (32, '菜单编辑', '2018-12-28 17:35:20', 'MENU_EDIT', 29, b'0', '2019-10-24 21:00:50');
-INSERT INTO `permission` VALUES (33, '菜单删除', '2018-12-28 17:35:29', 'MENU_DELETE', 29, b'0', '2019-10-24 21:00:50');
-INSERT INTO `permission` VALUES (35, '定时任务管理', '2019-01-08 14:59:57', 'JOB_ALL', 0, b'0', '2019-10-24 21:00:50');
-INSERT INTO `permission` VALUES (36, '任务查询', '2019-01-08 15:00:09', 'JOB_SELECT', 35, b'0', '2019-10-24 21:00:50');
-INSERT INTO `permission` VALUES (37, '任务创建', '2019-01-08 15:00:20', 'JOB_CREATE', 35, b'0', '2019-10-24 21:00:50');
-INSERT INTO `permission` VALUES (38, '任务编辑', '2019-01-08 15:00:33', 'JOB_EDIT', 35, b'0', '2019-10-24 21:00:50');
-INSERT INTO `permission` VALUES (39, '任务删除', '2019-01-08 15:01:13', 'JOB_DELETE', 35, b'0', '2019-10-24 21:00:50');
-INSERT INTO `permission` VALUES (40, '部门管理', '2019-03-29 17:06:55', 'DEPT_ALL', 0, b'0', '2019-10-24 21:00:50');
-INSERT INTO `permission` VALUES (41, '部门查询', '2019-03-29 17:07:09', 'DEPT_SELECT', 40, b'0', '2019-10-24 21:00:50');
-INSERT INTO `permission` VALUES (42, '部门创建', '2019-03-29 17:07:29', 'DEPT_CREATE', 40, b'0', '2019-10-24 21:00:50');
-INSERT INTO `permission` VALUES (43, '部门编辑', '2019-03-29 17:07:52', 'DEPT_EDIT', 40, b'0', '2019-10-24 21:00:50');
-INSERT INTO `permission` VALUES (44, '部门删除', '2019-03-29 17:08:14', 'DEPT_DELETE', 40, b'0', '2019-10-24 21:00:50');
-INSERT INTO `permission` VALUES (45, '岗位管理', '2019-03-29 17:08:52', 'USERJOB_ALL', 0, b'0', '2019-10-24 21:00:50');
-INSERT INTO `permission` VALUES (46, '岗位查询', '2019-03-29 17:10:27', 'USERJOB_SELECT', 45, b'0', '2019-10-24 21:00:50');
-INSERT INTO `permission` VALUES (47, '岗位创建', '2019-03-29 17:10:55', 'USERJOB_CREATE', 45, b'0', '2019-10-24 21:00:50');
-INSERT INTO `permission` VALUES (48, '岗位编辑', '2019-03-29 17:11:08', 'USERJOB_EDIT', 45, b'0', '2019-10-24 21:00:50');
-INSERT INTO `permission` VALUES (49, '岗位删除', '2019-03-29 17:11:19', 'USERJOB_DELETE', 45, b'0', '2019-10-24 21:00:50');
-INSERT INTO `permission` VALUES (50, '字典管理', '2019-04-10 16:24:51', 'DICT_ALL', 0, b'0', '2019-10-24 21:00:50');
-INSERT INTO `permission` VALUES (51, '字典查询', '2019-04-10 16:25:16', 'DICT_SELECT', 50, b'0', '2019-10-24 21:00:50');
-INSERT INTO `permission` VALUES (52, '字典创建', '2019-04-10 16:25:29', 'DICT_CREATE', 50, b'0', '2019-10-24 21:00:50');
-INSERT INTO `permission` VALUES (53, '字典编辑', '2019-04-10 16:27:19', 'DICT_EDIT', 50, b'0', '2019-10-24 21:00:50');
-INSERT INTO `permission` VALUES (54, '字典删除', '2019-04-10 16:27:30', 'DICT_DELETE', 50, b'0', '2019-10-24 21:00:50');
-INSERT INTO `permission` VALUES (55, '文件管理', '2019-09-08 12:31:54', 'LOCALSTORAGE_ALL', 0, b'0', '2019-10-24 21:00:50');
-INSERT INTO `permission` VALUES (56, '文件搜索', '2019-09-08 12:40:53', 'LOCALSTORAGE_SELECT', 55, b'0', '2019-10-24 21:00:50');
-INSERT INTO `permission` VALUES (57, '文件上传', '2019-09-08 12:41:05', 'LOCALSTORAGE_CREATE', 55, b'0', '2019-10-24 21:00:50');
-INSERT INTO `permission` VALUES (58, '文件编辑', '2019-09-08 12:41:19', 'LOCALSTORAGE_EDIT', 55, b'0', '2019-10-24 21:00:50');
-INSERT INTO `permission` VALUES (59, '文件删除', '2019-09-08 12:41:29', 'LOCALSTORAGE_DELETE', 55, b'0', '2019-10-24 21:00:50');
+INSERT INTO `permission` VALUES (1, '管理员', 'ADMIN', 0, '2018-12-03 12:27:48');
+INSERT INTO `permission` VALUES (2, '用户管理', 'USER_ALL', 0, '2018-12-03 12:28:19');
+INSERT INTO `permission` VALUES (3, '用户查询', 'USER_SELECT', 2, '2018-12-03 12:31:35');
+INSERT INTO `permission` VALUES (4, '用户创建', 'USER_CREATE', 2, '2018-12-03 12:31:35');
+INSERT INTO `permission` VALUES (5, '用户编辑', 'USER_EDIT', 2, '2018-12-03 12:31:35');
+INSERT INTO `permission` VALUES (6, '用户删除', 'USER_DELETE', 2, '2018-12-03 12:31:35');
+INSERT INTO `permission` VALUES (7, '角色管理', 'ROLES_ALL', 0, '2018-12-03 12:28:19');
+INSERT INTO `permission` VALUES (8, '角色查询', 'ROLES_SELECT', 7, '2018-12-03 12:31:35');
+INSERT INTO `permission` VALUES (10, '角色创建', 'ROLES_CREATE', 7, '2018-12-09 20:10:16');
+INSERT INTO `permission` VALUES (11, '角色编辑', 'ROLES_EDIT', 7, '2018-12-09 20:10:42');
+INSERT INTO `permission` VALUES (12, '角色删除', 'ROLES_DELETE', 7, '2018-12-09 20:11:07');
+INSERT INTO `permission` VALUES (13, '权限管理', 'PERMISSION_ALL', 0, '2018-12-09 20:11:37');
+INSERT INTO `permission` VALUES (14, '权限查询', 'PERMISSION_SELECT', 13, '2018-12-09 20:11:55');
+INSERT INTO `permission` VALUES (15, '权限创建', 'PERMISSION_CREATE', 13, '2018-12-09 20:14:10');
+INSERT INTO `permission` VALUES (16, '权限编辑', 'PERMISSION_EDIT', 13, '2018-12-09 20:15:44');
+INSERT INTO `permission` VALUES (17, '权限删除', 'PERMISSION_DELETE', 13, '2018-12-09 20:15:59');
+INSERT INTO `permission` VALUES (18, '缓存管理', 'REDIS_ALL', 0, '2018-12-17 13:53:25');
+INSERT INTO `permission` VALUES (20, '缓存查询', 'REDIS_SELECT', 18, '2018-12-17 13:54:07');
+INSERT INTO `permission` VALUES (22, '缓存删除', 'REDIS_DELETE', 18, '2018-12-17 13:55:04');
+INSERT INTO `permission` VALUES (23, '图床管理', 'PICTURE_ALL', 0, '2018-12-27 20:31:49');
+INSERT INTO `permission` VALUES (24, '查询图片', 'PICTURE_SELECT', 23, '2018-12-27 20:32:04');
+INSERT INTO `permission` VALUES (25, '上传图片', 'PICTURE_UPLOAD', 23, '2018-12-27 20:32:24');
+INSERT INTO `permission` VALUES (26, '删除图片', 'PICTURE_DELETE', 23, '2018-12-27 20:32:45');
+INSERT INTO `permission` VALUES (29, '菜单管理', 'MENU_ALL', 0, '2018-12-28 17:34:31');
+INSERT INTO `permission` VALUES (30, '菜单查询', 'MENU_SELECT', 29, '2018-12-28 17:34:41');
+INSERT INTO `permission` VALUES (31, '菜单创建', 'MENU_CREATE', 29, '2018-12-28 17:34:52');
+INSERT INTO `permission` VALUES (32, '菜单编辑', 'MENU_EDIT', 29, '2018-12-28 17:35:20');
+INSERT INTO `permission` VALUES (33, '菜单删除', 'MENU_DELETE', 29, '2018-12-28 17:35:29');
+INSERT INTO `permission` VALUES (35, '定时任务', 'JOB_ALL', 0, '2019-01-08 14:59:57');
+INSERT INTO `permission` VALUES (36, '任务查询', 'JOB_SELECT', 35, '2019-01-08 15:00:09');
+INSERT INTO `permission` VALUES (37, '任务创建', 'JOB_CREATE', 35, '2019-01-08 15:00:20');
+INSERT INTO `permission` VALUES (38, '任务编辑', 'JOB_EDIT', 35, '2019-01-08 15:00:33');
+INSERT INTO `permission` VALUES (39, '任务删除', 'JOB_DELETE', 35, '2019-01-08 15:01:13');
+INSERT INTO `permission` VALUES (40, '部门管理', 'DEPT_ALL', 0, '2019-03-29 17:06:55');
+INSERT INTO `permission` VALUES (41, '部门查询', 'DEPT_SELECT', 40, '2019-03-29 17:07:09');
+INSERT INTO `permission` VALUES (42, '部门创建', 'DEPT_CREATE', 40, '2019-03-29 17:07:29');
+INSERT INTO `permission` VALUES (43, '部门编辑', 'DEPT_EDIT', 40, '2019-03-29 17:07:52');
+INSERT INTO `permission` VALUES (44, '部门删除', 'DEPT_DELETE', 40, '2019-03-29 17:08:14');
+INSERT INTO `permission` VALUES (45, '岗位管理', 'USERJOB_ALL', 0, '2019-03-29 17:08:52');
+INSERT INTO `permission` VALUES (46, '岗位查询', 'USERJOB_SELECT', 45, '2019-03-29 17:10:27');
+INSERT INTO `permission` VALUES (47, '岗位创建', 'USERJOB_CREATE', 45, '2019-03-29 17:10:55');
+INSERT INTO `permission` VALUES (48, '岗位编辑', 'USERJOB_EDIT', 45, '2019-03-29 17:11:08');
+INSERT INTO `permission` VALUES (49, '岗位删除', 'USERJOB_DELETE', 45, '2019-03-29 17:11:19');
+INSERT INTO `permission` VALUES (50, '字典管理', 'DICT_ALL', 0, '2019-04-10 16:24:51');
+INSERT INTO `permission` VALUES (51, '字典查询', 'DICT_SELECT', 50, '2019-04-10 16:25:16');
+INSERT INTO `permission` VALUES (52, '字典创建', 'DICT_CREATE', 50, '2019-04-10 16:25:29');
+INSERT INTO `permission` VALUES (53, '字典编辑', 'DICT_EDIT', 50, '2019-04-10 16:27:19');
+INSERT INTO `permission` VALUES (54, '字典删除', 'DICT_DELETE', 50, '2019-04-10 16:27:30');
+INSERT INTO `permission` VALUES (55, '文件管理', 'LOCALSTORAGE_ALL', 0, '2019-09-08 12:31:54');
+INSERT INTO `permission` VALUES (56, '文件搜索', 'LOCALSTORAGE_SELECT', 55, '2019-09-08 12:40:53');
+INSERT INTO `permission` VALUES (57, '文件上传', 'LOCALSTORAGE_CREATE', 55, '2019-09-08 12:41:05');
+INSERT INTO `permission` VALUES (58, '文件编辑', 'LOCALSTORAGE_EDIT', 55, '2019-09-08 12:41:19');
+INSERT INTO `permission` VALUES (59, '文件删除', 'LOCALSTORAGE_DELETE', 55, '2019-09-08 12:41:29');
 
 -- ----------------------------
 -- Table structure for picture
@@ -368,7 +352,7 @@ CREATE TABLE `picture`  (
   `width` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '图片宽度',
   `md5code` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for qiniu_config
@@ -399,7 +383,7 @@ CREATE TABLE `qiniu_content`  (
   `url` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '文件url',
   `suffix` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for quartz_job
@@ -415,17 +399,15 @@ CREATE TABLE `quartz_job`  (
   `params` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '参数',
   `remark` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '备注',
   `create_time` datetime NULL DEFAULT NULL COMMENT '创建日期',
-  `is_delete` bit(1) NULL DEFAULT b'0',
-  `update_time` datetime NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of quartz_job
 -- ----------------------------
-INSERT INTO `quartz_job` VALUES (1, 'visitsTask', '0 0 0 * * ?', b'0', '更新访客记录', 'run', NULL, '每日0点创建新的访客记录', '2019-01-08 14:53:31', b'0', NULL);
-INSERT INTO `quartz_job` VALUES (2, 'testTask', '0/5 * * * * ?', b'1', '测试1', 'run1', 'test', '带参测试，多参使用json', '2019-08-22 14:08:29', b'0', NULL);
-INSERT INTO `quartz_job` VALUES (3, 'testTask', '0/5 * * * * ?', b'1', '测试', 'run', '', '不带参测试', '2019-09-26 16:44:39', b'0', '2019-10-26 22:36:04');
+INSERT INTO `quartz_job` VALUES (1, 'visitsTask', '0 0 0 * * ?', b'0', '更新访客记录', 'run', NULL, '每日0点创建新的访客记录', '2019-01-08 14:53:31');
+INSERT INTO `quartz_job` VALUES (2, 'testTask', '0/5 * * * * ?', b'1', '测试1', 'run1', 'test', '带参测试，多参使用json', '2019-08-22 14:08:29');
+INSERT INTO `quartz_job` VALUES (3, 'testTask', '0/5 * * * * ?', b'1', '测试', 'run', '', '不带参测试', '2019-09-26 16:44:39');
 
 -- ----------------------------
 -- Table structure for quartz_log
@@ -443,15 +425,7 @@ CREATE TABLE `quartz_log`  (
   `params` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `time` bigint(20) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
-
--- ----------------------------
--- Records of quartz_log
--- ----------------------------
-INSERT INTO `quartz_log` VALUES (1, 'testTask', '2019-10-24 14:23:41', '0/5 * * * * ?', NULL, b'1', '测试1', 'run1', 'test', 3);
-INSERT INTO `quartz_log` VALUES (2, 'testTask', '2019-10-24 14:23:46', '0/5 * * * * ?', NULL, b'1', '测试', 'run', '', 0);
-INSERT INTO `quartz_log` VALUES (3, 'testTask', '2019-10-26 22:35:57', '0/5 * * * * ?', NULL, b'1', '测试', 'run', '', 2);
-INSERT INTO `quartz_log` VALUES (4, 'testTask', '2019-10-26 22:36:00', '0/5 * * * * ?', NULL, b'1', '测试', 'run', '', 1);
+) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for role
@@ -459,22 +433,20 @@ INSERT INTO `quartz_log` VALUES (4, 'testTask', '2019-10-26 22:36:00', '0/5 * * 
 DROP TABLE IF EXISTS `role`;
 CREATE TABLE `role`  (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'ID',
-  `create_time` datetime NULL DEFAULT NULL COMMENT '创建日期',
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '名称',
   `remark` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '备注',
   `data_scope` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `level` int(255) NULL DEFAULT NULL,
-  `is_delete` bit(1) NULL DEFAULT b'0',
-  `update_time` datetime NULL DEFAULT NULL,
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建日期',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of role
 -- ----------------------------
-INSERT INTO `role` VALUES (1, '2018-11-23 11:04:37', '超级管理员', '·', '全部', 1, b'0', '2019-10-26 22:09:18');
-INSERT INTO `role` VALUES (2, '2018-11-23 13:09:06', '普通用户', '用于测试菜单与权限', '自定义', 3, b'0', '2019-10-24 21:02:16');
-INSERT INTO `role` VALUES (4, '2019-05-13 14:16:15', '普通管理员', '普通管理员级别为2，使用该角色新增用户时只能赋予比普通管理员级别低的角色', '自定义', 2, b'0', '2019-10-24 21:02:16');
+INSERT INTO `role` VALUES (1, '超级管理员', '·', '全部', 1, '2018-11-23 11:04:37');
+INSERT INTO `role` VALUES (2, '普通用户', '用于测试菜单与权限', '自定义', 3, '2018-11-23 13:09:06');
+INSERT INTO `role` VALUES (4, '普通管理员', '普通管理员级别为2，使用该角色新增用户时只能赋予比普通管理员级别低的角色', '自定义', 2, '2019-05-13 14:16:15');
 
 -- ----------------------------
 -- Table structure for roles_depts
@@ -528,7 +500,6 @@ INSERT INTO `roles_menus` VALUES (11, 1);
 INSERT INTO `roles_menus` VALUES (14, 1);
 INSERT INTO `roles_menus` VALUES (15, 1);
 INSERT INTO `roles_menus` VALUES (16, 1);
-INSERT INTO `roles_menus` VALUES (17, 1);
 INSERT INTO `roles_menus` VALUES (18, 1);
 INSERT INTO `roles_menus` VALUES (19, 1);
 INSERT INTO `roles_menus` VALUES (21, 1);
@@ -560,7 +531,6 @@ INSERT INTO `roles_menus` VALUES (11, 2);
 INSERT INTO `roles_menus` VALUES (14, 2);
 INSERT INTO `roles_menus` VALUES (15, 2);
 INSERT INTO `roles_menus` VALUES (16, 2);
-INSERT INTO `roles_menus` VALUES (17, 2);
 INSERT INTO `roles_menus` VALUES (18, 2);
 INSERT INTO `roles_menus` VALUES (19, 2);
 INSERT INTO `roles_menus` VALUES (21, 2);
@@ -621,17 +591,15 @@ DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user`  (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'ID',
   `avatar_id` bigint(20) NULL DEFAULT NULL COMMENT '头像',
-  `create_time` datetime NULL DEFAULT NULL COMMENT '创建日期',
   `email` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '邮箱',
   `enabled` bigint(20) NULL DEFAULT NULL COMMENT '状态：1启用、0禁用',
   `password` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '密码',
   `username` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '用户名',
-  `last_password_reset_time` datetime NULL DEFAULT NULL COMMENT '最后修改密码的日期',
   `dept_id` bigint(20) NULL DEFAULT NULL,
   `phone` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `job_id` bigint(20) NULL DEFAULT NULL,
-  `is_delete` bit(1) NULL DEFAULT b'0',
-  `update_time` datetime NULL DEFAULT NULL,
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建日期',
+  `last_password_reset_time` datetime NULL DEFAULT NULL COMMENT '最后修改密码的日期',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `UK_kpubos9gc2cvtkb0thktkbkes`(`email`) USING BTREE,
   UNIQUE INDEX `username`(`username`) USING BTREE,
@@ -641,14 +609,14 @@ CREATE TABLE `user`  (
   CONSTRAINT `FK5rwmryny6jthaaxkogownknqp` FOREIGN KEY (`dept_id`) REFERENCES `dept` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `FKfftoc2abhot8f2wu6cl9a5iky` FOREIGN KEY (`job_id`) REFERENCES `job` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `FKpq2dhypk2qgt68nauh2by22jb` FOREIGN KEY (`avatar_id`) REFERENCES `user_avatar` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES (1, NULL, '2018-08-23 09:11:56', 'admin@eladmin.net', 1, 'e10adc3949ba59abbe56e057f20f883e', 'admin', '2019-05-18 17:34:21', 2, '18888888888', 11, b'0', '2019-10-24 20:58:48');
-INSERT INTO `user` VALUES (3, NULL, '2018-12-27 20:05:26', 'test@eladmin.net', 1, 'e10adc3949ba59abbe56e057f20f883e', 'test', '2019-04-01 09:15:24', 2, '17777777777', 12, b'0', '2019-10-24 20:58:46');
-INSERT INTO `user` VALUES (5, NULL, '2019-04-02 10:07:12', 'hr@eladmin.net', 1, 'e10adc3949ba59abbe56e057f20f883e', 'hr', NULL, 11, '15555555555', 8, b'0', '2019-10-24 20:45:51');
+INSERT INTO `user` VALUES (1, NULL, 'admin@eladmin.net', 1, 'e10adc3949ba59abbe56e057f20f883e', 'admin', 2, '18888888888', 11, '2018-08-23 09:11:56', '2019-05-18 17:34:21');
+INSERT INTO `user` VALUES (3, NULL, 'test@eladmin.net', 1, 'e10adc3949ba59abbe56e057f20f883e', 'test', 2, '17777777777', 12, '2018-12-27 20:05:26', '2019-04-01 09:15:24');
+INSERT INTO `user` VALUES (5, NULL, 'hr@eladmin.net', 1, 'e10adc3949ba59abbe56e057f20f883e', 'hr', 11, '15555555555', 8, '2019-04-02 10:07:12', '2019-10-27 20:32:11');
 
 -- ----------------------------
 -- Table structure for user_avatar
@@ -660,8 +628,6 @@ CREATE TABLE `user_avatar`  (
   `path` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `size` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `create_time` datetime NULL DEFAULT NULL,
-  `is_delete` bit(1) NULL DEFAULT b'0',
-  `update_time` datetime NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
@@ -713,6 +679,7 @@ CREATE TABLE `visits`  (
   `week_day` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `UK_11aksgq87euk9bcyeesfs4vtp`(`date`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 103 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 106 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+
 
 SET FOREIGN_KEY_CHECKS = 1;

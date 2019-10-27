@@ -3,7 +3,7 @@ package me.zhengjie.modules.system.service.dto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import me.zhengjie.base.BaseDTO;
+import java.sql.Timestamp;
 
 /**
 * @author Zheng Jie
@@ -12,7 +12,7 @@ import me.zhengjie.base.BaseDTO;
 @Getter
 @Setter
 @NoArgsConstructor
-public class JobDTO  extends BaseDTO {
+public class JobDTO{
 
     private Long id;
 
@@ -25,6 +25,8 @@ public class JobDTO  extends BaseDTO {
     private DeptDTO dept;
 
     private String deptSuperiorName;
+
+    private Timestamp createTime;
 
     public JobDTO(String name, Boolean enabled) {
         this.name = name;

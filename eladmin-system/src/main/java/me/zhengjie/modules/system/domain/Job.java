@@ -2,12 +2,13 @@ package me.zhengjie.modules.system.domain;
 
 import lombok.Getter;
 import lombok.Setter;
-import me.zhengjie.base.BaseEntity;
+import org.hibernate.annotations.CreationTimestamp;
 import javax.persistence.*;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.sql.Timestamp;
 
 /**
 * @author Zheng Jie
@@ -17,7 +18,7 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 @Table(name="job")
-public class Job  extends BaseEntity {
+public class Job {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,4 +41,10 @@ public class Job  extends BaseEntity {
     @OneToOne
     @JoinColumn(name = "dept_id")
     private Dept dept;
+
+    @Column(name = "create_time")
+    @CreationTimestamp
+    private Timestamp createTime;
+
+    public @interface Update {}
 }

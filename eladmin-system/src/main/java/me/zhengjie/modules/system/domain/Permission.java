@@ -3,10 +3,11 @@ package me.zhengjie.modules.system.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
-import me.zhengjie.base.BaseEntity;
+import org.hibernate.annotations.CreationTimestamp;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.sql.Timestamp;
 import java.util.Set;
 
 /**
@@ -17,7 +18,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Table(name = "permission")
-public class Permission  extends BaseEntity {
+public class Permission{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,7 +36,13 @@ public class Permission  extends BaseEntity {
 	@NotBlank
 	private String alias;
 
+	@Column(name = "create_time")
+	@CreationTimestamp
+	private Timestamp createTime;
+
 	@JsonIgnore
 	@ManyToMany(mappedBy = "permissions")
 	private Set<Role> roles;
+
+	public @interface Update {}
 }

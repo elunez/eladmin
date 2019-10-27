@@ -2,9 +2,10 @@ package me.zhengjie.modules.system.domain;
 
 import lombok.Getter;
 import lombok.Setter;
-import me.zhengjie.base.BaseEntity;
+import org.hibernate.annotations.CreationTimestamp;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.sql.Timestamp;
 
 /**
 * @author Zheng Jie
@@ -14,7 +15,7 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 @Table(name="dict_detail")
-public class DictDetail  extends BaseEntity {
+public class DictDetail {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,4 +39,10 @@ public class DictDetail  extends BaseEntity {
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "dict_id")
     private Dict dict;
+
+    @Column(name = "create_time")
+    @CreationTimestamp
+    private Timestamp createTime;
+
+    public @interface Update {}
 }

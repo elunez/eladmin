@@ -2,7 +2,8 @@ package me.zhengjie.service.dto;
 
 import lombok.Getter;
 import lombok.Setter;
-import me.zhengjie.base.BaseDTO;
+
+import java.sql.Timestamp;
 
 /**
 * @author Zheng Jie
@@ -10,7 +11,7 @@ import me.zhengjie.base.BaseDTO;
 */
 @Getter
 @Setter
-public class LocalStorageDTO extends BaseDTO {
+public class LocalStorageDTO{
 
     // ID
     private Long id;
@@ -31,4 +32,6 @@ public class LocalStorageDTO extends BaseDTO {
 
     // 操作人
     private String operate;
+
+    private Timestamp createTime;
 }

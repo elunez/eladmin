@@ -2,7 +2,8 @@ package me.zhengjie.modules.system.service.dto;
 
 import lombok.Getter;
 import lombok.Setter;
-import me.zhengjie.base.BaseDTO;
+
+import java.sql.Timestamp;
 
 /**
 * @author Zheng Jie
@@ -10,7 +11,7 @@ import me.zhengjie.base.BaseDTO;
 */
 @Getter
 @Setter
-public class DictDetailDTO  extends BaseDTO {
+public class DictDetailDTO{
 
     private Long id;
 
@@ -19,4 +20,6 @@ public class DictDetailDTO  extends BaseDTO {
     private String value;
 
     private String sort;
+
+    private Timestamp createTime;
 }

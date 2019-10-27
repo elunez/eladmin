@@ -2,7 +2,8 @@ package me.zhengjie.modules.system.service.dto;
 
 import lombok.Getter;
 import lombok.Setter;
-import me.zhengjie.base.BaseDTO;
+
+import java.sql.Timestamp;
 import java.util.Set;
 
 /**
@@ -11,7 +12,7 @@ import java.util.Set;
  */
 @Getter
 @Setter
-public class RoleDTO  extends BaseDTO {
+public class RoleDTO{
 
     private Long id;
 
@@ -28,4 +29,6 @@ public class RoleDTO  extends BaseDTO {
     private Set<MenuDTO> menus;
 
     private Set<DeptDTO> depts;
+
+    private Timestamp createTime;
 }

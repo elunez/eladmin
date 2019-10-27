@@ -14,6 +14,7 @@ import me.zhengjie.utils.ValidationUtil;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,7 +44,8 @@ public class PermissionServiceImpl implements PermissionService {
     @Override
     @Cacheable
     public List<PermissionDTO> queryAll(PermissionQueryCriteria criteria) {
-        return permissionMapper.toDto(permissionRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder)));
+        Sort sort = new Sort(Sort.Direction.DESC,"id");
+        return permissionMapper.toDto(permissionRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),sort));
     }
 
     @Override

@@ -4,7 +4,10 @@ import lombok.*;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import me.zhengjie.base.BaseEntity;
+import org.hibernate.annotations.CreationTimestamp;
+
 import javax.persistence.*;
+import java.sql.Timestamp;
 
 /**
 * @author Zheng Jie
@@ -15,7 +18,7 @@ import javax.persistence.*;
 @Entity
 @Table(name="local_storage")
 @NoArgsConstructor
-public class LocalStorage extends BaseEntity {
+public class LocalStorage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,6 +52,10 @@ public class LocalStorage extends BaseEntity {
     // 操作人
     @Column(name = "operate")
     private String operate;
+
+    @Column(name = "create_time")
+    @CreationTimestamp
+    private Timestamp createTime;
 
     public LocalStorage(String realName,String name, String suffix, String path, String type, String size, String operate) {
         this.realName = realName;

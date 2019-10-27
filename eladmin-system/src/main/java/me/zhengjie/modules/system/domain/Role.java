@@ -3,10 +3,11 @@ package me.zhengjie.modules.system.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
-import me.zhengjie.base.BaseEntity;
+import org.hibernate.annotations.CreationTimestamp;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.sql.Timestamp;
 import java.util.Objects;
 import java.util.Set;
 
@@ -19,7 +20,7 @@ import java.util.Set;
 @Table(name = "role")
 @Getter
 @Setter
-public class Role  extends BaseEntity {
+public class Role{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -57,6 +58,12 @@ public class Role  extends BaseEntity {
     @JoinTable(name = "roles_depts", joinColumns = {@JoinColumn(name = "role_id",referencedColumnName = "id")}, inverseJoinColumns = {@JoinColumn(name = "dept_id",referencedColumnName = "id")})
     private Set<Dept> depts;
 
+    @Column(name = "create_time")
+    @CreationTimestamp
+    private Timestamp createTime;
+
+    public @interface Update {}
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -69,6 +76,4 @@ public class Role  extends BaseEntity {
     public int hashCode() {
         return Objects.hash(id);
     }
-
-    public interface Update{}
 }

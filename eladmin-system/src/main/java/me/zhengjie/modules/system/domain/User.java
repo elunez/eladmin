@@ -2,11 +2,12 @@ package me.zhengjie.modules.system.domain;
 
 import lombok.Getter;
 import lombok.Setter;
-import me.zhengjie.base.BaseEntity;
+import org.hibernate.annotations.CreationTimestamp;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Set;
 
@@ -18,7 +19,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Table(name="user")
-public class User  extends BaseEntity {
+public class User{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,6 +46,10 @@ public class User  extends BaseEntity {
 
     private String password;
 
+    @Column(name = "create_time")
+    @CreationTimestamp
+    private Timestamp createTime;
+
     @Column(name = "last_password_reset_time")
     private Date lastPasswordResetTime;
 
@@ -59,4 +64,6 @@ public class User  extends BaseEntity {
     @OneToOne
     @JoinColumn(name = "dept_id")
     private Dept dept;
+
+    public @interface Update {}
 }

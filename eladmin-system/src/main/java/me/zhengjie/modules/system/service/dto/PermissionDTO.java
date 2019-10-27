@@ -2,7 +2,8 @@ package me.zhengjie.modules.system.service.dto;
 
 import lombok.Getter;
 import lombok.Setter;
-import me.zhengjie.base.BaseDTO;
+
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -11,7 +12,7 @@ import java.util.List;
  */
 @Getter
 @Setter
-public class PermissionDTO  extends BaseDTO {
+public class PermissionDTO{
 
 	private Long id;
 
@@ -22,4 +23,6 @@ public class PermissionDTO  extends BaseDTO {
 	private String alias;
 
 	private List<PermissionDTO>  children;
+
+	private Timestamp createTime;
 }
