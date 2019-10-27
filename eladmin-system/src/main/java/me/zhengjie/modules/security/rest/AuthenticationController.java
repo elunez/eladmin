@@ -38,8 +38,8 @@ import javax.servlet.http.HttpServletRequest;
 @Api(tags = "系统：系统授权接口")
 public class AuthenticationController {
 
-    @Value("${jwt.online}")
-    private String onlineKey;
+    @Value("${jwt.codeKey}")
+    private String codeKey;
 
     private final JwtTokenUtil jwtTokenUtil;
 
@@ -104,7 +104,7 @@ public class AuthenticationController {
         captcha.setLen(2);
         // 获取运算的结果：5
         String result = captcha.text();
-        String uuid = onlineKey + IdUtil.simpleUUID();
+        String uuid = codeKey + IdUtil.simpleUUID();
         redisService.saveCode(uuid,result);
         return new ImgResult(captcha.toBase64(),uuid);
     }

@@ -30,6 +30,9 @@ public class RedisServiceImpl implements RedisService {
     @Value("${jwt.online}")
     private String onlineKey;
 
+    @Value("${jwt.codeKey}")
+    private String codeKey;
+
     public RedisServiceImpl(RedisTemplate redisTemplate) {
         this.redisTemplate = redisTemplate;
     }
@@ -43,7 +46,7 @@ public class RedisServiceImpl implements RedisService {
         Set<String> keys = redisTemplate.keys(key);
         for (String s : keys) {
             // 过滤掉权限的缓存
-            if (s.contains("role::loadPermissionByUser") || s.contains("user::loadUserByUsername") || s.contains(onlineKey)) {
+            if (s.contains("role::loadPermissionByUser") || s.contains("user::loadUserByUsername") || s.contains(onlineKey) || s.contains(codeKey)) {
                 continue;
             }
             RedisVo redisVo = new RedisVo(s, Objects.requireNonNull(redisTemplate.opsForValue().get(s)).toString());
@@ -63,7 +66,7 @@ public class RedisServiceImpl implements RedisService {
     @Override
     public void deleteAll() {
         Set<String> keys = redisTemplate.keys(  "*");
-        redisTemplate.delete(keys.stream().filter(s -> !s.contains(onlineKey)).collect(Collectors.toList()));
+        redisTemplate.delete(keys.stream().filter(s -> !s.contains(onlineKey)).filter(s -> !s.contains(codeKey)).collect(Collectors.toList()));
     }
 
     @Override
