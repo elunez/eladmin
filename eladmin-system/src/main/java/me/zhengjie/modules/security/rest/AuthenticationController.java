@@ -18,6 +18,7 @@ import me.zhengjie.modules.security.utils.JwtTokenUtil;
 import me.zhengjie.utils.SecurityUtils;
 import me.zhengjie.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AccountExpiredException;
@@ -36,6 +37,9 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/auth")
 @Api(tags = "系统：系统授权接口")
 public class AuthenticationController {
+
+    @Value("${jwt.online}")
+    private String onlineKey;
 
     private final JwtTokenUtil jwtTokenUtil;
 
@@ -100,7 +104,7 @@ public class AuthenticationController {
         captcha.setLen(2);
         // 获取运算的结果：5
         String result = captcha.text();
-        String uuid = IdUtil.simpleUUID();
+        String uuid = onlineKey + IdUtil.simpleUUID();
         redisService.saveCode(uuid,result);
         return new ImgResult(captcha.toBase64(),uuid);
     }
