@@ -6,6 +6,7 @@ import com.alibaba.fastjson.parser.ParserConfig;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import lombok.extern.slf4j.Slf4j;
 import me.zhengjie.utils.StringUtils;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
@@ -26,6 +27,8 @@ import org.springframework.data.redis.serializer.RedisSerializer;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Zheng Jie
@@ -83,13 +86,22 @@ public class RedisConfig extends CachingConfigurerSupport {
     @Override
     public KeyGenerator keyGenerator() {
         return (target, method, params) -> {
-            StringBuilder sb = new StringBuilder();
-            sb.append(target.getClass().getName());
-            sb.append(method.getName());
-            for (Object obj : params) {
-                sb.append(JSON.toJSONString(obj).hashCode());
+            Map<String,Object> container = new HashMap<>();
+            Class<?> targetClassClass = target.getClass();
+            // 类地址
+            container.put("class",targetClassClass.toGenericString());
+            // 方法名称
+            container.put("methodName",method.getName());
+            // 包名称
+            container.put("package",targetClassClass.getPackage());
+            // 参数列表
+            for (int i = 0; i < params.length; i++) {
+                container.put(String.valueOf(i),params[i]);
             }
-            return sb.toString();
+            // 转为JSON字符串
+            String jsonString = JSON.toJSONString(container);
+            // 做SHA256 Hash计算，得到一个SHA256摘要作为Key
+            return DigestUtils.sha256Hex(jsonString);
         };
     }
 
