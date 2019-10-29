@@ -22,14 +22,14 @@ public class OnlineController {
 
     @ApiOperation("查询在线用户")
     @GetMapping
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("@el.check()")
     public ResponseEntity getAll(String filter, Pageable pageable){
         return new ResponseEntity<>(onlineUserService.getAll(filter, pageable),HttpStatus.OK);
     }
 
     @ApiOperation("踢出用户")
     @DeleteMapping(value = "/{key}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("@el.check()")
     public ResponseEntity delete(@PathVariable String key) throws Exception {
         onlineUserService.kickOut(key);
         return new ResponseEntity(HttpStatus.OK);

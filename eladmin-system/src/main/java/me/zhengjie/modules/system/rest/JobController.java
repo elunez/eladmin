@@ -39,7 +39,7 @@ public class JobController {
     @Log("查询岗位")
     @ApiOperation("查询岗位")
     @GetMapping
-    @PreAuthorize("hasAnyRole('admin','USERJOB_ALL','USERJOB_SELECT','user:all','user:select')")
+    @PreAuthorize("@el.check('job:list','user:list')")
     public ResponseEntity getJobs(JobQueryCriteria criteria,
                                   Pageable pageable){
         // 数据权限
@@ -50,7 +50,7 @@ public class JobController {
     @Log("新增岗位")
     @ApiOperation("新增岗位")
     @PostMapping
-    @PreAuthorize("hasAnyRole('admin','USERJOB_ALL','USERJOB_CREATE')")
+    @PreAuthorize("@el.check('job:add')")
     public ResponseEntity create(@Validated @RequestBody Job resources){
         if (resources.getId() != null) {
             throw new BadRequestException("A new "+ ENTITY_NAME +" cannot already have an ID");
@@ -61,7 +61,7 @@ public class JobController {
     @Log("修改岗位")
     @ApiOperation("修改岗位")
     @PutMapping
-    @PreAuthorize("hasAnyRole('admin','USERJOB_ALL','USERJOB_EDIT')")
+    @PreAuthorize("@el.check('job:edit')")
     public ResponseEntity update(@Validated(Job.Update.class) @RequestBody Job resources){
         jobService.update(resources);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
@@ -70,7 +70,7 @@ public class JobController {
     @Log("删除岗位")
     @ApiOperation("删除岗位")
     @DeleteMapping(value = "/{id}")
-    @PreAuthorize("hasAnyRole('admin','USERJOB_ALL','USERJOB_DELETE')")
+    @PreAuthorize("@el.check('job:del')")
     public ResponseEntity delete(@PathVariable Long id){
         try {
             jobService.delete(id);

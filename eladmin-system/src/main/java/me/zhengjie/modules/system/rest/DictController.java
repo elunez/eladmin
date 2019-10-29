@@ -34,7 +34,7 @@ public class DictController {
     @Log("查询字典")
     @ApiOperation("查询字典")
     @GetMapping
-    @PreAuthorize("hasAnyRole('admin','DICT_ALL','DICT_SELECT')")
+    @PreAuthorize("@el.check('dict:list')")
     public ResponseEntity getDicts(DictQueryCriteria resources, Pageable pageable){
         return new ResponseEntity<>(dictService.queryAll(resources,pageable),HttpStatus.OK);
     }
@@ -42,7 +42,7 @@ public class DictController {
     @Log("新增字典")
     @ApiOperation("新增字典")
     @PostMapping
-    @PreAuthorize("hasAnyRole('admin','DICT_ALL','DICT_CREATE')")
+    @PreAuthorize("@el.check('dict:add')")
     public ResponseEntity create(@Validated @RequestBody Dict resources){
         if (resources.getId() != null) {
             throw new BadRequestException("A new "+ ENTITY_NAME +" cannot already have an ID");
@@ -53,7 +53,7 @@ public class DictController {
     @Log("修改字典")
     @ApiOperation("修改字典")
     @PutMapping
-    @PreAuthorize("hasAnyRole('admin','DICT_ALL','DICT_EDIT')")
+    @PreAuthorize("@el.check('dict:edit')")
     public ResponseEntity update(@Validated(Dict.Update.class) @RequestBody Dict resources){
         dictService.update(resources);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
@@ -62,7 +62,7 @@ public class DictController {
     @Log("删除字典")
     @ApiOperation("删除字典")
     @DeleteMapping(value = "/{id}")
-    @PreAuthorize("hasAnyRole('admin','DICT_ALL','DICT_DELETE')")
+    @PreAuthorize("@el.check('dict:del')")
     public ResponseEntity delete(@PathVariable Long id){
         dictService.delete(id);
         return new ResponseEntity(HttpStatus.OK);

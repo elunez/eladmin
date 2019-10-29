@@ -40,7 +40,7 @@ public class DeptController {
     @Log("查询部门")
     @ApiOperation("查询部门")
     @GetMapping
-    @PreAuthorize("hasAnyRole('admin','user:all','user:select','DEPT_ALL','DEPT_SELECT')")
+    @PreAuthorize("@el.check('user:list','dept:list')")
     public ResponseEntity getDepts(DeptQueryCriteria criteria){
         // 数据权限
         criteria.setIds(dataScope.getDeptIds());
@@ -51,7 +51,7 @@ public class DeptController {
     @Log("新增部门")
     @ApiOperation("新增部门")
     @PostMapping
-    @PreAuthorize("hasAnyRole('admin','DEPT_ALL','DEPT_CREATE')")
+    @PreAuthorize("@el.check('dept:add')")
     public ResponseEntity create(@Validated @RequestBody Dept resources){
         if (resources.getId() != null) {
             throw new BadRequestException("A new "+ ENTITY_NAME +" cannot already have an ID");
@@ -62,7 +62,7 @@ public class DeptController {
     @Log("修改部门")
     @ApiOperation("修改部门")
     @PutMapping
-    @PreAuthorize("hasAnyRole('admin','DEPT_ALL','DEPT_EDIT')")
+    @PreAuthorize("@el.check('dept:edit')")
     public ResponseEntity update(@Validated(Dept.Update.class) @RequestBody Dept resources){
         deptService.update(resources);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
@@ -71,7 +71,7 @@ public class DeptController {
     @Log("删除部门")
     @ApiOperation("删除部门")
     @DeleteMapping(value = "/{id}")
-    @PreAuthorize("hasAnyRole('admin','DEPT_ALL','DEPT_DELETE')")
+    @PreAuthorize("@el.check('dept:del')")
     public ResponseEntity delete(@PathVariable Long id){
         try {
             deptService.delete(id);

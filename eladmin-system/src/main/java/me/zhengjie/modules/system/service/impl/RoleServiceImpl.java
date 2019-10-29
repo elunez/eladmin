@@ -104,14 +104,6 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     @CacheEvict(allEntries = true)
-    public void updatePermission(Role resources, RoleDTO roleDTO) {
-        Role role = roleMapper.toEntity(roleDTO);
-        role.setPermissions(resources.getPermissions());
-        roleRepository.save(role);
-    }
-
-    @Override
-    @CacheEvict(allEntries = true)
     public void updateMenu(Role resources, RoleDTO roleDTO) {
         Role role = roleMapper.toEntity(roleDTO);
         role.setMenus(resources.getMenus());
@@ -123,13 +115,6 @@ public class RoleServiceImpl implements RoleService {
     @Transactional(rollbackFor = Exception.class)
     public void untiedMenu(Long id) {
         roleRepository.untiedMenu(id);
-    }
-
-    @Override
-    @CacheEvict(allEntries = true)
-    @Transactional(rollbackFor = Exception.class)
-    public void untiedPermission(Long id) {
-        roleRepository.untiedPermission(id);
     }
 
     @Override

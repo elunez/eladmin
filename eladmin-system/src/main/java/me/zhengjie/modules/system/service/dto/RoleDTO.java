@@ -26,8 +26,6 @@ public class RoleDTO{
 
     private String permission;
 
-    private Set<PermissionDTO> permissions;
-
     private Set<MenuDTO> menus;
 
     private Set<DeptDTO> depts;
