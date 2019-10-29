@@ -60,7 +60,7 @@ public class UserController {
     @Log("导出用户数据")
     @ApiOperation("导出用户数据")
     @GetMapping(value = "/download")
-    @PreAuthorize("hasAnyRole('ADMIN','USER_ALL','USER_SELECT')")
+    @PreAuthorize("hasAnyRole('admin','user:all','user:select')")
     public void update(HttpServletResponse response, UserQueryCriteria criteria) throws IOException {
         userService.download(userService.queryAll(criteria), response);
     }
@@ -68,7 +68,7 @@ public class UserController {
     @Log("查询用户")
     @ApiOperation("查询用户")
     @GetMapping
-    @PreAuthorize("hasAnyRole('ADMIN','USER_ALL','USER_SELECT')")
+    @PreAuthorize("hasAnyRole('admin','user:all','user:select')")
     public ResponseEntity getUsers(UserQueryCriteria criteria, Pageable pageable){
         Set<Long> deptSet = new HashSet<>();
         Set<Long> result = new HashSet<>();
@@ -105,7 +105,7 @@ public class UserController {
     @Log("新增用户")
     @ApiOperation("新增用户")
     @PostMapping
-    @PreAuthorize("hasAnyRole('ADMIN','USER_ALL','USER_CREATE')")
+    @PreAuthorize("hasAnyRole('admin','user:all','user:add')")
     public ResponseEntity create(@Validated @RequestBody User resources){
         checkLevel(resources);
         return new ResponseEntity<>(userService.create(resources),HttpStatus.CREATED);
@@ -114,7 +114,7 @@ public class UserController {
     @Log("修改用户")
     @ApiOperation("修改用户")
     @PutMapping
-    @PreAuthorize("hasAnyRole('ADMIN','USER_ALL','USER_EDIT')")
+    @PreAuthorize("hasAnyRole('admin','user:all','user:edit')")
     public ResponseEntity update(@Validated(User.Update.class) @RequestBody User resources){
         checkLevel(resources);
         userService.update(resources);
@@ -124,7 +124,7 @@ public class UserController {
     @Log("删除用户")
     @ApiOperation("删除用户")
     @DeleteMapping(value = "/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN','USER_ALL','USER_DELETE')")
+    @PreAuthorize("hasAnyRole('admin','user:all','user:del')")
     public ResponseEntity delete(@PathVariable Long id){
         Integer currentLevel =  Collections.min(roleService.findByUsers_Id(SecurityUtils.getUserId()).stream().map(RoleSmallDTO::getLevel).collect(Collectors.toList()));
         Integer optLevel =  Collections.min(roleService.findByUsers_Id(id).stream().map(RoleSmallDTO::getLevel).collect(Collectors.toList()));

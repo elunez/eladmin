@@ -42,6 +42,10 @@ public class Role{
     @Column
     private String remark;
 
+    // 权限
+    @Column(name = "permission")
+    private String permission;
+
     @JsonIgnore
     @ManyToMany(mappedBy = "roles")
     private Set<User> users;

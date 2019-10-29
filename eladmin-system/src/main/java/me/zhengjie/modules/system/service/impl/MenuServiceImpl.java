@@ -47,8 +47,8 @@ public class MenuServiceImpl implements MenuService {
     @Override
     @Cacheable
     public List<MenuDTO> queryAll(MenuQueryCriteria criteria){
-        Sort sort = new Sort(Sort.Direction.DESC,"id");
-        return menuMapper.toDto(menuRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),sort));
+//        Sort sort = new Sort(Sort.Direction.DESC,"id");
+        return menuMapper.toDto(menuRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder)));
     }
 
     @Override
@@ -63,7 +63,7 @@ public class MenuServiceImpl implements MenuService {
     public List<MenuDTO> findByRoles(List<RoleSmallDTO> roles) {
         Set<Menu> menus = new LinkedHashSet<>();
         for (RoleSmallDTO role : roles) {
-            List<Menu> menus1 = new ArrayList<>(menuRepository.findByRoles_IdOrderBySortAsc(role.getId()));
+            List<Menu> menus1 = new ArrayList<>(menuRepository.findByRoles_IdAndTypeIsNotInOrderBySortAsc(role.getId(), 2));
             menus.addAll(menus1);
         }
         return menus.stream().map(menuMapper::toDto).collect(Collectors.toList());
@@ -124,6 +124,8 @@ public class MenuServiceImpl implements MenuService {
         menu.setCache(resources.getCache());
         menu.setHidden(resources.getHidden());
         menu.setComponentName(resources.getComponentName());
+        menu.setPermission(resources.getPermission());
+        menu.setType(resources.getType());
         menuRepository.save(menu);
     }
 

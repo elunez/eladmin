@@ -45,7 +45,7 @@ public class MenuController {
         this.roleService = roleService;
     }
 
-    @ApiOperation("获取菜单树")
+    @ApiOperation("获取前端所需菜单")
     @GetMapping(value = "/build")
     public ResponseEntity buildMenus(){
         UserDTO user = userService.findByName(SecurityUtils.getUsername());
@@ -56,7 +56,7 @@ public class MenuController {
 
     @ApiOperation("返回全部的菜单")
     @GetMapping(value = "/tree")
-    @PreAuthorize("hasAnyRole('ADMIN','MENU_ALL','MENU_CREATE','MENU_EDIT','ROLES_SELECT','ROLES_ALL')")
+    @PreAuthorize("hasAnyRole('admin','MENU_ALL','MENU_CREATE','MENU_EDIT','ROLES_SELECT','ROLES_ALL')")
     public ResponseEntity getMenuTree(){
         return new ResponseEntity<>(menuService.getMenuTree(menuService.findByPid(0L)),HttpStatus.OK);
     }
@@ -64,7 +64,7 @@ public class MenuController {
     @Log("查询菜单")
     @ApiOperation("查询菜单")
     @GetMapping
-    @PreAuthorize("hasAnyRole('ADMIN','MENU_ALL','MENU_SELECT')")
+    @PreAuthorize("hasAnyRole('admin','MENU_ALL','MENU_SELECT')")
     public ResponseEntity getMenus(MenuQueryCriteria criteria){
         List<MenuDTO> menuDTOList = menuService.queryAll(criteria);
         return new ResponseEntity<>(menuService.buildTree(menuDTOList),HttpStatus.OK);
@@ -73,7 +73,7 @@ public class MenuController {
     @Log("新增菜单")
     @ApiOperation("新增菜单")
     @PostMapping
-    @PreAuthorize("hasAnyRole('ADMIN','MENU_ALL','MENU_CREATE')")
+    @PreAuthorize("hasAnyRole('admin','MENU_ALL','MENU_CREATE')")
     public ResponseEntity create(@Validated @RequestBody Menu resources){
         if (resources.getId() != null) {
             throw new BadRequestException("A new "+ ENTITY_NAME +" cannot already have an ID");
@@ -84,7 +84,7 @@ public class MenuController {
     @Log("修改菜单")
     @ApiOperation("修改菜单")
     @PutMapping
-    @PreAuthorize("hasAnyRole('ADMIN','MENU_ALL','MENU_EDIT')")
+    @PreAuthorize("hasAnyRole('admin','MENU_ALL','MENU_EDIT')")
     public ResponseEntity update(@Validated(Menu.Update.class) @RequestBody Menu resources){
         menuService.update(resources);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
@@ -93,7 +93,7 @@ public class MenuController {
     @Log("删除菜单")
     @ApiOperation("删除菜单")
     @DeleteMapping(value = "/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN','MENU_ALL','MENU_DELETE')")
+    @PreAuthorize("hasAnyRole('admin','MENU_ALL','MENU_DELETE')")
     public ResponseEntity delete(@PathVariable Long id){
         List<Menu> menuList = menuService.findByPid(id);
         Set<Menu> menuSet = new HashSet<>();

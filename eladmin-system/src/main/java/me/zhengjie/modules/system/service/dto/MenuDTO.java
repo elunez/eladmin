@@ -16,6 +16,10 @@ public class MenuDTO{
 
     private Long id;
 
+    private Integer type;
+
+    private String permission;
+
     private String name;
 
     private Long sort;

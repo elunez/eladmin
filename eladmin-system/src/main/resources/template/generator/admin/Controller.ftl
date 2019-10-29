@@ -30,7 +30,7 @@ public class ${className}Controller {
     @GetMapping
     @Log("查询${className}")
     @ApiOperation("查询${className}")
-    @PreAuthorize("hasAnyRole('ADMIN','${upperCaseClassName}_ALL','${upperCaseClassName}_SELECT')")
+    @PreAuthorize("hasAnyRole('admin','${upperCaseClassName}_ALL','${upperCaseClassName}_SELECT')")
     public ResponseEntity get${className}s(${className}QueryCriteria criteria, Pageable pageable){
         return new ResponseEntity<>(${changeClassName}Service.queryAll(criteria,pageable),HttpStatus.OK);
     }
@@ -38,7 +38,7 @@ public class ${className}Controller {
     @PostMapping
     @Log("新增${className}")
     @ApiOperation("新增${className}")
-    @PreAuthorize("hasAnyRole('ADMIN','${upperCaseClassName}_ALL','${upperCaseClassName}_CREATE')")
+    @PreAuthorize("hasAnyRole('admin','${upperCaseClassName}_ALL','${upperCaseClassName}_CREATE')")
     public ResponseEntity create(@Validated @RequestBody ${className} resources){
         return new ResponseEntity<>(${changeClassName}Service.create(resources),HttpStatus.CREATED);
     }
@@ -46,7 +46,7 @@ public class ${className}Controller {
     @PutMapping
     @Log("修改${className}")
     @ApiOperation("修改${className}")
-    @PreAuthorize("hasAnyRole('ADMIN','${upperCaseClassName}_ALL','${upperCaseClassName}_EDIT')")
+    @PreAuthorize("hasAnyRole('admin','${upperCaseClassName}_ALL','${upperCaseClassName}_EDIT')")
     public ResponseEntity update(@Validated @RequestBody ${className} resources){
         ${changeClassName}Service.update(resources);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
@@ -55,7 +55,7 @@ public class ${className}Controller {
     @DeleteMapping(value = "/{${pkChangeColName}}")
     @Log("删除${className}")
     @ApiOperation("删除${className}")
-    @PreAuthorize("hasAnyRole('ADMIN','${upperCaseClassName}_ALL','${upperCaseClassName}_DELETE')")
+    @PreAuthorize("hasAnyRole('admin','${upperCaseClassName}_ALL','${upperCaseClassName}_DELETE')")
     public ResponseEntity delete(@PathVariable ${pkColumnType} ${pkChangeColName}){
         ${changeClassName}Service.delete(${pkChangeColName});
         return new ResponseEntity(HttpStatus.OK);

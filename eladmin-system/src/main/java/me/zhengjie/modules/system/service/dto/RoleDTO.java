@@ -24,6 +24,8 @@ public class RoleDTO{
 
     private String remark;
 
+    private String permission;
+
     private Set<PermissionDTO> permissions;
 
     private Set<MenuDTO> menus;

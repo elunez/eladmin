@@ -44,8 +44,8 @@ public class PermissionServiceImpl implements PermissionService {
     @Override
     @Cacheable
     public List<PermissionDTO> queryAll(PermissionQueryCriteria criteria) {
-        Sort sort = new Sort(Sort.Direction.DESC,"id");
-        return permissionMapper.toDto(permissionRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),sort));
+//        Sort sort = new Sort(Sort.Direction.DESC,"id");
+        return permissionMapper.toDto(permissionRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder)));
     }
 
     @Override

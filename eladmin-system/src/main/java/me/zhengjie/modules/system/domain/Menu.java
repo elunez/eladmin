@@ -30,14 +30,20 @@ public class Menu{
     private String name;
 
     @Column(unique = true)
-    @NotNull
-    private Long sort;
+    private Long sort = 999L;
 
-    @NotBlank
     @Column(name = "path")
     private String path;
 
     private String component;
+
+    // 类型
+    @Column(name = "type")
+    private Integer type;
+
+    // 权限
+    @Column(name = "permission")
+    private String permission;
 
     @Column(unique = true,name = "component_name")
     private String componentName;
