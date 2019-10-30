@@ -20,7 +20,7 @@ public interface PictureService {
      * @param pageable
      * @return
      */
-    @Cacheable(keyGenerator = "keyGenerator")
+    @Cacheable
     Object queryAll(PictureQueryCriteria criteria, Pageable pageable);
 
     /**

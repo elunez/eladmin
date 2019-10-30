@@ -1,6 +1,7 @@
 package me.zhengjie.modules.quartz.task;
 
 import lombok.extern.slf4j.Slf4j;
+import me.zhengjie.exception.BadRequestException;
 import org.springframework.stereotype.Component;
 
 /**

@@ -1,6 +1,7 @@
 package me.zhengjie.modules.system.service.impl;
 
 import me.zhengjie.modules.system.domain.Dict;
+import me.zhengjie.modules.system.service.dto.DictQueryCriteria;
 import me.zhengjie.utils.PageUtil;
 import me.zhengjie.utils.QueryHelp;
 import me.zhengjie.utils.ValidationUtil;
@@ -31,7 +32,7 @@ public class DictServiceImpl implements DictService {
     private DictMapper dictMapper;
 
     @Override
-    public Object queryAll(DictDTO dict, Pageable pageable){
+    public Object queryAll(DictQueryCriteria dict, Pageable pageable){
         Page<Dict> page = dictRepository.findAll((root, query, cb) -> QueryHelp.getPredicate(root, dict, cb), pageable);
         return PageUtil.toPage(page.map(dictMapper::toDto));
     }

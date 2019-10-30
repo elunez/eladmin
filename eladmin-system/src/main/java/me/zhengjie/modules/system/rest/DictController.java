@@ -4,7 +4,7 @@ import me.zhengjie.aop.log.Log;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.modules.system.domain.Dict;
 import me.zhengjie.modules.system.service.DictService;
-import me.zhengjie.modules.system.service.dto.DictDTO;
+import me.zhengjie.modules.system.service.dto.DictQueryCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -29,7 +29,7 @@ public class DictController {
     @Log("查询字典")
     @GetMapping(value = "/dict")
     @PreAuthorize("hasAnyRole('ADMIN','DICT_ALL','DICT_SELECT')")
-    public ResponseEntity getDicts(DictDTO resources, Pageable pageable){
+    public ResponseEntity getDicts(DictQueryCriteria resources, Pageable pageable){
         return new ResponseEntity(dictService.queryAll(resources,pageable),HttpStatus.OK);
     }
 

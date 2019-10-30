@@ -37,7 +37,7 @@ public class PictureServiceImpl implements PictureService {
 
     public static final String CODE = "code";
 
-    public static final String MSG = "msg";
+    public static final String MSG = "message";
 
     @Override
     public Object queryAll(PictureQueryCriteria criteria, Pageable pageable){
@@ -48,7 +48,6 @@ public class PictureServiceImpl implements PictureService {
     @Transactional(rollbackFor = Throwable.class)
     public Picture upload(MultipartFile multipartFile, String username) {
         File file = FileUtil.toFile(multipartFile);
-
         HashMap<String, Object> paramMap = new HashMap<>(1);
 
         paramMap.put("smfile", file);
@@ -57,7 +56,7 @@ public class PictureServiceImpl implements PictureService {
         JSONObject jsonObject = JSONUtil.parseObj(result);
         Picture picture = null;
         if(!jsonObject.get(CODE).toString().equals(SUCCESS)){
-            throw new BadRequestException(jsonObject.get(MSG).toString());
+            throw new BadRequestException(TranslatorUtil.translate(jsonObject.get(MSG).toString()));
         }
         //转成实体类
         picture = JSON.parseObject(jsonObject.get("data").toString(), Picture.class);
@@ -66,7 +65,7 @@ public class PictureServiceImpl implements PictureService {
         picture.setFilename(FileUtil.getFileNameNoEx(multipartFile.getOriginalFilename())+"."+FileUtil.getExtensionName(multipartFile.getOriginalFilename()));
         pictureRepository.save(picture);
         //删除临时文件
-        FileUtil.deleteFile(file);
+        FileUtil.del(file);
         return picture;
 
     }

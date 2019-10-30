@@ -7,8 +7,9 @@ import me.zhengjie.annotation.Query;
  * 公共查询类
  */
 @Data
-public class CommonQueryCriteria {
+public class PermissionQueryCriteria {
 
-    @Query(type = Query.Type.INNER_LIKE)
-    private String name;
+    // 多字段模糊
+    @Query(blurry = "name,alias")
+    private String blurry;
 }

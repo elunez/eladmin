@@ -2,6 +2,7 @@ package me.zhengjie.modules.system.service;
 
 import me.zhengjie.modules.system.domain.Dict;
 import me.zhengjie.modules.system.service.dto.DictDTO;
+import me.zhengjie.modules.system.service.dto.DictQueryCriteria;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -20,8 +21,8 @@ public interface DictService {
      * @param pageable
      * @return
      */
-    @Cacheable(keyGenerator = "keyGenerator")
-    Object queryAll(DictDTO dict, Pageable pageable);
+    @Cacheable
+    Object queryAll(DictQueryCriteria dict, Pageable pageable);
 
     /**
      * findById

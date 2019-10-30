@@ -31,7 +31,9 @@ public class User implements Serializable {
     @Column(unique = true)
     private String username;
 
-    private String avatar;
+    @OneToOne
+    @JoinColumn(name = "avatar_id")
+    private UserAvatar userAvatar;
 
     @NotBlank
     @Pattern(regexp = "([a-z0-9A-Z]+[-|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}",message = "格式错误")
@@ -69,7 +71,6 @@ public class User implements Serializable {
         return "User{" +
                 "id=" + id +
                 ", username='" + username + '\'' +
-                ", avatar='" + avatar + '\'' +
                 ", email='" + email + '\'' +
                 ", enabled=" + enabled +
                 ", password='" + password + '\'' +

@@ -8,6 +8,11 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * @author Zheng Jie
@@ -64,11 +69,10 @@ public interface UserService {
 
     /**
      * 修改头像
-     * @param username
-     * @param url
+     * @param file
      */
     @CacheEvict(allEntries = true)
-    void updateAvatar(String username, String url);
+    void updateAvatar(MultipartFile file);
 
     /**
      * 修改邮箱
@@ -78,6 +82,11 @@ public interface UserService {
     @CacheEvict(allEntries = true)
     void updateEmail(String username, String email);
 
-    @Cacheable(keyGenerator = "keyGenerator")
+    @Cacheable
     Object queryAll(UserQueryCriteria criteria, Pageable pageable);
+
+    @Cacheable
+    List<UserDTO> queryAll(UserQueryCriteria criteria);
+
+    void download(List<UserDTO> queryAll, HttpServletResponse response) throws IOException;
 }

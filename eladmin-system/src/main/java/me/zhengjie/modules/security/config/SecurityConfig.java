@@ -106,6 +106,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 // 接口限流测试
                 .antMatchers("/test/**").anonymous()
+                // 文件
+                .antMatchers("/avatar/**").anonymous()
+                .antMatchers("/file/**").anonymous()
+
+                // 放行OPTIONS请求
                 .antMatchers(HttpMethod.OPTIONS, "/**").anonymous()
 
                 .antMatchers("/druid/**").anonymous()
