@@ -5,6 +5,7 @@ import com.wf.captcha.ArithmeticCaptcha;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import me.zhengjie.annotation.AnonymousAccess;
 import me.zhengjie.aop.log.Log;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.modules.monitor.service.RedisService;
@@ -58,6 +59,7 @@ public class AuthenticationController {
 
     @Log("用户登录")
     @ApiOperation("登录授权")
+    @AnonymousAccess
     @PostMapping(value = "/login")
     public ResponseEntity login(@Validated @RequestBody AuthUser authorizationUser, HttpServletRequest request){
 
@@ -96,6 +98,7 @@ public class AuthenticationController {
     }
 
     @ApiOperation("获取验证码")
+    @AnonymousAccess
     @GetMapping(value = "/code")
     public ImgResult getCode(){
         // 算术类型 https://gitee.com/whvse/EasyCaptcha
@@ -110,6 +113,7 @@ public class AuthenticationController {
     }
 
     @ApiOperation("退出登录")
+    @AnonymousAccess
     @DeleteMapping(value = "/logout")
     public ResponseEntity logout(HttpServletRequest request){
         onlineUserService.logout(jwtTokenUtil.getToken(request));
