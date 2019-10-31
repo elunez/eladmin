@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 public class TestTask {
-    
+
     public void run(){
         log.info("执行成功");
     }

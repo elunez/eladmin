@@ -1,5 +1,7 @@
 package me.zhengjie.modules.quartz.utils;
 
+import me.zhengjie.config.thread.TheadFactoryName;
+import me.zhengjie.config.thread.ThreadPoolExecutorUtil;
 import me.zhengjie.modules.quartz.domain.QuartzJob;
 import me.zhengjie.modules.quartz.domain.QuartzLog;
 import me.zhengjie.modules.quartz.repository.QuartzLogRepository;
@@ -11,9 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.quartz.QuartzJobBean;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
 
 /**
  * 参考人人开源，https://gitee.com/renrenio/renren-security
@@ -25,8 +25,8 @@ public class ExecutionJob extends QuartzJobBean {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    // 建议自定义线程池实现方式，该处仅供参考
-    private ExecutorService executorService = Executors.newSingleThreadExecutor();
+    // 该处仅供参考
+    private final static ThreadPoolExecutor executor = ThreadPoolExecutorUtil.getPoll();
 
     @Override
     @SuppressWarnings("unchecked")
@@ -48,7 +48,7 @@ public class ExecutionJob extends QuartzJobBean {
             logger.info("任务准备执行，任务名称：{}", quartzJob.getJobName());
             QuartzRunnable task = new QuartzRunnable(quartzJob.getBeanName(), quartzJob.getMethodName(),
                     quartzJob.getParams());
-            Future<?> future = executorService.submit(task);
+            Future<?> future = executor.submit(task);
             future.get();
             long times = System.currentTimeMillis() - startTime;
             log.setTime(times);
