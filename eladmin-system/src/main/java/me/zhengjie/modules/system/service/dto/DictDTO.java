@@ -3,7 +3,9 @@ package me.zhengjie.modules.system.service.dto;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.List;
 
 /**
 * @author Zheng Jie
@@ -11,13 +13,15 @@ import java.sql.Timestamp;
 */
 @Getter
 @Setter
-public class DictDTO{
+public class DictDTO implements Serializable {
 
     private Long id;
 
     private String name;
 
     private String remark;
+
+    private List<DictDetailDTO> dictDetails;
 
     private Timestamp createTime;
 }

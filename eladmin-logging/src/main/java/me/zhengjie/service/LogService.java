@@ -6,6 +6,10 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Async;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.List;
+
 /**
  * @author Zheng Jie
  * @date 2018-11-24
@@ -13,6 +17,8 @@ import org.springframework.scheduling.annotation.Async;
 public interface LogService {
 
     Object queryAll(LogQueryCriteria criteria, Pageable pageable);
+
+    List<Log> queryAll(LogQueryCriteria criteria);
 
     Object queryAllByUser(LogQueryCriteria criteria, Pageable pageable);
 
@@ -25,4 +31,6 @@ public interface LogService {
      * @return Object
      */
     Object findByErrDetail(Long id);
+
+    void download(List<Log> queryAll, HttpServletResponse response) throws IOException;
 }

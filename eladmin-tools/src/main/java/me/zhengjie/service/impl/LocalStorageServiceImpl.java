@@ -17,9 +17,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
 * @author Zheng Jie
@@ -54,7 +62,7 @@ public class LocalStorageServiceImpl implements LocalStorageService {
 
     @Override
     @Cacheable
-    public Object queryAll(LocalStorageQueryCriteria criteria){
+    public List<LocalStorageDTO> queryAll(LocalStorageQueryCriteria criteria){
         return localStorageMapper.toDto(localStorageRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder)));
     }
 
@@ -125,5 +133,21 @@ public class LocalStorageServiceImpl implements LocalStorageService {
             FileUtil.del(storage.getPath());
             localStorageRepository.delete(storage);
         }
+    }
+
+    @Override
+    public void download(List<LocalStorageDTO> queryAll, HttpServletResponse response) throws IOException {
+        List<Map<String, Object>> list = new ArrayList<>();
+        for (LocalStorageDTO localStorageDTO : queryAll) {
+            Map<String,Object> map = new LinkedHashMap<>();
+            map.put("文件名", localStorageDTO.getRealName());
+            map.put("备注名", localStorageDTO.getName());
+            map.put("文件类型", localStorageDTO.getType());
+            map.put("文件大小", localStorageDTO.getSize());
+            map.put("操作人", localStorageDTO.getOperate());
+            map.put("创建日期", localStorageDTO.getCreateTime());
+            list.add(map);
+        }
+        FileUtil.downloadExcel(list, response);
     }
 }

@@ -31,7 +31,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import java.util.Optional;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * @author Zheng Jie
@@ -58,6 +61,11 @@ public class QiNiuServiceImpl implements QiNiuService {
     @Cacheable
     public Object queryAll(QiniuQueryCriteria criteria, Pageable pageable){
         return PageUtil.toPage(qiniuContentRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable));
+    }
+
+    @Override
+    public List<QiniuContent> queryAll(QiniuQueryCriteria criteria) {
+        return qiniuContentRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder));
     }
 
     @Override
@@ -205,5 +213,21 @@ public class QiNiuServiceImpl implements QiNiuService {
     @Transactional(rollbackFor = Exception.class)
     public void update(String type) {
         qiNiuConfigRepository.update(type);
+    }
+
+    @Override
+    public void downloadList(List<QiniuContent> queryAll, HttpServletResponse response) throws IOException {
+        List<Map<String, Object>> list = new ArrayList<>();
+        for (QiniuContent content : queryAll) {
+            Map<String,Object> map = new LinkedHashMap<>();
+            map.put("文件名", content.getKey());
+            map.put("文件类型", content.getSuffix());
+            map.put("空间名称", content.getBucket());
+            map.put("文件大小", content.getSize());
+            map.put("空间类型", content.getType());
+            map.put("创建日期", content.getUpdateTime());
+            list.add(map);
+        }
+        FileUtil.downloadExcel(list, response);
     }
 }

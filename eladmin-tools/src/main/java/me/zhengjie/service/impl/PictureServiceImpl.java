@@ -19,8 +19,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
-import java.util.HashMap;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * @author Zheng Jie
@@ -48,6 +51,11 @@ public class PictureServiceImpl implements PictureService {
     @Cacheable
     public Object queryAll(PictureQueryCriteria criteria, Pageable pageable){
         return PageUtil.toPage(pictureRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable));
+    }
+
+    @Override
+    public List<Picture> queryAll(PictureQueryCriteria criteria) {
+        return pictureRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder));
     }
 
     @Override
@@ -105,5 +113,23 @@ public class PictureServiceImpl implements PictureService {
         for (Long id : ids) {
             delete(findById(id));
         }
+    }
+
+    @Override
+    public void download(List<Picture> queryAll, HttpServletResponse response) throws IOException {
+        List<Map<String, Object>> list = new ArrayList<>();
+        for (Picture picture : queryAll) {
+            Map<String,Object> map = new LinkedHashMap<>();
+            map.put("文件名", picture.getFilename());
+            map.put("图片地址", picture.getUrl());
+            map.put("文件大小", picture.getSize());
+            map.put("操作人", picture.getUsername());
+            map.put("高度", picture.getHeight());
+            map.put("宽度", picture.getWidth());
+            map.put("删除地址", picture.getDelete());
+            map.put("创建日期", picture.getCreateTime());
+            list.add(map);
+        }
+        FileUtil.downloadExcel(list, response);
     }
 }

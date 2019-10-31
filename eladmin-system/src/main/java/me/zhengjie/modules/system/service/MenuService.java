@@ -4,6 +4,9 @@ import me.zhengjie.modules.system.domain.Menu;
 import me.zhengjie.modules.system.service.dto.MenuDTO;
 import me.zhengjie.modules.system.service.dto.MenuQueryCriteria;
 import me.zhengjie.modules.system.service.dto.RoleSmallDTO;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -37,4 +40,6 @@ public interface MenuService {
     Menu findOne(Long id);
 
     void delete(Set<Menu> menuSet);
+
+    void download(List<MenuDTO> queryAll, HttpServletResponse response) throws IOException;
 }

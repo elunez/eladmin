@@ -17,6 +17,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -43,6 +46,14 @@ public class MenuController {
         this.menuService = menuService;
         this.userService = userService;
         this.roleService = roleService;
+    }
+
+    @Log("导出菜单数据")
+    @ApiOperation("导出菜单数据")
+    @GetMapping(value = "/download")
+    @PreAuthorize("@el.check('menu:list')")
+    public void download(HttpServletResponse response, MenuQueryCriteria criteria) throws IOException {
+        menuService.download(menuService.queryAll(criteria), response);
     }
 
     @ApiOperation("获取前端所需菜单")

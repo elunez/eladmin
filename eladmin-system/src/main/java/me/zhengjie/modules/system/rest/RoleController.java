@@ -19,6 +19,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -45,6 +48,14 @@ public class RoleController {
     @PreAuthorize("@el.check('roles:list')")
     public ResponseEntity getRoles(@PathVariable Long id){
         return new ResponseEntity<>(roleService.findById(id), HttpStatus.OK);
+    }
+
+    @Log("导出角色数据")
+    @ApiOperation("导出角色数据")
+    @GetMapping(value = "/download")
+    @PreAuthorize("@el.check('role:list')")
+    public void download(HttpServletResponse response, RoleQueryCriteria criteria) throws IOException {
+        roleService.download(roleService.queryAll(criteria), response);
     }
 
     @ApiOperation("返回全部的角色")

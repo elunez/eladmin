@@ -14,6 +14,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
 /**
 * @author Zheng Jie
 * @date 2019-04-10
@@ -29,6 +32,14 @@ public class DictController {
 
     public DictController(DictService dictService) {
         this.dictService = dictService;
+    }
+
+    @Log("导出字典数据")
+    @ApiOperation("导出字典数据")
+    @GetMapping(value = "/download")
+    @PreAuthorize("@el.check('dict:list')")
+    public void download(HttpServletResponse response, DictQueryCriteria criteria) throws IOException {
+        dictService.download(dictService.queryAll(criteria), response);
     }
 
     @Log("查询字典")

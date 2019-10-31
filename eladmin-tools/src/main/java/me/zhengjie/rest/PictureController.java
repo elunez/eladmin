@@ -13,6 +13,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,6 +40,14 @@ public class PictureController {
     @ApiOperation("查询图片")
     public ResponseEntity getRoles(PictureQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity<>(pictureService.queryAll(criteria,pageable),HttpStatus.OK);
+    }
+
+    @Log("导出数据")
+    @ApiOperation("导出数据")
+    @GetMapping(value = "/download")
+    @PreAuthorize("@el.check('pictures:list')")
+    public void download(HttpServletResponse response, PictureQueryCriteria criteria) throws IOException {
+        pictureService.download(pictureService.queryAll(criteria), response);
     }
 
     @Log("上传图片")

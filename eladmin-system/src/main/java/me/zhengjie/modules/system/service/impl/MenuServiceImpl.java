@@ -14,6 +14,7 @@ import me.zhengjie.modules.system.service.dto.MenuDTO;
 import me.zhengjie.modules.system.service.dto.MenuQueryCriteria;
 import me.zhengjie.modules.system.service.dto.RoleSmallDTO;
 import me.zhengjie.modules.system.service.mapper.MenuMapper;
+import me.zhengjie.utils.FileUtil;
 import me.zhengjie.utils.QueryHelp;
 import me.zhengjie.utils.StringUtils;
 import me.zhengjie.utils.ValidationUtil;
@@ -24,6 +25,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -260,5 +264,22 @@ public class MenuServiceImpl implements MenuService {
         Menu menu = menuRepository.findById(id).orElseGet(Menu::new);
         ValidationUtil.isNull(menu.getId(),"Menu","id",id);
         return menu;
+    }
+
+    @Override
+    public void download(List<MenuDTO> menuDTOS, HttpServletResponse response) throws IOException {
+        List<Map<String, Object>> list = new ArrayList<>();
+        for (MenuDTO menuDTO : menuDTOS) {
+            Map<String,Object> map = new LinkedHashMap<>();
+            map.put("菜单名称", menuDTO.getName());
+            map.put("菜单类型", menuDTO.getType() == 0 ? "目录" : menuDTO.getType() == 1 ? "菜单" : "按钮");
+            map.put("权限标识", menuDTO.getPermission());
+            map.put("外链菜单", menuDTO.getIFrame() ? "是" : "否");
+            map.put("菜单可见", menuDTO.getHidden() ? "否" : "是");
+            map.put("是否缓存", menuDTO.getCache() ? "是" : "否");
+            map.put("创建日期", menuDTO.getCreateTime());
+            list.add(map);
+        }
+        FileUtil.downloadExcel(list, response);
     }
 }

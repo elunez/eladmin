@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.*;
 import io.swagger.annotations.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
 /**
 * @author Zheng Jie
 * @date 2019-09-05
@@ -33,6 +36,14 @@ public class LocalStorageController {
     @PreAuthorize("@el.check('storage:list')")
     public ResponseEntity getLocalStorages(LocalStorageQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity<>(localStorageService.queryAll(criteria,pageable),HttpStatus.OK);
+    }
+
+    @Log("导出数据")
+    @ApiOperation("导出数据")
+    @GetMapping(value = "/download")
+    @PreAuthorize("@el.check('storage:list')")
+    public void download(HttpServletResponse response, LocalStorageQueryCriteria criteria) throws IOException {
+        localStorageService.download(localStorageService.queryAll(criteria), response);
     }
 
     @ApiOperation("上传文件")

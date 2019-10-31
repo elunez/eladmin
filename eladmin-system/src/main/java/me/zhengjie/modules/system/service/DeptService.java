@@ -3,6 +3,9 @@ package me.zhengjie.modules.system.service;
 import me.zhengjie.modules.system.domain.Dept;
 import me.zhengjie.modules.system.service.dto.DeptDTO;
 import me.zhengjie.modules.system.service.dto.DeptQueryCriteria;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
@@ -27,4 +30,6 @@ public interface DeptService {
     List<Dept> findByPid(long pid);
 
     Set<Dept> findByRoleIds(Long id);
+
+    void download(List<DeptDTO> queryAll, HttpServletResponse response) throws IOException;
 }

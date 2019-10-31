@@ -15,6 +15,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
 /**
  * @author Zheng Jie
  * @date 2019-01-07
@@ -39,6 +42,22 @@ public class QuartzJobController {
     @PreAuthorize("@el.check('timing:list')")
     public ResponseEntity getJobs(JobQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity<>(quartzJobService.queryAll(criteria,pageable), HttpStatus.OK);
+    }
+
+    @Log("导出任务数据")
+    @ApiOperation("导出任务数据")
+    @GetMapping(value = "/download")
+    @PreAuthorize("@el.check('timing:list')")
+    public void download(HttpServletResponse response, JobQueryCriteria criteria) throws IOException {
+        quartzJobService.download(quartzJobService.queryAll(criteria), response);
+    }
+
+    @Log("导出日志数据")
+    @ApiOperation("导出日志数据")
+    @GetMapping(value = "/download/log")
+    @PreAuthorize("@el.check('timing:list')")
+    public void downloadLog(HttpServletResponse response, JobQueryCriteria criteria) throws IOException {
+        quartzJobService.downloadLog(quartzJobService.queryAllLog(criteria), response);
     }
 
     @ApiOperation("查询任务执行日志")

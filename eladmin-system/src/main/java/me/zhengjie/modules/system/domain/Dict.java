@@ -7,6 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -18,7 +19,7 @@ import java.util.List;
 @Getter
 @Setter
 @Table(name="dict")
-public class Dict{
+public class Dict implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

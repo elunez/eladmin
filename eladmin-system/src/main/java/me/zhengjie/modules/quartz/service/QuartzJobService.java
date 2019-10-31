@@ -1,8 +1,13 @@
 package me.zhengjie.modules.quartz.service;
 
 import me.zhengjie.modules.quartz.domain.QuartzJob;
+import me.zhengjie.modules.quartz.domain.QuartzLog;
 import me.zhengjie.modules.quartz.service.dto.JobQueryCriteria;
 import org.springframework.data.domain.Pageable;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * @author Zheng Jie
@@ -12,7 +17,11 @@ public interface QuartzJobService {
 
     Object queryAll(JobQueryCriteria criteria, Pageable pageable);
 
+    List<QuartzJob> queryAll(JobQueryCriteria criteria);
+
     Object queryAllLog(JobQueryCriteria criteria, Pageable pageable);
+
+    List<QuartzLog> queryAllLog(JobQueryCriteria criteria);
 
     QuartzJob create(QuartzJob resources);
 
@@ -33,4 +42,8 @@ public interface QuartzJobService {
      * @param quartzJob /
      */
     void execution(QuartzJob quartzJob);
+
+    void download(List<QuartzJob> queryAll, HttpServletResponse response) throws IOException;
+
+    void downloadLog(List<QuartzLog> queryAllLog, HttpServletResponse response) throws IOException;
 }

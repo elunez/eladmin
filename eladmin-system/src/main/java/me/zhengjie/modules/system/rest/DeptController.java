@@ -15,6 +15,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -35,6 +38,14 @@ public class DeptController {
     public DeptController(DeptService deptService, DataScope dataScope) {
         this.deptService = deptService;
         this.dataScope = dataScope;
+    }
+
+    @Log("导出部门数据")
+    @ApiOperation("导出部门数据")
+    @GetMapping(value = "/download")
+    @PreAuthorize("@el.check('dept:list')")
+    public void download(HttpServletResponse response, DeptQueryCriteria criteria) throws IOException {
+        deptService.download(deptService.queryAll(criteria), response);
     }
 
     @Log("查询部门")

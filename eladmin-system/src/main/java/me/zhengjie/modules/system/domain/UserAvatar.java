@@ -8,6 +8,7 @@ import me.zhengjie.base.BaseEntity;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.sql.Timestamp;
 
 /**
@@ -19,7 +20,7 @@ import java.sql.Timestamp;
 @Setter
 @NoArgsConstructor
 @Table(name = "user_avatar")
-public class UserAvatar {
+public class UserAvatar implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

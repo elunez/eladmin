@@ -3,6 +3,7 @@ package me.zhengjie.service.dto;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 
 /**
@@ -11,7 +12,7 @@ import java.sql.Timestamp;
 */
 @Getter
 @Setter
-public class LocalStorageDTO{
+public class LocalStorageDTO  implements Serializable {
 
     // ID
     private Long id;

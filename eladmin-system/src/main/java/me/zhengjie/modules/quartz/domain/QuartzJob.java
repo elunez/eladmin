@@ -6,6 +6,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.sql.Timestamp;
 
 /**
@@ -16,7 +17,7 @@ import java.sql.Timestamp;
 @Setter
 @Entity
 @Table(name = "quartz_job")
-public class QuartzJob{
+public class QuartzJob  implements Serializable {
 
     public static final String JOB_KEY = "JOB_KEY";
 

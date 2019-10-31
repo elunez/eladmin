@@ -7,6 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.io.Serializable;
 import java.sql.Timestamp;
 
 /**
@@ -18,7 +19,7 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "verification_code")
-public class VerificationCode {
+public class VerificationCode  implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

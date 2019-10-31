@@ -2,6 +2,7 @@ package me.zhengjie.rest;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import me.zhengjie.aop.log.Log;
 import me.zhengjie.service.LogService;
 import me.zhengjie.service.dto.LogQueryCriteria;
 import me.zhengjie.utils.SecurityUtils;
@@ -13,6 +14,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * @author Zheng Jie
@@ -27,6 +31,14 @@ public class LogController {
 
     public LogController(LogService logService) {
         this.logService = logService;
+    }
+
+    @Log("导出数据")
+    @ApiOperation("导出数据")
+    @GetMapping(value = "/download")
+    @PreAuthorize("@el.check()")
+    public void download(HttpServletResponse response, LogQueryCriteria criteria) throws IOException {
+        logService.download(logService.queryAll(criteria), response);
     }
 
     @GetMapping

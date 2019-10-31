@@ -7,6 +7,7 @@ import me.zhengjie.base.BaseEntity;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.sql.Timestamp;
 
 /**
@@ -18,7 +19,7 @@ import java.sql.Timestamp;
 @Entity
 @Table(name="local_storage")
 @NoArgsConstructor
-public class LocalStorage {
+public class LocalStorage  implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

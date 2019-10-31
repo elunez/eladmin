@@ -3,6 +3,7 @@ package me.zhengjie.modules.system.service.dto;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Set;
 
@@ -12,7 +13,7 @@ import java.util.Set;
  */
 @Getter
 @Setter
-public class RoleDTO{
+public class RoleDTO implements Serializable {
 
     private Long id;
 

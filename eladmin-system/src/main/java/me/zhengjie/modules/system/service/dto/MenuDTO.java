@@ -3,6 +3,7 @@ package me.zhengjie.modules.system.service.dto;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -12,7 +13,7 @@ import java.util.List;
  */
 @Getter
 @Setter
-public class MenuDTO{
+public class MenuDTO implements Serializable {
 
     private Long id;
 
