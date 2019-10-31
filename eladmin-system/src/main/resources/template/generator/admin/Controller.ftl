@@ -11,6 +11,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.annotations.*;
+import java.io.IOException;
+import javax.servlet.http.HttpServletResponse;
 
 /**
 * @author ${author}
@@ -27,10 +29,18 @@ public class ${className}Controller {
         this.${changeClassName}Service = ${changeClassName}Service;
     }
 
+    @Log("导出数据")
+    @ApiOperation("导出数据")
+    @GetMapping(value = "/download")
+    @PreAuthorize("@el.check('${changeClassName}:list')")
+    public void download(HttpServletResponse response, ${className}QueryCriteria criteria) throws IOException {
+        ${changeClassName}Service.download(${changeClassName}Service.queryAll(criteria), response);
+    }
+
     @GetMapping
     @Log("查询${className}")
     @ApiOperation("查询${className}")
-    @PreAuthorize("@el.check('${changeClassName}:list'")
+    @PreAuthorize("@el.check('${changeClassName}:list')")
     public ResponseEntity get${className}s(${className}QueryCriteria criteria, Pageable pageable){
         return new ResponseEntity<>(${changeClassName}Service.queryAll(criteria,pageable),HttpStatus.OK);
     }

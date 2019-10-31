@@ -6,6 +6,8 @@ import ${package}.service.dto.${className}QueryCriteria;
 import org.springframework.data.domain.Pageable;
 import java.util.Map;
 import java.util.List;
+import java.io.IOException;
+import javax.servlet.http.HttpServletResponse;
 
 /**
 * @author ${author}
@@ -40,4 +42,6 @@ public interface ${className}Service {
     void update(${className} resources);
 
     void delete(${pkColumnType} ${pkChangeColName});
+
+    void download(List<${className}DTO> all, HttpServletResponse response) throws IOException;
 }
