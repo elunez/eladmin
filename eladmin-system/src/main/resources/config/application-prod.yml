@@ -49,11 +49,10 @@ jwt:
   secret: mySecret
   # token 过期时间 2个小时
   expiration: 7200000
-  auth:
-    # 授权路径
-    path: /login
-    # 获取用户信息
-    account: /info
+  # 在线用户key
+  online: online-token
+  # 验证码
+  codeKey: code-key
 
 #是否允许生成代码，生产环境设置为false
 generator:

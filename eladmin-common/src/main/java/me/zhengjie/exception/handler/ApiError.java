@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Data
 class ApiError {
 
-    private Integer status;
+    private Integer status = 400;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime timestamp;
     private String message;
@@ -21,10 +21,17 @@ class ApiError {
         timestamp = LocalDateTime.now();
     }
 
-    public ApiError(Integer status,String message) {
-        this();
-        this.status = status;
-        this.message = message;
+    public static ApiError error(String message){
+        ApiError apiError = new ApiError();
+        apiError.setMessage(message);
+        return apiError;
+    }
+
+    public static ApiError error(Integer status, String message){
+        ApiError apiError = new ApiError();
+        apiError.setStatus(status);
+        apiError.setMessage(message);
+        return apiError;
     }
 }
 

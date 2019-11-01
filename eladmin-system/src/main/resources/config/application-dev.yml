@@ -45,13 +45,12 @@ spring:
 jwt:
   header: Authorization
   secret: mySecret
-  # token 过期时间 6个小时
-  expiration: 21000000
-  auth:
-    # 授权路径
-    path: /login
-    # 获取用户信息
-    account: /info
+  # token 过期时间/毫秒，6小时  1小时 = 3600000 毫秒
+  expiration: 21600000
+  # 在线用户key
+  online: online-token
+  # 验证码
+  codeKey: code-key
 
 #是否允许生成代码，生产环境设置为false
 generator:

@@ -25,14 +25,17 @@ public class DataScope {
 
     private final String[] scopeType = {"全部","本级","自定义"};
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    private RoleService roleService;
+    private final RoleService roleService;
 
-    @Autowired
-    private DeptService deptService;
+    private final DeptService deptService;
+
+    public DataScope(UserService userService, RoleService roleService, DeptService deptService) {
+        this.userService = userService;
+        this.roleService = roleService;
+        this.deptService = deptService;
+    }
 
     public Set<Long> getDeptIds() {
 
@@ -76,7 +79,7 @@ public class DataScope {
         deptList.forEach(dept -> {
                     if (dept!=null && dept.getEnabled()){
                         List<Dept> depts = deptService.findByPid(dept.getId());
-                        if(deptList!=null && deptList.size()!=0){
+                        if(deptList.size() != 0){
                             list.addAll(getDeptChildren(depts));
                         }
                         list.add(dept.getId());

@@ -1,7 +1,6 @@
 package me.zhengjie.modules.quartz.utils;
 
 import lombok.extern.slf4j.Slf4j;
-import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.utils.SpringContextHolder;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.ReflectionUtils;
@@ -10,7 +9,7 @@ import java.util.concurrent.Callable;
 
 /**
  * 执行定时任务
- * @author
+ * @author /
  */
 @Slf4j
 public class QuartzRunnable implements Callable {

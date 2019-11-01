@@ -1,19 +1,25 @@
 package me.zhengjie.modules.system.service.dto;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.List;
-import java.util.Set;
 
 /**
  * @author Zheng Jie
  * @date 2018-12-17
  */
-@Data
-public class MenuDTO {
+@Getter
+@Setter
+public class MenuDTO implements Serializable {
 
     private Long id;
+
+    private Integer type;
+
+    private String permission;
 
     private String name;
 

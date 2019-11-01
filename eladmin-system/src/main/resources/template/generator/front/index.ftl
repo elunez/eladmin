@@ -14,12 +14,22 @@
       <!-- 新增 -->
       <div style="display: inline-block;margin: 0px 2px;">
         <el-button
-          v-permission="['ADMIN','${upperCaseClassName}_ALL','${upperCaseClassName}_CREATE']"
+          v-permission="['admin','${changeClassName}:add']"
           class="filter-item"
           size="mini"
           type="primary"
           icon="el-icon-plus"
           @click="add">新增</el-button>
+      </div>
+      <!-- 导出 -->
+      <div style="display: inline-block;">
+        <el-button
+          :loading="downloadLoading"
+          size="mini"
+          class="filter-item"
+          type="warning"
+          icon="el-icon-download"
+          @click="download">导出</el-button>
       </div>
     </div>
     <!--表单组件-->
@@ -41,11 +51,11 @@
           </#if>
           </#list>
       </#if>
-      <el-table-column v-if="checkPermission(['ADMIN','${upperCaseClassName}_ALL','${upperCaseClassName}_EDIT','${upperCaseClassName}_DELETE'])" label="操作" width="150px" align="center">
+      <el-table-column v-if="checkPermission(['admin','${changeClassName}:edit','${changeClassName}:del'])" label="操作" width="150px" align="center">
         <template slot-scope="scope">
-          <el-button v-permission="['ADMIN','${upperCaseClassName}_ALL','${upperCaseClassName}_EDIT']" size="mini" type="primary" icon="el-icon-edit" @click="edit(scope.row)"/>
+          <el-button v-permission="['admin','${changeClassName}:edit']" size="mini" type="primary" icon="el-icon-edit" @click="edit(scope.row)"/>
           <el-popover
-            v-permission="['ADMIN','${upperCaseClassName}_ALL','${upperCaseClassName}_DELETE']"
+            v-permission="['admin','${changeClassName}:del']"
             :ref="scope.row.${pkChangeColName}"
             placement="top"
             width="180">
@@ -73,9 +83,9 @@
 <script>
 import checkPermission from '@/utils/permission'
 import initData from '@/mixins/initData'
-import { del } from '@/api/${changeClassName}'
+import { del, download${className} } from '@/api/${changeClassName}'
 <#if hasTimestamp>
-import { parseTime } from '@/utils/index'
+import { parseTime, downloadFile } from '@/utils/index'
 </#if>
 import eForm from './form'
 export default {
@@ -150,6 +160,17 @@ export default {
         </#if>
       }
       _this.dialog = true
+    },
+    // 导出
+    download() {
+      this.beforeInit()
+      this.downloadLoading = true
+      download${className}(this.params).then(result => {
+        downloadFile(result, '${className}列表', 'xlsx')
+        this.downloadLoading = false
+      }).catch(() => {
+        this.downloadLoading = false
+      })
     }
   }
 }

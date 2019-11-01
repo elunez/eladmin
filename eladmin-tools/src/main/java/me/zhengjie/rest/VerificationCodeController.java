@@ -1,15 +1,14 @@
 package me.zhengjie.rest;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import me.zhengjie.domain.VerificationCode;
 import me.zhengjie.domain.vo.EmailVo;
 import me.zhengjie.service.EmailService;
 import me.zhengjie.service.VerificationCodeService;
 import me.zhengjie.utils.ElAdminConstant;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -17,20 +16,21 @@ import org.springframework.web.bind.annotation.*;
  * @date 2018-12-26
  */
 @RestController
-@RequestMapping("api")
+@RequestMapping("/api/code")
+@Api(tags = "工具：验证码管理")
 public class VerificationCodeController {
 
-    @Autowired
-    private VerificationCodeService verificationCodeService;
+    private final VerificationCodeService verificationCodeService;
 
-    @Autowired
-    @Qualifier("jwtUserDetailsService")
-    private UserDetailsService userDetailsService;
+    private final EmailService emailService;
 
-    @Autowired
-    private EmailService emailService;
+    public VerificationCodeController(VerificationCodeService verificationCodeService,  EmailService emailService) {
+        this.verificationCodeService = verificationCodeService;
+        this.emailService = emailService;
+    }
 
-    @PostMapping(value = "/code/resetEmail")
+    @PostMapping(value = "/resetEmail")
+    @ApiOperation("重置邮箱，发送验证码")
     public ResponseEntity resetEmail(@RequestBody VerificationCode code) throws Exception {
         code.setScenes(ElAdminConstant.RESET_MAIL);
         EmailVo emailVo = verificationCodeService.sendEmail(code);
@@ -38,7 +38,8 @@ public class VerificationCodeController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @PostMapping(value = "/code/email/resetPass")
+    @PostMapping(value = "/email/resetPass")
+    @ApiOperation("重置密码，发送验证码")
     public ResponseEntity resetPass(@RequestParam String email) throws Exception {
         VerificationCode code = new VerificationCode();
         code.setType("email");
@@ -49,7 +50,8 @@ public class VerificationCodeController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @GetMapping(value = "/code/validated")
+    @GetMapping(value = "/validated")
+    @ApiOperation("验证码验证")
     public ResponseEntity validated(VerificationCode code){
         verificationCodeService.validated(code);
         return new ResponseEntity(HttpStatus.OK);

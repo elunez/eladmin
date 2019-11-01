@@ -12,10 +12,6 @@ public class PageUtil extends cn.hutool.core.util.PageUtil {
 
     /**
      * List 分页
-     * @param page
-     * @param size
-     * @param list
-     * @return
      */
     public static List toPage(int page, int size , List list) {
         int fromIndex = page * size;
@@ -32,10 +28,8 @@ public class PageUtil extends cn.hutool.core.util.PageUtil {
 
     /**
      * Page 数据处理，预防redis反序列化报错
-     * @param page
-     * @return
      */
-    public static Map toPage(Page page) {
+    public static Map<String,Object> toPage(Page page) {
         Map<String,Object> map = new LinkedHashMap<>(2);
         map.put("content",page.getContent());
         map.put("totalElements",page.getTotalElements());
@@ -43,11 +37,9 @@ public class PageUtil extends cn.hutool.core.util.PageUtil {
     }
 
     /**
-     * @param object
-     * @param totalElements
-     * @return
+     * 自定义分页
      */
-    public static Map toPage(Object object, Object totalElements) {
+    public static Map<String,Object> toPage(Object object, Object totalElements) {
         Map<String,Object> map = new LinkedHashMap<>(2);
         map.put("content",object);
         map.put("totalElements",totalElements);

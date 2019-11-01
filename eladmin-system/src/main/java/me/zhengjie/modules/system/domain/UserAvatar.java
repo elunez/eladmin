@@ -1,10 +1,14 @@
 package me.zhengjie.modules.system.domain;
 
 import cn.hutool.core.util.ObjectUtil;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import me.zhengjie.base.BaseEntity;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.sql.Timestamp;
 
 /**
@@ -12,10 +16,11 @@ import java.sql.Timestamp;
  * @date 2019年9月7日 16:16:59
  */
 @Entity
-@Table(name = "user_avatar")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
-public class UserAvatar {
+@Table(name = "user_avatar")
+public class UserAvatar implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,6 +31,10 @@ public class UserAvatar {
     private String path;
 
     private String size;
+
+    @Column(name = "create_time")
+    @CreationTimestamp
+    private Timestamp createTime;
 
     public UserAvatar(UserAvatar userAvatar,String realName, String path, String size) {
         this.id = ObjectUtil.isNotEmpty(userAvatar) ? userAvatar.getId() : null;

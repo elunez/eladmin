@@ -21,13 +21,12 @@ eladmin基于 Spring Boot 2.1.0 、 Jpa、 Spring Security、redis、Vue的前�
 
 |     |   后端源码  |   前端源码  |
 |---  |--- | --- |
-|  github   |  https://github.com/elunez/eladmin   |  https://github.com/elunez/eladmin-qd   |
-|  码云   |  https://gitee.com/elunez/eladmin   |  https://gitee.com/elunez/eladmin-qt   |
+|  github   |  https://github.com/elunez/eladmin   |  https://github.com/elunez/eladmin-web   |
+|  码云   |  https://gitee.com/elunez/eladmin   |  https://gitee.com/elunez/eladmin-web   |
 
 ####  系统功能
 - 用户管理：提供用户的相关配置，新增用户后，默认密码为123456
 - 角色管理：对权限与菜单进行分配，可根据部门设置角色的数据权限
-- 权限管理：权限细化到接口，可以理解成按钮权限
 - 菜单管理：已实现菜单动态路由，后端可配置化，支持多级菜单
 - 部门管理：可配置系统组织架构，树形表格展示
 - 岗位管理：配置各个部门的职位
@@ -44,16 +43,19 @@ eladmin基于 Spring Boot 2.1.0 、 Jpa、 Spring Security、redis、Vue的前�
 - 支付宝支付：整合了支付宝支付并且提供了测试账号，可自行测试
 
 #### 项目结构
-项目采用分模块开发方式，将通用的配置放在公共模块，```system```模块为系统核心模块也是项目入口模块，```logging``` 模块为系统的日志模块，```tools``` 为第三方工具模块，包含了图床、邮件、七牛云、支付宝，```generator``` 为系统的代码生成模块
+项目采用按功能分模块开发方式，将通用的配置放在公共模块，```system```模块为系统核心模块也是项目入口模块，```logging``` 模块为系统的日志模块，```tools``` 为第三方工具模块，包含了图床、邮件、七牛云、支付宝，```generator``` 为系统的代码生成模块
+
 - eladmin-common 公共模块
-    - exception 项目统一异常的处理
-    - mapper mapstruct的通用mapper
-    - redis redis缓存相关配置
-    - swagger2 接口文档配置
-    - utils 系统通用工具类
+  - annotation 为系统自定义注解
+  - aspect 自定义注解的切面
+  - base 提供了Entity、DTO基类和mapstruct的通用mapper
+  - config 自定义权限实现、redis配置、swagger配置
+  - exception 项目统一异常的处理
+  - utils 系统通用工具类
 - eladmin-system 系统核心模块（系统启动入口）
-	- config 配置跨域与静态资源，与数据权限
-	- modules 系统相关模块(登录授权、定时任务等)
+  - config 配置跨域与静态资源，与数据权限
+    - thread 线程池相关
+  - modules 系统相关模块(登录授权、系统监控、定时任务等)
 - eladmin-logging 系统日志模块
 - eladmin-tools 系统第三方工具模块
 - eladmin-generator 系统代码生成模块
@@ -78,6 +80,6 @@ eladmin基于 Spring Boot 2.1.0 、 Jpa、 Spring Security、redis、Vue的前�
 </table>
 
 #### 项目捐赠
-项目的发展离不开你的支持，请作者喝杯咖啡吧 ☕！ [Donate](https://docs.auauz.net/#/jz)
+项目的发展离不开你的支持，请作者喝杯咖啡吧！ps：辣条也行 ☕！ [Donate](https://docs.auauz.net/#/jz)
 #### 反馈交流
 - QQ交流群：891137268

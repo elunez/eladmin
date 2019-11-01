@@ -19,30 +19,22 @@ public class EmailConfig implements Serializable {
     @Id
     private Long id;
 
-    /**
-     *邮件服务器SMTP地址
-     */
+    // 邮件服务器SMTP地址
     @NotBlank
     private String host;
 
-    /**
-     * 邮件服务器SMTP端口
-     */
+    // 邮件服务器SMTP端口
     @NotBlank
     private String port;
 
-    /**
-     * 发件者用户名，默认为发件人邮箱前缀
-     */
+    // 发件者用户名，默认为发件人邮箱前缀
     @NotBlank
     private String user;
 
     @NotBlank
     private String pass;
 
-    /**
-     * 收件人
-     */
+    // 收件人
     @NotBlank
     @Column(name = "from_user")
     private String fromUser;

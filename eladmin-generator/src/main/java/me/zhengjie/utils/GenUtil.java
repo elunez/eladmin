@@ -34,9 +34,9 @@ public class GenUtil {
 
     /**
      * 获取后端代码模板名称
-     * @return
+     * @return List
      */
-    public static List<String> getAdminTemplateNames() {
+    private static List<String> getAdminTemplateNames() {
         List<String> templateNames = new ArrayList<>();
         templateNames.add("Entity");
         templateNames.add("Dto");
@@ -51,9 +51,9 @@ public class GenUtil {
 
     /**
      * 获取前端代码模板名称
-     * @return
+     * @return List
      */
-    public static List<String> getFrontTemplateNames() {
+    private static List<String> getFrontTemplateNames() {
         List<String> templateNames = new ArrayList<>();
         templateNames.add("api");
         templateNames.add("index");
@@ -67,7 +67,7 @@ public class GenUtil {
      * @param genConfig 生成代码的参数配置，如包路径，作者
      */
     public static void generatorCode(List<ColumnInfo> columnInfos, GenConfig genConfig, String tableName) throws IOException {
-        Map<String,Object> map = new HashMap();
+        Map<String,Object> map = new HashMap<>();
         map.put("package",genConfig.getPack());
         map.put("moduleName",genConfig.getModuleName());
         map.put("author",genConfig.getAuthor());
@@ -85,6 +85,8 @@ public class GenUtil {
         map.put("upperCaseClassName", className.toUpperCase());
         map.put("changeClassName", changeClassName);
         map.put("hasTimestamp",false);
+        map.put("queryHasTimestamp",false);
+        map.put("queryHasBigDecimal",false);
         map.put("hasBigDecimal",false);
         map.put("hasQuery",false);
         map.put("auto",false);
@@ -92,7 +94,7 @@ public class GenUtil {
         List<Map<String,Object>> columns = new ArrayList<>();
         List<Map<String,Object>> queryColumns = new ArrayList<>();
         for (ColumnInfo column : columnInfos) {
-            Map<String,Object> listMap = new HashMap();
+            Map<String,Object> listMap = new HashMap<>();
             listMap.put("columnComment",column.getColumnComment());
             listMap.put("columnKey",column.getColumnKey());
 
@@ -124,6 +126,12 @@ public class GenUtil {
             if(!StringUtils.isBlank(column.getColumnQuery())){
                 listMap.put("columnQuery",column.getColumnQuery());
                 map.put("hasQuery",true);
+                if(TIMESTAMP.equals(colType)){
+                    map.put("queryHasTimestamp",true);
+                }
+                if(BIGDECIMAL.equals(colType)){
+                    map.put("queryHasBigDecimal",true);
+                }
                 queryColumns.add(listMap);
             }
             columns.add(listMap);
@@ -138,6 +146,7 @@ public class GenUtil {
             Template template = engine.getTemplate("generator/admin/"+templateName+".ftl");
             String filePath = getAdminFilePath(templateName,genConfig,className);
 
+            assert filePath != null;
             File file = new File(filePath);
 
             // 如果非覆盖生成
@@ -154,6 +163,7 @@ public class GenUtil {
             Template template = engine.getTemplate("generator/front/"+templateName+".ftl");
             String filePath = getFrontFilePath(templateName,genConfig,map.get("changeClassName").toString());
 
+            assert filePath != null;
             File file = new File(filePath);
 
             // 如果非覆盖生成
@@ -168,7 +178,7 @@ public class GenUtil {
     /**
      * 定义后端文件路径以及名称
      */
-    public static String getAdminFilePath(String templateName, GenConfig genConfig, String className) {
+    private static String getAdminFilePath(String templateName, GenConfig genConfig, String className) {
         String projectPath = System.getProperty("user.dir") + File.separator + genConfig.getModuleName();
         String packagePath = projectPath + File.separator + "src" +File.separator+ "main" + File.separator + "java" + File.separator;
         if (!ObjectUtils.isEmpty(genConfig.getPack())) {
@@ -213,7 +223,7 @@ public class GenUtil {
     /**
      * 定义前端文件路径以及名称
      */
-    public static String getFrontFilePath(String templateName, GenConfig genConfig, String apiName) {
+    private static String getFrontFilePath(String templateName, GenConfig genConfig, String apiName) {
         String path = genConfig.getPath();
 
         if ("api".equals(templateName)) {
@@ -230,18 +240,17 @@ public class GenUtil {
         return null;
     }
 
-    public static void genFile(File file,Template template,Map<String,Object> map) throws IOException {
+    private static void genFile(File file, Template template, Map<String, Object> map) throws IOException {
         // 生成目标文件
         Writer writer = null;
         try {
             FileUtil.touch(file);
             writer = new FileWriter(file);
             template.render(map, writer);
-        } catch (TemplateException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
+        } catch (TemplateException | IOException e) {
             throw new RuntimeException(e);
         } finally {
+            assert writer != null;
             writer.close();
         }
     }

@@ -22,3 +22,12 @@ export function edit(data) {
     data
   })
 }
+
+export function download${className}(params) {
+  return request({
+    url: 'api/${changeClassName}/download',
+    method: 'get',
+    params,
+    responseType: 'blob'
+  })
+}

@@ -56,8 +56,7 @@ public class QuartzManage {
 
     /**
      * 更新job cron表达式
-     * @param quartzJob
-     * @throws SchedulerException
+     * @param quartzJob /
      */
     public void updateJobCron(QuartzJob quartzJob){
         try {
@@ -88,8 +87,7 @@ public class QuartzManage {
 
     /**
      * 删除一个job
-     * @param quartzJob
-     * @throws SchedulerException
+     * @param quartzJob /
      */
     public void deleteJob(QuartzJob quartzJob){
         try {
@@ -104,8 +102,7 @@ public class QuartzManage {
 
     /**
      * 恢复一个job
-     * @param quartzJob
-     * @throws SchedulerException
+     * @param quartzJob /
      */
     public void resumeJob(QuartzJob quartzJob){
         try {
@@ -124,8 +121,7 @@ public class QuartzManage {
 
     /**
      * 立即执行job
-     * @param quartzJob
-     * @throws SchedulerException
+     * @param quartzJob /
      */
     public void runAJobNow(QuartzJob quartzJob){
         try {
@@ -146,8 +142,7 @@ public class QuartzManage {
 
     /**
      * 暂停一个job
-     * @param quartzJob
-     * @throws SchedulerException
+     * @param quartzJob /
      */
     public void pauseJob(QuartzJob quartzJob){
         try {
