@@ -5,7 +5,6 @@ import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.AsyncConfigurer;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import java.lang.reflect.Method;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -37,7 +36,7 @@ public class AsyncTaskExecutePool implements AsyncConfigurer {
         //活跃时间
         executor.setKeepAliveSeconds(config.getKeepAliveSeconds());
         //线程名字前缀
-        executor.setThreadNamePrefix("el-executor-");
+        executor.setThreadNamePrefix("el-async-");
         // setRejectedExecutionHandler：当pool已经达到max size的时候，如何处理新任务
         // CallerRunsPolicy：不在新线程中执行任务，而是由调用者所在的线程来执行
         executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
@@ -47,12 +46,9 @@ public class AsyncTaskExecutePool implements AsyncConfigurer {
 
     @Override
     public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {
-        return new AsyncUncaughtExceptionHandler() {
-            @Override
-            public void handleUncaughtException(Throwable throwable, Method method, Object... objects) {
-                log.error("=========================="+throwable.getMessage()+"=======================", throwable);
-                log.error("exception method:"+method.getName());
-            }
+        return (throwable, method, objects) -> {
+            log.error("===="+throwable.getMessage()+"====", throwable);
+            log.error("exception method:"+method.getName());
         };
     }
 }

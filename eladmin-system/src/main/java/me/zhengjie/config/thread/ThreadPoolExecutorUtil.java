@@ -20,7 +20,7 @@ public class ThreadPoolExecutorUtil {
                 properties.getMaxPoolSize(),
                 properties.getKeepAliveSeconds(),
                 TimeUnit.SECONDS,
-                new ArrayBlockingQueue<Runnable>(properties.getQueueCapacity()),
+                new ArrayBlockingQueue<>(properties.getQueueCapacity()),
                 new TheadFactoryName()
         );
     }
