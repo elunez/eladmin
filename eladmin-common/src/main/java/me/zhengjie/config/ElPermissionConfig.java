@@ -18,8 +18,11 @@ public class ElPermissionConfig {
         }
         // 获取当前用户的所有权限
         List<String> elPermissions = SecurityUtils.getUserDetails().getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
+        // admin 直接放行
+        if (elPermissions.contains("admin")) {
+            return true;
+        }
         // 判断当前用户的所有权限是否包含接口上定义的权限
-        List<String> list = Arrays.stream(permissions).filter(elPermissions::contains).collect(Collectors.toList());
-        return elPermissions.contains("admin") || list.size() != 0;
+        return  Arrays.stream(permissions).filter(elPermissions::contains).collect(Collectors.toList()).size() > 0;
     }
 }
