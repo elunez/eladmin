@@ -1,6 +1,6 @@
 package me.zhengjie.modules.monitor.rest;
 
-import me.zhengjie.modules.security.annotation.AnonymousAccess;
+import me.zhengjie.annotation.AnonymousAccess;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

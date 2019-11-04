@@ -40,7 +40,7 @@
           <#list columns as column>
           <#if column.columnShow = 'true'>
               <#if column.columnType != 'Timestamp'>
-      <el-table-column prop="${column.changeColumnName}" label="<#if column.columnComment != ''>${column.columnComment}<#else>${column.changeColumnName}</#if>"/>
+      <el-table-column prop="${column.changeColumnName}" show-overflow-tooltip tooltip-effect="light" label="<#if column.columnComment != ''>${column.columnComment}<#else>${column.changeColumnName}</#if>"/>
               <#else>
       <el-table-column prop="${column.changeColumnName}" label="<#if column.columnComment != ''>${column.columnComment}<#else>${column.changeColumnName}</#if>">
         <template slot-scope="scope">
