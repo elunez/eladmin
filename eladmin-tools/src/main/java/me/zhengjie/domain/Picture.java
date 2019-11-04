@@ -32,9 +32,6 @@ public class Picture implements Serializable {
 
     private String width;
 
-    /**
-     * delete URl
-     */
     @Column(name = "delete_url")
     private String delete;
 
@@ -43,6 +40,9 @@ public class Picture implements Serializable {
     @CreationTimestamp
     @Column(name = "create_time")
     private Timestamp createTime;
+
+    // 用于检测文件是否重复
+    private String md5Code;
 
     @Override
     public String toString() {

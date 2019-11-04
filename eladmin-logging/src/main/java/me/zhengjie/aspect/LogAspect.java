@@ -2,7 +2,6 @@ package me.zhengjie.aspect;
 
 import lombok.extern.slf4j.Slf4j;
 import me.zhengjie.domain.Log;
-import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.service.LogService;
 import me.zhengjie.utils.RequestHolder;
 import me.zhengjie.utils.SecurityUtils;
@@ -14,7 +13,6 @@ import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,10 +26,13 @@ import javax.servlet.http.HttpServletRequest;
 @Slf4j
 public class LogAspect {
 
-    @Autowired
-    private LogService logService;
+    private final LogService logService;
 
     private long currentTime = 0L;
+
+    public LogAspect(LogService logService) {
+        this.logService = logService;
+    }
 
     /**
      * 配置切入点
@@ -48,11 +49,12 @@ public class LogAspect {
      */
     @Around("logPointcut()")
     public Object logAround(ProceedingJoinPoint joinPoint) throws Throwable {
-        Object result = null;
+        Object result;
         currentTime = System.currentTimeMillis();
         result = joinPoint.proceed();
         Log log = new Log("INFO",System.currentTimeMillis() - currentTime);
-        logService.save(getUsername(), StringUtils.getIP(RequestHolder.getHttpServletRequest()),joinPoint, log);
+        HttpServletRequest request = RequestHolder.getHttpServletRequest();
+        logService.save(getUsername(), StringUtils.getBrowser(request), StringUtils.getIp(request),joinPoint, log);
         return result;
     }
 
@@ -66,7 +68,8 @@ public class LogAspect {
     public void logAfterThrowing(JoinPoint joinPoint, Throwable e) {
         Log log = new Log("ERROR",System.currentTimeMillis() - currentTime);
         log.setExceptionDetail(ThrowableUtil.getStackTrace(e).getBytes());
-        logService.save(getUsername(), StringUtils.getIP(RequestHolder.getHttpServletRequest()), (ProceedingJoinPoint)joinPoint, log);
+        HttpServletRequest request = RequestHolder.getHttpServletRequest();
+        logService.save(getUsername(), StringUtils.getBrowser(request), StringUtils.getIp(request), (ProceedingJoinPoint)joinPoint, log);
     }
 
     public String getUsername() {

@@ -12,6 +12,6 @@ import org.springframework.data.jpa.repository.Query;
 public interface QiNiuConfigRepository extends JpaRepository<QiniuConfig,Long> {
 
     @Modifying
-    @Query(value = "update qiniu_content set type = ?1", nativeQuery = true)
+    @Query(value = "update QiniuConfig set type = ?1")
     void update(String type);
 }

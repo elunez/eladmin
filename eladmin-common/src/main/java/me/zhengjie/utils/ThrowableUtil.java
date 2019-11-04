@@ -2,30 +2,23 @@ package me.zhengjie.utils;
 
 import me.zhengjie.exception.BadRequestException;
 import org.hibernate.exception.ConstraintViolationException;
-
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
 /**
- * 异常工具
+ * 异常工具 2019-01-06
  * @author Zheng Jie
- * @date 2019-01-06
  */
 public class ThrowableUtil {
 
     /**
      * 获取堆栈信息
-     * @param throwable
-     * @return
      */
     public static String getStackTrace(Throwable throwable){
         StringWriter sw = new StringWriter();
-        PrintWriter pw = new PrintWriter(sw);
-        try {
+        try (PrintWriter pw = new PrintWriter(sw)) {
             throwable.printStackTrace(pw);
             return sw.toString();
-        } finally {
-            pw.close();
         }
     }
 
@@ -34,9 +27,10 @@ public class ThrowableUtil {
         while ((t != null) && !(t instanceof ConstraintViolationException)) {
             t = t.getCause();
         }
-        if (t instanceof ConstraintViolationException) {
+        if (t != null) {
             throw new BadRequestException(msg);
         }
+        assert false;
         throw new BadRequestException("删除失败：" + t.getMessage());
     }
 }

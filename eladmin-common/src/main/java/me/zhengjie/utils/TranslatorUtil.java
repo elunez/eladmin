@@ -1,8 +1,6 @@
 package me.zhengjie.utils;
 
 import cn.hutool.json.JSONArray;
-import lombok.var;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -26,7 +24,7 @@ public class TranslatorUtil {
             BufferedReader in = new BufferedReader(
                     new InputStreamReader(con.getInputStream()));
             String inputLine;
-            StringBuffer response = new StringBuffer();
+            StringBuilder response = new StringBuilder();
 
             while ((inputLine = in.readLine()) != null) {
                 response.append(inputLine);
@@ -38,15 +36,12 @@ public class TranslatorUtil {
         }
     }
 
-    private static String parseResult(String inputJson) throws Exception {
-        JSONArray jsonArray = new JSONArray(inputJson);
-        JSONArray jsonArray2 = (JSONArray) jsonArray.get(0);
-        String result ="";
-
-        for(var i = 0; i < jsonArray2.size(); i ++){
-            result += ((JSONArray) jsonArray2.get(i)).get(0).toString();
+    private static String parseResult(String inputJson){
+        JSONArray jsonArray2 = (JSONArray) new JSONArray(inputJson).get(0);
+        StringBuilder result = new StringBuilder();
+        for (Object o : jsonArray2) {
+            result.append(((JSONArray) o).get(0).toString());
         }
-        return result;
+        return result.toString();
     }
-
 }

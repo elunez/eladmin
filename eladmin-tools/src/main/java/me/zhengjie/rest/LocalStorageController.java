@@ -4,7 +4,6 @@ import me.zhengjie.aop.log.Log;
 import me.zhengjie.domain.LocalStorage;
 import me.zhengjie.service.LocalStorageService;
 import me.zhengjie.service.dto.LocalStorageQueryCriteria;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,55 +13,65 @@ import org.springframework.web.bind.annotation.*;
 import io.swagger.annotations.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
 /**
 * @author Zheng Jie
 * @date 2019-09-05
 */
-@Api(tags = "本地存储管理")
+@Api(tags = "工具：本地存储管理")
 @RestController
-@RequestMapping("api")
+@RequestMapping("/api/localStorage")
 public class LocalStorageController {
 
-    @Autowired
-    private LocalStorageService localStorageService;
+    private final LocalStorageService localStorageService;
 
-    @ApiOperation(value = "查询文件")
-    @GetMapping(value = "/localStorage")
-    @PreAuthorize("hasAnyRole('ADMIN','LOCALSTORAGE_ALL','LOCALSTORAGE_SELECT')")
+    public LocalStorageController(LocalStorageService localStorageService) {
+        this.localStorageService = localStorageService;
+    }
+
+    @ApiOperation("查询文件")
+    @GetMapping
+    @PreAuthorize("@el.check('storage:list')")
     public ResponseEntity getLocalStorages(LocalStorageQueryCriteria criteria, Pageable pageable){
-        return new ResponseEntity(localStorageService.queryAll(criteria,pageable),HttpStatus.OK);
+        return new ResponseEntity<>(localStorageService.queryAll(criteria,pageable),HttpStatus.OK);
     }
 
-    @ApiOperation(value = "上传文件")
-    @PostMapping(value = "/localStorage")
-    @PreAuthorize("hasAnyRole('ADMIN','LOCALSTORAGE_ALL','LOCALSTORAGE_CREATE')")
+    @Log("导出数据")
+    @ApiOperation("导出数据")
+    @GetMapping(value = "/download")
+    @PreAuthorize("@el.check('storage:list')")
+    public void download(HttpServletResponse response, LocalStorageQueryCriteria criteria) throws IOException {
+        localStorageService.download(localStorageService.queryAll(criteria), response);
+    }
+
+    @ApiOperation("上传文件")
+    @PostMapping
+    @PreAuthorize("@el.check('storage:add')")
     public ResponseEntity create(@RequestParam String name, @RequestParam("file") MultipartFile file){
-        return new ResponseEntity(localStorageService.create(name, file),HttpStatus.CREATED);
+        return new ResponseEntity<>(localStorageService.create(name, file),HttpStatus.CREATED);
     }
 
-    @ApiOperation(value = "修改文件")
-    @PutMapping(value = "/localStorage")
-    @PreAuthorize("hasAnyRole('ADMIN','LOCALSTORAGE_ALL','LOCALSTORAGE_EDIT')")
+    @ApiOperation("修改文件")
+    @PutMapping
+    @PreAuthorize("@el.check('storage:edit')")
     public ResponseEntity update(@Validated @RequestBody LocalStorage resources){
         localStorageService.update(resources);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
-    @ApiOperation(value = "删除文件")
-    @DeleteMapping(value = "/localStorage/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN','LOCALSTORAGE_ALL','LOCALSTORAGE_DELETE')")
+    @ApiOperation("删除文件")
+    @DeleteMapping(value = "/{id}")
+    @PreAuthorize("@el.check('storage:del')")
     public ResponseEntity delete(@PathVariable Long id){
         localStorageService.delete(id);
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    /**
-     * 删除多张图片
-     * @param ids
-     * @return
-     */
-    @Log("删除图片")
-    @DeleteMapping(value = "/localStorage")
+    @Log("多选删除")
+    @DeleteMapping
+    @ApiOperation("多选删除")
     public ResponseEntity deleteAll(@RequestBody Long[] ids) {
         localStorageService.deleteAll(ids);
         return new ResponseEntity(HttpStatus.OK);

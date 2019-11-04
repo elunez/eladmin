@@ -11,6 +11,7 @@ import javax.activation.MimetypesFileTypeMap;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.security.MessageDigest;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -44,8 +45,6 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
 
     /**
      * MultipartFile转File
-     * @param multipartFile
-     * @return
      */
     public static File toFile(MultipartFile multipartFile){
         // 获取文件名
@@ -65,21 +64,7 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
     }
 
     /**
-     * 删除
-     * @param files
-     */
-    public static void deleteFile(File... files) {
-        for (File file : files) {
-            if (file.exists()) {
-                file.delete();
-            }
-        }
-    }
-
-    /**
-     * 获取文件扩展名
-     * @param filename
-     * @return
+     * 获取文件扩展名，不带 .
      */
     public static String getExtensionName(String filename) {
         if ((filename != null) && (filename.length() > 0)) {
@@ -93,8 +78,6 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
 
     /**
      * Java文件操作 获取不带扩展名的文件名
-     * @param filename
-     * @return
      */
     public static String getFileNameNoEx(String filename) {
         if ((filename != null) && (filename.length() > 0)) {
@@ -108,11 +91,9 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
 
     /**
      * 文件大小转换
-     * @param size
-     * @return
      */
     public static String getSize(long size){
-        String resultSize = "";
+        String resultSize;
         if (size / GB >= 1) {
             //如果当前Byte的值大于等于1GB
             resultSize = DF.format(size / (float) GB) + "GB   ";
@@ -130,18 +111,14 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
 
     /**
      * inputStream 转 File
-     * @param ins
-     * @param name
-     * @return
-     * @throws Exception
      */
-    public static File inputStreamToFile(InputStream ins, String name) throws Exception{
+    static File inputStreamToFile(InputStream ins, String name) throws Exception{
         File file = new File(System.getProperty("java.io.tmpdir") + File.separator + name);
         if (file.exists()) {
             return file;
         }
         OutputStream os = new FileOutputStream(file);
-        int bytesRead = 0;
+        int bytesRead;
         byte[] buffer = new byte[8192];
         while ((bytesRead = ins.read(buffer, 0, 8192)) != -1) {
             os.write(buffer, 0, bytesRead);
@@ -153,10 +130,6 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
 
     /**
      * 将文件名解析成文件的上传路径
-     *
-     * @param file
-     * @param filePath
-     * @return 上传到服务器的文件名
      */
     public static File upload(MultipartFile file, String filePath) {
         Date date = new Date();
@@ -167,13 +140,14 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
         try {
             String fileName = name + nowStr + "." + suffix;
             String path = filePath + fileName;
-            File dest = new File(path);
+            // getCanonicalFile 可解析正确各种路径
+            File dest = new File(path).getCanonicalFile();
             // 检测是否存在目录
             if (!dest.getParentFile().exists()) {
-                dest.getParentFile().mkdirs();// 新建文件夹
+                dest.getParentFile().mkdirs();
             }
-            String d = dest.getPath();
-            file.transferTo(dest);// 文件写入
+            // 文件写入
+            file.transferTo(dest);
             return dest;
         } catch (Exception e) {
             e.printStackTrace();
@@ -183,20 +157,16 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
 
     public static String fileToBase64(File file) throws Exception {
         FileInputStream inputFile = new FileInputStream(file);
-        String base64 =null;
+        String base64;
         byte[] buffer = new byte[(int)file.length()];
         inputFile.read(buffer);
         inputFile.close();
-        base64=new Base64().encode(buffer);
-        String encoded = base64.replaceAll("[\\s*\t\n\r]", "");
-        return encoded;
+        base64=Base64.encode(buffer);
+        return base64.replaceAll("[\\s*\t\n\r]", "");
     }
 
     /**
      * 导出excel
-     * @param list
-     * @return
-     * @throws Exception
      */
     public static void downloadExcel(List<Map<String, Object>> list, HttpServletResponse response) throws IOException {
         String tempPath =System.getProperty("java.io.tmpdir") + IdUtil.fastSimpleUUID() + ".xlsx";
@@ -217,28 +187,91 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
     }
 
     public static String getFileType(String type) {
-        String documents = "txt doc pdf ppt pps xlsx xls";
+        String documents = "txt doc pdf ppt pps xlsx xls docx";
         String music = "mp3 wav wma mpa ram ra aac aif m4a";
         String video = "avi mpg mpe mpeg asf wmv mov qt rm mp4 flv m4v webm ogv ogg";
         String image = "bmp dib pcp dif wmf gif jpg tif eps psd cdr iff tga pcd mpt png jpeg";
-        if(image.indexOf(type) != -1){
+        if(image.contains(type)){
             return "图片";
-        } else if(documents.indexOf(type) != -1){
+        } else if(documents.contains(type)){
             return "文档";
-        } else if(music.indexOf(type) != -1){
+        } else if(music.contains(type)){
             return "音乐";
-        } else if(video.indexOf(type) != -1){
+        } else if(video.contains(type)){
             return "视频";
-        } else return "其他";
+        } else {
+            return "其他";
+        }
     }
 
     public static String getFileTypeByMimeType(String type) {
         String mimeType = new MimetypesFileTypeMap().getContentType("." + type);
-        return mimeType.split("\\/")[0];
+        return mimeType.split("/")[0];
     }
+
     public static void checkSize(long maxSize, long size) {
         if(size > (maxSize * 1024 * 1024)){
             throw new BadRequestException("文件超出规定大小");
         }
     }
+
+    /**
+     * 判断两个文件是否相同
+     */
+    public static boolean check(File file1, File file2) {
+        String img1Md5 = getMd5(file1);
+        String img2Md5 = getMd5(file2);
+        return img1Md5.equals(img2Md5);
+    }
+
+    /**
+     * 判断两个文件是否相同
+     */
+    public static boolean check(String file1Md5, String file2Md5) {
+        return file1Md5.equals(file2Md5);
+    }
+
+    private static byte[] getByte(File file) {
+        // 得到文件长度
+        byte[] b = new byte[(int) file.length()];
+        try {
+            InputStream in = new FileInputStream(file);
+            try {
+                in.read(b);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return b;
+    }
+
+    private static String getMd5(byte[] bytes) {
+        // 16进制字符
+        char[] hexDigits = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
+        try {
+            MessageDigest mdTemp = MessageDigest.getInstance("MD5");
+            mdTemp.update(bytes);
+            byte[] md = mdTemp.digest();
+            int j = md.length;
+            char[] str = new char[j * 2];
+            int k = 0;
+            // 移位 输出字符串
+            for (byte byte0 : md) {
+                str[k++] = hexDigits[byte0 >>> 4 & 0xf];
+                str[k++] = hexDigits[byte0 & 0xf];
+            }
+            return new String(str);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static String getMd5(File file) {
+        return getMd5(getByte(file));
+    }
+
 }

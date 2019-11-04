@@ -3,6 +3,8 @@ package me.zhengjie.service.dto;
 import lombok.Data;
 import me.zhengjie.annotation.Query;
 
+import java.sql.Timestamp;
+
 /**
  * 日志查询类
  * @author Zheng Jie
@@ -17,4 +19,10 @@ public class LogQueryCriteria {
 
     @Query
     private String logType;
+
+    @Query(type = Query.Type.GREATER_THAN,propName = "createTime")
+    private Timestamp startTime;
+
+    @Query(type = Query.Type.LESS_THAN,propName = "createTime")
+    private Timestamp endTime;
 }

@@ -5,7 +5,11 @@
   <#list columns as column>
   <#if column.changeColumnName != '${pkChangeColName}'>
       <el-form-item label="<#if column.columnComment != ''>${column.columnComment}<#else>${column.changeColumnName}</#if>" <#if column.columnKey = 'UNI'>prop="${column.changeColumnName}"</#if>>
+        <#if column.columnType != 'Timestamp'>
         <el-input v-model="form.${column.changeColumnName}" style="width: 370px;"/>
+        <#else >
+        <el-date-picker v-model="form.${column.changeColumnName}" type="datetime" style="width: 370px;"/>
+        </#if>
       </el-form-item>
   </#if>
   </#list>

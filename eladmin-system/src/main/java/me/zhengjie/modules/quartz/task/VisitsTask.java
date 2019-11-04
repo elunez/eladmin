@@ -1,7 +1,6 @@
 package me.zhengjie.modules.quartz.task;
 
 import me.zhengjie.modules.monitor.service.VisitsService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -11,8 +10,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class VisitsTask {
 
-    @Autowired
-    private VisitsService visitsService;
+    private final VisitsService visitsService;
+
+    public VisitsTask(VisitsService visitsService) {
+        this.visitsService = visitsService;
+    }
 
     public void run(){
         visitsService.save();

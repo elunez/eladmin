@@ -29,6 +29,17 @@ spring:
     #连接超时时间
     timeout: 5000
 
+task:
+  pool:
+    # 核心线程池大小
+    core-pool-size: 10
+    # 最大线程数
+    max-pool-size: 30
+    # 活跃时间
+    keep-alive-seconds: 60
+    # 队列容量
+    queue-capacity: 50
+
 #七牛云
 qiniu:
   # 文件大小 /M

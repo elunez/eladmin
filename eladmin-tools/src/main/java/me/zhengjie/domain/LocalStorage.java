@@ -1,29 +1,26 @@
 package me.zhengjie.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.*;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
-import lombok.NoArgsConstructor;
+import me.zhengjie.base.BaseEntity;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 /**
 * @author Zheng Jie
 * @date 2019-09-05
 */
+@Getter
+@Setter
 @Entity
-@Data
 @Table(name="local_storage")
-@AllArgsConstructor
 @NoArgsConstructor
-public class LocalStorage implements Serializable {
+public class LocalStorage  implements Serializable {
 
-    // ID
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -57,15 +54,9 @@ public class LocalStorage implements Serializable {
     @Column(name = "operate")
     private String operate;
 
-    // 创建日期
     @Column(name = "create_time")
     @CreationTimestamp
     private Timestamp createTime;
-
-    // 修改日期
-    @Column(name = "update_time")
-    @UpdateTimestamp
-    private Timestamp updateTime;
 
     public LocalStorage(String realName,String name, String suffix, String path, String type, String size, String operate) {
         this.realName = realName;

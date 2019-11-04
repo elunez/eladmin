@@ -1,10 +1,10 @@
 package ${package}.service.dto;
 
 import lombok.Data;
-<#if hasTimestamp>
+<#if queryHasTimestamp>
 import java.sql.Timestamp;
 </#if>
-<#if hasBigDecimal>
+<#if queryHasBigDecimal>
 import java.math.BigDecimal;
 </#if>
 <#if queryColumns??>

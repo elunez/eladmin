@@ -1,10 +1,7 @@
 package me.zhengjie.modules.system.service.dto;
 
 import lombok.Data;
-
 import java.io.Serializable;
-import java.sql.Timestamp;
-import java.util.Set;
 
 /**
  * @author Zheng Jie
