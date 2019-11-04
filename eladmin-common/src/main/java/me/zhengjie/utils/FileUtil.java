@@ -140,7 +140,8 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
         try {
             String fileName = name + nowStr + "." + suffix;
             String path = filePath + fileName;
-            File dest = new File(path);
+            // getCanonicalFile 可解析正确各种路径
+            File dest = new File(path).getCanonicalFile();
             // 检测是否存在目录
             if (!dest.getParentFile().exists()) {
                 dest.getParentFile().mkdirs();
