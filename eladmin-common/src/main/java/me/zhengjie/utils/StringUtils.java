@@ -6,6 +6,7 @@ import eu.bitwalker.useragentutils.UserAgent;
 import org.lionsoul.ip2region.DataBlock;
 import org.lionsoul.ip2region.DbConfig;
 import org.lionsoul.ip2region.DbSearcher;
+
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.lang.reflect.Method;
@@ -13,6 +14,10 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 字符串工具类, 继承org.apache.commons.lang3.StringUtils类
@@ -123,7 +128,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
         if (ip.contains(",")) {
             ip = ip.split(",")[0];
         }
-        if  ("127.0.0.1".equals(ip))  {
+        if ("127.0.0.1".equals(ip)) {
             // 获取本机真正的ip地址
             try {
                 ip = InetAddress.getLocalHost().getHostAddress();
@@ -148,18 +153,18 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
             method = searcher.getClass().getMethod("btreeSearch", String.class);
             DataBlock dataBlock;
             dataBlock = (DataBlock) method.invoke(searcher, ip);
-            String address = dataBlock.getRegion().replace("0|","");
-            if(address.charAt(address.length()-1) == '|'){
-                address = address.substring(0,address.length() - 1);
+            String address = dataBlock.getRegion().replace("0|", "");
+            if (address.charAt(address.length() - 1) == '|') {
+                address = address.substring(0, address.length() - 1);
             }
-            return address.equals(ElAdminConstant.REGION)?"内网IP":address;
+            return address.equals(ElAdminConstant.REGION) ? "内网IP" : address;
         } catch (Exception e) {
             e.printStackTrace();
         }
         return "";
     }
 
-    public static String getBrowser(HttpServletRequest request){
+    public static String getBrowser(HttpServletRequest request) {
         UserAgent userAgent = UserAgent.parseUserAgentString(request.getHeader("User-Agent"));
         Browser browser = userAgent.getBrowser();
         return browser.getName();
@@ -168,15 +173,25 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
     /**
      * 获得当天是周几
      */
-    public static String getWeekDay(){
+    public static String getWeekDay() {
         String[] weekDays = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
         Calendar cal = Calendar.getInstance();
         cal.setTime(new Date());
 
         int w = cal.get(Calendar.DAY_OF_WEEK) - 1;
-        if (w < 0){
+        if (w < 0) {
             w = 0;
         }
         return weekDays[w];
+    }
+
+    public static Set<String> findRoles(String roleStr) {
+//        String line = "hasAnyRole('ROLE_ANONYMOUS') or hasAnyRole('kkjd','ddd') or @el.check('dept:list')";
+        Set<String> roles = new HashSet<>();
+        Matcher m = Pattern.compile("'([\\w:]+)'").matcher(roleStr);
+        while (m.find()) {
+            roles.add(m.group(1));
+        }
+        return roles;
     }
 }

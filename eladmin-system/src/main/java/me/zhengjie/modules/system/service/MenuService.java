@@ -42,4 +42,6 @@ public interface MenuService {
     void delete(Set<Menu> menuSet);
 
     void download(List<MenuDTO> queryAll, HttpServletResponse response) throws IOException;
+
+    void autoRegisterSysMenu();
 }

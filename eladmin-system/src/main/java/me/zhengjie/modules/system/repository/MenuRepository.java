@@ -19,4 +19,6 @@ public interface MenuRepository extends JpaRepository<Menu, Long>, JpaSpecificat
     List<Menu> findByPid(long pid);
 
     LinkedHashSet<Menu> findByRoles_IdAndTypeIsNotInOrderBySortAsc(Long id, Integer type);
+
+    List<Menu> findMenusByType(Integer type);
 }

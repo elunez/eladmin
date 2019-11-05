@@ -78,6 +78,7 @@ public class MenuController {
     @PreAuthorize("@el.check('menu:list')")
     public ResponseEntity getMenus(MenuQueryCriteria criteria){
         List<MenuDTO> menuDTOList = menuService.queryAll(criteria);
+        menuService.autoRegisterSysMenu();
         return new ResponseEntity<>(menuService.buildTree(menuDTOList),HttpStatus.OK);
     }
 

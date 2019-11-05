@@ -23,6 +23,6 @@ public class ElPermissionConfig {
             return true;
         }
         // 判断当前用户的所有权限是否包含接口上定义的权限
-        return  Arrays.stream(permissions).filter(elPermissions::contains).collect(Collectors.toList()).size() > 0;
+        return  Arrays.stream(permissions).anyMatch(elPermissions::contains);
     }
 }

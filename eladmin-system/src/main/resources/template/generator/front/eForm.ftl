@@ -6,7 +6,7 @@
   <#if column.changeColumnName != '${pkChangeColName}'>
       <el-form-item label="<#if column.columnComment != ''>${column.columnComment}<#else>${column.changeColumnName}</#if>" <#if column.columnKey = 'UNI'>prop="${column.changeColumnName}"</#if>>
         <#if column.columnType != 'Timestamp'>
-          <el-input v-model="form.${column.changeColumnName}" :type="(form.${column.changeColumnName} && form.${column.changeColumnName}.length ) > 35 ? 'textarea': 'text'" style="width: 370px;"/>
+          <el-input v-model="form.${column.changeColumnName}" style="width: 370px;"/>
           <#else >
           <el-date-picker type="datetime" v-model="form.${column.changeColumnName}" style="width: 370px;"/>
         </#if>
