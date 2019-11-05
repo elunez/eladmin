@@ -291,7 +291,7 @@ INSERT INTO `menu` VALUES (75, b'0', '任务删除', '', 28, 4, '', '', b'0', b'
 INSERT INTO `menu` VALUES (77, b'0', '上传文件', '', 18, 2, '', '', b'0', b'0', '', '2019-10-29 13:09:09', 'storage:add', 2);
 INSERT INTO `menu` VALUES (78, b'0', '文件编辑', '', 18, 3, '', '', b'0', b'0', '', '2019-10-29 13:09:22', 'storage:edit', 2);
 INSERT INTO `menu` VALUES (79, b'0', '文件删除', '', 18, 4, '', '', b'0', b'0', '', '2019-10-29 13:09:34', 'storage:del', 2);
-
+INSERT INTO `menu` VALUES (81, b'0', '服务器监控', 'monitor/server/index', 6, 15, 'system', 'server', b'0', b'0', 'Server', '2019-11-01 16:37:41', 'server:list', 1);
 -- ----------------------------
 -- Table structure for picture
 -- ----------------------------
@@ -497,6 +497,7 @@ INSERT INTO `roles_menus` VALUES (75, 1);
 INSERT INTO `roles_menus` VALUES (77, 1);
 INSERT INTO `roles_menus` VALUES (78, 1);
 INSERT INTO `roles_menus` VALUES (79, 1);
+INSERT INTO `roles_menus` VALUES (81, 1);
 INSERT INTO `roles_menus` VALUES (1, 2);
 INSERT INTO `roles_menus` VALUES (2, 2);
 INSERT INTO `roles_menus` VALUES (3, 2);
