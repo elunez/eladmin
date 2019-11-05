@@ -632,4 +632,24 @@ INSERT INTO `visits` VALUES (108, '2019-10-29 21:45:49', '2019-10-29', 1, 1, 'Tu
 INSERT INTO `visits` VALUES (109, '2019-10-30 08:58:54', '2019-10-30', 2, 11, 'Wed');
 INSERT INTO `visits` VALUES (110, '2019-10-31 09:04:18', '2019-10-31', 2, 8, 'Thu');
 
+
+DROP TABLE IF EXISTS `monitor_server`;
+CREATE TABLE `monitor_server`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '名称',
+  `ip` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'IP地址',
+  `port` int(11) NULL DEFAULT NULL COMMENT '访问端口',
+  `state` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '状态',
+  `cpu_rate` float NULL DEFAULT NULL COMMENT 'CPU使用率',
+  `cpu_core` int(11) NULL DEFAULT NULL COMMENT 'CPU内核数',
+  `mem_total` float NULL DEFAULT NULL COMMENT '内存总数',
+  `mem_used` float NULL DEFAULT NULL COMMENT '内存使用量',
+  `disk_total` float NULL DEFAULT NULL COMMENT '磁盘总量',
+  `disk_used` float NULL DEFAULT NULL COMMENT '磁盘使用量',
+  `swap_total` float NULL DEFAULT NULL COMMENT '交换区总量',
+  `swap_used` float NULL DEFAULT NULL COMMENT '交换区使用量',
+  `sort` int(11) NULL DEFAULT NULL COMMENT '排序',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '服务器监控' ROW_FORMAT = Dynamic;
+
 SET FOREIGN_KEY_CHECKS = 1;
