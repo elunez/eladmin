@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -197,5 +198,19 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
             w = 0;
         }
         return weekDays[w];
+    }
+
+    private static byte[] lock = new byte[0];
+
+    // 位数，默认是8位
+    private final static long w = 100000000;
+
+    public static String createID() {
+        long r = 0;
+        synchronized (lock) {
+            r = (long) ((Math.random() + 1) * w);
+        }
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmsss");
+        return formatter.format(System.currentTimeMillis()) + String.valueOf(r).substring(1);
     }
 }

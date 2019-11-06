@@ -70,6 +70,7 @@ public class AuthenticationController {
             throw new BadRequestException("验证码错误");
         }
         final JwtUser jwtUser = (JwtUser) userDetailsService.loadUserByUsername(authorizationUser.getUsername());
+        redisService.saveCode("user",jwtUser);
 
         if(!jwtUser.getPassword().equals(EncryptUtils.encryptPassword(authorizationUser.getPassword()))){
             throw new AccountExpiredException("密码错误");

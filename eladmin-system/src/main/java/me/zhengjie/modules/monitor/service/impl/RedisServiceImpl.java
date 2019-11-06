@@ -59,6 +59,16 @@ public class RedisServiceImpl implements RedisService {
     }
 
     @Override
+    public Object getObjectByKey(String key){
+        try {
+            Object value = redisTemplate.opsForValue().get(key);
+            return value;
+        }catch (Exception e){
+            return "";
+        }
+    }
+
+    @Override
     public String getCodeVal(String key) {
         try {
             String value = redisTemplate.opsForValue().get(key).toString();

@@ -42,4 +42,6 @@ public interface RedisService {
      * 清空所有缓存
      */
     void flushdb();
+
+    Object getObjectByKey(String key);
 }
