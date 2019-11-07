@@ -14,7 +14,8 @@
         <module>eladmin-logging</module>
         <module>eladmin-system</module>
         <module>eladmin-tools</module>
-    </modules>
+		<module>eladmin-monitor</module>
+	</modules>
 
     <name>EL-ADMIN后台管理系统</name>
     <url>http://auauz.net</url>
