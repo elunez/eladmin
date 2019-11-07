@@ -14,7 +14,6 @@
         <module>eladmin-logging</module>
         <module>eladmin-system</module>
         <module>eladmin-tools</module>
-        <module>eladmin-generator</module>
     </modules>
 
     <name>EL-ADMIN后台管理系统</name>
@@ -24,7 +23,6 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>2.1.0.RELEASE</version>
-        <relativePath/>
     </parent>
 
     <properties>
@@ -42,7 +40,6 @@
     </properties>
 
     <dependencies>
-
         <!--Spring boot start-->
         <dependency>
             <groupId>org.springframework.boot</groupId>

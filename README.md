@@ -58,7 +58,9 @@ eladmin基于 Spring Boot 2.1.0 、 Jpa、 Spring Security、redis、Vue的前�
   - modules 系统相关模块(登录授权、系统监控、定时任务等)
 - eladmin-logging 系统日志模块
 - eladmin-tools 系统第三方工具模块
-- eladmin-generator 系统代码生成模块
+  - config 文件上传临时路径配置
+  - modules 工具相关模块(第三方工具、代码生成工具)
+    
 
 #### 系统预览
 <table>
