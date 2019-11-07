@@ -26,6 +26,7 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.hyperic/sigar -->
 		<dependency>
 			<groupId>org.hyperic</groupId>
 			<artifactId>sigar</artifactId>
@@ -39,6 +40,16 @@
 		</dependency>
 	</dependencies>
 
+	<repositories>
+		<repository>
+			<id>public</id>
+			<name>aliyun nexus</name>
+			<url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</repository>
+	</repositories>
 
 	<build>
 		<plugins>
