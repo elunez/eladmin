@@ -86,7 +86,7 @@ public class CustomerInfoServiceImpl implements CustomerInfoService {
                             List<CustomerContact> customerContactList = new Gson().fromJson(customerContactJsonStr,new TypeToken<ArrayList<CustomerContact>>() {}.getType());
                             if(!CollectionUtils.isEmpty(customerContactList)){
                                 for(CustomerContact customerContact : customerContactList){
-                                    if(customerContact.getFirstTag() == 1){
+                                    if(!StringUtils.isEmpty(customerContact.getFirstTag()) && customerContact.getFirstTag() == 1){
                                         customerInfoDTO.setFirstContactMobile(customerContact.getMobile());
                                         customerInfoDTO.setFirstContactName(customerContact.getName());
                                     }
