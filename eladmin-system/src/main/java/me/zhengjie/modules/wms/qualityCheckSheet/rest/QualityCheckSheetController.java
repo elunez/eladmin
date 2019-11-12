@@ -2,6 +2,7 @@ package me.zhengjie.modules.wms.qualityCheckSheet.rest;
 
 import me.zhengjie.aop.log.Log;
 import me.zhengjie.modules.wms.qualityCheckSheet.domain.QualityCheckSheet;
+import me.zhengjie.modules.wms.qualityCheckSheet.request.CreateQualityCheckSheetRequest;
 import me.zhengjie.modules.wms.qualityCheckSheet.service.QualityCheckSheetService;
 import me.zhengjie.modules.wms.qualityCheckSheet.service.dto.QualityCheckSheetQueryCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,11 +14,14 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.annotations.*;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 /**
 * @author huangxingxing
 * @date 2019-11-12
 */
-@Api(tags = "QualityCheckSheet管理")
+@Api(tags = "质量检验单管理")
 @RestController
 @RequestMapping("api")
 public class QualityCheckSheetController {
@@ -25,37 +29,47 @@ public class QualityCheckSheetController {
     @Autowired
     private QualityCheckSheetService qualityCheckSheetService;
 
-    @Log("查询QualityCheckSheet")
+    @Log("分页查询质量管理检验单")
     @ApiOperation(value = "查询QualityCheckSheet")
     @GetMapping(value = "/qualityCheckSheet")
-    @PreAuthorize("hasAnyRole('ADMIN','QUALITYCHECKSHEET_ALL','QUALITYCHECKSHEET_SELECT')")
+//    @PreAuthorize("hasAnyRole('ADMIN','QUALITYCHECKSHEET_ALL','QUALITYCHECKSHEET_SELECT')")
     public ResponseEntity getQualityCheckSheets(QualityCheckSheetQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity(qualityCheckSheetService.queryAll(criteria,pageable),HttpStatus.OK);
     }
 
-    @Log("新增QualityCheckSheet")
-    @ApiOperation(value = "新增QualityCheckSheet")
+    @Log("新增质量检验单")
+    @ApiOperation(value = "新增质量检验单")
     @PostMapping(value = "/qualityCheckSheet")
-    @PreAuthorize("hasAnyRole('ADMIN','QUALITYCHECKSHEET_ALL','QUALITYCHECKSHEET_CREATE')")
-    public ResponseEntity create(@Validated @RequestBody QualityCheckSheet resources){
-        return new ResponseEntity(qualityCheckSheetService.create(resources),HttpStatus.CREATED);
+//    @PreAuthorize("hasAnyRole('ADMIN','QUALITYCHECKSHEET_ALL','QUALITYCHECKSHEET_CREATE')")
+    public ResponseEntity create(@Validated @RequestBody CreateQualityCheckSheetRequest createQualityCheckSheetRequest){
+        return new ResponseEntity(qualityCheckSheetService.create(createQualityCheckSheetRequest),HttpStatus.CREATED);
     }
 
-    @Log("修改QualityCheckSheet")
-    @ApiOperation(value = "修改QualityCheckSheet")
+    @Log("修改质量检验单")
+    @ApiOperation(value = "修改质量检验单")
     @PutMapping(value = "/qualityCheckSheet")
-    @PreAuthorize("hasAnyRole('ADMIN','QUALITYCHECKSHEET_ALL','QUALITYCHECKSHEET_EDIT')")
+//    @PreAuthorize("hasAnyRole('ADMIN','QUALITYCHECKSHEET_ALL','QUALITYCHECKSHEET_EDIT')")
     public ResponseEntity update(@Validated @RequestBody QualityCheckSheet resources){
         qualityCheckSheetService.update(resources);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
-    @Log("删除QualityCheckSheet")
-    @ApiOperation(value = "删除QualityCheckSheet")
+    @Log("删除质量检验单")
+    @ApiOperation(value = "删除质量检验单")
     @DeleteMapping(value = "/qualityCheckSheet/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN','QUALITYCHECKSHEET_ALL','QUALITYCHECKSHEET_DELETE')")
+//    @PreAuthorize("hasAnyRole('ADMIN','QUALITYCHECKSHEET_ALL','QUALITYCHECKSHEET_DELETE')")
     public ResponseEntity delete(@PathVariable Long id){
         qualityCheckSheetService.delete(id);
         return new ResponseEntity(HttpStatus.OK);
+    }
+
+
+    @Log("初始化质量检验单单据编号")
+    @ApiOperation(value = "初始化质量检验单单据编号")
+    @GetMapping(value = "/initQualityCheckSheetCode")
+    public ResponseEntity initQualityCheckSheetCode(){
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS");//设置日期格式
+        String supplierCode = "QCS"+ LocalDateTime.now().format(fmt);
+        return new ResponseEntity(supplierCode,HttpStatus.OK);
     }
 }

@@ -1,8 +1,11 @@
 package me.zhengjie.modules.wms.qualityCheckSheet.service.dto;
 
 import lombok.Data;
+import me.zhengjie.modules.wms.outSourceProductSheet.service.dto.OutSourceProcessSheetProductDTO;
+
 import java.sql.Timestamp;
 import java.io.Serializable;
+import java.util.List;
 
 
 /**
@@ -19,7 +22,7 @@ public class QualityCheckSheetDTO implements Serializable {
 
     private Timestamp updateTime;
 
-    private Integer status;
+    private Boolean status;
 
     // 制单人
     private Long makePeopleId;
@@ -31,4 +34,7 @@ public class QualityCheckSheetDTO implements Serializable {
     private String qualityCheekSheetCode;
 
     private String remark;
+
+    // 委外加工单产品信息
+    private List<QualityCheckSheetProductDTO> qualityCheckSheetProductList;
 }

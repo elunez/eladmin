@@ -19,7 +19,7 @@ public class QualityCheckSheetProductDTO implements Serializable {
 
     private Timestamp updateTime;
 
-    private Integer status;
+    private Boolean status;
 
     // 所属质量检验单
     private Long qualityCheckSheetId;

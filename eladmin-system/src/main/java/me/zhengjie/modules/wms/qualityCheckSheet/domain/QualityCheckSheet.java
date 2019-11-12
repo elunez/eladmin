@@ -3,6 +3,8 @@ package me.zhengjie.modules.wms.qualityCheckSheet.domain;
 import lombok.Data;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
+import org.hibernate.annotations.CreationTimestamp;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.io.Serializable;
@@ -23,13 +25,15 @@ public class QualityCheckSheet implements Serializable {
     private Long id;
 
     @Column(name = "create_time")
+    @CreationTimestamp
     private Timestamp createTime;
 
     @Column(name = "update_time")
+    @CreationTimestamp
     private Timestamp updateTime;
 
     @Column(name = "status")
-    private Integer status;
+    private Boolean status;
 
     // 制单人
     @Column(name = "make_people_id")
