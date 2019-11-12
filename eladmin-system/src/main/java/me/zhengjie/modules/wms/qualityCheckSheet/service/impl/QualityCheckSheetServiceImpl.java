@@ -11,6 +11,7 @@ import me.zhengjie.modules.wms.qualityCheckSheet.domain.QualityCheckSheetProduct
 import me.zhengjie.modules.wms.qualityCheckSheet.repository.QualityCheckSheetProductRepository;
 import me.zhengjie.modules.wms.qualityCheckSheet.request.CreateQualityCheckSheetRequest;
 import me.zhengjie.modules.wms.qualityCheckSheet.request.QualityCheckSheetProductRequest;
+import me.zhengjie.modules.wms.qualityCheckSheet.request.UpdateQualityCheckSheetRequest;
 import me.zhengjie.modules.wms.qualityCheckSheet.service.dto.QualityCheckSheetProductDTO;
 import me.zhengjie.modules.wms.qualityCheckSheet.service.mapper.QualityCheckSheetProductMapper;
 import me.zhengjie.utils.ValidationUtil;
@@ -27,7 +28,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import me.zhengjie.utils.PageUtil;
@@ -123,12 +128,65 @@ public class QualityCheckSheetServiceImpl implements QualityCheckSheetService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void update(QualityCheckSheet resources) {
-        Optional<QualityCheckSheet> optionalQualityCheckSheet = qualityCheckSheetRepository.findById(resources.getId());
-        ValidationUtil.isNull( optionalQualityCheckSheet,"QualityCheckSheet","id",resources.getId());
-        QualityCheckSheet qualityCheckSheet = optionalQualityCheckSheet.get();
-        qualityCheckSheet.copy(resources);
+    public void update(UpdateQualityCheckSheetRequest updateQualityCheckSheetRequest) {
+        Long qualityCheckSheetId = updateQualityCheckSheetRequest.getId();
+        Optional<QualityCheckSheet> qualityCheckSheetOptional = qualityCheckSheetRepository.findById(qualityCheckSheetId);
+        QualityCheckSheet qualityCheckSheet = qualityCheckSheetOptional.get();
+        BeanUtils.copyProperties(updateQualityCheckSheetRequest, qualityCheckSheet);
+
+        qualityCheckSheet.setStatus(true);
+
         qualityCheckSheetRepository.save(qualityCheckSheet);
+
+        // 修改产品信息之前，查询该订单中原来的产品信息，key为产品code
+        List<QualityCheckSheetProduct> qualityCheckSheetProductListBeforeUpdate = qualityCheckSheetProductRepository.queryByQualityCheckSheetIdAndStatusTrue(qualityCheckSheet.getId());
+        Map<String, QualityCheckSheetProduct> qualityCheckSheetProductMapBefore = qualityCheckSheetProductListBeforeUpdate.stream().collect(Collectors.toMap(QualityCheckSheetProduct::getProductCode, Function.identity()));
+
+        List<QualityCheckSheetProductDTO> qualityCheckSheetProducRequestList = updateQualityCheckSheetRequest.getQualityCheckSheetProductList();
+        if(CollectionUtils.isEmpty(qualityCheckSheetProducRequestList)){
+            throw new BadRequestException("质量检验单产品信息不能为空!");
+        }
+
+        Map<String, QualityCheckSheetProductDTO> qualityCheckSheetProductMapAfter = qualityCheckSheetProducRequestList.stream().collect(Collectors.toMap(QualityCheckSheetProductDTO::getProductCode, Function.identity()));
+
+        //需要将订单中原来订单对应的产品删除了的数据
+        List<String> deleteTargetList = new ArrayList<>();
+        //比较量个map中，key不一样的数据
+        for(Map.Entry<String, QualityCheckSheetProduct> entry:qualityCheckSheetProductMapBefore.entrySet()){
+            String productCode = entry.getKey();
+            //修改后的map记录对应的key在原来中是否存在
+            QualityCheckSheetProductDTO qualityCheckSheetProductDTOTemp = qualityCheckSheetProductMapAfter.get(productCode);
+            if(null == qualityCheckSheetProductDTOTemp){
+                deleteTargetList.add(entry.getKey());
+            }
+
+        }
+
+
+        List<QualityCheckSheetProduct> qualityCheckSheetProductList = new ArrayList<>();
+        for(QualityCheckSheetProductDTO qualityCheckSheetProductDTO : qualityCheckSheetProducRequestList){
+            QualityCheckSheetProduct qualityCheckSheetProduct = new QualityCheckSheetProduct();
+            BeanUtils.copyProperties(qualityCheckSheetProductDTO, qualityCheckSheetProduct);
+            qualityCheckSheetProduct.setQualityCheckSheetId(qualityCheckSheet.getId());
+            qualityCheckSheetProduct.setStatus(true);
+
+            if(!(!CollectionUtils.isEmpty(deleteTargetList) && deleteTargetList.contains(qualityCheckSheetProductDTO.getId()))){
+                qualityCheckSheetProductList.add(qualityCheckSheetProduct);
+            }
+        }
+        qualityCheckSheetProductRepository.saveAll(qualityCheckSheetProductList);
+
+        /**
+         * 场景描述:
+         * 1.刚开始新增了 a b c三种产品
+         * 2.修改的时候删除了 a c两种产品
+         * 3.所以需要查修改前数据库中有的产品，再比较修改传过来的产品数据，如果修改后的在原来里面没有，需要将原来里面对应的删除
+         */
+        if(!CollectionUtils.isEmpty(deleteTargetList)){
+            for(String prductCode : deleteTargetList){
+                qualityCheckSheetProductRepository.deleteByProductCodeAndQualityCheckSheetId(prductCode, qualityCheckSheet.getId());
+            }
+        }
     }
 
     @Override

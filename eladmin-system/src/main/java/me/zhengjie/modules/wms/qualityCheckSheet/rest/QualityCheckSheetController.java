@@ -3,6 +3,7 @@ package me.zhengjie.modules.wms.qualityCheckSheet.rest;
 import me.zhengjie.aop.log.Log;
 import me.zhengjie.modules.wms.qualityCheckSheet.domain.QualityCheckSheet;
 import me.zhengjie.modules.wms.qualityCheckSheet.request.CreateQualityCheckSheetRequest;
+import me.zhengjie.modules.wms.qualityCheckSheet.request.UpdateQualityCheckSheetRequest;
 import me.zhengjie.modules.wms.qualityCheckSheet.service.QualityCheckSheetService;
 import me.zhengjie.modules.wms.qualityCheckSheet.service.dto.QualityCheckSheetQueryCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,8 +50,8 @@ public class QualityCheckSheetController {
     @ApiOperation(value = "修改质量检验单")
     @PutMapping(value = "/qualityCheckSheet")
 //    @PreAuthorize("hasAnyRole('ADMIN','QUALITYCHECKSHEET_ALL','QUALITYCHECKSHEET_EDIT')")
-    public ResponseEntity update(@Validated @RequestBody QualityCheckSheet resources){
-        qualityCheckSheetService.update(resources);
+    public ResponseEntity update(@Validated @RequestBody UpdateQualityCheckSheetRequest updateQualityCheckSheetRequest){
+        qualityCheckSheetService.update(updateQualityCheckSheetRequest);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 

@@ -2,6 +2,7 @@ package me.zhengjie.modules.wms.qualityCheckSheet.service;
 
 import me.zhengjie.modules.wms.qualityCheckSheet.domain.QualityCheckSheet;
 import me.zhengjie.modules.wms.qualityCheckSheet.request.CreateQualityCheckSheetRequest;
+import me.zhengjie.modules.wms.qualityCheckSheet.request.UpdateQualityCheckSheetRequest;
 import me.zhengjie.modules.wms.qualityCheckSheet.service.dto.QualityCheckSheetDTO;
 import me.zhengjie.modules.wms.qualityCheckSheet.service.dto.QualityCheckSheetQueryCriteria;
 //import org.springframework.cache.annotation.CacheConfig;
@@ -51,10 +52,10 @@ public interface QualityCheckSheetService {
 
     /**
      * update
-     * @param resources
+     * @param updateQualityCheckSheetRequest
      */
     //@CacheEvict(allEntries = true)
-    void update(QualityCheckSheet resources);
+    void update(UpdateQualityCheckSheetRequest updateQualityCheckSheetRequest);
 
     /**
      * delete
