@@ -91,6 +91,10 @@ public class CustomerInfoServiceImpl implements CustomerInfoService {
                                         customerInfoDTO.setFirstContactName(customerContact.getName());
                                     }
                                 }
+                                if(StringUtils.isEmpty(customerInfoDTO.getFirstContactName())){
+                                    customerInfoDTO.setFirstContactName(customerContactList.get(0).getName());
+                                    customerInfoDTO.setFirstContactMobile(customerContactList.get(0).getMobile());
+                                }
                             }
                         }
                     }
