@@ -67,7 +67,8 @@ public class AuthenticationController {
             throw new BadRequestException("验证码已过期");
         }
         if (StringUtils.isBlank(authorizationUser.getCode()) || !authorizationUser.getCode().equalsIgnoreCase(code)) {
-            throw new BadRequestException("验证码错误");
+           // throw new BadRequestException("验证码错误");
+           throw new BadRequestException("Verification code error");
         }
         final JwtUser jwtUser = (JwtUser) userDetailsService.loadUserByUsername(authorizationUser.getUsername());
 
