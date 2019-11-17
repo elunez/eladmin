@@ -1,7 +1,9 @@
 package me.zhengjie.service;
 
 import me.zhengjie.domain.GenConfig;
-import me.zhengjie.domain.vo.ColumnInfo;
+import me.zhengjie.domain.ColumnInfo;
+import org.springframework.scheduling.annotation.Async;
+
 import java.util.List;
 
 /**
@@ -23,7 +25,7 @@ public interface GeneratorService {
      * @param name 表名
      * @return /
      */
-    Object getColumns(String name);
+    List<ColumnInfo> getColumns(String name);
 
     /**
      * 生成代码
@@ -32,4 +34,17 @@ public interface GeneratorService {
      * @param tableName 表名
      */
     void generator(List<ColumnInfo> columnInfos, GenConfig genConfig, String tableName);
+
+    /**
+     * 同步表数据
+     * @param columnInfos /
+     */
+    @Async
+    void sync(List<ColumnInfo> columnInfos);
+
+    /**
+     * 保持数据
+     * @param columnInfos /
+     */
+    void save(List<ColumnInfo> columnInfos);
 }

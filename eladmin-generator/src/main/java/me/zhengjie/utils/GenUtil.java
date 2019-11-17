@@ -4,7 +4,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.template.*;
 import lombok.extern.slf4j.Slf4j;
 import me.zhengjie.domain.GenConfig;
-import me.zhengjie.domain.vo.ColumnInfo;
+import me.zhengjie.domain.ColumnInfo;
 import org.springframework.util.ObjectUtils;
 import java.io.File;
 import java.io.FileWriter;
@@ -95,13 +95,13 @@ public class GenUtil {
         List<Map<String,Object>> queryColumns = new ArrayList<>();
         for (ColumnInfo column : columnInfos) {
             Map<String,Object> listMap = new HashMap<>();
-            listMap.put("columnComment",column.getColumnComment());
-            listMap.put("columnKey",column.getColumnKey());
+            listMap.put("columnComment",column.getRemark());
+            listMap.put("columnKey",column.getKeyType());
 
             String colType = ColUtil.cloToJava(column.getColumnType().toString());
             String changeColumnName = StringUtils.toCamelCase(column.getColumnName().toString());
             String capitalColumnName = StringUtils.toCapitalizeCamelCase(column.getColumnName().toString());
-            if(PK.equals(column.getColumnKey())){
+            if(PK.equals(column.getKeyType())){
                 map.put("pkColumnType",colType);
                 map.put("pkChangeColName",changeColumnName);
                 map.put("pkCapitalColName",capitalColumnName);
@@ -117,14 +117,14 @@ public class GenUtil {
             }
             listMap.put("columnType",colType);
             listMap.put("columnName",column.getColumnName());
-            listMap.put("isNullable",column.getIsNullable());
-            listMap.put("columnShow",column.getColumnShow());
+            listMap.put("isNullable",column.getNotNull());
+            listMap.put("columnShow",column.getListShow());
             listMap.put("changeColumnName",changeColumnName);
             listMap.put("capitalColumnName",capitalColumnName);
 
             // 判断是否有查询，如有则把查询的字段set进columnQuery
-            if(!StringUtils.isBlank(column.getColumnQuery())){
-                listMap.put("columnQuery",column.getColumnQuery());
+            if(!StringUtils.isBlank(column.getQueryType())){
+                listMap.put("columnQuery",column.getQueryType());
                 map.put("hasQuery",true);
                 if(TIMESTAMP.equals(colType)){
                     map.put("queryHasTimestamp",true);

@@ -4,11 +4,10 @@ import me.zhengjie.domain.GenConfig;
 import me.zhengjie.repository.GenConfigRepository;
 import me.zhengjie.service.GenConfigService;
 import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import java.io.File;
-import java.util.Optional;
 
 /**
  * @author Zheng Jie
@@ -25,16 +24,18 @@ public class GenConfigServiceImpl implements GenConfigService {
     }
 
     @Override
-    @Cacheable(key = "'1'")
-    public GenConfig find() {
-        Optional<GenConfig> genConfig = genConfigRepository.findById(1L);
-        return genConfig.orElseGet(GenConfig::new);
+    @Cacheable(key = "#p0")
+    public GenConfig find(String tableName) {
+        GenConfig genConfig = genConfigRepository.findByTableName(tableName);
+        if(genConfig == null){
+            return new GenConfig(tableName);
+        }
+        return genConfig;
     }
 
     @Override
-    @CacheEvict(allEntries = true)
-    public GenConfig update(GenConfig genConfig) {
-        genConfig.setId(1L);
+    @CachePut(key = "#p0")
+    public GenConfig update(String tableName, GenConfig genConfig) {
         // 自动设置Api路径，注释掉前需要同步取消前端的注释
         String separator = File.separator;
         String[] paths;

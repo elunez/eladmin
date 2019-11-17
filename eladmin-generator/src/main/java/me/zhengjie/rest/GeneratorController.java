@@ -1,12 +1,12 @@
 package me.zhengjie.rest;
 
-import cn.hutool.core.util.PageUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import me.zhengjie.domain.vo.ColumnInfo;
+import me.zhengjie.domain.ColumnInfo;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.service.GenConfigService;
 import me.zhengjie.service.GeneratorService;
+import me.zhengjie.utils.PageUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +34,7 @@ public class GeneratorController {
         this.genConfigService = genConfigService;
     }
 
-    @ApiOperation("查询数据库元数据")
+    @ApiOperation("查询数据库数据")
     @GetMapping(value = "/tables")
     public ResponseEntity getTables(@RequestParam(defaultValue = "") String name,
                                     @RequestParam(defaultValue = "0")Integer page,
@@ -43,10 +43,21 @@ public class GeneratorController {
         return new ResponseEntity<>(generatorService.getTables(name,startEnd), HttpStatus.OK);
     }
 
-    @ApiOperation("查询表内元数据")
+    @ApiOperation("查询字段数据")
     @GetMapping(value = "/columns")
     public ResponseEntity getTables(@RequestParam String tableName){
-        return new ResponseEntity<>(generatorService.getColumns(tableName), HttpStatus.OK);
+        List<ColumnInfo> columnInfos = generatorService.getColumns(tableName);
+        // 异步同步表信息
+        generatorService.sync(columnInfos);
+        return new ResponseEntity<>(PageUtil.toPage(columnInfos,columnInfos.size()), HttpStatus.OK);
+    }
+
+    @ApiOperation("保存字段数据")
+    @PutMapping
+    public ResponseEntity save(@RequestBody List<ColumnInfo> columnInfos){
+        // 异步同步表信息
+        generatorService.save(columnInfos);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     @ApiOperation("生成代码")
@@ -55,7 +66,7 @@ public class GeneratorController {
         if(!generatorEnabled){
             throw new BadRequestException("此环境不允许生成代码！");
         }
-        generatorService.generator(columnInfos,genConfigService.find(),tableName);
+        generatorService.generator(columnInfos,genConfigService.find(tableName),tableName);
         return new ResponseEntity(HttpStatus.OK);
     }
 }

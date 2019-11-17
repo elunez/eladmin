@@ -8,7 +8,7 @@ import me.zhengjie.domain.GenConfig;
  */
 public interface GenConfigService {
 
-    GenConfig find();
+    GenConfig find(String tableName);
 
-    GenConfig update(GenConfig genConfig);
+    GenConfig update(String tableName, GenConfig genConfig);
 }
