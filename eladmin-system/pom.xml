@@ -17,6 +17,18 @@
     </properties>
 
     <dependencies>
+        <!--    代码生成模块    -->
+        <dependency>
+            <groupId>me.zhengjie</groupId>
+            <artifactId>eladmin-generator</artifactId>
+            <version>2.3</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>me.zhengjie</groupId>
+                    <artifactId>eladmin-common</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
 
         <!--    tools 模块包含了 common 和 logging 模块    -->
         <dependency>

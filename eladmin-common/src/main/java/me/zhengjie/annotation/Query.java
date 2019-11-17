@@ -50,6 +50,8 @@ public @interface Query {
         , LESS_THAN_NQ
         // jie 2019/6/4 包含
         , IN
+        // 不等于
+        ,NOT_EQUAL
     }
 
     /**
