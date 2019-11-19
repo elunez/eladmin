@@ -1,9 +1,8 @@
 package me.zhengjie.domain;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
+import me.zhengjie.utils.GenUtil;
 import javax.persistence.*;
 
 /**
@@ -60,14 +59,20 @@ public class ColumnInfo {
     // 关联表名
     private String joinName;
 
+    // 日期注解
+    private String dateAnnotation;
+
     public ColumnInfo(String tableName, String columnName, Boolean notNull, String columnType, String remark, String keyType, String extra) {
         this.tableName = tableName;
         this.columnName = columnName;
         this.columnType = columnType;
         this.keyType = keyType;
         this.extra = extra;
-        this.remark = remark;
         this.notNull = notNull;
+        if(GenUtil.PK.equalsIgnoreCase(keyType) && GenUtil.EXTRA.equalsIgnoreCase(extra)){
+            this.notNull = false;
+        }
+        this.remark = remark;
         this.listShow = true;
         this.formShow = true;
     }

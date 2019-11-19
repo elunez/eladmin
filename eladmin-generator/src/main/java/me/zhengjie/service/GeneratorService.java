@@ -28,14 +28,6 @@ public interface GeneratorService {
     List<ColumnInfo> getColumns(String name);
 
     /**
-     * 生成代码
-     * @param columnInfos 表字段数据
-     * @param genConfig 代码生成配置
-     * @param tableName 表名
-     */
-    void generator(List<ColumnInfo> columnInfos, GenConfig genConfig, String tableName);
-
-    /**
      * 同步表数据
      * @param columnInfos /
      */
@@ -47,4 +39,18 @@ public interface GeneratorService {
      * @param columnInfos /
      */
     void save(List<ColumnInfo> columnInfos);
+
+    /**
+     * 获取所有table
+     * @return /
+     */
+    Object getTables();
+
+    /**
+     * 代码生成
+     * @param genConfig 配置信息
+     * @param columns 字段信息
+     * @return /
+     */
+    Object generator(GenConfig genConfig, List<ColumnInfo> columns);
 }

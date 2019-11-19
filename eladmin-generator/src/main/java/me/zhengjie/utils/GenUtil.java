@@ -28,9 +28,9 @@ public class GenUtil {
 
     private static final String BIGDECIMAL = "BigDecimal";
 
-    private static final String PK = "PRI";
+    public static final String PK = "PRI";
 
-    private static final String EXTRA = "auto_increment";
+    public static final String EXTRA = "auto_increment";
 
     /**
      * 获取后端代码模板名称
@@ -61,85 +61,161 @@ public class GenUtil {
         return templateNames;
     }
 
-    /**
-     * 生成代码
-     * @param columnInfos 表元数据
-     * @param genConfig 生成代码的参数配置，如包路径，作者
-     */
-    public static void generatorCode(List<ColumnInfo> columnInfos, GenConfig genConfig, String tableName) throws IOException {
-        Map<String,Object> map = new HashMap<>();
-        map.put("package",genConfig.getPack());
-        map.put("moduleName",genConfig.getModuleName());
-        map.put("author",genConfig.getAuthor());
-        map.put("date", LocalDate.now().toString());
-        map.put("tableName",tableName);
-        String className = StringUtils.toCapitalizeCamelCase(tableName);
-        String changeClassName = StringUtils.toCamelCase(tableName);
-
+    public static void generatorCode(List<ColumnInfo> columnInfos, GenConfig genConfig) throws IOException {
+        // 存储模版字段数据
+        Map<String,Object> genMap = new HashMap<>();
+        // 包名称
+        genMap.put("package",genConfig.getPack());
+        // 模块名称
+        genMap.put("moduleName",genConfig.getModuleName());
+        // 作者
+        genMap.put("author",genConfig.getAuthor());
+        // 创建日期
+        genMap.put("date", LocalDate.now().toString());
+        // 表名
+        genMap.put("tableName",genConfig.getTableName());
+        // 大写开头的类名
+        String className = StringUtils.toCapitalizeCamelCase(genConfig.getTableName());
+        // 小写开头的类名
+        String changeClassName = StringUtils.toCamelCase(genConfig.getTableName());
         // 判断是否去除表前缀
         if (StringUtils.isNotEmpty(genConfig.getPrefix())) {
-            className = StringUtils.toCapitalizeCamelCase(StrUtil.removePrefix(tableName,genConfig.getPrefix()));
-            changeClassName = StringUtils.toCamelCase(StrUtil.removePrefix(tableName,genConfig.getPrefix()));
+            className = StringUtils.toCapitalizeCamelCase(StrUtil.removePrefix(genConfig.getTableName(),genConfig.getPrefix()));
+            changeClassName = StringUtils.toCamelCase(StrUtil.removePrefix(genConfig.getTableName(),genConfig.getPrefix()));
         }
-        map.put("className", className);
-        map.put("upperCaseClassName", className.toUpperCase());
-        map.put("changeClassName", changeClassName);
-        map.put("hasTimestamp",false);
-        map.put("queryHasTimestamp",false);
-        map.put("queryHasBigDecimal",false);
-        map.put("hasBigDecimal",false);
-        map.put("hasQuery",false);
-        map.put("auto",false);
-
+        // 保存类名
+        genMap.put("className", className);
+        // 保存小写开头的类名
+        genMap.put("changeClassName", changeClassName);
+        // 存在 Timestamp 字段
+        genMap.put("hasTimestamp",false);
+        // 查询类中存在 Timestamp 字段
+        genMap.put("queryHasTimestamp",false);
+        // 存在 BigDecimal 字段
+        genMap.put("hasBigDecimal",false);
+        // 查询类中存在 BigDecimal 字段
+        genMap.put("queryHasBigDecimal",false);
+        // 是否需要创建查询
+        genMap.put("hasQuery",false);
+        // 自增主键
+        genMap.put("auto",false);
+        // 存在字典
+        genMap.put("hasDict",false);
+        // 存在日期注解
+        genMap.put("hasDateAnnotation",false);
+        // 保存字段信息
         List<Map<String,Object>> columns = new ArrayList<>();
+        // 保存查询字段的信息
         List<Map<String,Object>> queryColumns = new ArrayList<>();
+        // 存储字典信息
+        List<String> dicts = new ArrayList<>();
+        // 存储 DateRange 信息
+        List<Map<String,Object>> dateRanges = new ArrayList<>();
+        // 存储不为空的字段信息
+        List<Map<String,Object>> isNotNullColumns = new ArrayList<>();
+
         for (ColumnInfo column : columnInfos) {
             Map<String,Object> listMap = new HashMap<>();
-            listMap.put("columnComment",column.getRemark());
+            // 字段描述
+            listMap.put("remark",column.getRemark());
+            // 字段类型
             listMap.put("columnKey",column.getKeyType());
-
-            String colType = ColUtil.cloToJava(column.getColumnType().toString());
+            // 主键类型
+            String colType = ColUtil.cloToJava(column.getColumnType());
+            // 小写开头的字段名
             String changeColumnName = StringUtils.toCamelCase(column.getColumnName().toString());
+            // 大写开头的字段名
             String capitalColumnName = StringUtils.toCapitalizeCamelCase(column.getColumnName().toString());
             if(PK.equals(column.getKeyType())){
-                map.put("pkColumnType",colType);
-                map.put("pkChangeColName",changeColumnName);
-                map.put("pkCapitalColName",capitalColumnName);
+                // 存储主键类型
+                genMap.put("pkColumnType",colType);
+                // 存储小写开头的字段名
+                genMap.put("pkChangeColName",changeColumnName);
+                // 存储大写开头的字段名
+                genMap.put("pkCapitalColName",capitalColumnName);
             }
+            // 是否存在 Timestamp 类型的字段
             if(TIMESTAMP.equals(colType)){
-                map.put("hasTimestamp",true);
+                genMap.put("hasTimestamp",true);
             }
+            // 是否存在 BigDecimal 类型的字段
             if(BIGDECIMAL.equals(colType)){
-                map.put("hasBigDecimal",true);
+                genMap.put("hasBigDecimal",true);
             }
+            // 主键是否自增
             if(EXTRA.equals(column.getExtra())){
-                map.put("auto",true);
+                genMap.put("auto",true);
             }
-            listMap.put("columnType",colType);
-            listMap.put("columnName",column.getColumnName());
-            listMap.put("isNullable",column.getNotNull());
-            listMap.put("columnShow",column.getListShow());
-            listMap.put("changeColumnName",changeColumnName);
-            listMap.put("capitalColumnName",capitalColumnName);
+            // 主键存在字典
+            if(StringUtils.isNotBlank(column.getDictName())){
+                genMap.put("hasDict",true);
+                dicts.add(column.getDictName());
+            }
 
+            // 存储字段类型
+            listMap.put("columnType",colType);
+            // 存储字原始段名称
+            listMap.put("columnName",column.getColumnName());
+            // 不为空
+            listMap.put("istNotNull",column.getNotNull());
+            // 字段列表显示
+            listMap.put("columnShow",column.getListShow());
+            // 表单显示
+            listMap.put("formShow",column.getFormShow());
+            // 表单组件类型
+            listMap.put("formType",column.getFormType());
+            // 小写开头的字段名称
+            listMap.put("changeColumnName",changeColumnName);
+            //大写开头的字段名称
+            listMap.put("capitalColumnName",capitalColumnName);
+            // 字典名称
+            listMap.put("dictName",column.getDictName());
+            // 关联字段
+            listMap.put("joinName",column.getJoinName());
+            // 日期注解
+            listMap.put("dateAnnotation",column.getDateAnnotation());
+            if(StringUtils.isNotBlank(column.getDateAnnotation())){
+                genMap.put("hasDateAnnotation",true);
+            }
+            // 添加非空字段信息
+            if(column.getNotNull()){
+                isNotNullColumns.add(listMap);
+            }
             // 判断是否有查询，如有则把查询的字段set进columnQuery
             if(!StringUtils.isBlank(column.getQueryType())){
-                listMap.put("columnQuery",column.getQueryType());
-                map.put("hasQuery",true);
+                // 查询类型
+                listMap.put("queryType",column.getQueryType());
+                // 是否存在查询
+                genMap.put("hasQuery",true);
                 if(TIMESTAMP.equals(colType)){
-                    map.put("queryHasTimestamp",true);
+                    // 查询中存储 Timestamp 类型
+                    genMap.put("queryHasTimestamp",true);
                 }
                 if(BIGDECIMAL.equals(colType)){
-                    map.put("queryHasBigDecimal",true);
+                    // 查询中存储 BigDecimal 类型
+                    genMap.put("queryHasBigDecimal",true);
                 }
-                queryColumns.add(listMap);
+                if("DateRange".equalsIgnoreCase(column.getQueryType())){
+                    dateRanges.add(listMap);
+                } else {
+                    // 添加到查询列表中
+                    queryColumns.add(listMap);
+                }
             }
+            // 添加到字段列表中
             columns.add(listMap);
         }
-        map.put("columns",columns);
-        map.put("queryColumns",queryColumns);
+        // 保存字段列表
+        genMap.put("columns",columns);
+        // 保存查询列表
+        genMap.put("queryColumns",queryColumns);
+        // 保存字段列表
+        genMap.put("dicts",dicts);
+        // 保存查询列表
+        genMap.put("dateRanges",dateRanges);
+        // 保存非空字段信息
+        genMap.put("isNotNullColumns",isNotNullColumns);
         TemplateEngine engine = TemplateUtil.createEngine(new TemplateConfig("template", TemplateConfig.ResourceMode.CLASSPATH));
-
         // 生成后端代码
         List<String> templates = getAdminTemplateNames();
         for (String templateName : templates) {
@@ -154,14 +230,14 @@ public class GenUtil {
                 continue;
             }
             // 生成代码
-            genFile(file, template, map);
+            genFile(file, template, genMap);
         }
 
         // 生成前端代码
         templates = getFrontTemplateNames();
         for (String templateName : templates) {
             Template template = engine.getTemplate("generator/front/"+templateName+".ftl");
-            String filePath = getFrontFilePath(templateName,genConfig,map.get("changeClassName").toString());
+            String filePath = getFrontFilePath(templateName,genConfig,genMap.get("changeClassName").toString());
 
             assert filePath != null;
             File file = new File(filePath);
@@ -171,7 +247,7 @@ public class GenUtil {
                 continue;
             }
             // 生成代码
-            genFile(file, template, map);
+            genFile(file, template, genMap);
         }
     }
 

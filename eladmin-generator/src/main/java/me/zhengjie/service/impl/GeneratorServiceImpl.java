@@ -24,6 +24,7 @@ import java.util.List;
  * @date 2019-01-02
  */
 @Service
+@SuppressWarnings("all")
 public class GeneratorServiceImpl implements GeneratorService {
 
     @PersistenceContext
@@ -36,7 +37,16 @@ public class GeneratorServiceImpl implements GeneratorService {
     }
 
     @Override
-    @SuppressWarnings("all")
+    public Object getTables() {
+        // 使用预编译防止sql注入
+        String sql = "select table_name ,create_time , engine, table_collation, table_comment from information_schema.tables " +
+                "where table_schema = (select database()) " +
+                "order by create_time desc";
+        Query query = em.createNativeQuery(sql);
+        return query.getResultList();
+    }
+
+    @Override
     public Object getTables(String name, int[] startEnd) {
         // 使用预编译防止sql注入
         String sql = "select table_name ,create_time , engine, table_collation, table_comment from information_schema.tables " +
@@ -68,7 +78,6 @@ public class GeneratorServiceImpl implements GeneratorService {
         }
     }
 
-    @SuppressWarnings("all")
     public List<ColumnInfo> query(String tableName){
         // 使用预编译防止sql注入
         String sql = "select column_name, is_nullable, data_type, column_comment, column_key, extra from information_schema.columns " +
@@ -104,14 +113,15 @@ public class GeneratorServiceImpl implements GeneratorService {
     }
 
     @Override
-    public void generator(List<ColumnInfo> columnInfos, GenConfig genConfig, String tableName) {
+    public Object generator(GenConfig genConfig, List<ColumnInfo> columns) {
         if(genConfig.getId() == null){
             throw new BadRequestException("请先配置生成器");
         }
         try {
-            GenUtil.generatorCode(columnInfos,genConfig,tableName);
+            GenUtil.generatorCode(columns,genConfig);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        return null;
     }
 }
