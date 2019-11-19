@@ -43,5 +43,7 @@ public interface ${className}Service {
 
     void delete(${pkColumnType} ${pkChangeColName});
 
+    void deleteAll(${pkColumnType}[] ids);
+
     void download(List<${className}DTO> all, HttpServletResponse response) throws IOException;
 }

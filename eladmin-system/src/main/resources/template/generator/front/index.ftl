@@ -47,11 +47,23 @@
           icon="el-icon-download"
           @click="download">导出</el-button>
       </div>
+      <!-- 多选删除 -->
+      <div v-permission="['admin','${changeClassName}:del']" style="display: inline-block;">
+        <el-button
+          :loading="delAllLoading"
+          :disabled="data.length === 0 || $refs.table.selection.length === 0"
+          class="filter-item"
+          size="mini"
+          type="danger"
+          icon="el-icon-delete"
+          @click="open">删除</el-button>
+      </div>
     </div>
     <!--表单组件-->
     <eForm ref="form" :is-add="isAdd" <#if hasDict>:dicts="dict"</#if>/>
     <!--表格渲染-->
-    <el-table v-loading="loading" :data="data" size="small" style="width: 100%;">
+    <el-table v-loading="loading" ref="table" :data="data" size="small" style="width: 100%;">
+      <el-table-column type="selection" width="55"/>
       <#if columns??>
           <#list columns as column>
           <#if column.columnShow>
@@ -105,7 +117,7 @@
 <script>
 import checkPermission from '@/utils/permission'
 import initData from '@/mixins/initData'
-import { del, download${className} } from '@/api/${changeClassName}'
+import { del, download${className}, delAll } from '@/api/${changeClassName}'
 <#if hasTimestamp>
 import { parseTime, downloadFile } from '@/utils/index'
 </#if>
@@ -118,7 +130,7 @@ export default {
   </#if>
   data() {
     return {
-      delLoading: false,
+      delLoading: false, delAllLoading: false,
       <#if hasQuery>
       queryTypeOptions: [
         <#if queryColumns??>
@@ -207,6 +219,36 @@ export default {
         this.downloadLoading = false
       }).catch(() => {
         this.downloadLoading = false
+      })
+    },
+    doDelete() {
+      this.delAllLoading = true
+      const data = this.$refs.table.selection
+      const ids = []
+      for (let i = 0; i < data.length; i++) {
+        ids.push(data[i].id)
+      }
+      delAll(ids).then(res => {
+        this.delAllLoading = false
+        this.init()
+        this.dleChangePage(ids.length)
+        this.$notify({
+          title: '删除成功',
+          type: 'success',
+          duration: 2500
+        })
+      }).catch(err => {
+        this.delAllLoading = false
+        console.log(err.response.data.message)
+      })
+    },
+    open() {
+      this.$confirm('你确定删除选中的数据吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.doDelete()
       })
     }
   }

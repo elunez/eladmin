@@ -133,6 +133,13 @@ public class ${className}ServiceImpl implements ${className}Service {
         ${changeClassName}Repository.deleteById(${pkChangeColName});
     }
 
+    @Override
+    @CacheEvict(allEntries = true)
+    public void deleteAll(${pkColumnType}[] ids) {
+        for (${pkColumnType} id : ids) {
+            ${changeClassName}Repository.deleteById(${pkChangeColName});
+        }
+    }
 
     @Override
     public void download(List<${className}DTO> all, HttpServletResponse response) throws IOException {

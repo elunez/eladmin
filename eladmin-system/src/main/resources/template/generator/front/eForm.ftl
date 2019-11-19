@@ -51,7 +51,7 @@ export default {
       required: true
     }<#if hasDict>,
     dicts: {
-      type: Array,
+      type: Object,
       required: true
     }
     </#if>

@@ -70,4 +70,13 @@ public class ${className}Controller {
         ${changeClassName}Service.delete(${pkChangeColName});
         return new ResponseEntity(HttpStatus.OK);
     }
+
+    @Log("多选删除${className}")
+    @ApiOperation("多选删除${className}")
+    @PreAuthorize("@el.check('${changeClassName}:del')")
+    @DeleteMapping
+    public ResponseEntity deleteAll(@RequestBody ${pkColumnType}[] ids) {
+        ${changeClassName}Service.deleteAll(ids);
+        return new ResponseEntity(HttpStatus.OK);
+    }
 }
