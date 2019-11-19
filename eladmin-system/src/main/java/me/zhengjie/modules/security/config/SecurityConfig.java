@@ -1,7 +1,6 @@
 package me.zhengjie.modules.security.config;
 
 import me.zhengjie.annotation.AnonymousAccess;
-import me.zhengjie.config.ElPermissionConfig;
 import me.zhengjie.modules.security.security.JwtAuthenticationEntryPoint;
 import me.zhengjie.modules.security.security.JwtAuthorizationTokenFilter;
 import me.zhengjie.modules.security.service.JwtUserDetailsService;
@@ -108,7 +107,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/*.html",
                         "/**/*.html",
                         "/**/*.css",
-                        "/**/*.js"
+                        "/**/*.js",
+						"/webSocket/**"
                 ).anonymous()
                 // swagger start
                 .antMatchers("/swagger-ui.html").permitAll()
