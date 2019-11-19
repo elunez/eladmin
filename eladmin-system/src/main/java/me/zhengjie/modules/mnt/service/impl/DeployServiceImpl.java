@@ -145,7 +145,7 @@ public class DeployServiceImpl implements DeployService {
 		ScpClientUtil scpClientUtil = getScpClientUtil(ip);
 		log.info(msg);
 		sendMsg(msg, MsgType.INFO);
-		msg = String.format("上传文件到服务器:%s<br>目录:%s下", fileSavePath, ip, uploadPath);
+		msg = String.format("上传文件到服务器:%s<br>目录:%s下", ip, uploadPath);
 		sendMsg(msg, MsgType.INFO);
 		scpClientUtil.putFile(fileSavePath, uploadPath);
 		if (flag) {
