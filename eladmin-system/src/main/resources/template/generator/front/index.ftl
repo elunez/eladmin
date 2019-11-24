@@ -9,6 +9,22 @@
       <el-select v-model="query.type" clearable placeholder="类型" class="filter-item" style="width: 130px">
         <el-option v-for="item in queryTypeOptions" :key="item.key" :label="item.display_name" :value="item.key"/>
       </el-select>
+<#if dateRanges??>
+  <#list dateRanges as column>
+    <#if column.queryType = 'DateRange'>
+      <el-date-picker
+        v-model="query.${column.changeColumnName}"
+        :default-time="['00:00:00','23:59:59']"
+        type="daterange"
+        range-separator=":"
+        class="el-range-editor--small filter-item"
+        style="height: 30.5px;width: 225px;"
+        value-format="yyyy-MM-dd HH:mm:ss"
+        start-placeholder="${column.changeColumnName}Start"
+        end-placeholder="${column.changeColumnName}End"/>
+    </#if>
+  </#list>
+</#if>
       <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
     </#if>
       <!-- 新增 -->
@@ -31,18 +47,36 @@
           icon="el-icon-download"
           @click="download">导出</el-button>
       </div>
+      <!-- 多选删除 -->
+      <div v-permission="['admin','${changeClassName}:del']" style="display: inline-block;">
+        <el-button
+          :loading="delAllLoading"
+          :disabled="data.length === 0 || $refs.table.selection.length === 0"
+          class="filter-item"
+          size="mini"
+          type="danger"
+          icon="el-icon-delete"
+          @click="open">删除</el-button>
+      </div>
     </div>
     <!--表单组件-->
-    <eForm ref="form" :is-add="isAdd"/>
+    <eForm ref="form" :is-add="isAdd" <#if hasDict>:dicts="dict"</#if>/>
     <!--表格渲染-->
-    <el-table v-loading="loading" :data="data" size="small" style="width: 100%;">
+    <el-table v-loading="loading" ref="table" :data="data" size="small" style="width: 100%;">
+      <el-table-column type="selection" width="55"/>
       <#if columns??>
           <#list columns as column>
-          <#if column.columnShow = 'true'>
-              <#if column.columnType != 'Timestamp'>
-      <el-table-column prop="${column.changeColumnName}" label="<#if column.columnComment != ''>${column.columnComment}<#else>${column.changeColumnName}</#if>"/>
+          <#if column.columnShow>
+        <#if column.dictName??>
+      <el-table-column prop="${column.changeColumnName}" label="<#if column.remark != ''>${column.remark}<#else>${column.changeColumnName}</#if>">
+        <template slot-scope="scope">
+          {{ dict.label.${column.dictName}[scope.row.${column.changeColumnName}] }}
+        </template>
+      </el-table-column>
+        <#elseif column.columnType != 'Timestamp'>
+      <el-table-column prop="${column.changeColumnName}" label="<#if column.remark != ''>${column.remark}<#else>${column.changeColumnName}</#if>"/>
               <#else>
-      <el-table-column prop="${column.changeColumnName}" label="<#if column.columnComment != ''>${column.columnComment}<#else>${column.changeColumnName}</#if>">
+      <el-table-column prop="${column.changeColumnName}" label="<#if column.remark != ''>${column.remark}<#else>${column.changeColumnName}</#if>">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.${column.changeColumnName}) }}</span>
         </template>
@@ -83,7 +117,7 @@
 <script>
 import checkPermission from '@/utils/permission'
 import initData from '@/mixins/initData'
-import { del, download${className} } from '@/api/${changeClassName}'
+import { del, download${className}, delAll } from '@/api/${changeClassName}'
 <#if hasTimestamp>
 import { parseTime, downloadFile } from '@/utils/index'
 </#if>
@@ -91,14 +125,19 @@ import eForm from './form'
 export default {
   components: { eForm },
   mixins: [initData],
+  <#if hasDict>
+  dicts: [<#if hasDict??><#list dicts as dict>'${dict}'<#if dict_has_next>, </#if></#list></#if>],
+  </#if>
   data() {
     return {
-      delLoading: false,
+      delLoading: false, delAllLoading: false,
       <#if hasQuery>
       queryTypeOptions: [
         <#if queryColumns??>
         <#list queryColumns as column>
-        { key: '${column.changeColumnName}', display_name: '<#if column.columnComment != ''>${column.columnComment}<#else>${column.changeColumnName}</#if>' }<#if column_has_next>,</#if>
+        <#if column.queryType != 'DateRange'>
+        { key: '${column.changeColumnName}', display_name: '<#if column.remark != ''>${column.remark}<#else>${column.changeColumnName}</#if>' }<#if column_has_next>,</#if>
+        </#if>
         </#list>
         </#if>
       ]
@@ -124,6 +163,16 @@ export default {
       const type = query.type
       const value = query.value
       if (type && value) { this.params[type] = value }
+      <#if dateRanges??>
+      <#list dateRanges as column>
+      <#if column.queryType = 'DateRange'>
+      if (query.${column.changeColumnName}) {
+        this.params['${column.changeColumnName}Start'] = query.${column.changeColumnName}[0]
+        this.params['${column.changeColumnName}End'] = query.${column.changeColumnName}[1]
+      }
+      </#if>
+      </#list>
+      </#if>
       </#if>
       return true
     },
@@ -170,6 +219,36 @@ export default {
         this.downloadLoading = false
       }).catch(() => {
         this.downloadLoading = false
+      })
+    },
+    doDelete() {
+      this.delAllLoading = true
+      const data = this.$refs.table.selection
+      const ids = []
+      for (let i = 0; i < data.length; i++) {
+        ids.push(data[i].id)
+      }
+      delAll(ids).then(res => {
+        this.delAllLoading = false
+        this.init()
+        this.dleChangePage(ids.length)
+        this.$notify({
+          title: '删除成功',
+          type: 'success',
+          duration: 2500
+        })
+      }).catch(err => {
+        this.delAllLoading = false
+        console.log(err.response.data.message)
+      })
+    },
+    open() {
+      this.$confirm('你确定删除选中的数据吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.doDelete()
       })
     }
   }

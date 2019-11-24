@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 /**
 * @author Zheng Jie
@@ -51,8 +52,7 @@ public class JobController {
     @ApiOperation("查询岗位")
     @GetMapping
     @PreAuthorize("@el.check('job:list','user:list')")
-    public ResponseEntity getJobs(JobQueryCriteria criteria,
-                                  Pageable pageable){
+    public ResponseEntity getJobs(JobQueryCriteria criteria, Pageable pageable){
         // 数据权限
         criteria.setDeptIds(dataScope.getDeptIds());
         return new ResponseEntity<>(jobService.queryAll(criteria, pageable),HttpStatus.OK);

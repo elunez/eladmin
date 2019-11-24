@@ -22,5 +22,7 @@ public class DictDetailDTO implements Serializable {
 
     private String sort;
 
+    private DictSmallDTO dict;
+
     private Timestamp createTime;
 }

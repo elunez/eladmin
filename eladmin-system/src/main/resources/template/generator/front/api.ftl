@@ -14,6 +14,13 @@ export function del(${pkChangeColName}) {
     method: 'delete'
   })
 }
+export function delAll(ids) {
+  return request({
+    url: 'api/${changeClassName}/',
+    method: 'delete',
+    data: ids
+  })
+}
 
 export function edit(data) {
   return request({

@@ -106,6 +106,14 @@ public class QueryHelp {
                                 list.add(getExpression(attributeName,join,root).in((Collection<Long>) val));
                             }
                             break;
+                        case NOT_EQUAL:
+                            list.add(cb.notEqual(getExpression(attributeName,join,root), val));
+                            break;
+                        case BETWEEN:
+                            List<Object> between = new ArrayList<>((List<Object>)val);
+                            list.add(cb.between(getExpression(attributeName, join, root).as((Class<? extends Comparable>) between.get(0).getClass()),
+                                    (Comparable) between.get(0), (Comparable) between.get(1)));
+                            break;
                         default: break;
                     }
                 }
