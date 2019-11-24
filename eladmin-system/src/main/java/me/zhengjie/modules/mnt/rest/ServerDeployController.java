@@ -55,7 +55,7 @@ public class ServerDeployController {
     @ApiOperation(value = "删除Server")
 	@DeleteMapping(value = "/{id:.+}")
 	@PreAuthorize("@el.check('serverDeploy:del')")
-    public ResponseEntity delete(@PathVariable String id){
+    public ResponseEntity delete(@PathVariable Long id){
         serverDeployService.delete(id);
         return new ResponseEntity(HttpStatus.OK);
     }

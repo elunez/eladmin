@@ -31,7 +31,7 @@ public interface ServerDeployService {
      * @param id
      * @return
      */
-    ServerDeployDTO findById(String id);
+    ServerDeployDTO findById(Long id);
 
     /**
      * create
@@ -50,5 +50,7 @@ public interface ServerDeployService {
      * delete
      * @param id
      */
-    void delete(String id);
+    void delete(Long id);
+
+    ServerDeployDTO findByIp(String ip);
 }

@@ -3,6 +3,9 @@ package me.zhengjie.modules.mnt.service.dto;
 import lombok.Data;
 import me.zhengjie.annotation.Query;
 
+import java.sql.Timestamp;
+import java.util.List;
+
 /**
 * @author zhanghouying
 * @date 2019-08-24
@@ -13,7 +16,9 @@ public class ServerDeployQueryCriteria{
 	/**
 	 * 模糊
 	 */
-	@Query(type = Query.Type.INNER_LIKE)
-    private String id;
+	@Query(blurry = "name,ip,account")
+    private String blurry;
 
+	@Query(type = Query.Type.BETWEEN)
+	private List<Timestamp> createTime;
 }

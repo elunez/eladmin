@@ -3,8 +3,11 @@ package me.zhengjie.modules.mnt.domain;
 import lombok.Data;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
+import org.hibernate.annotations.CreationTimestamp;
+
 import javax.persistence.*;
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 /**
 * @author zhanghouying
@@ -19,14 +22,21 @@ public class ServerDeploy implements Serializable {
 	 * 服务器IP
 	 */
     @Id
-    @Column(name = "id")
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	/**
-	 * 服务器账号
-	 */
-    @Column(name = "account_id")
-    private String accountId;
+    private String name;
+
+    private String ip;
+
+    private Integer port;
+
+    private String account;
+
+    private String password;
+
+    @CreationTimestamp
+    private Timestamp createTime;
 
     public void copy(ServerDeploy source){
         BeanUtil.copyProperties(source,this, CopyOptions.create().setIgnoreNullValue(true));

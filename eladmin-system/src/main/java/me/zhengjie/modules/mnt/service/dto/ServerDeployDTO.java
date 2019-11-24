@@ -1,11 +1,8 @@
 package me.zhengjie.modules.mnt.service.dto;
 
 import lombok.Data;
-import me.zhengjie.modules.mnt.service.ServerAccountService;
-import me.zhengjie.modules.mnt.service.ServerDeployService;
-import me.zhengjie.utils.SpringContextHolder;
-
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 
 /**
@@ -15,26 +12,17 @@ import java.io.Serializable;
 @Data
 public class ServerDeployDTO implements Serializable {
 
-	/**
-	 * 服务器IP
-	 */
-    private String id;
+    private Long id;
 
-	/**
-	 * 服务器账号
-	 */
-    private String accountId;
+	private String name;
 
-	/**
-	 * 账号名称
-	 */
-	private String accountName;
+	private String ip;
 
-	public String getAccountName() {
-		if(accountId != null){
-			ServerAccountService serverAccountService = SpringContextHolder.getBean(ServerAccountService.class);
-			return serverAccountService.findById(accountId).getName();
-		}
-		return accountName;
-	}
+	private Integer port;
+
+	private String account;
+
+	private String password;
+
+	private Timestamp createTime;
 }

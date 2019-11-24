@@ -10,9 +10,11 @@ import org.springframework.data.jpa.repository.Query;
 * @author zhanghouying
 * @date 2019-08-24
 */
-public interface ServerDeployRepository extends JpaRepository<ServerDeploy, String>, JpaSpecificationExecutor {
+public interface ServerDeployRepository extends JpaRepository<ServerDeploy, Long>, JpaSpecificationExecutor<ServerDeploy> {
 
     @Modifying
     @Query(value = "update mnt_server set account_id = null where account_id = ?1", nativeQuery = true)
     void changeByAccount(String id);
+
+    ServerDeploy findByIp(String ip);
 }
