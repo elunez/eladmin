@@ -118,9 +118,11 @@ public class GeneratorServiceImpl implements GeneratorService {
             throw new BadRequestException("请先配置生成器");
         }
         try {
-            GenUtil.generatorCode(columns,genConfig);
+            // 查询是否存在关联实体字段信息
+            GenUtil.generatorCode(columns, genConfig);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
+            throw new BadRequestException("生成失败，请手动处理已生成的文件");
         }
         return null;
     }

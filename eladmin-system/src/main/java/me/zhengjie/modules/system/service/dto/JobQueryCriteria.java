@@ -3,9 +3,8 @@ package me.zhengjie.modules.system.service.dto;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import me.zhengjie.annotation.Query;
-
-import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -28,9 +27,6 @@ public class JobQueryCriteria {
     @Query(propName = "id", joinName = "dept", type = Query.Type.IN)
     private Set<Long> deptIds;
 
-    @Query(type = Query.Type.GREATER_THAN,propName = "createTime")
-    private Timestamp startTime;
-
-    @Query(type = Query.Type.LESS_THAN,propName = "createTime")
-    private Timestamp endTime;
+    @Query(type = Query.Type.BETWEEN)
+    private List<Timestamp> createTime;
 }

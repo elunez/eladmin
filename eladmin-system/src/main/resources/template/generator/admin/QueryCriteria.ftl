@@ -7,6 +7,9 @@ import java.sql.Timestamp;
 <#if queryHasBigDecimal>
 import java.math.BigDecimal;
 </#if>
+<#if dateRanges??>
+import java.util.List;
+</#if>
 <#if queryColumns??>
 import me.zhengjie.annotation.Query;
 </#if>
@@ -49,13 +52,8 @@ public class ${className}QueryCriteria{
 </#if>
 <#if dateRanges??>
     <#list dateRanges as column>
-
-    // 时间段查询
-    @Query(type = Query.Type.GREATER_THAN, propName = "${column.changeColumnName}")
-    private ${column.columnType} ${column.changeColumnName}Start;
-
-    @Query(type = Query.Type.LESS_THAN, propName = "${column.changeColumnName}")
-    private ${column.columnType} ${column.changeColumnName}End;
+    @Query(type = Query.Type.BETWEEN)
+    private List<${column.columnType}> createTime;
     </#list>
 </#if>
 }

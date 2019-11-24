@@ -4,6 +4,7 @@ import lombok.Data;
 import me.zhengjie.annotation.Query;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 /**
  * @author Zheng Jie
@@ -15,9 +16,6 @@ public class QiniuQueryCriteria{
     @Query(type = Query.Type.INNER_LIKE)
     private String key;
 
-    @Query(type = Query.Type.GREATER_THAN,propName = "updateTime")
-    private Timestamp startTime;
-
-    @Query(type = Query.Type.LESS_THAN,propName = "updateTime")
-    private Timestamp endTime;
+    @Query(type = Query.Type.BETWEEN)
+    private List<Timestamp> createTime;
 }

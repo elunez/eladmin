@@ -170,8 +170,6 @@ public class GenUtil {
             listMap.put("capitalColumnName",capitalColumnName);
             // 字典名称
             listMap.put("dictName",column.getDictName());
-            // 关联字段
-            listMap.put("joinName",column.getJoinName());
             // 日期注解
             listMap.put("dateAnnotation",column.getDateAnnotation());
             if(StringUtils.isNotBlank(column.getDateAnnotation())){

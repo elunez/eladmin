@@ -56,9 +56,6 @@ public class ColumnInfo {
     // 字典名称
     private String dictName;
 
-    // 关联表名
-    private String joinName;
-
     // 日期注解
     private String dateAnnotation;
 

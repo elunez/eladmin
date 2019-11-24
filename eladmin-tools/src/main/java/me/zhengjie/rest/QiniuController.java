@@ -52,7 +52,7 @@ public class QiniuController {
 
     @Log("导出数据")
     @ApiOperation("导出数据")
-    @GetMapping(value = "/download/list")
+    @GetMapping(value = "/download")
     public void download(HttpServletResponse response, QiniuQueryCriteria criteria) throws IOException {
         qiNiuService.downloadList(qiNiuService.queryAll(criteria), response);
     }

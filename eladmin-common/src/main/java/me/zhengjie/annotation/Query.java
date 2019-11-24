@@ -52,6 +52,8 @@ public @interface Query {
         , IN
         // 不等于
         ,NOT_EQUAL
+        // between
+        ,BETWEEN
     }
 
     /**
