@@ -42,12 +42,6 @@ public interface DeployHistoryService {
     DeployHistoryDTO create(DeployHistory resources);
 
     /**
-	 * update
-     * @param resources
-     */
-    void update(DeployHistory resources);
-
-    /**
 	 * delete
      * @param id
      */

@@ -60,16 +60,6 @@ public class DeployHistoryServiceImpl implements DeployHistoryService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void update(DeployHistory resources) {
-        Optional<DeployHistory> optionalDeployHistory = deployhistoryRepository.findById(resources.getId());
-        ValidationUtil.isNull( optionalDeployHistory,"DeployHistory","id",resources.getId());
-        DeployHistory deployhistory = optionalDeployHistory.get();
-        deployhistory.copy(resources);
-        deployhistoryRepository.save(deployhistory);
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
     public void delete(String id) {
         deployhistoryRepository.deleteById(id);
     }

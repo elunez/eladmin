@@ -18,7 +18,7 @@ public class ServerDTO implements Serializable {
     private String name;
 
     // IP地址
-    private String ip;
+    private String address;
 
     // 访问端口
     private Integer port;

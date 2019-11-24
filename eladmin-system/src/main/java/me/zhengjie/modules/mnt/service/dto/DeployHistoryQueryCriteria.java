@@ -13,11 +13,6 @@ public class DeployHistoryQueryCriteria{
 	/**
 	 * 精确
 	 */
-	@Query
-	private String deployId;
-	/**
-	 * 模糊
-	 */
-	@Query(type = Query.Type.INNER_LIKE)
-	private String deployDate;
+	@Query(blurry = "appName,ip,deployUser,deployId")
+	private String blurry;
 }

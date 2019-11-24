@@ -3,6 +3,7 @@ package me.zhengjie.modules.mnt.service.impl;
 import cn.hutool.core.util.IdUtil;
 import me.zhengjie.modules.mnt.domain.ServerAccount;
 import me.zhengjie.modules.mnt.repository.ServerAccountRepository;
+import me.zhengjie.modules.mnt.repository.ServerDeployRepository;
 import me.zhengjie.modules.mnt.service.ServerAccountService;
 import me.zhengjie.modules.mnt.service.dto.ServerAccountDTO;
 import me.zhengjie.modules.mnt.service.dto.ServerAccountQueryCriteria;
@@ -10,6 +11,7 @@ import me.zhengjie.modules.mnt.service.mapper.ServerAccountMapper;
 import me.zhengjie.utils.PageUtil;
 import me.zhengjie.utils.QueryHelp;
 import me.zhengjie.utils.ValidationUtil;
+import org.hibernate.mapping.IdGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,6 +31,9 @@ public class ServerAccountServiceImpl implements ServerAccountService {
 
     @Autowired
     private ServerAccountRepository serverAccountRepository;
+
+    @Autowired
+    private ServerDeployRepository serverDeployRepository;
 
     @Autowired
     private ServerAccountMapper serverAccountMapper;
@@ -54,7 +59,7 @@ public class ServerAccountServiceImpl implements ServerAccountService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public ServerAccountDTO create(ServerAccount resources) {
-        resources.setId(IdUtil.simpleUUID());
+        resources.setId(IdUtil.getSnowflake(0, 0).toString());
         return serverAccountMapper.toDto(serverAccountRepository.save(resources));
     }
 
@@ -72,5 +77,6 @@ public class ServerAccountServiceImpl implements ServerAccountService {
     @Transactional(rollbackFor = Exception.class)
     public void delete(String id) {
         serverAccountRepository.deleteById(id);
+        serverDeployRepository.changeByAccount(id);
     }
 }

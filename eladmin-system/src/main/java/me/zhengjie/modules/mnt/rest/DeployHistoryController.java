@@ -34,23 +34,6 @@ public class DeployHistoryController {
         return new ResponseEntity(deployhistoryService.queryAll(criteria,pageable),HttpStatus.OK);
     }
 
-    @Log("新增DeployHistory")
-    @ApiOperation(value = "新增DeployHistory")
-    @PostMapping
-	@PreAuthorize("@el.check('deployHistory:add')")
-    public ResponseEntity create(@Validated @RequestBody DeployHistory resources){
-        return new ResponseEntity(deployhistoryService.create(resources),HttpStatus.CREATED);
-    }
-
-    @Log("修改DeployHistory")
-    @ApiOperation(value = "修改DeployHistory")
-    @PutMapping
-	@PreAuthorize("@el.check('deployHistory:edit')")
-    public ResponseEntity update(@Validated @RequestBody DeployHistory resources){
-        deployhistoryService.update(resources);
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
-    }
-
     @Log("删除DeployHistory")
     @ApiOperation(value = "删除DeployHistory")
 	@DeleteMapping(value = "/{id}")
