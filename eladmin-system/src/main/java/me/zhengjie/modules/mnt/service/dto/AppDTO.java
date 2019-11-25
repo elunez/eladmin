@@ -3,6 +3,7 @@ package me.zhengjie.modules.mnt.service.dto;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 
 /**
@@ -51,5 +52,7 @@ public class AppDTO implements Serializable {
 	 * 部署脚本
 	 */
 	private String deployScript;
+
+	private Timestamp createTime;
 
 }

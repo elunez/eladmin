@@ -59,7 +59,7 @@ public class AppController {
     @ApiOperation(value = "删除App")
 	@DeleteMapping(value = "/{id}")
 	@PreAuthorize("@el.check('app:del')")
-    public ResponseEntity delete(@PathVariable String id){
+    public ResponseEntity delete(@PathVariable Long id){
         appService.delete(id);
         return new ResponseEntity(HttpStatus.OK);
     }

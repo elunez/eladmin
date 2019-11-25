@@ -5,8 +5,10 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
 import lombok.extern.slf4j.Slf4j;
 import me.zhengjie.exception.BadRequestException;
+import me.zhengjie.modules.mnt.domain.App;
 import me.zhengjie.modules.mnt.domain.Deploy;
 import me.zhengjie.modules.mnt.domain.DeployHistory;
+import me.zhengjie.modules.mnt.domain.ServerDeploy;
 import me.zhengjie.modules.mnt.repository.DeployRepository;
 import me.zhengjie.modules.mnt.service.*;
 import me.zhengjie.modules.mnt.service.dto.*;
@@ -32,6 +34,7 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * @author zhanghouying
@@ -74,7 +77,7 @@ public class DeployServiceImpl implements DeployService {
 	}
 
 	@Override
-	public DeployDTO findById(String id) {
+	public DeployDTO findById(Long id) {
 		Optional<Deploy> Deploy = deployRepository.findById(id);
 		ValidationUtil.isNull(Deploy, "Deploy", "id", id);
 		return deployMapper.toDto(Deploy.get());
@@ -83,7 +86,6 @@ public class DeployServiceImpl implements DeployService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public DeployDTO create(Deploy resources) {
-		resources.setId(IdUtil.simpleUUID());
 		return deployMapper.toDto(deployRepository.save(resources));
 	}
 
@@ -99,12 +101,12 @@ public class DeployServiceImpl implements DeployService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void delete(String id) {
+	public void delete(Long id) {
 		deployRepository.deleteById(id);
 	}
 
 	@Override
-	public String deploy(String fileSavePath, String id) {
+	public String deploy(String fileSavePath, Long id) {
 		return deployApp(fileSavePath, id);
 	}
 
@@ -113,14 +115,14 @@ public class DeployServiceImpl implements DeployService {
 	 * @param id
 	 * @return
 	 */
-	private String deployApp(String fileSavePath, String id) {
+	private String deployApp(String fileSavePath, Long id) {
 
 		DeployDTO deploy = findById(id);
 		if (deploy == null) {
 			sendMsg("部署信息不存在", MsgType.ERROR);
 			throw new BadRequestException("部署信息不存在");
 		}
-		AppDTO app = appService.findById(deploy.getAppId());
+		AppDTO app = deploy.getApp();
 		if (app == null) {
 			sendMsg("包对应应用信息不存在", MsgType.ERROR);
 			throw new BadRequestException("包对应应用信息不存在");
@@ -130,42 +132,44 @@ public class DeployServiceImpl implements DeployService {
 		String uploadPath = app.getUploadPath();
 		StringBuilder sb = new StringBuilder();
 		String msg = "";
-		String ip = deploy.getIp();
-		ExecuteShellUtil executeShellUtil = getExecuteShellUtil(ip);
-		//判断是否第一次部署
-		boolean flag = checkFile(executeShellUtil, app);
-		//第一步要确认服务器上有这个目录
-		executeShellUtil.execute("mkdir -p " + uploadPath);
-		//上传文件
-		msg = String.format("登陆到服务器:%s", ip);
-		ScpClientUtil scpClientUtil = getScpClientUtil(ip);
-		log.info(msg);
-		sendMsg(msg, MsgType.INFO);
-		msg = String.format("上传文件到服务器:%s<br>目录:%s下", ip, uploadPath);
-		sendMsg(msg, MsgType.INFO);
-		scpClientUtil.putFile(fileSavePath, uploadPath);
-		if (flag) {
-			sendMsg("停止原来应用", MsgType.INFO);
-			//停止应用
-			stopApp(port, executeShellUtil);
-			sendMsg("备份原来应用", MsgType.INFO);
-			//备份应用
-			backupApp(executeShellUtil, ip, app.getDeployPath(), app.getName(), app.getBackupPath(), id);
+		Set<ServerDeployDTO> deploys = deploy.getDeploys();
+		for (ServerDeployDTO deployDTO : deploys) {
+			String ip = deployDTO.getIp();
+			ExecuteShellUtil executeShellUtil = getExecuteShellUtil(ip);
+			//判断是否第一次部署
+			boolean flag = checkFile(executeShellUtil, app);
+			//第一步要确认服务器上有这个目录
+			executeShellUtil.execute("mkdir -p " + uploadPath);
+			//上传文件
+			msg = String.format("登陆到服务器:%s", ip);
+			ScpClientUtil scpClientUtil = getScpClientUtil(ip);
+			log.info(msg);
+			sendMsg(msg, MsgType.INFO);
+			msg = String.format("上传文件到服务器:%s<br>目录:%s下", ip, uploadPath);
+			sendMsg(msg, MsgType.INFO);
+			scpClientUtil.putFile(fileSavePath, uploadPath);
+			if (flag) {
+				sendMsg("停止原来应用", MsgType.INFO);
+				//停止应用
+				stopApp(port, executeShellUtil);
+				sendMsg("备份原来应用", MsgType.INFO);
+				//备份应用
+				backupApp(executeShellUtil, ip, app.getDeployPath(), app.getName(), app.getBackupPath(), id);
+			}
+			sendMsg("部署应用", MsgType.INFO);
+			//部署文件,并启动应用
+			String deployScript = app.getDeployScript();
+			executeShellUtil.execute(deployScript);
+
+			sendMsg("启动应用", MsgType.INFO);
+			String startScript = app.getStartScript();
+			executeShellUtil.execute(startScript);
+			//只有过5秒才能知道到底是不是启动成功了。
+			sleep(5);
+			boolean result = checkIsRunningStatus(port, executeShellUtil);
+			sb.append("服务器:").append(deployDTO.getName()).append("<br>应用:").append(app.getName());
+			sendResultMsg(result, sb);
 		}
-		sendMsg("部署应用", MsgType.INFO);
-		//部署文件,并启动应用
-		String deployScript = app.getDeployScript();
-		executeShellUtil.execute(deployScript);
-
-		sendMsg("启动应用", MsgType.INFO);
-		String startScript = app.getStartScript();
-		executeShellUtil.execute(startScript);
-		//只有过5秒才能知道到底是不是启动成功了。
-		sleep(5);
-		boolean result = checkIsRunningStatus(port, executeShellUtil);
-		sb.append("服务器:").append(ip).append("<br>应用:").append(app.getName());
-		sendResultMsg(result, sb);
-
 		return "部署结束";
 	}
 
@@ -177,7 +181,7 @@ public class DeployServiceImpl implements DeployService {
 		}
 	}
 
-	private void backupApp(ExecuteShellUtil executeShellUtil, String ip, String fileSavePath, String appName, String backupPath, String id) {
+	private void backupApp(ExecuteShellUtil executeShellUtil, String ip, String fileSavePath, String appName, String backupPath, Long id) {
 		String deployDate = DateUtil.format(new Date(), DatePattern.PURE_DATETIME_PATTERN);
 		StringBuilder sb = new StringBuilder();
 		if (!backupPath.endsWith(FILE_SEPARATOR)) {
@@ -241,21 +245,22 @@ public class DeployServiceImpl implements DeployService {
 
 	@Override
 	public String serverStatus(Deploy resources) {
-		String ip = resources.getIp();
-		String appId = resources.getAppId();
-		AppDTO app = appService.findById(appId);
-		StringBuffer sb = new StringBuffer();
-		ExecuteShellUtil executeShellUtil = getExecuteShellUtil(ip);
-		sb.append("服务器:").append(ip).append("<br>应用:").append(app.getName());
-		boolean result = checkIsRunningStatus(app.getPort(), executeShellUtil);
-		if (result) {
-			sb.append("<br>正在运行");
-			sendMsg(sb.toString(), MsgType.INFO);
-		} else {
-			sb.append("<br>已停止!");
-			sendMsg(sb.toString(), MsgType.ERROR);
+		Set<ServerDeploy> serverDeploys = resources.getDeploys();
+		App app = resources.getApp();
+		for (ServerDeploy serverDeploy : serverDeploys) {
+			StringBuilder sb = new StringBuilder();
+			ExecuteShellUtil executeShellUtil = getExecuteShellUtil(serverDeploy.getIp());
+			sb.append("服务器:").append(serverDeploy.getName()).append("<br>应用:").append(app.getName());
+			boolean result = checkIsRunningStatus(app.getPort(), executeShellUtil);
+			if (result) {
+				sb.append("<br>正在运行");
+				sendMsg(sb.toString(), MsgType.INFO);
+			} else {
+				sb.append("<br>已停止!");
+				sendMsg(sb.toString(), MsgType.ERROR);
+			}
+			log.info(sb.toString());
 		}
-		log.info(sb.toString());
 		return "执行完毕";
 	}
 
@@ -277,21 +282,22 @@ public class DeployServiceImpl implements DeployService {
 	 */
 	@Override
 	public String startServer(Deploy resources) {
-		String ip = resources.getIp();
-		String appId = resources.getAppId();
-		AppDTO app = appService.findById(appId);
-		StringBuilder sb = new StringBuilder();
-		ExecuteShellUtil executeShellUtil = getExecuteShellUtil(ip);
-		//为了防止重复启动，这里先停止应用
-		stopApp(app.getPort(), executeShellUtil);
-		sb.append("服务器:").append(ip).append("<br>应用:").append(app.getName());
-		sendMsg("下发启动命令", MsgType.INFO);
-		executeShellUtil.execute(app.getStartScript());
-		//停止3秒，防止应用没有启动完成
-		sleep(3);
-		boolean result = checkIsRunningStatus(app.getPort(), executeShellUtil);
-		sendResultMsg(result, sb);
-		log.info(sb.toString());
+		Set<ServerDeploy> deploys = resources.getDeploys();
+		App app = resources.getApp();
+		for (ServerDeploy deploy : deploys) {
+			StringBuilder sb = new StringBuilder();
+			ExecuteShellUtil executeShellUtil = getExecuteShellUtil(deploy.getIp());
+			//为了防止重复启动，这里先停止应用
+			stopApp(app.getPort(), executeShellUtil);
+			sb.append("服务器:").append(deploy.getName()).append("<br>应用:").append(app.getName());
+			sendMsg("下发启动命令", MsgType.INFO);
+			executeShellUtil.execute(app.getStartScript());
+			//停止3秒，防止应用没有启动完成
+			sleep(3);
+			boolean result = checkIsRunningStatus(app.getPort(), executeShellUtil);
+			sendResultMsg(result, sb);
+			log.info(sb.toString());
+		}
 		return "执行完毕";
 	}
 
@@ -302,34 +308,35 @@ public class DeployServiceImpl implements DeployService {
 	 */
 	@Override
 	public String stopServer(Deploy resources) {
-		String ip = resources.getIp();
-		String appId = resources.getAppId();
-		AppDTO app = appService.findById(appId);
-		StringBuffer sb = new StringBuffer();
-		ExecuteShellUtil executeShellUtil = getExecuteShellUtil(ip);
-		sb.append("服务器:").append(ip).append("<br>应用:").append(app.getName());
-		sendMsg("下发停止命令", MsgType.INFO);
-		//停止应用
-		stopApp(app.getPort(), executeShellUtil);
-		sleep(1);
-		boolean result = checkIsRunningStatus(app.getPort(), executeShellUtil);
-		if (result) {
-			sb.append("<br>关闭失败!");
-			sendMsg(sb.toString(), MsgType.ERROR);
-		} else {
-			sb.append("<br>关闭成功!");
-			sendMsg(sb.toString(), MsgType.INFO);
+		Set<ServerDeploy> deploys = resources.getDeploys();
+		App app = resources.getApp();
+		for (ServerDeploy deploy : deploys) {
+			StringBuffer sb = new StringBuffer();
+			ExecuteShellUtil executeShellUtil = getExecuteShellUtil(deploy.getIp());
+			sb.append("服务器:").append(deploy.getName()).append("<br>应用:").append(app.getName());
+			sendMsg("下发停止命令", MsgType.INFO);
+			//停止应用
+			stopApp(app.getPort(), executeShellUtil);
+			sleep(1);
+			boolean result = checkIsRunningStatus(app.getPort(), executeShellUtil);
+			if (result) {
+				sb.append("<br>关闭失败!");
+				sendMsg(sb.toString(), MsgType.ERROR);
+			} else {
+				sb.append("<br>关闭成功!");
+				sendMsg(sb.toString(), MsgType.INFO);
+			}
+			log.info(sb.toString());
 		}
-		log.info(sb.toString());
 		return "执行完毕";
 	}
 
 	@Override
 	public String serverReduction(DeployHistory resources) {
-		String deployId = resources.getDeployId();
+		Long deployId = resources.getDeployId();
 		Deploy deployInfo = deployRepository.findById(deployId).get();
 		String deployDate = resources.getDeployDate();
-		AppDTO app = appService.findById(deployInfo.getAppId());
+		App app = deployInfo.getApp();
 		if (app == null) {
 			sendMsg("应用信息不存在：" + resources.getAppName(), MsgType.ERROR);
 			throw new BadRequestException("应用信息不存在：" + resources.getAppName());

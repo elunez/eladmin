@@ -32,7 +32,7 @@ public interface DeployService {
      * @param id
      * @return
      */
-    DeployDTO findById(String id);
+    DeployDTO findById(Long id);
 
     /**
 	 * create
@@ -54,7 +54,7 @@ public interface DeployService {
      * @CacheEvict(allEntries = true)
      * @param id
      */
-    void delete(String id);
+    void delete(Long id);
 
 	/**
 	 * 部署文件到服务器
@@ -62,7 +62,7 @@ public interface DeployService {
 	 * @param appId
 	 * @return
 	 */
-	public String deploy(String fileSavePath, String appId);
+	public String deploy(String fileSavePath, Long appId);
 
     /**
      * 查询部署状态

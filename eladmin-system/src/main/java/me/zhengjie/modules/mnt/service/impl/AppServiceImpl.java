@@ -1,6 +1,5 @@
 package me.zhengjie.modules.mnt.service.impl;
 
-import cn.hutool.core.util.IdUtil;
 import me.zhengjie.modules.mnt.domain.App;
 import me.zhengjie.modules.mnt.repository.AppRepository;
 import me.zhengjie.modules.mnt.service.AppService;
@@ -15,7 +14,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.Optional;
 
 /**
@@ -47,7 +45,7 @@ public class AppServiceImpl implements AppService {
     }
 
     @Override
-    public AppDTO findById(String id) {
+    public AppDTO findById(Long id) {
 		Optional<App> app = appRepository.findById(id);
         ValidationUtil.isNull(app,"App","id",id);
         return appMapper.toDto(app.get());
@@ -56,7 +54,6 @@ public class AppServiceImpl implements AppService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public AppDTO create(App resources) {
-        resources.setId(IdUtil.fastUUID());
         return appMapper.toDto(appRepository.save(resources));
     }
 
@@ -72,7 +69,7 @@ public class AppServiceImpl implements AppService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void delete(String id) {
+    public void delete(Long id) {
         appRepository.deleteById(id);
     }
 }

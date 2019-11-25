@@ -39,5 +39,5 @@ public class DeployHistoryDTO implements Serializable {
 	/**
 	 * 部署编号
 	 */
-	private String deployId;
+	private Long deployId;
 }

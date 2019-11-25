@@ -50,7 +50,7 @@ public class DeployHistory implements Serializable {
 	 * 部署编号
 	 */
 	@Column(name = "deploy_id",nullable = false)
-	private String deployId;
+	private Long deployId;
 
     public void copy(DeployHistory source){
         BeanUtil.copyProperties(source,this, CopyOptions.create().setIgnoreNullValue(true));

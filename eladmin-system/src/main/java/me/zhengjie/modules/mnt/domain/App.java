@@ -3,8 +3,11 @@ package me.zhengjie.modules.mnt.domain;
 import lombok.Data;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
+import org.hibernate.annotations.CreationTimestamp;
+
 import javax.persistence.*;
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 /**
 * @author zhanghouying
@@ -19,8 +22,8 @@ public class App implements Serializable {
 	 * 应用编号
 	 */
     @Id
-    @Column(name = "id")
-    private String id;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
 	/**
 	 * 应用名称
@@ -63,6 +66,9 @@ public class App implements Serializable {
 	 */
 	@Column(name = "deploy_script")
 	private String deployScript;
+
+	@CreationTimestamp
+	private Timestamp createTime;
 
     public void copy(App source){
         BeanUtil.copyProperties(source,this, CopyOptions.create().setIgnoreNullValue(true));

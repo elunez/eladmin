@@ -2,6 +2,7 @@ package me.zhengjie.modules.mnt.service.dto;
 
 import lombok.Data;
 import java.io.Serializable;
+import java.util.Set;
 
 
 /**
@@ -16,16 +17,12 @@ public class DeployDTO implements Serializable {
 	 */
     private String id;
 
-	/**
-	 * 应用编号
-	 */
-    private String appId;
+	private AppDTO app;
 
 	/**
-	 * IP列表
+	 * 服务器
 	 */
-    private String ip;
-
+	private Set<ServerDeployDTO> deploys;
 
 	/**
 	 * 服务状态

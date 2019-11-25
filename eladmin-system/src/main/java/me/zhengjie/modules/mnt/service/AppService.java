@@ -31,7 +31,7 @@ public interface AppService {
      * @param id
      * @return
      */
-    AppDTO findById(String id);
+    AppDTO findById(Long id);
 
     /**
 	 * create
@@ -50,5 +50,5 @@ public interface AppService {
 	 * delete
      * @param id
      */
-    void delete(String id);
+    void delete(Long id);
 }
