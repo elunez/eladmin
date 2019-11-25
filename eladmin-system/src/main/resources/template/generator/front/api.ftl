@@ -30,11 +30,4 @@ export function edit(data) {
   })
 }
 
-export function download${className}(params) {
-  return request({
-    url: 'api/${changeClassName}/download',
-    method: 'get',
-    params,
-    responseType: 'blob'
-  })
-}
+export default { add, edit, del, delAll }

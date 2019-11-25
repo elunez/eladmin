@@ -17,7 +17,7 @@ public interface ${className}Service {
 
     /**
     * 查询数据分页
-    * @param criteria 条件参数
+    * @param criteria 条件
     * @param pageable 分页参数
     * @return Map<String,Object>
     */
@@ -37,13 +37,36 @@ public interface ${className}Service {
      */
     ${className}Dto findById(${pkColumnType} ${pkChangeColName});
 
+    /**
+    * 创建
+    * @param resources /
+    * @return ${className}Dto
+    */
     ${className}Dto create(${className} resources);
 
+    /**
+    * 编辑
+    * @param resources /
+    */
     void update(${className} resources);
 
+    /**
+    * 删除
+    * @param ${pkChangeColName} /
+    */
     void delete(${pkColumnType} ${pkChangeColName});
 
+    /**
+    * 多选删除
+    * @param ids /
+    */
     void deleteAll(${pkColumnType}[] ids);
 
+    /**
+    * 导出数据
+    * @param all 待导出的数据
+    * @param response /
+    * @throws IOException /
+    */
     void download(List<${className}Dto> all, HttpServletResponse response) throws IOException;
 }

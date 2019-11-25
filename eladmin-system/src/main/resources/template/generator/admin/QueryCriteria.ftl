@@ -7,7 +7,7 @@ import java.sql.Timestamp;
 <#if queryHasBigDecimal>
 import java.math.BigDecimal;
 </#if>
-<#if dateRanges??>
+<#if betweens??>
 import java.util.List;
 </#if>
 <#if queryColumns??>
@@ -24,34 +24,35 @@ public class ${className}QueryCriteria{
     <#list queryColumns as column>
 
 <#if column.queryType = '='>
-    // 精确
+    /** 精确 */
     @Query
     private ${column.columnType} ${column.changeColumnName};
 </#if>
 <#if column.queryType = 'Like'>
-    // 模糊
+    /** 模糊 */
     @Query(type = Query.Type.INNER_LIKE)
     private ${column.columnType} ${column.changeColumnName};
 </#if>
 <#if column.queryType = '!='>
-    // 不等于
+    /** 不等于 */
     @Query(type = Query.Type.NOT_EQUAL)
     private ${column.columnType} ${column.changeColumnName};
 </#if>
 <#if column.queryType = '>='>
-    // 大于等于
+    /** 大于等于 */
     @Query(type = Query.Type.GREATER_THAN)
     private ${column.columnType} ${column.changeColumnName};
 </#if>
 <#if column.queryType = '<='>
-    // 小于等于
+    /** 小于等于 */
     @Query(type = Query.Type.LESS_THAN)
     private ${column.columnType} ${column.changeColumnName};
 </#if>
     </#list>
 </#if>
-<#if dateRanges??>
-    <#list dateRanges as column>
+<#if betweens??>
+    <#list betweens as column>
+    /** BETWEEN */
     @Query(type = Query.Type.BETWEEN)
     private List<${column.columnType}> createTime;
     </#list>

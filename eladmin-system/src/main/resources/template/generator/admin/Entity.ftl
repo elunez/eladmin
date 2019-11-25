@@ -32,7 +32,7 @@ public class ${className} implements Serializable {
     <#list columns as column>
 
     <#if column.remark != ''>
-    // ${column.remark}
+    /** ${column.remark} */
     </#if>
     <#if column.columnKey = 'PRI'>
     @Id
