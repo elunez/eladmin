@@ -13,7 +13,7 @@ import java.util.List;
 */
 @Getter
 @Setter
-public class DictDTO implements Serializable {
+public class DictDto implements Serializable {
 
     private Long id;
 
@@ -21,7 +21,7 @@ public class DictDTO implements Serializable {
 
     private String remark;
 
-    private List<DictDetailDTO> dictDetails;
+    private List<DictDetailDto> dictDetails;
 
     private Timestamp createTime;
 }

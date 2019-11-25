@@ -50,7 +50,7 @@ public class AuthenticationController {
 
     private final OnlineUserService onlineUserService;
 
-    public AuthenticationController(JwtTokenUtil jwtTokenUtil, RedisService redisService, @Qualifier("jwtUserDetailsService") UserDetailsService userDetailsService, OnlineUserService onlineUserService) {
+    public AuthenticationController(JwtTokenUtil jwtTokenUtil, RedisService redisService, @Qualifier("jwtUserDetailsServiceImpl") UserDetailsService userDetailsService, OnlineUserService onlineUserService) {
         this.jwtTokenUtil = jwtTokenUtil;
         this.redisService = redisService;
         this.userDetailsService = userDetailsService;

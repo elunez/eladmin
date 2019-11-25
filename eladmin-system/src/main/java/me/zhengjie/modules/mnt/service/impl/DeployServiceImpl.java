@@ -67,30 +67,30 @@ public class DeployServiceImpl implements DeployService {
 	}
 
 	@Override
-	public List<DeployDTO> queryAll(DeployQueryCriteria criteria) {
+	public List<DeployDto> queryAll(DeployQueryCriteria criteria) {
 		return deployMapper.toDto(deployRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root, criteria, criteriaBuilder)));
 	}
 
 	@Override
-	public DeployDTO findById(Long id) {
-		Deploy Deploy = deployRepository.findById(id).orElseGet(Deploy::new);
-		ValidationUtil.isNull(Deploy.getId(), "Deploy", "id", id);
-		return deployMapper.toDto(Deploy);
+	public DeployDto findById(Long id) {
+		Deploy deploy = deployRepository.findById(id).orElseGet(Deploy::new);
+		ValidationUtil.isNull(deploy.getId(), "Deploy", "id", id);
+		return deployMapper.toDto(deploy);
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public DeployDTO create(Deploy resources) {
+	public DeployDto create(Deploy resources) {
 		return deployMapper.toDto(deployRepository.save(resources));
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void update(Deploy resources) {
-		Deploy Deploy = deployRepository.findById(resources.getId()).orElseGet(Deploy::new);
-		ValidationUtil.isNull(Deploy.getId(), "Deploy", "id", resources.getId());
-		Deploy.copy(resources);
-		deployRepository.save(Deploy);
+		Deploy deploy = deployRepository.findById(resources.getId()).orElseGet(Deploy::new);
+		ValidationUtil.isNull(deploy.getId(), "Deploy", "id", resources.getId());
+		deploy.copy(resources);
+		deployRepository.save(deploy);
 	}
 
 	@Override
@@ -100,8 +100,8 @@ public class DeployServiceImpl implements DeployService {
 	}
 
 	@Override
-	public String deploy(String fileSavePath, Long id) {
-		return deployApp(fileSavePath, id);
+	public void deploy(String fileSavePath, Long id) {
+		deployApp(fileSavePath, id);
 	}
 
 	/**
@@ -111,12 +111,12 @@ public class DeployServiceImpl implements DeployService {
 	 */
 	private String deployApp(String fileSavePath, Long id) {
 
-		DeployDTO deploy = findById(id);
+		DeployDto deploy = findById(id);
 		if (deploy == null) {
 			sendMsg("部署信息不存在", MsgType.ERROR);
 			throw new BadRequestException("部署信息不存在");
 		}
-		AppDTO app = deploy.getApp();
+		AppDto app = deploy.getApp();
 		if (app == null) {
 			sendMsg("包对应应用信息不存在", MsgType.ERROR);
 			throw new BadRequestException("包对应应用信息不存在");
@@ -126,8 +126,8 @@ public class DeployServiceImpl implements DeployService {
 		String uploadPath = app.getUploadPath();
 		StringBuilder sb = new StringBuilder();
 		String msg;
-		Set<ServerDeployDTO> deploys = deploy.getDeploys();
-		for (ServerDeployDTO deployDTO : deploys) {
+		Set<ServerDeployDto> deploys = deploy.getDeploys();
+		for (ServerDeployDto deployDTO : deploys) {
 			String ip = deployDTO.getIp();
 			ExecuteShellUtil executeShellUtil = getExecuteShellUtil(ip);
 			//判断是否第一次部署
@@ -252,7 +252,7 @@ public class DeployServiceImpl implements DeployService {
 		return "执行完毕";
 	}
 
-	private boolean checkFile(ExecuteShellUtil executeShellUtil, AppDTO appDTO) {
+	private boolean checkFile(ExecuteShellUtil executeShellUtil, AppDto appDTO) {
 		String sb = "find " +
 				appDTO.getDeployPath() +
 				" -name " +
@@ -346,7 +346,8 @@ public class DeployServiceImpl implements DeployService {
 		//删除原来应用
 		sendMsg("删除应用", MsgType.INFO);
 		//考虑到系统安全性，必须限制下操作目录
-		if (!deployPath.startsWith("/opt")) {
+		String path = "/opt";
+		if (!deployPath.startsWith(path)) {
 			throw new BadRequestException("部署路径必须在opt目录下：" + deployPath);
 		}
 		executeShellUtil.execute("rm -rf " + deployPath + FILE_SEPARATOR + resources.getAppName());
@@ -366,7 +367,7 @@ public class DeployServiceImpl implements DeployService {
 	}
 
 	private ExecuteShellUtil getExecuteShellUtil(String ip) {
-		ServerDeployDTO serverDeployDTO = serverDeployService.findByIp(ip);
+		ServerDeployDto serverDeployDTO = serverDeployService.findByIp(ip);
 		if (serverDeployDTO == null) {
 			sendMsg("IP对应服务器信息不存在：" + ip, MsgType.ERROR);
 			throw new BadRequestException("IP对应服务器信息不存在：" + ip);
@@ -375,7 +376,7 @@ public class DeployServiceImpl implements DeployService {
 	}
 
 	private ScpClientUtil getScpClientUtil(String ip) {
-		ServerDeployDTO serverDeployDTO = serverDeployService.findByIp(ip);
+		ServerDeployDto serverDeployDTO = serverDeployService.findByIp(ip);
 		if (serverDeployDTO == null) {
 			sendMsg("IP对应服务器信息不存在：" + ip, MsgType.ERROR);
 			throw new BadRequestException("IP对应服务器信息不存在：" + ip);

@@ -1,7 +1,7 @@
 package me.zhengjie.modules.mnt.service;
 
 import me.zhengjie.modules.mnt.domain.Database;
-import me.zhengjie.modules.mnt.service.dto.DatabaseDTO;
+import me.zhengjie.modules.mnt.service.dto.DatabaseDto;
 import me.zhengjie.modules.mnt.service.dto.DatabaseQueryCriteria;
 import org.springframework.data.domain.Pageable;
 
@@ -11,15 +11,44 @@ import org.springframework.data.domain.Pageable;
  */
 public interface DatabaseService {
 
+    /**
+     * 分页查询
+     * @param criteria 条件
+     * @param pageable 分页参数
+     * @return /
+     */
     Object queryAll(DatabaseQueryCriteria criteria, Pageable pageable);
 
+    /**
+     * 查询全部
+     * @param criteria 条件
+     * @return /
+     */
     Object queryAll(DatabaseQueryCriteria criteria);
 
-    DatabaseDTO findById(String id);
+    /**
+     * 根据ID查询
+     * @param id /
+     * @return /
+     */
+    DatabaseDto findById(String id);
 
-    DatabaseDTO create(Database resources);
+    /**
+     * 创建
+     * @param resources /
+     * @return /
+     */
+    DatabaseDto create(Database resources);
 
+    /**
+     * 编辑
+     * @param resources /
+     */
     void update(Database resources);
 
+    /**
+     * 删除
+     * @param id /
+     */
     void delete(String id);
 }

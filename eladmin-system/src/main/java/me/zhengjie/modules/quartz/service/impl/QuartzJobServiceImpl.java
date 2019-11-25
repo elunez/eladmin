@@ -125,7 +125,7 @@ public class QuartzJobServiceImpl implements QuartzJobService {
         if(quartzJob.getId().equals(1L)){
             throw new BadRequestException("该任务不可操作");
         }
-        quartzManage.runAJobNow(quartzJob);
+        quartzManage.runJobNow(quartzJob);
     }
 
     @Override

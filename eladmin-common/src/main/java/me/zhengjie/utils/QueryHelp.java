@@ -15,7 +15,7 @@ import java.util.*;
 @Slf4j
 public class QueryHelp {
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("all")
     public static <R, Q> Predicate getPredicate(Root<R> root, Q query, CriteriaBuilder cb) {
         List<Predicate> list = new ArrayList<>();
 

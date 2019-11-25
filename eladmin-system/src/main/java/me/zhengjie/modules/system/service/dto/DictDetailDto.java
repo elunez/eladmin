@@ -12,7 +12,7 @@ import java.sql.Timestamp;
 */
 @Getter
 @Setter
-public class DictDetailDTO implements Serializable {
+public class DictDetailDto implements Serializable {
 
     private Long id;
 
@@ -22,7 +22,7 @@ public class DictDetailDTO implements Serializable {
 
     private String sort;
 
-    private DictSmallDTO dict;
+    private DictSmallDto dict;
 
     private Timestamp createTime;
 }

@@ -2,9 +2,7 @@ package me.zhengjie.modules.system.service.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Getter;
-import lombok.Setter;
-
+import lombok.Data;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Date;
@@ -14,9 +12,8 @@ import java.util.Set;
  * @author Zheng Jie
  * @date 2018-11-23
  */
-@Getter
-@Setter
-public class UserDTO implements Serializable {
+@Data
+public class UserDto implements Serializable {
 
     @ApiModelProperty(hidden = true)
     private Long id;
@@ -37,12 +34,12 @@ public class UserDTO implements Serializable {
     private Date lastPasswordResetTime;
 
     @ApiModelProperty(hidden = true)
-    private Set<RoleSmallDTO> roles;
+    private Set<RoleSmallDto> roles;
 
     @ApiModelProperty(hidden = true)
-    private JobSmallDTO job;
+    private JobSmallDto job;
 
-    private DeptSmallDTO dept;
+    private DeptSmallDto dept;
 
     private Long deptId;
 

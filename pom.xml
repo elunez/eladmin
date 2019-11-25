@@ -36,7 +36,6 @@
         <swagger.version>2.9.2</swagger.version>
         <fastjson.version>1.2.54</fastjson.version>
         <druid.version>1.1.10</druid.version>
-        <hutool.version>[4.1.12,)</hutool.version>
         <commons-pool2.version>2.5.0</commons-pool2.version>
         <mapstruct.version>1.2.0.Final</mapstruct.version>
     </properties>
@@ -142,12 +141,6 @@
             <optional>true</optional>
         </dependency>
 
-        <!--工具包-->
-        <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-all</artifactId>
-            <version>${hutool.version}</version>
-        </dependency>
         <!--https://gitee.com/lionsoul/ip2region/tree/v1.4-release/-->
         <dependency>
             <groupId>org.lionsoul</groupId>

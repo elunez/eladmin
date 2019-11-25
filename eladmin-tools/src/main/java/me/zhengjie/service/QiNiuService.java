@@ -16,13 +16,24 @@ import java.util.List;
  */
 public interface QiNiuService {
 
+    /**
+     * 分页查询
+     * @param criteria 条件
+     * @param pageable 分页参数
+     * @return /
+     */
     Object queryAll(QiniuQueryCriteria criteria, Pageable pageable);
 
+    /**
+     * 查询全部
+     * @param criteria 条件
+     * @return /
+     */
     List<QiniuContent> queryAll(QiniuQueryCriteria criteria);
 
     /**
      * 查配置
-     * @return Cacheable
+     * @return QiniuConfig
      */
     QiniuConfig find();
 
@@ -86,6 +97,7 @@ public interface QiNiuService {
      * 导出数据
      * @param queryAll /
      * @param response /
+     * @throws IOException /
      */
     void downloadList(List<QiniuContent> queryAll, HttpServletResponse response) throws IOException;
 }

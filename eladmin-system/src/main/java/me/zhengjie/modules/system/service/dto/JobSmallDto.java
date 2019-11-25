@@ -10,7 +10,7 @@ import java.io.Serializable;
 */
 @Data
 @NoArgsConstructor
-public class JobSmallDTO implements Serializable {
+public class JobSmallDto implements Serializable {
 
     private Long id;
 

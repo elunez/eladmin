@@ -36,10 +36,23 @@ public interface ServerService {
      */
     ServerDTO findById(Integer id);
 
+    /**
+     * 创建服务监控
+     * @param resources /
+     * @return /
+     */
     ServerDTO create(Server resources);
 
+    /**
+     * 编辑服务监控
+     * @param resources /
+     */
     void update(Server resources);
 
+    /**
+     * 删除
+     * @param id /
+     */
     void delete(Integer id);
 
 }

@@ -3,7 +3,7 @@ package me.zhengjie.modules.security.service;
 import me.zhengjie.modules.system.domain.Menu;
 import me.zhengjie.modules.system.domain.Role;
 import me.zhengjie.modules.system.repository.RoleRepository;
-import me.zhengjie.modules.system.service.dto.UserDTO;
+import me.zhengjie.modules.system.service.dto.UserDto;
 import me.zhengjie.utils.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
@@ -11,17 +11,19 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * @author Zheng Jie
+ */
 @Service
 @CacheConfig(cacheNames = "role")
-public class JwtPermissionService {
+public class JwtPermissionServiceImpl {
 
     private final RoleRepository roleRepository;
 
-    public JwtPermissionService(RoleRepository roleRepository) {
+    public JwtPermissionServiceImpl(RoleRepository roleRepository) {
         this.roleRepository = roleRepository;
     }
 
@@ -31,7 +33,7 @@ public class JwtPermissionService {
      * @return Collection
      */
     @Cacheable(key = "'loadPermissionByUser:' + #p0.username")
-    public Collection<GrantedAuthority> mapToGrantedAuthorities(UserDTO user) {
+    public Collection<GrantedAuthority> mapToGrantedAuthorities(UserDto user) {
 
         System.out.println("--------------------loadPermissionByUser:" + user.getUsername() + "---------------------");
 

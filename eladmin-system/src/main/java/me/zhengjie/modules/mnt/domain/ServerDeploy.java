@@ -18,9 +18,6 @@ import java.sql.Timestamp;
 @Table(name="mnt_server")
 public class ServerDeploy implements Serializable {
 
-	/**
-	 * 服务器IP
-	 */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

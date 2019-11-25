@@ -22,6 +22,7 @@ import java.util.Map;
  * @date 2019-01-02
  */
 @Slf4j
+@SuppressWarnings("all")
 public class GenUtil {
 
     private static final String TIMESTAMP = "Timestamp";
@@ -63,7 +64,7 @@ public class GenUtil {
 
     public static void generatorCode(List<ColumnInfo> columnInfos, GenConfig genConfig) throws IOException {
         // 存储模版字段数据
-        Map<String,Object> genMap = new HashMap<>();
+        Map<String,Object> genMap = new HashMap<>(16);
         // 包名称
         genMap.put("package",genConfig.getPack());
         // 模块名称
@@ -115,7 +116,7 @@ public class GenUtil {
         List<Map<String,Object>> isNotNullColumns = new ArrayList<>();
 
         for (ColumnInfo column : columnInfos) {
-            Map<String,Object> listMap = new HashMap<>();
+            Map<String,Object> listMap = new HashMap<>(16);
             // 字段描述
             listMap.put("remark",column.getRemark());
             // 字段类型

@@ -1,7 +1,7 @@
 package ${package}.service;
 
 import ${package}.domain.${className};
-import ${package}.service.dto.${className}DTO;
+import ${package}.service.dto.${className}Dto;
 import ${package}.service.dto.${className}QueryCriteria;
 import org.springframework.data.domain.Pageable;
 import java.util.Map;
@@ -26,18 +26,18 @@ public interface ${className}Service {
     /**
     * 查询所有数据不分页
     * @param criteria 条件参数
-    * @return List<${className}DTO>
+    * @return List<${className}Dto>
     */
-    List<${className}DTO> queryAll(${className}QueryCriteria criteria);
+    List<${className}Dto> queryAll(${className}QueryCriteria criteria);
 
     /**
      * 根据ID查询
      * @param ${pkChangeColName} ID
-     * @return ${className}DTO
+     * @return ${className}Dto
      */
-    ${className}DTO findById(${pkColumnType} ${pkChangeColName});
+    ${className}Dto findById(${pkColumnType} ${pkChangeColName});
 
-    ${className}DTO create(${className} resources);
+    ${className}Dto create(${className} resources);
 
     void update(${className} resources);
 
@@ -45,5 +45,5 @@ public interface ${className}Service {
 
     void deleteAll(${pkColumnType}[] ids);
 
-    void download(List<${className}DTO> all, HttpServletResponse response) throws IOException;
+    void download(List<${className}Dto> all, HttpServletResponse response) throws IOException;
 }

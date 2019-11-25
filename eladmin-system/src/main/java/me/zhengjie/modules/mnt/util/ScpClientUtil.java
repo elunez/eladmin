@@ -16,15 +16,15 @@ public class ScpClientUtil {
 
 	static private ScpClientUtil instance;
 
-	static synchronized public ScpClientUtil getInstance(String IP, int port, String username, String passward) {
+	static synchronized public ScpClientUtil getInstance(String ip, int port, String username, String passward) {
 		if (instance == null) {
-			instance = new ScpClientUtil(IP, port, username, passward);
+			instance = new ScpClientUtil(ip, port, username, passward);
 		}
 		return instance;
 	}
 
-	public ScpClientUtil(String IP, int port, String username, String passward) {
-		this.ip = IP;
+	public ScpClientUtil(String ip, int port, String username, String passward) {
+		this.ip = ip;
 		this.port = port;
 		this.username = username;
 		this.password = passward;

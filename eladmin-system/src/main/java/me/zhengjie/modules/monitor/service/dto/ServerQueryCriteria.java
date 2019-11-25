@@ -10,7 +10,6 @@ import me.zhengjie.annotation.Query;
 @Data
 public class ServerQueryCriteria{
 
-    // 模糊
     @Query(blurry = "name,address")
     private String blurry;
 }

@@ -4,11 +4,9 @@ import me.zhengjie.modules.system.domain.Dept;
 import me.zhengjie.modules.system.service.DeptService;
 import me.zhengjie.modules.system.service.RoleService;
 import me.zhengjie.modules.system.service.UserService;
-import me.zhengjie.modules.system.service.dto.DeptDTO;
-import me.zhengjie.modules.system.service.dto.RoleSmallDTO;
-import me.zhengjie.modules.system.service.dto.UserDTO;
+import me.zhengjie.modules.system.service.dto.RoleSmallDto;
+import me.zhengjie.modules.system.service.dto.UserDto;
 import me.zhengjie.utils.SecurityUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -39,15 +37,15 @@ public class DataScope {
 
     public Set<Long> getDeptIds() {
 
-        UserDTO user = userService.findByName(SecurityUtils.getUsername());
+        UserDto user = userService.findByName(SecurityUtils.getUsername());
 
         // 用于存储部门id
         Set<Long> deptIds = new HashSet<>();
 
         // 查询用户角色
-        List<RoleSmallDTO> roleSet = roleService.findByUsers_Id(user.getId());
+        List<RoleSmallDto> roleSet = roleService.findByUsersId(user.getId());
 
-        for (RoleSmallDTO role : roleSet) {
+        for (RoleSmallDto role : roleSet) {
 
             if (scopeType[0].equals(role.getDataScope())) {
                 return new HashSet<>() ;

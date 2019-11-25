@@ -14,6 +14,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+/**
+ * @author /
+ */
 @Component
 public class JwtTokenUtil implements Serializable {
 
@@ -68,7 +71,7 @@ public class JwtTokenUtil implements Serializable {
     }
 
     public String generateToken(UserDetails userDetails) {
-        Map<String, Object> claims = new HashMap<>();
+        Map<String, Object> claims = new HashMap<>(16);
         return doGenerateToken(claims, userDetails.getUsername());
     }
 
@@ -107,7 +110,8 @@ public class JwtTokenUtil implements Serializable {
 
     public String getToken(HttpServletRequest request){
         final String requestHeader = request.getHeader(tokenHeader);
-        if (requestHeader != null && requestHeader.startsWith("Bearer ")) {
+        String startsWith = "Bearer ";
+        if (requestHeader != null && requestHeader.startsWith(startsWith)) {
             return requestHeader.substring(7);
         }
         return null;

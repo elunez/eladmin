@@ -81,7 +81,8 @@ public class GlobalExceptionHandler {
         log.error(ThrowableUtil.getStackTrace(e));
         String[] str = Objects.requireNonNull(e.getBindingResult().getAllErrors().get(0).getCodes())[1].split("\\.");
         String message = e.getBindingResult().getAllErrors().get(0).getDefaultMessage();
-        if("不能为空".equals(message)){
+        String msg = "不能为空";
+        if(msg.equals(message)){
             message = str[1] + ":" + message;
         }
         return buildResponseEntity(ApiError.error(message));

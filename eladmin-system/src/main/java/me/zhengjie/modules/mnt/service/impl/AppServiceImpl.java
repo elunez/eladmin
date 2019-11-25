@@ -3,7 +3,7 @@ package me.zhengjie.modules.mnt.service.impl;
 import me.zhengjie.modules.mnt.domain.App;
 import me.zhengjie.modules.mnt.repository.AppRepository;
 import me.zhengjie.modules.mnt.service.AppService;
-import me.zhengjie.modules.mnt.service.dto.AppDTO;
+import me.zhengjie.modules.mnt.service.dto.AppDto;
 import me.zhengjie.modules.mnt.service.dto.AppQueryCriteria;
 import me.zhengjie.modules.mnt.service.mapper.AppMapper;
 import me.zhengjie.utils.PageUtil;
@@ -44,7 +44,7 @@ public class AppServiceImpl implements AppService {
     }
 
     @Override
-    public AppDTO findById(Long id) {
+    public AppDto findById(Long id) {
 		App app = appRepository.findById(id).orElseGet(App::new);
         ValidationUtil.isNull(app.getId(),"App","id",id);
         return appMapper.toDto(app);
@@ -52,7 +52,7 @@ public class AppServiceImpl implements AppService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public AppDTO create(App resources) {
+    public AppDto create(App resources) {
         return appMapper.toDto(appRepository.save(resources));
     }
 

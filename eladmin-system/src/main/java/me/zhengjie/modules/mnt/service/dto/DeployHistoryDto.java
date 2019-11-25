@@ -10,7 +10,7 @@ import java.sql.Timestamp;
 * @date 2019-08-24
 */
 @Data
-public class DeployHistoryDTO implements Serializable {
+public class DeployHistoryDto implements Serializable {
 
 	/**
 	 * 编号

@@ -14,7 +14,7 @@ import java.sql.Timestamp;
 @Getter
 @Setter
 @NoArgsConstructor
-public class JobDTO implements Serializable {
+public class JobDto implements Serializable {
 
     private Long id;
 
@@ -24,13 +24,13 @@ public class JobDTO implements Serializable {
 
     private Boolean enabled;
 
-    private DeptDTO dept;
+    private DeptDto dept;
 
     private String deptSuperiorName;
 
     private Timestamp createTime;
 
-    public JobDTO(String name, Boolean enabled) {
+    public JobDto(String name, Boolean enabled) {
         this.name = name;
         this.enabled = enabled;
     }

@@ -11,7 +11,7 @@ import java.sql.Timestamp;
 * @date 2019-08-24
 */
 @Data
-public class AppDTO implements Serializable {
+public class AppDto implements Serializable {
 
 	/**
 	 * 应用编号
@@ -26,7 +26,7 @@ public class AppDTO implements Serializable {
 	/**
 	 * 端口
 	 */
-	private int port;
+	private Integer port;
 
 	/**
 	 * 上传目录

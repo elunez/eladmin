@@ -119,8 +119,9 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
         }
         OutputStream os = new FileOutputStream(file);
         int bytesRead;
-        byte[] buffer = new byte[8192];
-        while ((bytesRead = ins.read(buffer, 0, 8192)) != -1) {
+        int len = 8192;
+        byte[] buffer = new byte[len];
+        while ((bytesRead = ins.read(buffer, 0, len)) != -1) {
             os.write(buffer, 0, bytesRead);
         }
         os.close();
@@ -210,7 +211,9 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
     }
 
     public static void checkSize(long maxSize, long size) {
-        if(size > (maxSize * 1024 * 1024)){
+        // 1M
+        int len = 1024 * 1024;
+        if(size > (maxSize * len)){
             throw new BadRequestException("文件超出规定大小");
         }
     }

@@ -39,14 +39,17 @@ public class GenConfigServiceImpl implements GenConfigService {
         // 自动设置Api路径，注释掉前需要同步取消前端的注释
         String separator = File.separator;
         String[] paths;
-        if (separator.equals("\\")) {
+        String symbol = "\\";
+        if (symbol.equals(separator)) {
             paths = genConfig.getPath().split("\\\\");
-        } else paths = genConfig.getPath().split(File.separator);
+        } else {
+            paths = genConfig.getPath().split(File.separator);
+        }
         StringBuilder api = new StringBuilder();
         for (String path : paths) {
             api.append(path);
             api.append(separator);
-            if (path.equals("src")) {
+            if ("src".equals(path)) {
                 api.append("api");
                 break;
             }

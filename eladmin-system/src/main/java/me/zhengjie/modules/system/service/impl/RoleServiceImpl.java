@@ -4,9 +4,9 @@ import me.zhengjie.modules.system.domain.Role;
 import me.zhengjie.exception.EntityExistException;
 import me.zhengjie.modules.system.repository.RoleRepository;
 import me.zhengjie.modules.system.service.RoleService;
-import me.zhengjie.modules.system.service.dto.RoleDTO;
+import me.zhengjie.modules.system.service.dto.RoleDto;
 import me.zhengjie.modules.system.service.dto.RoleQueryCriteria;
-import me.zhengjie.modules.system.service.dto.RoleSmallDTO;
+import me.zhengjie.modules.system.service.dto.RoleSmallDto;
 import me.zhengjie.modules.system.service.mapper.RoleMapper;
 import me.zhengjie.modules.system.service.mapper.RoleSmallMapper;
 import me.zhengjie.utils.FileUtil;
@@ -56,7 +56,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     @Cacheable
-    public List<RoleDTO> queryAll(RoleQueryCriteria criteria) {
+    public List<RoleDto> queryAll(RoleQueryCriteria criteria) {
         return roleMapper.toDto(roleRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder)));
     }
 
@@ -69,7 +69,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     @Cacheable(key = "#p0")
-    public RoleDTO findById(long id) {
+    public RoleDto findById(long id) {
         Role role = roleRepository.findById(id).orElseGet(Role::new);
         ValidationUtil.isNull(role.getId(),"Role","id",id);
         return roleMapper.toDto(role);
@@ -78,7 +78,7 @@ public class RoleServiceImpl implements RoleService {
     @Override
     @CacheEvict(allEntries = true)
     @Transactional(rollbackFor = Exception.class)
-    public RoleDTO create(Role resources) {
+    public RoleDto create(Role resources) {
         if(roleRepository.findByName(resources.getName()) != null){
             throw new EntityExistException(Role.class,"username",resources.getName());
         }
@@ -108,7 +108,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     @CacheEvict(allEntries = true)
-    public void updateMenu(Role resources, RoleDTO roleDTO) {
+    public void updateMenu(Role resources, RoleDto roleDTO) {
         Role role = roleMapper.toEntity(roleDTO);
         role.setMenus(resources.getMenus());
         roleRepository.save(role);
@@ -130,24 +130,24 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     @Cacheable(key = "'findByUsers_Id:' + #p0")
-    public List<RoleSmallDTO> findByUsers_Id(Long id) {
+    public List<RoleSmallDto> findByUsersId(Long id) {
         return roleSmallMapper.toDto(new ArrayList<>(roleRepository.findByUsers_Id(id)));
     }
 
     @Override
     @Cacheable
     public Integer findByRoles(Set<Role> roles) {
-        Set<RoleDTO> roleDTOS = new HashSet<>();
+        Set<RoleDto> roleDtos = new HashSet<>();
         for (Role role : roles) {
-            roleDTOS.add(findById(role.getId()));
+            roleDtos.add(findById(role.getId()));
         }
-        return Collections.min(roleDTOS.stream().map(RoleDTO::getLevel).collect(Collectors.toList()));
+        return Collections.min(roleDtos.stream().map(RoleDto::getLevel).collect(Collectors.toList()));
     }
 
     @Override
-    public void download(List<RoleDTO> roles, HttpServletResponse response) throws IOException {
+    public void download(List<RoleDto> roles, HttpServletResponse response) throws IOException {
         List<Map<String, Object>> list = new ArrayList<>();
-        for (RoleDTO role : roles) {
+        for (RoleDto role : roles) {
             Map<String,Object> map = new LinkedHashMap<>();
             map.put("角色名称", role.getName());
             map.put("默认权限", role.getPermission());

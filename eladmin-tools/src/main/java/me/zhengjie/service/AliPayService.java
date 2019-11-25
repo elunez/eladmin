@@ -7,7 +7,7 @@ import me.zhengjie.domain.AlipayConfig;
  * @author Zheng Jie
  * @date 2018-12-31
  */
-public interface AlipayService {
+public interface AliPayService {
 
     /**
      * 处理来自PC的交易请求
@@ -16,7 +16,7 @@ public interface AlipayService {
      * @return String
      * @throws Exception 异常
      */
-    String toPayAsPC(AlipayConfig alipay, TradeVo trade) throws Exception;
+    String toPayAsPc(AlipayConfig alipay, TradeVo trade) throws Exception;
 
     /**
      * 处理来自手机网页的交易请求

@@ -10,7 +10,7 @@ import java.sql.Timestamp;
 * @date 2019-08-24
 */
 @Data
-public class ServerDeployDTO implements Serializable {
+public class ServerDeployDto implements Serializable {
 
     private Long id;
 

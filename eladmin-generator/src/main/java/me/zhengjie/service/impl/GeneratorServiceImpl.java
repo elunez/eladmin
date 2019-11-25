@@ -92,7 +92,7 @@ public class GeneratorServiceImpl implements GeneratorService {
                     new ColumnInfo(
                             tableName,
                             arr[0].toString(),
-                            arr[1].equals("NO"),
+                            "NO".equals(arr[1]),
                             arr[2].toString(),
                             ObjectUtil.isNotNull(arr[3]) ? arr[3].toString() : null,
                             ObjectUtil.isNotNull(arr[4]) ? arr[4].toString() : null,

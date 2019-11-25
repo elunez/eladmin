@@ -3,7 +3,7 @@ package me.zhengjie.modules.mnt.service.impl;
 import me.zhengjie.modules.mnt.domain.ServerDeploy;
 import me.zhengjie.modules.mnt.repository.ServerDeployRepository;
 import me.zhengjie.modules.mnt.service.ServerDeployService;
-import me.zhengjie.modules.mnt.service.dto.ServerDeployDTO;
+import me.zhengjie.modules.mnt.service.dto.ServerDeployDto;
 import me.zhengjie.modules.mnt.service.dto.ServerDeployQueryCriteria;
 import me.zhengjie.modules.mnt.service.mapper.ServerDeployMapper;
 import me.zhengjie.utils.PageUtil;
@@ -44,21 +44,21 @@ public class ServerDeployServiceImpl implements ServerDeployService {
     }
 
     @Override
-    public ServerDeployDTO findById(Long id) {
+    public ServerDeployDto findById(Long id) {
         ServerDeploy server = serverDeployRepository.findById(id).orElseGet(ServerDeploy::new);
         ValidationUtil.isNull(server.getId(),"ServerDeploy","id",id);
         return serverDeployMapper.toDto(server);
     }
 
     @Override
-    public ServerDeployDTO findByIp(String ip) {
+    public ServerDeployDto findByIp(String ip) {
         ServerDeploy deploy = serverDeployRepository.findByIp(ip);
         return serverDeployMapper.toDto(deploy);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ServerDeployDTO create(ServerDeploy resources) {
+    public ServerDeployDto create(ServerDeploy resources) {
 		return serverDeployMapper.toDto(serverDeployRepository.save(resources));
     }
 

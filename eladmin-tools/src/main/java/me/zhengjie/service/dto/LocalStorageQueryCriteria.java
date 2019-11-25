@@ -13,7 +13,6 @@ import me.zhengjie.annotation.Query;
 @Data
 public class LocalStorageQueryCriteria{
 
-    // 模糊
     @Query(blurry = "name,suffix,type,operate,size")
     private String blurry;
 

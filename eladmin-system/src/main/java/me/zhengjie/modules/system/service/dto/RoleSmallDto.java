@@ -8,7 +8,7 @@ import java.io.Serializable;
  * @date 2018-11-23
  */
 @Data
-public class RoleSmallDTO implements Serializable {
+public class RoleSmallDto implements Serializable {
 
     private Long id;
 

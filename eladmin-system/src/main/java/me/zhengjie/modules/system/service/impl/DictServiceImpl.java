@@ -2,7 +2,7 @@ package me.zhengjie.modules.system.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
 import me.zhengjie.modules.system.domain.Dict;
-import me.zhengjie.modules.system.service.dto.DictDetailDTO;
+import me.zhengjie.modules.system.service.dto.DictDetailDto;
 import me.zhengjie.modules.system.service.dto.DictQueryCriteria;
 import me.zhengjie.utils.FileUtil;
 import me.zhengjie.utils.PageUtil;
@@ -10,7 +10,7 @@ import me.zhengjie.utils.QueryHelp;
 import me.zhengjie.utils.ValidationUtil;
 import me.zhengjie.modules.system.repository.DictRepository;
 import me.zhengjie.modules.system.service.DictService;
-import me.zhengjie.modules.system.service.dto.DictDTO;
+import me.zhengjie.modules.system.service.dto.DictDto;
 import me.zhengjie.modules.system.service.mapper.DictMapper;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
@@ -54,14 +54,14 @@ public class DictServiceImpl implements DictService {
     }
 
     @Override
-    public List<DictDTO> queryAll(DictQueryCriteria dict) {
+    public List<DictDto> queryAll(DictQueryCriteria dict) {
         List<Dict> list = dictRepository.findAll((root, query, cb) -> QueryHelp.getPredicate(root, dict, cb));
         return dictMapper.toDto(list);
     }
 
     @Override
     @Cacheable(key = "#p0")
-    public DictDTO findById(Long id) {
+    public DictDto findById(Long id) {
         Dict dict = dictRepository.findById(id).orElseGet(Dict::new);
         ValidationUtil.isNull(dict.getId(),"Dict","id",id);
         return dictMapper.toDto(dict);
@@ -70,7 +70,7 @@ public class DictServiceImpl implements DictService {
     @Override
     @CacheEvict(allEntries = true)
     @Transactional(rollbackFor = Exception.class)
-    public DictDTO create(Dict resources) {
+    public DictDto create(Dict resources) {
         return dictMapper.toDto(dictRepository.save(resources));
     }
 
@@ -92,11 +92,11 @@ public class DictServiceImpl implements DictService {
     }
 
     @Override
-    public void download(List<DictDTO> dictDTOS, HttpServletResponse response) throws IOException {
+    public void download(List<DictDto> dictDtos, HttpServletResponse response) throws IOException {
         List<Map<String, Object>> list = new ArrayList<>();
-        for (DictDTO dictDTO : dictDTOS) {
+        for (DictDto dictDTO : dictDtos) {
             if(CollectionUtil.isNotEmpty(dictDTO.getDictDetails())){
-                for (DictDetailDTO dictDetail : dictDTO.getDictDetails()) {
+                for (DictDetailDto dictDetail : dictDTO.getDictDetails()) {
                     Map<String,Object> map = new LinkedHashMap<>();
                     map.put("字典名称", dictDTO.getName());
                     map.put("字典描述", dictDTO.getRemark());

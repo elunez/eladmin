@@ -7,8 +7,8 @@ import com.alipay.api.request.AlipayTradeWapPayRequest;
 import me.zhengjie.domain.vo.TradeVo;
 import me.zhengjie.domain.AlipayConfig;
 import me.zhengjie.exception.BadRequestException;
-import me.zhengjie.repository.AlipayRepository;
-import me.zhengjie.service.AlipayService;
+import me.zhengjie.repository.AliPayRepository;
+import me.zhengjie.service.AliPayService;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -23,24 +23,23 @@ import java.util.Optional;
  */
 @Service
 @CacheConfig(cacheNames = "alipay")
+@SuppressWarnings("all")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
-public class AlipayServiceImpl implements AlipayService {
+public class AliPayServiceImpl implements AliPayService {
 
-    private final AlipayRepository alipayRepository;
+    private final AliPayRepository alipayRepository;
 
-    public AlipayServiceImpl(AlipayRepository alipayRepository) {
+    public AliPayServiceImpl(AliPayRepository alipayRepository) {
         this.alipayRepository = alipayRepository;
     }
 
     @Override
-    public String toPayAsPC(AlipayConfig alipay, TradeVo trade) throws Exception {
+    public String toPayAsPc(AlipayConfig alipay, TradeVo trade) throws Exception {
 
         if(alipay.getId() == null){
             throw new BadRequestException("请先添加相应配置，再操作");
         }
-        AlipayClient alipayClient = new DefaultAlipayClient(alipay.getGatewayUrl(), alipay.getAppID(), alipay.getPrivateKey(), alipay.getFormat(), alipay.getCharset(), alipay.getPublicKey(), alipay.getSignType());
-
-//        double money = Double.parseDouble(trade.getTotalAmount());
+        AlipayClient alipayClient = new DefaultAlipayClient(alipay.getGatewayUrl(), alipay.getAppId(), alipay.getPrivateKey(), alipay.getFormat(), alipay.getCharset(), alipay.getPublicKey(), alipay.getSignType());
 
         // 创建API对应的request(电脑网页版)
         AlipayTradePagePayRequest request = new AlipayTradePagePayRequest();
@@ -69,10 +68,11 @@ public class AlipayServiceImpl implements AlipayService {
         if(alipay.getId() == null){
             throw new BadRequestException("请先添加相应配置，再操作");
         }
-        AlipayClient alipayClient = new DefaultAlipayClient(alipay.getGatewayUrl(), alipay.getAppID(), alipay.getPrivateKey(), alipay.getFormat(), alipay.getCharset(), alipay.getPublicKey(), alipay.getSignType());
+        AlipayClient alipayClient = new DefaultAlipayClient(alipay.getGatewayUrl(), alipay.getAppId(), alipay.getPrivateKey(), alipay.getFormat(), alipay.getCharset(), alipay.getPublicKey(), alipay.getSignType());
 
         double money = Double.parseDouble(trade.getTotalAmount());
-        if(money <= 0 || money >= 5000){
+        double maxMoney = 5000;
+        if(money <= 0 || money >= maxMoney){
             throw new BadRequestException("测试金额过大");
         }
         // 创建API对应的request(手机网页版)
@@ -88,7 +88,7 @@ public class AlipayServiceImpl implements AlipayService {
                 "    \"extend_params\":{" +
                 "    \"sys_service_provider_id\":\""+alipay.getSysServiceProviderId()+"\"" +
                 "    }"+
-                "  }");//填充业务参数
+                "  }");
         return alipayClient.pageExecute(request, "GET").getBody();
     }
 

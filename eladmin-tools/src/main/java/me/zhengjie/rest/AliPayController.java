@@ -9,7 +9,7 @@ import me.zhengjie.domain.vo.TradeVo;
 import me.zhengjie.domain.AlipayConfig;
 import me.zhengjie.utils.AliPayStatusEnum;
 import me.zhengjie.utils.AlipayUtils;
-import me.zhengjie.service.AlipayService;
+import me.zhengjie.service.AliPayService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -32,9 +32,9 @@ public class AliPayController {
 
     private final AlipayUtils alipayUtils;
 
-    private final AlipayService alipayService;
+    private final AliPayService alipayService;
 
-    public AliPayController(AlipayUtils alipayUtils, AlipayService alipayService) {
+    public AliPayController(AlipayUtils alipayUtils, AliPayService alipayService) {
         this.alipayUtils = alipayUtils;
         this.alipayService = alipayService;
     }
@@ -56,10 +56,10 @@ public class AliPayController {
     @Log("支付宝PC网页支付")
     @ApiOperation("PC网页支付")
     @PostMapping(value = "/toPayAsPC")
-    public ResponseEntity<String> toPayAsPC(@Validated@RequestBody TradeVo trade) throws Exception{
-        AlipayConfig alipay = alipayService.find();
+    public ResponseEntity<String> toPayAsPc(@Validated@RequestBody TradeVo trade) throws Exception{
+        AlipayConfig aliPay = alipayService.find();
         trade.setOutTradeNo(alipayUtils.getOrderCode());
-        String payUrl = alipayService.toPayAsPC(alipay,trade);
+        String payUrl = alipayService.toPayAsPc(aliPay,trade);
         return ResponseEntity.ok(payUrl);
     }
 
@@ -99,6 +99,7 @@ public class AliPayController {
     @ApiIgnore
     @RequestMapping("/notify")
     @AnonymousAccess
+    @SuppressWarnings("all")
     @ApiOperation("支付异步通知(要公网访问)，接收异步通知，检查通知内容app_id、out_trade_no、total_amount是否与请求中的一致，根据trade_status进行后续业务处理")
     public ResponseEntity notify(HttpServletRequest request){
         AlipayConfig alipay = alipayService.find();

@@ -1,8 +1,6 @@
 package me.zhengjie.modules.system.service.dto;
 
-import lombok.Getter;
-import lombok.Setter;
-
+import lombok.Data;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.List;
@@ -11,9 +9,8 @@ import java.util.List;
  * @author Zheng Jie
  * @date 2018-12-17
  */
-@Getter
-@Setter
-public class MenuDTO implements Serializable {
+@Data
+public class MenuDto implements Serializable {
 
     private Long id;
 
@@ -41,7 +38,7 @@ public class MenuDTO implements Serializable {
 
     private String icon;
 
-    private List<MenuDTO> children;
+    private List<MenuDto> children;
 
     private Timestamp createTime;
 }

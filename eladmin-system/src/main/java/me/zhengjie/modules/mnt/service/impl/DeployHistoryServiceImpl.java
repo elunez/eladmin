@@ -4,7 +4,7 @@ import cn.hutool.core.util.IdUtil;
 import me.zhengjie.modules.mnt.domain.DeployHistory;
 import me.zhengjie.modules.mnt.repository.DeployHistoryRepository;
 import me.zhengjie.modules.mnt.service.DeployHistoryService;
-import me.zhengjie.modules.mnt.service.dto.DeployHistoryDTO;
+import me.zhengjie.modules.mnt.service.dto.DeployHistoryDto;
 import me.zhengjie.modules.mnt.service.dto.DeployHistoryQueryCriteria;
 import me.zhengjie.modules.mnt.service.mapper.DeployHistoryMapper;
 import me.zhengjie.utils.PageUtil;
@@ -45,7 +45,7 @@ public class DeployHistoryServiceImpl implements DeployHistoryService {
     }
 
     @Override
-    public DeployHistoryDTO findById(String id) {
+    public DeployHistoryDto findById(String id) {
         DeployHistory deployhistory = deployhistoryRepository.findById(id).orElseGet(DeployHistory::new);
         ValidationUtil.isNull(deployhistory.getId(),"DeployHistory","id",id);
         return deployhistoryMapper.toDto(deployhistory);
@@ -53,7 +53,7 @@ public class DeployHistoryServiceImpl implements DeployHistoryService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public DeployHistoryDTO create(DeployHistory resources) {
+    public DeployHistoryDto create(DeployHistory resources) {
         resources.setId(IdUtil.simpleUUID());
         return deployhistoryMapper.toDto(deployhistoryRepository.save(resources));
     }

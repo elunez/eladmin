@@ -4,7 +4,7 @@ import cn.hutool.core.util.IdUtil;
 import me.zhengjie.modules.mnt.domain.Database;
 import me.zhengjie.modules.mnt.repository.DatabaseRepository;
 import me.zhengjie.modules.mnt.service.DatabaseService;
-import me.zhengjie.modules.mnt.service.dto.DatabaseDTO;
+import me.zhengjie.modules.mnt.service.dto.DatabaseDto;
 import me.zhengjie.modules.mnt.service.dto.DatabaseQueryCriteria;
 import me.zhengjie.modules.mnt.service.mapper.DatabaseMapper;
 import me.zhengjie.utils.PageUtil;
@@ -45,7 +45,7 @@ public class DatabaseServiceImpl implements DatabaseService {
     }
 
     @Override
-    public DatabaseDTO findById(String id) {
+    public DatabaseDto findById(String id) {
         Database database = databaseRepository.findById(id).orElseGet(Database::new);
         ValidationUtil.isNull(database.getId(),"Database","id",id);
         return databaseMapper.toDto(database);
@@ -53,7 +53,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public DatabaseDTO create(Database resources) {
+    public DatabaseDto create(Database resources) {
         resources.setId(IdUtil.simpleUUID());
         return databaseMapper.toDto(databaseRepository.save(resources));
     }

@@ -16,8 +16,9 @@ import java.util.List;
 public interface RedisService {
 
     /**
-     * findById
+     * 根据KEY查询
      * @param key 键
+     * @param pageable 分页参数
      * @return /
      */
     Page findByKey(String key, Pageable pageable);
@@ -55,9 +56,10 @@ public interface RedisService {
     void deleteAll();
 
     /**
-     *
+     * 导出数据
      * @param redisVos /
      * @param response /
+     * @throws IOException /
      */
     void download(List<RedisVo> redisVos, HttpServletResponse response) throws IOException;
 }

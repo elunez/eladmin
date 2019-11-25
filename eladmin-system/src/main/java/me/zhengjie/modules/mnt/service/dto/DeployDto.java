@@ -13,19 +13,19 @@ import java.util.stream.Collectors;
 * @date 2019-08-24
 */
 @Data
-public class DeployDTO implements Serializable {
+public class DeployDto implements Serializable {
 
 	/**
 	 * 部署编号
 	 */
     private String id;
 
-	private AppDTO app;
+	private AppDto app;
 
 	/**
 	 * 服务器
 	 */
-	private Set<ServerDeployDTO> deploys;
+	private Set<ServerDeployDto> deploys;
 
 	private String servers;
 
@@ -38,7 +38,7 @@ public class DeployDTO implements Serializable {
 
 	public String getServers() {
 		if(CollectionUtil.isNotEmpty(deploys)){
-			return deploys.stream().map(ServerDeployDTO::getName).collect(Collectors.joining(","));
+			return deploys.stream().map(ServerDeployDto::getName).collect(Collectors.joining(","));
 		}
 		return servers;
 	}
