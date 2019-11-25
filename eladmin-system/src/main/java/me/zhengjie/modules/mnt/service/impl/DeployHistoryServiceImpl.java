@@ -10,14 +10,11 @@ import me.zhengjie.modules.mnt.service.mapper.DeployHistoryMapper;
 import me.zhengjie.utils.PageUtil;
 import me.zhengjie.utils.QueryHelp;
 import me.zhengjie.utils.ValidationUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 /**
 * @author zhanghouying
@@ -27,11 +24,14 @@ import java.util.Optional;
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class DeployHistoryServiceImpl implements DeployHistoryService {
 
-    @Autowired
-    private DeployHistoryRepository deployhistoryRepository;
+    private final DeployHistoryRepository deployhistoryRepository;
 
-    @Autowired
-    private DeployHistoryMapper deployhistoryMapper;
+    private final DeployHistoryMapper deployhistoryMapper;
+
+    public DeployHistoryServiceImpl(DeployHistoryRepository deployhistoryRepository, DeployHistoryMapper deployhistoryMapper) {
+        this.deployhistoryRepository = deployhistoryRepository;
+        this.deployhistoryMapper = deployhistoryMapper;
+    }
 
     @Override
     public Object queryAll(DeployHistoryQueryCriteria criteria, Pageable pageable){
@@ -46,9 +46,9 @@ public class DeployHistoryServiceImpl implements DeployHistoryService {
 
     @Override
     public DeployHistoryDTO findById(String id) {
-        Optional<DeployHistory> deployhistory = deployhistoryRepository.findById(id);
-        ValidationUtil.isNull(deployhistory,"DeployHistory","id",id);
-        return deployhistoryMapper.toDto(deployhistory.get());
+        DeployHistory deployhistory = deployhistoryRepository.findById(id).orElseGet(DeployHistory::new);
+        ValidationUtil.isNull(deployhistory.getId(),"DeployHistory","id",id);
+        return deployhistoryMapper.toDto(deployhistory);
     }
 
     @Override

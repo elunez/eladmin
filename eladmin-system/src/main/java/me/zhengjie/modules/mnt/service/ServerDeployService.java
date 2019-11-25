@@ -11,45 +11,16 @@ import org.springframework.data.domain.Pageable;
 */
 public interface ServerDeployService {
 
-    /**
-    * queryAll 分页
-    * @param criteria
-    * @param pageable
-    * @return
-    */
     Object queryAll(ServerDeployQueryCriteria criteria, Pageable pageable);
 
-    /**
-    * queryAll 不分页
-    * @param criteria
-    * @return
-    */
-    public Object queryAll(ServerDeployQueryCriteria criteria);
+    Object queryAll(ServerDeployQueryCriteria criteria);
 
-    /**
-     * findById
-     * @param id
-     * @return
-     */
     ServerDeployDTO findById(Long id);
 
-    /**
-     * create
-     * @param resources
-     * @return
-     */
 	ServerDeployDTO create(ServerDeploy resources);
 
-    /**
-     * update
-     * @param resources
-     */
     void update(ServerDeploy resources);
 
-    /**
-     * delete
-     * @param id
-     */
     void delete(Long id);
 
     ServerDeployDTO findByIp(String ip);

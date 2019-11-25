@@ -2,6 +2,7 @@ package me.zhengjie.modules.mnt.service.dto;
 
 import lombok.Data;
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 
 /**
@@ -29,7 +30,7 @@ public class DeployHistoryDTO implements Serializable {
 	/**
 	 * 部署时间
 	 */
-    private String deployDate;
+	private Timestamp deployDate;
 
 	/**
 	 * 部署人员

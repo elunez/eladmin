@@ -2,7 +2,6 @@ package me.zhengjie.modules.mnt.service.impl;
 
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.util.IdUtil;
 import lombok.extern.slf4j.Slf4j;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.modules.mnt.domain.App;
@@ -22,18 +21,16 @@ import me.zhengjie.utils.PageUtil;
 import me.zhengjie.utils.QueryHelp;
 import me.zhengjie.utils.SecurityUtils;
 import me.zhengjie.utils.ValidationUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.io.File;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -47,23 +44,21 @@ public class DeployServiceImpl implements DeployService {
 
 	private final String FILE_SEPARATOR = File.separatorChar + "";
 
-	@Autowired
-	private DeployRepository deployRepository;
+	private final DeployRepository deployRepository;
 
-	@Autowired
-	private DeployMapper deployMapper;
+	private final DeployMapper deployMapper;
 
-	@Autowired
-	private AppService appService;
+	private final ServerDeployService serverDeployService;
 
-	@Autowired
-	private ServerDeployService serverDeployService;
+	private final DeployHistoryService deployHistoryService;
 
-	@Autowired
-	private DeployHistoryService deployHistoryService;
+	public DeployServiceImpl(DeployRepository deployRepository, DeployMapper deployMapper, ServerDeployService serverDeployService, DeployHistoryService deployHistoryService) {
+		this.deployRepository = deployRepository;
+		this.deployMapper = deployMapper;
+		this.serverDeployService = serverDeployService;
+		this.deployHistoryService = deployHistoryService;
+	}
 
-	@Autowired
-	private DatabaseService databaseService;
 
 	@Override
 	public Object queryAll(DeployQueryCriteria criteria, Pageable pageable) {
@@ -78,9 +73,9 @@ public class DeployServiceImpl implements DeployService {
 
 	@Override
 	public DeployDTO findById(Long id) {
-		Optional<Deploy> Deploy = deployRepository.findById(id);
-		ValidationUtil.isNull(Deploy, "Deploy", "id", id);
-		return deployMapper.toDto(Deploy.get());
+		Deploy Deploy = deployRepository.findById(id).orElseGet(Deploy::new);
+		ValidationUtil.isNull(Deploy.getId(), "Deploy", "id", id);
+		return deployMapper.toDto(Deploy);
 	}
 
 	@Override
@@ -92,9 +87,8 @@ public class DeployServiceImpl implements DeployService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void update(Deploy resources) {
-		Optional<Deploy> optionalDeploy = deployRepository.findById(resources.getId());
-		ValidationUtil.isNull(optionalDeploy, "Deploy", "id", resources.getId());
-		Deploy Deploy = optionalDeploy.get();
+		Deploy Deploy = deployRepository.findById(resources.getId()).orElseGet(Deploy::new);
+		ValidationUtil.isNull(Deploy.getId(), "Deploy", "id", resources.getId());
 		Deploy.copy(resources);
 		deployRepository.save(Deploy);
 	}
@@ -112,8 +106,8 @@ public class DeployServiceImpl implements DeployService {
 
 	/**
 	 * @param fileSavePath 本机路径
-	 * @param id
-	 * @return
+	 * @param id ID
+	 * @return string
 	 */
 	private String deployApp(String fileSavePath, Long id) {
 
@@ -131,7 +125,7 @@ public class DeployServiceImpl implements DeployService {
 		//这个是服务器部署路径
 		String uploadPath = app.getUploadPath();
 		StringBuilder sb = new StringBuilder();
-		String msg = "";
+		String msg;
 		Set<ServerDeployDTO> deploys = deploy.getDeploys();
 		for (ServerDeployDTO deployDTO : deploys) {
 			String ip = deployDTO.getIp();
@@ -199,7 +193,6 @@ public class DeployServiceImpl implements DeployService {
 		//还原信息入库
 		DeployHistory deployHistory = new DeployHistory();
 		deployHistory.setAppName(appName);
-		deployHistory.setDeployDate(deployDate);
 		deployHistory.setDeployUser(SecurityUtils.getUsername());
 		deployHistory.setIp(ip);
 		deployHistory.setDeployId(id);
@@ -209,9 +202,8 @@ public class DeployServiceImpl implements DeployService {
 	/**
 	 * 停App
 	 *
-	 * @param port
-	 * @param executeShellUtil
-	 * @return
+	 * @param port 端口
+	 * @param executeShellUtil /
 	 */
 	private void stopApp(int port, ExecuteShellUtil executeShellUtil) {
 		//发送停止命令
@@ -222,17 +214,13 @@ public class DeployServiceImpl implements DeployService {
 	/**
 	 * 指定端口程序是否在运行
 	 *
-	 * @param port
-	 * @param executeShellUtil
+	 * @param port 端口
+	 * @param executeShellUtil /
 	 * @return true 正在运行  false 已经停止
 	 */
 	private boolean checkIsRunningStatus(int port, ExecuteShellUtil executeShellUtil) {
 		String statusResult = executeShellUtil.executeForResult(String.format("fuser -n tcp %d", port));
-		if ("".equals(statusResult.trim())) {
-			return false;
-		} else {
-			return true;
-		}
+		return !"".equals(statusResult.trim());
 	}
 
 	private void sendMsg(String msg, MsgType msgType) {
@@ -265,20 +253,17 @@ public class DeployServiceImpl implements DeployService {
 	}
 
 	private boolean checkFile(ExecuteShellUtil executeShellUtil, AppDTO appDTO) {
-		StringBuffer sb = new StringBuffer();
-		sb.append("find ");
-		sb.append(appDTO.getDeployPath());
-		sb.append(" -name ");
-		sb.append(appDTO.getName());
-		boolean flag = executeShellUtil.executeShell(sb.toString());
-		return flag;
+		String sb = "find " +
+				appDTO.getDeployPath() +
+				" -name " +
+				appDTO.getName();
+		return executeShellUtil.executeShell(sb);
 	}
 
 	/**
 	 * 启动服务
-	 *
-	 * @param resources
-	 * @return
+	 * @param resources /
+	 * @return /
 	 */
 	@Override
 	public String startServer(Deploy resources) {
@@ -303,15 +288,15 @@ public class DeployServiceImpl implements DeployService {
 
 	/**
 	 * 停止服务
-	 * @param resources
-	 * @return
+	 * @param resources /
+	 * @return /
 	 */
 	@Override
 	public String stopServer(Deploy resources) {
 		Set<ServerDeploy> deploys = resources.getDeploys();
 		App app = resources.getApp();
 		for (ServerDeploy deploy : deploys) {
-			StringBuffer sb = new StringBuffer();
+			StringBuilder sb = new StringBuilder();
 			ExecuteShellUtil executeShellUtil = getExecuteShellUtil(deploy.getIp());
 			sb.append("服务器:").append(deploy.getName()).append("<br>应用:").append(app.getName());
 			sendMsg("下发停止命令", MsgType.INFO);
@@ -334,8 +319,8 @@ public class DeployServiceImpl implements DeployService {
 	@Override
 	public String serverReduction(DeployHistory resources) {
 		Long deployId = resources.getDeployId();
-		Deploy deployInfo = deployRepository.findById(deployId).get();
-		String deployDate = resources.getDeployDate();
+		Deploy deployInfo = deployRepository.findById(deployId).orElseGet(Deploy::new);
+		Timestamp deployDate = resources.getDeployDate();
 		App app = deployInfo.getApp();
 		if (app == null) {
 			sendMsg("应用信息不存在：" + resources.getAppName(), MsgType.ERROR);
@@ -350,7 +335,7 @@ public class DeployServiceImpl implements DeployService {
 		String deployPath = app.getDeployPath();
 		String ip = resources.getIp();
 		ExecuteShellUtil executeShellUtil = getExecuteShellUtil(ip);
-		String msg = "";
+		String msg;
 
 		msg = String.format("登陆到服务器:%s", ip);
 		log.info(msg);
@@ -398,7 +383,7 @@ public class DeployServiceImpl implements DeployService {
 		return ScpClientUtil.getInstance(ip, serverDeployDTO.getPort(), serverDeployDTO.getAccount(), serverDeployDTO.getPassword());
 	}
 
-	public void sendResultMsg(boolean result, StringBuilder sb) {
+	private void sendResultMsg(boolean result, StringBuilder sb) {
 		if (result) {
 			sb.append("<br>启动成功!");
 			sendMsg(sb.toString(), MsgType.INFO);

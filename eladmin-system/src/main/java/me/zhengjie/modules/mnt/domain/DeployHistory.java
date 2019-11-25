@@ -3,8 +3,11 @@ package me.zhengjie.modules.mnt.domain;
 import lombok.Data;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
+import org.hibernate.annotations.CreationTimestamp;
+
 import javax.persistence.*;
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 /**
 * @author zhanghouying
@@ -37,8 +40,9 @@ public class DeployHistory implements Serializable {
 	/**
 	 * 部署时间
 	 */
-    @Column(name = "deploy_date",nullable = false)
-    private String deployDate;
+    @Column(name = "deploy_date")
+	@CreationTimestamp
+    private Timestamp deployDate;
 
 	/**
 	 * 部署人员

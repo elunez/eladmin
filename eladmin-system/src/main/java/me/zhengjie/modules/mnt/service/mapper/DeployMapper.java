@@ -10,7 +10,7 @@ import org.mapstruct.ReportingPolicy;
 * @author zhanghouying
 * @date 2019-08-24
 */
-@Mapper(componentModel = "spring",uses = {},unmappedTargetPolicy = ReportingPolicy.IGNORE)
+@Mapper(componentModel = "spring",uses = {AppMapper.class, ServerDeployMapper.class},unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface DeployMapper extends BaseMapper<DeployDTO, Deploy> {
 
 }

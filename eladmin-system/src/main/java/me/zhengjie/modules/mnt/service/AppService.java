@@ -11,44 +11,15 @@ import org.springframework.data.domain.Pageable;
 */
 public interface AppService {
 
-    /**
-	 * queryAll 分页
-    * @param criteria
-    * @param pageable
-    * @return
-    */
     Object queryAll(AppQueryCriteria criteria, Pageable pageable);
 
-    /**
-	 * queryAll 不分页
-    * @param criteria
-    * @return
-    */
-    public Object queryAll(AppQueryCriteria criteria);
+    Object queryAll(AppQueryCriteria criteria);
 
-    /**
-	 * findById
-     * @param id
-     * @return
-     */
     AppDTO findById(Long id);
 
-    /**
-	 * create
-     * @param resources
-     * @return
-     */
     AppDTO create(App resources);
 
-    /**
-	 * update
-     * @param resources
-     */
     void update(App resources);
 
-    /**
-	 * delete
-     * @param id
-     */
     void delete(Long id);
 }

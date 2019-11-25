@@ -2,6 +2,8 @@ package me.zhengjie.modules.mnt.service.dto;
 
 import lombok.Data;
 import me.zhengjie.annotation.Query;
+import java.sql.Timestamp;
+import java.util.List;
 
 /**
 * @author zhanghouying
@@ -13,13 +15,10 @@ public class DeployQueryCriteria{
 	/**
 	 * 模糊
 	 */
-    @Query(type = Query.Type.EQUAL)
-    private String appId;
+    @Query(type = Query.Type.INNER_LIKE, propName = "name", joinName = "app")
+    private String appName;
 
-	/**
-	 * 模糊
-	 */
-    @Query(type = Query.Type.INNER_LIKE)
-    private String ip;
+	@Query(type = Query.Type.BETWEEN)
+	private List<Timestamp> createTime;
 
 }

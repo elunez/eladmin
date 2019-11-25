@@ -15,8 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
 /**
 * @author zhanghouying
 * @date 2019-08-24
@@ -47,9 +45,9 @@ public class ServerDeployServiceImpl implements ServerDeployService {
 
     @Override
     public ServerDeployDTO findById(Long id) {
-        Optional<ServerDeploy> server = serverDeployRepository.findById(id);
-        ValidationUtil.isNull(server,"ServerDeploy","id",id);
-        return serverDeployMapper.toDto(server.get());
+        ServerDeploy server = serverDeployRepository.findById(id).orElseGet(ServerDeploy::new);
+        ValidationUtil.isNull(server.getId(),"ServerDeploy","id",id);
+        return serverDeployMapper.toDto(server);
     }
 
     @Override
@@ -67,9 +65,8 @@ public class ServerDeployServiceImpl implements ServerDeployService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void update(ServerDeploy resources) {
-        Optional<ServerDeploy> optionalServer = serverDeployRepository.findById(resources.getId());
-        ValidationUtil.isNull( optionalServer,"ServerDeploy","id",resources.getId());
-        ServerDeploy serverDeploy = optionalServer.get();
+        ServerDeploy serverDeploy = serverDeployRepository.findById(resources.getId()).orElseGet(ServerDeploy::new);
+        ValidationUtil.isNull( serverDeploy.getId(),"ServerDeploy","id",resources.getId());
 		serverDeploy.copy(resources);
         serverDeployRepository.save(serverDeploy);
     }

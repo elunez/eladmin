@@ -16,7 +16,7 @@ public class AppDTO implements Serializable {
 	/**
 	 * 应用编号
 	 */
-    private String id;
+    private Long id;
 
 	/**
 	 * 应用名称

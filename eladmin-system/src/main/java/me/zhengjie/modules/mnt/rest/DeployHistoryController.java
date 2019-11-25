@@ -23,19 +23,22 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/deployHistory")
 public class DeployHistoryController {
 
-    @Autowired
-    private DeployHistoryService deployhistoryService;
+    private final DeployHistoryService deployhistoryService;
 
-    @Log("查询DeployHistory")
-    @ApiOperation(value = "查询DeployHistory")
+    public DeployHistoryController(DeployHistoryService deployhistoryService) {
+        this.deployhistoryService = deployhistoryService;
+    }
+
+    @Log("查询部署历史")
+    @ApiOperation(value = "查询部署历史")
     @GetMapping
 	@PreAuthorize("@el.check('deployHistory:list')")
     public ResponseEntity getDeployHistorys(DeployHistoryQueryCriteria criteria, Pageable pageable){
-        return new ResponseEntity(deployhistoryService.queryAll(criteria,pageable),HttpStatus.OK);
+        return new ResponseEntity<>(deployhistoryService.queryAll(criteria,pageable),HttpStatus.OK);
     }
 
     @Log("删除DeployHistory")
-    @ApiOperation(value = "删除DeployHistory")
+    @ApiOperation(value = "删除部署历史")
 	@DeleteMapping(value = "/{id}")
     @PreAuthorize("hasAnyRole('deployHistory:del')")
     public ResponseEntity delete(@PathVariable String id){

@@ -6,7 +6,6 @@ import me.zhengjie.aop.log.Log;
 import me.zhengjie.modules.mnt.domain.Database;
 import me.zhengjie.modules.mnt.service.DatabaseService;
 import me.zhengjie.modules.mnt.service.dto.DatabaseQueryCriteria;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,27 +22,30 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/database")
 public class DatabaseController {
 
-    @Autowired
-    private DatabaseService databaseService;
+    private final DatabaseService databaseService;
 
-    @Log("查询Database")
-    @ApiOperation(value = "查询Database")
+    public DatabaseController(DatabaseService databaseService) {
+        this.databaseService = databaseService;
+    }
+
+    @Log("查询数据库")
+    @ApiOperation(value = "查询数据库")
     @GetMapping
 	@PreAuthorize("@el.check('database:list')")
     public ResponseEntity getDatabases(DatabaseQueryCriteria criteria, Pageable pageable){
-        return new ResponseEntity(databaseService.queryAll(criteria,pageable),HttpStatus.OK);
+        return new ResponseEntity<>(databaseService.queryAll(criteria,pageable),HttpStatus.OK);
     }
 
-    @Log("新增Database")
-    @ApiOperation(value = "新增Database")
+    @Log("新增数据库")
+    @ApiOperation(value = "新增数据库")
     @PostMapping
 	@PreAuthorize("@el.check('database:add')")
     public ResponseEntity create(@Validated @RequestBody Database resources){
-        return new ResponseEntity(databaseService.create(resources),HttpStatus.CREATED);
+        return new ResponseEntity<>(databaseService.create(resources),HttpStatus.CREATED);
     }
 
-    @Log("修改Database")
-    @ApiOperation(value = "修改Database")
+    @Log("修改数据库")
+    @ApiOperation(value = "修改数据库")
     @PutMapping
 	@PreAuthorize("@el.check('database:edit')")
     public ResponseEntity update(@Validated @RequestBody Database resources){
@@ -51,8 +53,8 @@ public class DatabaseController {
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
-    @Log("删除Database")
-    @ApiOperation(value = "删除Database")
+    @Log("删除数据库")
+    @ApiOperation(value = "删除数据库")
     @DeleteMapping(value = "/{id}")
 	@PreAuthorize("@el.check('database:del')")
     public ResponseEntity delete(@PathVariable String id){

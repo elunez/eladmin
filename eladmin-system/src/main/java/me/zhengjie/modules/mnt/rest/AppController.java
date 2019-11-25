@@ -6,7 +6,6 @@ import me.zhengjie.aop.log.Log;
 import me.zhengjie.modules.mnt.domain.App;
 import me.zhengjie.modules.mnt.service.AppService;
 import me.zhengjie.modules.mnt.service.dto.AppQueryCriteria;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,31 +22,30 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/app")
 public class AppController {
 
-    @Autowired
-    private AppService appService;
+    private final AppService appService;
 
     public AppController(AppService appService){
-    	this.appService = this.appService;
-	}
+        this.appService = appService;
+    }
 
-    @Log("查询App")
-    @ApiOperation(value = "查询App")
+    @Log("查询应用")
+    @ApiOperation(value = "查询应用")
     @GetMapping
 	@PreAuthorize("@el.check('app:list')")
     public ResponseEntity getApps(AppQueryCriteria criteria, Pageable pageable){
-        return new ResponseEntity(appService.queryAll(criteria,pageable),HttpStatus.OK);
+        return new ResponseEntity<>(appService.queryAll(criteria,pageable),HttpStatus.OK);
     }
 
-    @Log("新增App")
-    @ApiOperation(value = "新增App")
+    @Log("新增应用")
+    @ApiOperation(value = "新增应用")
     @PostMapping
 	@PreAuthorize("@el.check('app:add')")
     public ResponseEntity create(@Validated @RequestBody App resources){
-        return new ResponseEntity(appService.create(resources),HttpStatus.CREATED);
+        return new ResponseEntity<>(appService.create(resources),HttpStatus.CREATED);
     }
 
-    @Log("修改App")
-    @ApiOperation(value = "修改App")
+    @Log("修改应用")
+    @ApiOperation(value = "修改应用")
     @PutMapping
 	@PreAuthorize("@el.check('app:edit')")
     public ResponseEntity update(@Validated @RequestBody App resources){
@@ -55,8 +53,8 @@ public class AppController {
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
-    @Log("删除App")
-    @ApiOperation(value = "删除App")
+    @Log("删除应用")
+    @ApiOperation(value = "删除应用")
 	@DeleteMapping(value = "/{id}")
 	@PreAuthorize("@el.check('app:del')")
     public ResponseEntity delete(@PathVariable Long id){

@@ -12,81 +12,49 @@ import org.springframework.data.domain.Pageable;
 */
 public interface DeployService {
 
-    /**
-	 * queryAll 分页
-    * @param criteria
-    * @param pageable
-    * @return
-    */
     Object queryAll(DeployQueryCriteria criteria, Pageable pageable);
 
-    /**
-	 * queryAll 不分页
-    * @param criteria
-    * @return
-    */
-    public Object queryAll(DeployQueryCriteria criteria);
+    Object queryAll(DeployQueryCriteria criteria);
 
-    /**
-	 * findById
-     * @param id
-     * @return
-     */
     DeployDTO findById(Long id);
 
-    /**
-	 * create
-     * @CacheEvict(allEntries = true)
-     * @param resources
-     * @return
-     */
     DeployDTO create(Deploy resources);
 
-    /**
-	 * update
-     * @CacheEvict(allEntries = true)
-     * @param resources
-     */
     void update(Deploy resources);
 
-    /**
-	 * delete
-     * @CacheEvict(allEntries = true)
-     * @param id
-     */
     void delete(Long id);
 
 	/**
 	 * 部署文件到服务器
-	 * @param fileSavePath
-	 * @param appId
-	 * @return
+	 * @param fileSavePath 文件路径
+	 * @param appId 应用ID
+	 * @return /
 	 */
-	public String deploy(String fileSavePath, Long appId);
+	String deploy(String fileSavePath, Long appId);
 
     /**
      * 查询部署状态
-     * @param resources
-     * @return
+     * @param resources /
+     * @return /
      */
-    public String serverStatus(Deploy resources);
+    String serverStatus(Deploy resources);
     /**
      * 启动服务
-     * @param resources
-     * @return
+     * @param resources /
+     * @return /
      */
-    public String startServer(Deploy resources);
+    String startServer(Deploy resources);
     /**
      * 停止服务
-     * @param resources
-     * @return
+     * @param resources /
+     * @return /
      */
-    public String stopServer(Deploy resources);
+    String stopServer(Deploy resources);
 
     /**
      * 停止服务
-     * @param resources
-     * @return
+     * @param resources /
+     * @return /
      */
-    public String serverReduction(DeployHistory resources);
+    String serverReduction(DeployHistory resources);
 }

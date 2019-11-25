@@ -16,8 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
 /**
 * @author zhanghouying
 * @date 2019-08-24
@@ -48,9 +46,9 @@ public class DatabaseServiceImpl implements DatabaseService {
 
     @Override
     public DatabaseDTO findById(String id) {
-        Optional<Database> database = databaseRepository.findById(id);
-        ValidationUtil.isNull(database,"Database","id",id);
-        return databaseMapper.toDto(database.get());
+        Database database = databaseRepository.findById(id).orElseGet(Database::new);
+        ValidationUtil.isNull(database.getId(),"Database","id",id);
+        return databaseMapper.toDto(database);
     }
 
     @Override
@@ -63,9 +61,8 @@ public class DatabaseServiceImpl implements DatabaseService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void update(Database resources) {
-        Optional<Database> optionalDatabase = databaseRepository.findById(resources.getId());
-        ValidationUtil.isNull( optionalDatabase,"Database","id",resources.getId());
-        Database database = optionalDatabase.get();
+        Database database = databaseRepository.findById(resources.getId()).orElseGet(Database::new);
+        ValidationUtil.isNull(database.getId(),"Database","id",resources.getId());
         database.copy(resources);
         databaseRepository.save(database);
     }

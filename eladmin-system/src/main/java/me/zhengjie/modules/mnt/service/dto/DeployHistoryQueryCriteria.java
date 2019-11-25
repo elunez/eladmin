@@ -2,6 +2,8 @@ package me.zhengjie.modules.mnt.service.dto;
 
 import lombok.Data;
 import me.zhengjie.annotation.Query;
+import java.sql.Timestamp;
+import java.util.List;
 
 /**
 * @author zhanghouying
@@ -15,4 +17,7 @@ public class DeployHistoryQueryCriteria{
 	 */
 	@Query(blurry = "appName,ip,deployUser,deployId")
 	private String blurry;
+
+	@Query(type = Query.Type.BETWEEN)
+	private List<Timestamp> deployDate;
 }
