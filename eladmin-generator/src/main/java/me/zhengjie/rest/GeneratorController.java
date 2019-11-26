@@ -75,6 +75,8 @@ public class GeneratorController {
             // 生成代码
             case 0: generatorService.generator(genConfigService.find(tableName), generatorService.getColumns(tableName));
                     break;
+            // 预览
+            case 1: return generatorService.preview(genConfigService.find(tableName), generatorService.getColumns(tableName));
             default: break;
         }
         return new ResponseEntity(HttpStatus.OK);

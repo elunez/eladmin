@@ -11,10 +11,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 代码生成
@@ -61,7 +58,72 @@ public class GenUtil {
         return templateNames;
     }
 
+    public static List<Map<String, Object>> preview(List<ColumnInfo> columns, GenConfig genConfig) {
+        Map<String,Object> genMap = getGenMap(columns, genConfig);
+        List<Map<String,Object>> genList = new ArrayList<>();
+        // 获取后端模版
+        List<String> templates = getAdminTemplateNames();
+        TemplateEngine engine = TemplateUtil.createEngine(new TemplateConfig("template", TemplateConfig.ResourceMode.CLASSPATH));
+        for (String templateName : templates) {
+            Map<String,Object> map = new HashMap<>(1);
+            Template template = engine.getTemplate("generator/admin/"+templateName+".ftl");
+            map.put("content", template.render(genMap));
+            map.put("name", templateName);
+            genList.add(map);
+        }
+        // 获取前端模版
+        templates = getFrontTemplateNames();
+        for (String templateName : templates) {
+            Map<String,Object> map = new HashMap<>(1);
+            Template template = engine.getTemplate("generator/front/"+templateName+".ftl");
+            map.put(templateName, template.render(genMap));
+            map.put("content", template.render(genMap));
+            map.put("name", templateName);
+            genList.add(map);
+        }
+        return genList;
+    }
+
     public static void generatorCode(List<ColumnInfo> columnInfos, GenConfig genConfig) throws IOException {
+        Map<String,Object> genMap = getGenMap(columnInfos, genConfig);
+        TemplateEngine engine = TemplateUtil.createEngine(new TemplateConfig("template", TemplateConfig.ResourceMode.CLASSPATH));
+        // 生成后端代码
+        List<String> templates = getAdminTemplateNames();
+        for (String templateName : templates) {
+            Template template = engine.getTemplate("generator/admin/"+templateName+".ftl");
+            String filePath = getAdminFilePath(templateName,genConfig,genMap.get("className").toString());
+
+            assert filePath != null;
+            File file = new File(filePath);
+
+            // 如果非覆盖生成
+            if(!genConfig.getCover() && FileUtil.exist(file)){
+                continue;
+            }
+            // 生成代码
+            genFile(file, template, genMap);
+        }
+
+        // 生成前端代码
+        templates = getFrontTemplateNames();
+        for (String templateName : templates) {
+            Template template = engine.getTemplate("generator/front/"+templateName+".ftl");
+            String filePath = getFrontFilePath(templateName,genConfig,genMap.get("changeClassName").toString());
+
+            assert filePath != null;
+            File file = new File(filePath);
+
+            // 如果非覆盖生成
+            if(!genConfig.getCover() && FileUtil.exist(file)){
+                continue;
+            }
+            // 生成代码
+            genFile(file, template, genMap);
+        }
+    }
+
+    // 获取模版数据
+    private static Map<String,Object> getGenMap(List<ColumnInfo> columnInfos, GenConfig genConfig) {
         // 存储模版字段数据
         Map<String,Object> genMap = new HashMap<>(16);
         // 接口别名
@@ -165,7 +227,7 @@ public class GenUtil {
             // 表单显示
             listMap.put("formShow",column.getFormShow());
             // 表单组件类型
-            listMap.put("formType",column.getFormType());
+            listMap.put("formType", StringUtils.isNotBlank(column.getFormType()) ? column.getFormType() : "Input");
             // 小写开头的字段名称
             listMap.put("changeColumnName",changeColumnName);
             //大写开头的字段名称
@@ -215,40 +277,7 @@ public class GenUtil {
         genMap.put("betweens",betweens);
         // 保存非空字段信息
         genMap.put("isNotNullColumns",isNotNullColumns);
-        TemplateEngine engine = TemplateUtil.createEngine(new TemplateConfig("template", TemplateConfig.ResourceMode.CLASSPATH));
-        // 生成后端代码
-        List<String> templates = getAdminTemplateNames();
-        for (String templateName : templates) {
-            Template template = engine.getTemplate("generator/admin/"+templateName+".ftl");
-            String filePath = getAdminFilePath(templateName,genConfig,className);
-
-            assert filePath != null;
-            File file = new File(filePath);
-
-            // 如果非覆盖生成
-            if(!genConfig.getCover() && FileUtil.exist(file)){
-                continue;
-            }
-            // 生成代码
-            genFile(file, template, genMap);
-        }
-
-        // 生成前端代码
-        templates = getFrontTemplateNames();
-        for (String templateName : templates) {
-            Template template = engine.getTemplate("generator/front/"+templateName+".ftl");
-            String filePath = getFrontFilePath(templateName,genConfig,genMap.get("changeClassName").toString());
-
-            assert filePath != null;
-            File file = new File(filePath);
-
-            // 如果非覆盖生成
-            if(!genConfig.getCover() && FileUtil.exist(file)){
-                continue;
-            }
-            // 生成代码
-            genFile(file, template, genMap);
-        }
+        return genMap;
     }
 
     /**
