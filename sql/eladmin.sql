@@ -353,7 +353,7 @@ CREATE TABLE `mnt_app`  (
 -- ----------------------------
 -- Records of mnt_app
 -- ----------------------------
-INSERT INTO `mnt_app` VALUES (1, 'eladmin-monitor-2.3.jar', '/opt/upload', '/opt/monitor', '/opt/backup', 8777, 'cd /opt/monitor/\nnohup java -jar eladmin-monitor-2.2.jar >nohup.out 2>&1 &\n', 'mv /opt/upload/eladmin-monitor-2.2.jar /opt/monitor/\ncd /opt/monitor\nnohup java -jar eladmin-monitor-2.2.jar >nohup.out 2>&1 &\n', '2019-11-24 20:52:59');
+INSERT INTO `mnt_app` VALUES (1, 'eladmin-monitor-2.3.jar', '/opt/upload', '/opt/monitor', '/opt/backup', 8777, 'cd /opt/monitor\nnohup java -jar eladmin-monitor-2.3.jar >nohup.out 2>&1 &\n', 'mkdir -p /opt/monitor\nmv -f /opt/upload/eladmin-monitor-2.3.jar /opt/monitor\n', '2019-11-24 20:52:59');
 
 -- ----------------------------
 -- Table structure for mnt_database
