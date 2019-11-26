@@ -39,11 +39,11 @@ public class GenUtil {
         templateNames.add("Entity");
         templateNames.add("Dto");
         templateNames.add("Mapper");
-        templateNames.add("Repository");
+        templateNames.add("Controller");
+        templateNames.add("QueryCriteria");
         templateNames.add("Service");
         templateNames.add("ServiceImpl");
-        templateNames.add("QueryCriteria");
-        templateNames.add("Controller");
+        templateNames.add("Repository");
         return templateNames;
     }
 
@@ -53,8 +53,8 @@ public class GenUtil {
      */
     private static List<String> getFrontTemplateNames() {
         List<String> templateNames = new ArrayList<>();
-        templateNames.add("api");
         templateNames.add("index");
+        templateNames.add("api");
         return templateNames;
     }
 
