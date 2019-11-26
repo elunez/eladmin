@@ -84,6 +84,44 @@ public class GenUtil {
         return genList;
     }
 
+    public static String download(List<ColumnInfo> columns, GenConfig genConfig) throws IOException {
+        String tempPath =System.getProperty("java.io.tmpdir") + "eladmin-gen-temp" + File.separator + genConfig.getTableName() + File.separator;
+        Map<String,Object> genMap = getGenMap(columns, genConfig);
+        TemplateEngine engine = TemplateUtil.createEngine(new TemplateConfig("template", TemplateConfig.ResourceMode.CLASSPATH));
+        // 生成后端代码
+        List<String> templates = getAdminTemplateNames();
+        for (String templateName : templates) {
+            Template template = engine.getTemplate("generator/admin/"+templateName+".ftl");
+            String filePath = getAdminFilePath(templateName,genConfig,genMap.get("className").toString(),tempPath + "eladmin" + File.separator);
+            assert filePath != null;
+            File file = new File(filePath);
+            // 如果非覆盖生成
+            if(!genConfig.getCover() && FileUtil.exist(file)){
+                continue;
+            }
+            // 生成代码
+            genFile(file, template, genMap);
+        }
+        // 生成前端代码
+        templates = getFrontTemplateNames();
+        for (String templateName : templates) {
+            Template template = engine.getTemplate("generator/front/"+templateName+".ftl");
+            String path = tempPath + "eladmin-web"  + File.separator;
+            String apiPath = path + "src" + File.separator + "api" + File.separator;
+            String srcPath = path + "src" + File.separator + "views" + File.separator + genMap.get("changeClassName").toString() + File.separator;
+            String filePath = getFrontFilePath(templateName, apiPath, srcPath, genMap.get("changeClassName").toString());
+            assert filePath != null;
+            File file = new File(filePath);
+            // 如果非覆盖生成
+            if(!genConfig.getCover() && FileUtil.exist(file)){
+                continue;
+            }
+            // 生成代码
+            genFile(file, template, genMap);
+        }
+        return tempPath;
+    }
+
     public static void generatorCode(List<ColumnInfo> columnInfos, GenConfig genConfig) throws IOException {
         Map<String,Object> genMap = getGenMap(columnInfos, genConfig);
         TemplateEngine engine = TemplateUtil.createEngine(new TemplateConfig("template", TemplateConfig.ResourceMode.CLASSPATH));
@@ -91,7 +129,7 @@ public class GenUtil {
         List<String> templates = getAdminTemplateNames();
         for (String templateName : templates) {
             Template template = engine.getTemplate("generator/admin/"+templateName+".ftl");
-            String filePath = getAdminFilePath(templateName,genConfig,genMap.get("className").toString());
+            String filePath = getAdminFilePath(templateName,genConfig,genMap.get("className").toString(),System.getProperty("user.dir"));
 
             assert filePath != null;
             File file = new File(filePath);
@@ -108,7 +146,7 @@ public class GenUtil {
         templates = getFrontTemplateNames();
         for (String templateName : templates) {
             Template template = engine.getTemplate("generator/front/"+templateName+".ftl");
-            String filePath = getFrontFilePath(templateName,genConfig,genMap.get("changeClassName").toString());
+            String filePath = getFrontFilePath(templateName,genConfig.getApiPath(),genConfig.getPath(),genMap.get("changeClassName").toString());
 
             assert filePath != null;
             File file = new File(filePath);
@@ -283,8 +321,8 @@ public class GenUtil {
     /**
      * 定义后端文件路径以及名称
      */
-    private static String getAdminFilePath(String templateName, GenConfig genConfig, String className) {
-        String projectPath = System.getProperty("user.dir") + File.separator + genConfig.getModuleName();
+    private static String getAdminFilePath(String templateName, GenConfig genConfig, String className, String rootPath) {
+        String projectPath = rootPath + File.separator + genConfig.getModuleName();
         String packagePath = projectPath + File.separator + "src" +File.separator+ "main" + File.separator + "java" + File.separator;
         if (!ObjectUtils.isEmpty(genConfig.getPack())) {
             packagePath += genConfig.getPack().replace(".", File.separator) + File.separator;
@@ -328,11 +366,10 @@ public class GenUtil {
     /**
      * 定义前端文件路径以及名称
      */
-    private static String getFrontFilePath(String templateName, GenConfig genConfig, String apiName) {
-        String path = genConfig.getPath();
+    private static String getFrontFilePath(String templateName, String apiPath, String path, String apiName) {
 
         if ("api".equals(templateName)) {
-            return genConfig.getApiPath() + File.separator + apiName + ".js";
+            return apiPath + File.separator + apiName + ".js";
         }
 
         if ("index".equals(templateName)) {

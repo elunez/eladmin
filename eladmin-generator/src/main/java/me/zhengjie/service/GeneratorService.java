@@ -4,7 +4,8 @@ import me.zhengjie.domain.GenConfig;
 import me.zhengjie.domain.ColumnInfo;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
-
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -61,4 +62,13 @@ public interface GeneratorService {
      * @return /
      */
     ResponseEntity preview(GenConfig genConfig, List<ColumnInfo> columns);
+
+    /**
+     * 打包下载
+     * @param genConfig 配置信息
+     * @param columns 字段信息
+     * @param request
+     * @param response
+     */
+    void download(GenConfig genConfig, List<ColumnInfo> columns, HttpServletRequest request, HttpServletResponse response);
 }
