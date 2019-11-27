@@ -1,6 +1,7 @@
 package me.zhengjie.modules.security.config;
 
 import me.zhengjie.annotation.AnonymousAccess;
+import me.zhengjie.modules.security.security.JwtAccessDeniedHandler;
 import me.zhengjie.modules.security.security.JwtAuthenticationEntryPoint;
 import me.zhengjie.modules.security.security.JwtAuthorizationTokenFilter;
 import me.zhengjie.modules.security.service.JwtUserDetailsServiceImpl;
@@ -39,6 +40,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JwtAuthenticationEntryPoint unauthorizedHandler;
 
+    private final JwtAccessDeniedHandler accessDeniedHandler;
+
     private final JwtUserDetailsServiceImpl jwtUserDetailsService;
 
     private final ApplicationContext applicationContext;
@@ -49,8 +52,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Value("${jwt.header}")
     private String tokenHeader;
 
-    public SecurityConfig(JwtAuthenticationEntryPoint unauthorizedHandler, JwtUserDetailsServiceImpl jwtUserDetailsService, JwtAuthorizationTokenFilter authenticationTokenFilter, ApplicationContext applicationContext) {
+    public SecurityConfig(JwtAuthenticationEntryPoint unauthorizedHandler, JwtAccessDeniedHandler accessDeniedHandler, JwtUserDetailsServiceImpl jwtUserDetailsService, JwtAuthorizationTokenFilter authenticationTokenFilter, ApplicationContext applicationContext) {
         this.unauthorizedHandler = unauthorizedHandler;
+        this.accessDeniedHandler = accessDeniedHandler;
         this.jwtUserDetailsService = jwtUserDetailsService;
         this.authenticationTokenFilter = authenticationTokenFilter;
         this.applicationContext = applicationContext;
@@ -100,6 +104,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 // 授权异常
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
+                .exceptionHandling().accessDeniedHandler(accessDeniedHandler).and()
                 // 不创建会话
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 // 过滤请求
@@ -110,7 +115,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/**/*.html",
                         "/**/*.css",
                         "/**/*.js",
-						"/webSocket/**"
+                        "/webSocket/**"
                 ).anonymous()
                 // swagger start
                 .antMatchers("/swagger-ui.html").permitAll()
