@@ -18,16 +18,14 @@ import java.util.Vector;
 @Slf4j
 public class ExecuteShellUtil {
 
-	public final int DEFAULT_SSH_PORT = 22;
-
 	private Vector<String> stdout;
 
 	Session session;
 
-	public ExecuteShellUtil(final String ipAddress, final String username, final String password) {
+	public ExecuteShellUtil(final String ipAddress, final String username, final String password,int port) {
 		try {
 			JSch jsch = new JSch();
-			session = jsch.getSession(username, ipAddress, DEFAULT_SSH_PORT);
+			session = jsch.getSession(username, ipAddress, port);
 			session.setPassword(password);
 			session.setConfig("StrictHostKeyChecking", "no");
 			session.connect(3000);

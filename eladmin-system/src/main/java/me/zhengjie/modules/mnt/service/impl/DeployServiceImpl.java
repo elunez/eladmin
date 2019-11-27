@@ -379,7 +379,7 @@ public class DeployServiceImpl implements DeployService {
 			sendMsg("IP对应服务器信息不存在：" + ip, MsgType.ERROR);
 			throw new BadRequestException("IP对应服务器信息不存在：" + ip);
 		}
-		return new ExecuteShellUtil(ip, serverDeployDTO.getAccount(), serverDeployDTO.getPassword());
+		return new ExecuteShellUtil(ip, serverDeployDTO.getAccount(), serverDeployDTO.getPassword(),serverDeployDTO.getPort());
 	}
 
 	private ScpClientUtil getScpClientUtil(String ip) {

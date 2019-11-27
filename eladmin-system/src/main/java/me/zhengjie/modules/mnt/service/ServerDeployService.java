@@ -58,4 +58,11 @@ public interface ServerDeployService {
      * @return /
      */
     ServerDeployDto findByIp(String ip);
+
+	/**
+	 * 测试登录服务器
+	 * @param resources
+	 * @return
+	 */
+	Boolean testConnect(ServerDeploy resources);
 }
