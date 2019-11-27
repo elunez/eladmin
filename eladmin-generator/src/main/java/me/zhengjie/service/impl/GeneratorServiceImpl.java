@@ -2,22 +2,30 @@ package me.zhengjie.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.ZipUtil;
 import me.zhengjie.domain.GenConfig;
 import me.zhengjie.domain.ColumnInfo;
 import me.zhengjie.domain.vo.TableInfo;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.repository.ColumnInfoRepository;
 import me.zhengjie.service.GeneratorService;
+import me.zhengjie.utils.FileUtil;
 import me.zhengjie.utils.GenUtil;
 import me.zhengjie.utils.PageUtil;
 import me.zhengjie.utils.StringUtils;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Zheng Jie
@@ -113,17 +121,39 @@ public class GeneratorServiceImpl implements GeneratorService {
     }
 
     @Override
-    public Object generator(GenConfig genConfig, List<ColumnInfo> columns) {
+    public void generator(GenConfig genConfig, List<ColumnInfo> columns) {
         if(genConfig.getId() == null){
             throw new BadRequestException("请先配置生成器");
         }
         try {
-            // 查询是否存在关联实体字段信息
             GenUtil.generatorCode(columns, genConfig);
         } catch (IOException e) {
             e.printStackTrace();
             throw new BadRequestException("生成失败，请手动处理已生成的文件");
         }
-        return null;
+    }
+
+    @Override
+    public ResponseEntity preview(GenConfig genConfig, List<ColumnInfo> columns) {
+        if(genConfig.getId() == null){
+            throw new BadRequestException("请先配置生成器");
+        }
+        List<Map<String,Object>> genList =  GenUtil.preview(columns, genConfig);
+        return new ResponseEntity<>(genList, HttpStatus.OK);
+    }
+
+    @Override
+    public void download(GenConfig genConfig, List<ColumnInfo> columns, HttpServletRequest request, HttpServletResponse response) {
+        if(genConfig.getId() == null){
+            throw new BadRequestException("请先配置生成器");
+        }
+        try {
+            File file = new File(GenUtil.download(columns, genConfig));
+            String zipPath = file.getPath()  + ".zip";
+            ZipUtil.zip(file.getPath(), zipPath);
+            FileUtil.downloadFile(request, response, new File(zipPath), true);
+        } catch (IOException e) {
+            throw new BadRequestException("打包失败");
+        }
     }
 }

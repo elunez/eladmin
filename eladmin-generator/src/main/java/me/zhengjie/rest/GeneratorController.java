@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -67,15 +69,20 @@ public class GeneratorController {
 
     @ApiOperation("生成代码")
     @PostMapping(value = "/{tableName}/{type}")
-    public ResponseEntity generator(@PathVariable String tableName, @PathVariable Integer type){
-        if(!generatorEnabled){
-            throw new BadRequestException("此环境不允许生成代码！");
+    public ResponseEntity generator(@PathVariable String tableName, @PathVariable Integer type, HttpServletRequest request, HttpServletResponse response){
+        if(!generatorEnabled && type == 0){
+            throw new BadRequestException("此环境不允许生成代码，请选择预览或者下载查看！");
         }
         switch (type){
             // 生成代码
             case 0: generatorService.generator(genConfigService.find(tableName), generatorService.getColumns(tableName));
                     break;
-            default: break;
+            // 预览
+            case 1: return generatorService.preview(genConfigService.find(tableName), generatorService.getColumns(tableName));
+            // 打包
+            case 2: generatorService.download(genConfigService.find(tableName), generatorService.getColumns(tableName), request, response);
+                    break;
+            default: throw new BadRequestException("没有这个选项");
         }
         return new ResponseEntity(HttpStatus.OK);
     }
