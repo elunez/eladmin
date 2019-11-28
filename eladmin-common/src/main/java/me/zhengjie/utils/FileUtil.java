@@ -6,9 +6,11 @@ import cn.hutool.core.util.IdUtil;
 import cn.hutool.poi.excel.BigExcelWriter;
 import cn.hutool.poi.excel.ExcelUtil;
 import me.zhengjie.exception.BadRequestException;
+import org.apache.poi.util.IOUtils;
 import org.springframework.web.multipart.MultipartFile;
 import javax.activation.MimetypesFileTypeMap;
 import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.security.MessageDigest;
@@ -119,8 +121,9 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
         }
         OutputStream os = new FileOutputStream(file);
         int bytesRead;
-        byte[] buffer = new byte[8192];
-        while ((bytesRead = ins.read(buffer, 0, 8192)) != -1) {
+        int len = 8192;
+        byte[] buffer = new byte[len];
+        while ((bytesRead = ins.read(buffer, 0, len)) != -1) {
             os.write(buffer, 0, bytesRead);
         }
         os.close();
@@ -210,7 +213,9 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
     }
 
     public static void checkSize(long maxSize, long size) {
-        if(size > (maxSize * 1024 * 1024)){
+        // 1M
+        int len = 1024 * 1024;
+        if(size > (maxSize * len)){
             throw new BadRequestException("文件超出规定大小");
         }
     }
@@ -268,6 +273,37 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
             e.printStackTrace();
         }
         return null;
+    }
+
+    /**
+     * 下载文件
+     * @param request /
+     * @param response /
+     * @param file /
+     */
+    public static void downloadFile(HttpServletRequest request, HttpServletResponse response, File file, boolean deleteOnExit){
+        response.setCharacterEncoding(request.getCharacterEncoding());
+        response.setContentType("application/octet-stream");
+        FileInputStream fis = null;
+        try {
+            fis = new FileInputStream(file);
+            response.setHeader("Content-Disposition", "attachment; filename="+file.getName());
+            IOUtils.copy(fis,response.getOutputStream());
+            response.flushBuffer();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (fis != null) {
+                try {
+                    fis.close();
+                    if(deleteOnExit){
+                        file.deleteOnExit();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     public static String getMd5(File file) {

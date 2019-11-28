@@ -7,7 +7,7 @@ import me.zhengjie.config.DataScope;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.modules.system.domain.Dept;
 import me.zhengjie.modules.system.service.DeptService;
-import me.zhengjie.modules.system.service.dto.DeptDTO;
+import me.zhengjie.modules.system.service.dto.DeptDto;
 import me.zhengjie.modules.system.service.dto.DeptQueryCriteria;
 import me.zhengjie.utils.ThrowableUtil;
 import org.springframework.http.HttpStatus;
@@ -55,8 +55,8 @@ public class DeptController {
     public ResponseEntity getDepts(DeptQueryCriteria criteria){
         // 数据权限
         criteria.setIds(dataScope.getDeptIds());
-        List<DeptDTO> deptDTOS = deptService.queryAll(criteria);
-        return new ResponseEntity<>(deptService.buildTree(deptDTOS),HttpStatus.OK);
+        List<DeptDto> deptDtos = deptService.queryAll(criteria);
+        return new ResponseEntity<>(deptService.buildTree(deptDtos),HttpStatus.OK);
     }
 
     @Log("新增部门")

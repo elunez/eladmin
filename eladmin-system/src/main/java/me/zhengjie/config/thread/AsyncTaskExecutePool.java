@@ -17,7 +17,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 @Configuration
 public class AsyncTaskExecutePool implements AsyncConfigurer {
 
-    //注入配置类
+    /** 注入配置类 */
     private final AsyncTaskProperties config;
 
     public AsyncTaskExecutePool(AsyncTaskProperties config) {

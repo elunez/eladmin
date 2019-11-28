@@ -1,10 +1,9 @@
 package me.zhengjie.modules.security.config;
 
 import me.zhengjie.annotation.AnonymousAccess;
-import me.zhengjie.config.ElPermissionConfig;
 import me.zhengjie.modules.security.security.JwtAuthenticationEntryPoint;
 import me.zhengjie.modules.security.security.JwtAuthorizationTokenFilter;
-import me.zhengjie.modules.security.service.JwtUserDetailsService;
+import me.zhengjie.modules.security.service.JwtUserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
@@ -26,11 +25,13 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
-
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * @author Zheng Jie
+ */
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -38,17 +39,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JwtAuthenticationEntryPoint unauthorizedHandler;
 
-    private final JwtUserDetailsService jwtUserDetailsService;
+    private final JwtUserDetailsServiceImpl jwtUserDetailsService;
 
     private final ApplicationContext applicationContext;
 
-    // 自定义基于JWT的安全过滤器
+    /** 自定义基于JWT的安全过滤器 */
     private final JwtAuthorizationTokenFilter authenticationTokenFilter;
 
     @Value("${jwt.header}")
     private String tokenHeader;
 
-    public SecurityConfig(JwtAuthenticationEntryPoint unauthorizedHandler, JwtUserDetailsService jwtUserDetailsService, JwtAuthorizationTokenFilter authenticationTokenFilter, ApplicationContext applicationContext) {
+    public SecurityConfig(JwtAuthenticationEntryPoint unauthorizedHandler, JwtUserDetailsServiceImpl jwtUserDetailsService, JwtAuthorizationTokenFilter authenticationTokenFilter, ApplicationContext applicationContext) {
         this.unauthorizedHandler = unauthorizedHandler;
         this.jwtUserDetailsService = jwtUserDetailsService;
         this.authenticationTokenFilter = authenticationTokenFilter;
@@ -108,7 +109,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/*.html",
                         "/**/*.html",
                         "/**/*.css",
-                        "/**/*.js"
+                        "/**/*.js",
+						"/webSocket/**"
                 ).anonymous()
                 // swagger start
                 .antMatchers("/swagger-ui.html").permitAll()

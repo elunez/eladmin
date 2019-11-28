@@ -16,7 +16,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Map;
 
@@ -43,7 +42,7 @@ public class ServerServiceImpl implements ServerService {
         page.forEach(server -> {
 			try {
 				server.setState("1");
-				String url = String.format("http://%s:%d/api/serverMonitor",server.getIp(),server.getPort());
+				String url = String.format("http://%s:%d/api/serverMonitor",server.getAddress(),server.getPort());
 				String res = HttpUtil.get(url,1000);
 				JSONObject obj = JSONObject.parseObject(res);
 				server.setCpuRate(obj.getDouble("cpuRate"));

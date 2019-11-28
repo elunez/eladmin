@@ -25,8 +25,8 @@ public class ExecutionJob extends QuartzJobBean {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    // 该处仅供参考
-    private final static ThreadPoolExecutor executor = ThreadPoolExecutorUtil.getPoll();
+    /** 该处仅供参考 */
+    private final static ThreadPoolExecutor EXECUTOR = ThreadPoolExecutorUtil.getPoll();
 
     @Override
     @SuppressWarnings("unchecked")
@@ -48,7 +48,7 @@ public class ExecutionJob extends QuartzJobBean {
             logger.info("任务准备执行，任务名称：{}", quartzJob.getJobName());
             QuartzRunnable task = new QuartzRunnable(quartzJob.getBeanName(), quartzJob.getMethodName(),
                     quartzJob.getParams());
-            Future<?> future = executor.submit(task);
+            Future<?> future = EXECUTOR.submit(task);
             future.get();
             long times = System.currentTimeMillis() - startTime;
             log.setTime(times);

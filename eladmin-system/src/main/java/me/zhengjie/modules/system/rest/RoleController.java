@@ -8,7 +8,7 @@ import me.zhengjie.modules.system.domain.Role;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.modules.system.service.RoleService;
 import me.zhengjie.modules.system.service.dto.RoleQueryCriteria;
-import me.zhengjie.modules.system.service.dto.RoleSmallDTO;
+import me.zhengjie.modules.system.service.dto.RoleSmallDto;
 import me.zhengjie.utils.SecurityUtils;
 import me.zhengjie.utils.ThrowableUtil;
 import org.springframework.data.domain.Pageable;
@@ -76,7 +76,7 @@ public class RoleController {
     @ApiOperation("获取用户级别")
     @GetMapping(value = "/level")
     public ResponseEntity getLevel(){
-        List<Integer> levels = roleService.findByUsers_Id(SecurityUtils.getUserId()).stream().map(RoleSmallDTO::getLevel).collect(Collectors.toList());
+        List<Integer> levels = roleService.findByUsersId(SecurityUtils.getUserId()).stream().map(RoleSmallDto::getLevel).collect(Collectors.toList());
         return new ResponseEntity<>(Dict.create().set("level", Collections.min(levels)),HttpStatus.OK);
     }
 

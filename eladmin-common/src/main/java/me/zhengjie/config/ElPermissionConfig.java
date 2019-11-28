@@ -7,6 +7,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * @author Zheng Jie
+ */
 @Service(value = "el")
 public class ElPermissionConfig {
 

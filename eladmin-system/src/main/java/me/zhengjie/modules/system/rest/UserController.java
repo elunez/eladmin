@@ -4,15 +4,15 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import me.zhengjie.aop.log.Log;
 import me.zhengjie.config.DataScope;
-import me.zhengjie.modules.tools.domain.VerificationCode;
+import me.zhengjie.domain.VerificationCode;
 import me.zhengjie.modules.system.domain.User;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.modules.system.domain.vo.UserPassVo;
 import me.zhengjie.modules.system.service.DeptService;
 import me.zhengjie.modules.system.service.RoleService;
-import me.zhengjie.modules.system.service.dto.RoleSmallDTO;
+import me.zhengjie.modules.system.service.dto.RoleSmallDto;
 import me.zhengjie.modules.system.service.dto.UserQueryCriteria;
-import me.zhengjie.modules.tools.service.VerificationCodeService;
+import me.zhengjie.service.VerificationCodeService;
 import me.zhengjie.utils.*;
 import me.zhengjie.modules.system.service.UserService;
 import org.springframework.data.domain.Pageable;
@@ -87,7 +87,9 @@ public class UserController {
             criteria.setDeptIds(result);
             if(result.size() == 0){
                 return new ResponseEntity<>(PageUtil.toPage(null,0),HttpStatus.OK);
-            } else return new ResponseEntity<>(userService.queryAll(criteria,pageable),HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(userService.queryAll(criteria,pageable),HttpStatus.OK);
+            }
         // 否则取并集
         } else {
             result.addAll(deptSet);
@@ -121,8 +123,8 @@ public class UserController {
     @DeleteMapping(value = "/{id}")
     @PreAuthorize("@el.check('user:del')")
     public ResponseEntity delete(@PathVariable Long id){
-        Integer currentLevel =  Collections.min(roleService.findByUsers_Id(SecurityUtils.getUserId()).stream().map(RoleSmallDTO::getLevel).collect(Collectors.toList()));
-        Integer optLevel =  Collections.min(roleService.findByUsers_Id(id).stream().map(RoleSmallDTO::getLevel).collect(Collectors.toList()));
+        Integer currentLevel =  Collections.min(roleService.findByUsersId(SecurityUtils.getUserId()).stream().map(RoleSmallDto::getLevel).collect(Collectors.toList()));
+        Integer optLevel =  Collections.min(roleService.findByUsersId(id).stream().map(RoleSmallDto::getLevel).collect(Collectors.toList()));
 
         if (currentLevel > optLevel) {
             throw new BadRequestException("角色权限不足");
@@ -171,7 +173,7 @@ public class UserController {
      * @param resources /
      */
     private void checkLevel(User resources) {
-        Integer currentLevel =  Collections.min(roleService.findByUsers_Id(SecurityUtils.getUserId()).stream().map(RoleSmallDTO::getLevel).collect(Collectors.toList()));
+        Integer currentLevel =  Collections.min(roleService.findByUsersId(SecurityUtils.getUserId()).stream().map(RoleSmallDto::getLevel).collect(Collectors.toList()));
         Integer optLevel = roleService.findByRoles(resources.getRoles());
         if (currentLevel > optLevel) {
             throw new BadRequestException("角色权限不足");

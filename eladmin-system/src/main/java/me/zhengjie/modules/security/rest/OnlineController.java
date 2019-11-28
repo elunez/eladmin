@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * @author Zheng Jie
+ */
 @RestController
 @RequestMapping("/auth/online")
 @Api(tags = "系统：在线用户管理")

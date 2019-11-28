@@ -7,6 +7,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 
+/**
+ * @author Zheng Jie
+ * 翻译工具类
+ */
 public class TranslatorUtil {
 
     public static String translate(String word){

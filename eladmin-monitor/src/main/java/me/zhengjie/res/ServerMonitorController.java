@@ -36,19 +36,17 @@ public class ServerMonitorController {
 			FileSystem[] fsArray = sigar.getFileSystemList();
 			double diskTotal = 0;
 			double diskUsed = 0;
-			for (int i = 0; i < fsArray.length; i++) {
+			for (FileSystem fileSystem : fsArray) {
 				try {
-					FileSystem fs = fsArray[i];
 					FileSystemUsage usage = null;
-					usage = sigar.getFileSystemUsage(fs.getDirName());
-					switch (fs.getType()) {
-						case 2:
-							//本地硬盘
-							diskTotal += usage.getTotal()/GB*1024;
-							diskUsed += usage.getUsed()/GB*1024;
-							break;
+					usage = sigar.getFileSystemUsage(fileSystem.getDirName());
+					// 本地硬盘
+					if (fileSystem.getType() == 2) {
+						diskTotal += usage.getTotal() / GB * 1024;
+						diskUsed += usage.getUsed() / GB * 1024;
 					}
-				} catch (Exception e) {}
+				} catch (Exception ignored) {
+				}
 			}
 			resultMap.put("diskTotal",diskTotal);
 			resultMap.put("diskUsed",diskUsed);
