@@ -1,4 +1,4 @@
-package me.zhengjie.modules.security.security;
+package me.zhengjie.modules.security.security.vo;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -18,6 +18,8 @@ public class AuthUser {
 
     @NotBlank
     private String password;
+
+    private Boolean rememberMe;
 
     private String code;
 

@@ -1,12 +1,12 @@
 package me.zhengjie.modules.security.service;
 
-import me.zhengjie.modules.security.security.JwtUser;
-import me.zhengjie.modules.security.security.OnlineUser;
+import me.zhengjie.modules.security.config.SecurityProperties;
+import me.zhengjie.modules.security.security.vo.JwtUser;
+import me.zhengjie.modules.security.security.vo.OnlineUser;
 import me.zhengjie.utils.EncryptUtils;
 import me.zhengjie.utils.FileUtil;
 import me.zhengjie.utils.PageUtil;
 import me.zhengjie.utils.StringUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -26,18 +26,20 @@ import java.util.concurrent.TimeUnit;
 @SuppressWarnings({"unchecked","all"})
 public class OnlineUserService {
 
-    @Value("${jwt.expiration}")
-    private Long expiration;
-
-    @Value("${jwt.online}")
-    private String onlineKey;
-
+    private final SecurityProperties properties;
     private final RedisTemplate redisTemplate;
 
-    public OnlineUserService(RedisTemplate redisTemplate) {
+    public OnlineUserService(SecurityProperties properties, RedisTemplate redisTemplate) {
+        this.properties = properties;
         this.redisTemplate = redisTemplate;
     }
 
+    /**
+     * 保存在线用户信息
+     * @param jwtUser
+     * @param token
+     * @param request
+     */
     public void save(JwtUser jwtUser, String token, HttpServletRequest request){
         String job = jwtUser.getDept() + "/" + jwtUser.getJob();
         String ip = StringUtils.getIp(request);
@@ -49,10 +51,16 @@ public class OnlineUserService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        redisTemplate.opsForValue().set(onlineKey + token, onlineUser);
-        redisTemplate.expire(onlineKey + token,expiration, TimeUnit.MILLISECONDS);
+        redisTemplate.opsForValue().set(properties.getOnlineKey() + token, onlineUser);
+        redisTemplate.expire(properties.getOnlineKey() + token,properties.getTokenValidityInSeconds(), TimeUnit.MILLISECONDS);
     }
 
+    /**
+     * 查询全部数据
+     * @param filter
+     * @param pageable
+     * @return
+     */
     public Page<OnlineUser> getAll(String filter, Pageable pageable){
         List<OnlineUser> onlineUsers = getAll(filter);
         return new PageImpl<OnlineUser>(
@@ -61,8 +69,13 @@ public class OnlineUserService {
                 onlineUsers.size());
     }
 
+    /**
+     * 查询全部数据，不分页
+     * @param filter
+     * @return
+     */
     public List<OnlineUser> getAll(String filter){
-        List<String> keys = new ArrayList<>(redisTemplate.keys(onlineKey + "*"));
+        List<String> keys = new ArrayList<>(redisTemplate.keys(properties.getOnlineKey() + "*"));
         Collections.reverse(keys);
         List<OnlineUser> onlineUsers = new ArrayList<>();
         for (String key : keys) {
@@ -81,16 +94,31 @@ public class OnlineUserService {
         return onlineUsers;
     }
 
+    /**
+     * 踢出用户
+     * @param val
+     * @throws Exception
+     */
     public void kickOut(String val) throws Exception {
-        String key = onlineKey + EncryptUtils.desDecrypt(val);
+        String key = properties.getOnlineKey() + EncryptUtils.desDecrypt(val);
         redisTemplate.delete(key);
     }
 
+    /**
+     * 退出登录
+     * @param token
+     */
     public void logout(String token) {
-        String key = onlineKey + token;
+        String key = properties.getOnlineKey() + token;
         redisTemplate.delete(key);
     }
 
+    /**
+     * 导出
+     * @param all
+     * @param response
+     * @throws IOException
+     */
     public void download(List<OnlineUser> all, HttpServletResponse response) throws IOException {
         List<Map<String, Object>> list = new ArrayList<>();
         for (OnlineUser user : all) {
@@ -104,5 +132,14 @@ public class OnlineUserService {
             list.add(map);
         }
         FileUtil.downloadExcel(list, response);
+    }
+
+    /**
+     * 查询用户
+     * @param key
+     * @return
+     */
+    public OnlineUser getOne(String key) {
+        return (OnlineUser)redisTemplate.opsForValue().get(key);
     }
 }

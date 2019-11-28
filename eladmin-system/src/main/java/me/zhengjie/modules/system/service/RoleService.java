@@ -4,10 +4,14 @@ import me.zhengjie.modules.system.domain.Role;
 import me.zhengjie.modules.system.service.dto.RoleDto;
 import me.zhengjie.modules.system.service.dto.RoleQueryCriteria;
 import me.zhengjie.modules.system.service.dto.RoleSmallDto;
+import me.zhengjie.modules.system.service.dto.UserDto;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.GrantedAuthority;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -99,4 +103,11 @@ public interface RoleService {
      * @throws IOException /
      */
     void download(List<RoleDto> queryAll, HttpServletResponse response) throws IOException;
+
+    /**
+     * 获取用户权限信息
+     * @param user 用户信息
+     * @return 权限信息
+     */
+    Collection<GrantedAuthority> mapToGrantedAuthorities(UserDto user);
 }

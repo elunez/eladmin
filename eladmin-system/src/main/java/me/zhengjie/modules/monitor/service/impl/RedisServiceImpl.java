@@ -1,8 +1,8 @@
 package me.zhengjie.modules.monitor.service.impl;
 
-import cn.hutool.core.util.ObjectUtil;
 import me.zhengjie.modules.monitor.domain.vo.RedisVo;
 import me.zhengjie.modules.monitor.service.RedisService;
+import me.zhengjie.modules.security.config.SecurityProperties;
 import me.zhengjie.utils.FileUtil;
 import me.zhengjie.utils.PageUtil;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,18 +27,13 @@ import java.util.stream.Collectors;
 public class RedisServiceImpl implements RedisService {
 
     private final RedisTemplate redisTemplate;
-
+    private final SecurityProperties properties;
     @Value("${loginCode.expiration}")
     private Long expiration;
 
-    @Value("${jwt.online}")
-    private String onlineKey;
-
-    @Value("${jwt.codeKey}")
-    private String codeKey;
-
-    public RedisServiceImpl(RedisTemplate redisTemplate) {
+    public RedisServiceImpl(RedisTemplate redisTemplate, SecurityProperties properties) {
         this.redisTemplate = redisTemplate;
+        this.properties = properties;
     }
 
     @Override
@@ -59,7 +54,7 @@ public class RedisServiceImpl implements RedisService {
         Set<String> keys = redisTemplate.keys(key);
         for (String s : keys) {
             // 过滤掉权限的缓存
-            if (s.contains("role::loadPermissionByUser") || s.contains("user::loadUserByUsername") || s.contains(onlineKey) || s.contains(codeKey)) {
+            if (s.contains("role::loadPermissionByUser") || s.contains("user::loadUserByUsername") || s.contains(properties.getOnlineKey()) || s.contains(properties.getCodeKey())) {
                 continue;
             }
             RedisVo redisVo = new RedisVo(s, Objects.requireNonNull(redisTemplate.opsForValue().get(s)).toString());
@@ -76,7 +71,7 @@ public class RedisServiceImpl implements RedisService {
     @Override
     public void deleteAll() {
         Set<String> keys = redisTemplate.keys(  "*");
-        redisTemplate.delete(keys.stream().filter(s -> !s.contains(onlineKey)).filter(s -> !s.contains(codeKey)).collect(Collectors.toList()));
+        redisTemplate.delete(keys.stream().filter(s -> !s.contains(properties.getOnlineKey())).filter(s -> !s.contains(properties.getCodeKey())).collect(Collectors.toList()));
     }
 
     @Override

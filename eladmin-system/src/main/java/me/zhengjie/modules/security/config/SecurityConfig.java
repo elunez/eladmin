@@ -1,19 +1,12 @@
 package me.zhengjie.modules.security.config;
 
 import me.zhengjie.annotation.AnonymousAccess;
-import me.zhengjie.modules.security.security.JwtAccessDeniedHandler;
-import me.zhengjie.modules.security.security.JwtAuthenticationEntryPoint;
-import me.zhengjie.modules.security.security.JwtAuthorizationTokenFilter;
-import me.zhengjie.modules.security.service.JwtUserDetailsServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import me.zhengjie.modules.security.security.*;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -23,6 +16,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
@@ -35,36 +29,21 @@ import java.util.Set;
  */
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final JwtAuthenticationEntryPoint unauthorizedHandler;
-
-    private final JwtAccessDeniedHandler accessDeniedHandler;
-
-    private final JwtUserDetailsServiceImpl jwtUserDetailsService;
-
+    private final TokenProvider tokenProvider;
+    private final CorsFilter corsFilter;
+    private final JwtAuthenticationEntryPoint authenticationErrorHandler;
+    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private final ApplicationContext applicationContext;
 
-    /** 自定义基于JWT的安全过滤器 */
-    private final JwtAuthorizationTokenFilter authenticationTokenFilter;
-
-    @Value("${jwt.header}")
-    private String tokenHeader;
-
-    public SecurityConfig(JwtAuthenticationEntryPoint unauthorizedHandler, JwtAccessDeniedHandler accessDeniedHandler, JwtUserDetailsServiceImpl jwtUserDetailsService, JwtAuthorizationTokenFilter authenticationTokenFilter, ApplicationContext applicationContext) {
-        this.unauthorizedHandler = unauthorizedHandler;
-        this.accessDeniedHandler = accessDeniedHandler;
-        this.jwtUserDetailsService = jwtUserDetailsService;
-        this.authenticationTokenFilter = authenticationTokenFilter;
+    public SecurityConfig(TokenProvider tokenProvider, CorsFilter corsFilter, JwtAuthenticationEntryPoint authenticationErrorHandler, JwtAccessDeniedHandler jwtAccessDeniedHandler, ApplicationContext applicationContext) {
+        this.tokenProvider = tokenProvider;
+        this.corsFilter = corsFilter;
+        this.authenticationErrorHandler = authenticationErrorHandler;
+        this.jwtAccessDeniedHandler = jwtAccessDeniedHandler;
         this.applicationContext = applicationContext;
-    }
-
-    @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth
-                .userDetailsService(jwtUserDetailsService)
-                .passwordEncoder(passwordEncoderBean());
     }
 
     @Bean
@@ -74,14 +53,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoderBean() {
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
     }
 
     @Override
@@ -102,12 +75,25 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity
                 // 禁用 CSRF
                 .csrf().disable()
+
+                .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
                 // 授权异常
-                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
-                .exceptionHandling().accessDeniedHandler(accessDeniedHandler).and()
+                .exceptionHandling()
+                .authenticationEntryPoint(authenticationErrorHandler)
+                .accessDeniedHandler(jwtAccessDeniedHandler)
+
+                // 防止iframe 造成跨域
+                .and()
+                .headers()
+                .frameOptions()
+                .sameOrigin()
+
                 // 不创建会话
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                // 过滤请求
+                .and()
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+
+                .and()
                 .authorizeRequests()
                 .antMatchers(
                         HttpMethod.GET,
@@ -116,7 +102,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/**/*.css",
                         "/**/*.js",
                         "/webSocket/**"
-                ).anonymous()
+                ).permitAll()
                 // swagger start
                 .antMatchers("/swagger-ui.html").permitAll()
                 .antMatchers("/swagger-resources/**").permitAll()
@@ -126,16 +112,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // 文件
                 .antMatchers("/avatar/**").permitAll()
                 .antMatchers("/file/**").permitAll()
+                .antMatchers("/druid/**").permitAll()
                 // 放行OPTIONS请求
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                .antMatchers("/druid/**").permitAll()
                 // 自定义匿名访问所有url放行 ： 允许 匿名和带权限以及登录用户访问
                 .antMatchers(anonymousUrls.toArray(new String[0])).permitAll()
                 // 所有请求都需要认证
                 .anyRequest().authenticated()
-                // 防止iframe 造成跨域
-                .and().headers().frameOptions().disable();
-        httpSecurity
-                .addFilterBefore(authenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
+                .and()
+                .apply(securityConfigurerAdapter());
+    }
+
+    private TokenConfigurer securityConfigurerAdapter() {
+        return new TokenConfigurer(tokenProvider);
     }
 }

@@ -1,5 +1,6 @@
 package me.zhengjie.modules.system.service.impl;
 
+import me.zhengjie.modules.system.domain.Menu;
 import me.zhengjie.modules.system.domain.Role;
 import me.zhengjie.exception.EntityExistException;
 import me.zhengjie.modules.system.repository.RoleRepository;
@@ -7,17 +8,17 @@ import me.zhengjie.modules.system.service.RoleService;
 import me.zhengjie.modules.system.service.dto.RoleDto;
 import me.zhengjie.modules.system.service.dto.RoleQueryCriteria;
 import me.zhengjie.modules.system.service.dto.RoleSmallDto;
+import me.zhengjie.modules.system.service.dto.UserDto;
 import me.zhengjie.modules.system.service.mapper.RoleMapper;
 import me.zhengjie.modules.system.service.mapper.RoleSmallMapper;
-import me.zhengjie.utils.FileUtil;
-import me.zhengjie.utils.PageUtil;
-import me.zhengjie.utils.QueryHelp;
-import me.zhengjie.utils.ValidationUtil;
+import me.zhengjie.utils.*;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -142,6 +143,20 @@ public class RoleServiceImpl implements RoleService {
             roleDtos.add(findById(role.getId()));
         }
         return Collections.min(roleDtos.stream().map(RoleDto::getLevel).collect(Collectors.toList()));
+    }
+
+    @Override
+    @Cacheable(key = "'loadPermissionByUser:' + #p0.username")
+    public Collection<GrantedAuthority> mapToGrantedAuthorities(UserDto user) {
+        Set<Role> roles = roleRepository.findByUsers_Id(user.getId());
+        Set<String> permissions = roles.stream().filter(role -> StringUtils.isNotBlank(role.getPermission())).map(Role::getPermission).collect(Collectors.toSet());
+        permissions.addAll(
+                roles.stream().flatMap(role -> role.getMenus().stream())
+                        .filter(menu -> StringUtils.isNotBlank(menu.getPermission()))
+                        .map(Menu::getPermission).collect(Collectors.toSet())
+        );
+        return permissions.stream().map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
     }
 
     @Override

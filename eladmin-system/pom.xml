@@ -13,7 +13,7 @@
     <name>核心模块</name>
 
     <properties>
-        <jjwt.version>0.9.1</jjwt.version>
+        <jjwt.version>0.10.6</jjwt.version>
     </properties>
 
     <dependencies>
@@ -45,7 +45,17 @@
         <!--jwt-->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt</artifactId>
+            <artifactId>jjwt-api</artifactId>
+            <version>${jjwt.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+            <version>${jjwt.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-jackson</artifactId>
             <version>${jjwt.version}</version>
         </dependency>
 

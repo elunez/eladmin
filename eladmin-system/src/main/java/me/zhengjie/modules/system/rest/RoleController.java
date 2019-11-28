@@ -7,8 +7,10 @@ import me.zhengjie.aop.log.Log;
 import me.zhengjie.modules.system.domain.Role;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.modules.system.service.RoleService;
+import me.zhengjie.modules.system.service.UserService;
 import me.zhengjie.modules.system.service.dto.RoleQueryCriteria;
 import me.zhengjie.modules.system.service.dto.RoleSmallDto;
+import me.zhengjie.modules.system.service.dto.UserDto;
 import me.zhengjie.utils.SecurityUtils;
 import me.zhengjie.utils.ThrowableUtil;
 import org.springframework.data.domain.Pageable;
@@ -36,11 +38,13 @@ import java.util.stream.Collectors;
 public class RoleController {
 
     private final RoleService roleService;
+    private final UserService userService;
 
     private static final String ENTITY_NAME = "role";
 
-    public RoleController(RoleService roleService) {
+    public RoleController(RoleService roleService, UserService userService) {
         this.roleService = roleService;
+        this.userService = userService;
     }
 
     @ApiOperation("获取单个role")
@@ -76,7 +80,8 @@ public class RoleController {
     @ApiOperation("获取用户级别")
     @GetMapping(value = "/level")
     public ResponseEntity getLevel(){
-        List<Integer> levels = roleService.findByUsersId(SecurityUtils.getUserId()).stream().map(RoleSmallDto::getLevel).collect(Collectors.toList());
+        UserDto user = userService.findByName(SecurityUtils.getUsername());
+        List<Integer> levels = roleService.findByUsersId(user.getId()).stream().map(RoleSmallDto::getLevel).collect(Collectors.toList());
         return new ResponseEntity<>(Dict.create().set("level", Collections.min(levels)),HttpStatus.OK);
     }
 
