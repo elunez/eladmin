@@ -9,24 +9,25 @@ import me.zhengjie.annotation.AnonymousAccess;
 import me.zhengjie.aop.log.Log;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.modules.monitor.service.RedisService;
-import me.zhengjie.modules.security.security.AuthInfo;
-import me.zhengjie.modules.security.security.AuthUser;
-import me.zhengjie.modules.security.security.ImgResult;
-import me.zhengjie.modules.security.security.JwtUser;
+import me.zhengjie.modules.security.config.SecurityProperties;
+import me.zhengjie.modules.security.security.TokenProvider;
+import me.zhengjie.modules.security.security.vo.AuthUser;
+import me.zhengjie.modules.security.security.vo.JwtUser;
 import me.zhengjie.modules.security.service.OnlineUserService;
-import me.zhengjie.utils.EncryptUtils;
-import me.zhengjie.modules.security.utils.JwtTokenUtil;
 import me.zhengjie.utils.SecurityUtils;
 import me.zhengjie.utils.StringUtils;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AccountExpiredException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Zheng Jie
@@ -37,24 +38,22 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 @RequestMapping("/auth")
 @Api(tags = "系统：系统授权接口")
-public class AuthenticationController {
+public class AuthController {
 
-    @Value("${jwt.codeKey}")
-    private String codeKey;
-
-    private final JwtTokenUtil jwtTokenUtil;
-
+    private final SecurityProperties properties;
     private final RedisService redisService;
-
     private final UserDetailsService userDetailsService;
-
     private final OnlineUserService onlineUserService;
+    private final TokenProvider tokenProvider;
+    private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
-    public AuthenticationController(JwtTokenUtil jwtTokenUtil, RedisService redisService, @Qualifier("jwtUserDetailsServiceImpl") UserDetailsService userDetailsService, OnlineUserService onlineUserService) {
-        this.jwtTokenUtil = jwtTokenUtil;
+    public AuthController(SecurityProperties properties, RedisService redisService, UserDetailsService userDetailsService, OnlineUserService onlineUserService, TokenProvider tokenProvider, AuthenticationManagerBuilder authenticationManagerBuilder) {
+        this.properties = properties;
         this.redisService = redisService;
         this.userDetailsService = userDetailsService;
         this.onlineUserService = onlineUserService;
+        this.tokenProvider = tokenProvider;
+        this.authenticationManagerBuilder = authenticationManagerBuilder;
     }
 
     @Log("用户登录")
@@ -62,7 +61,6 @@ public class AuthenticationController {
     @AnonymousAccess
     @PostMapping(value = "/login")
     public ResponseEntity login(@Validated @RequestBody AuthUser authUser, HttpServletRequest request){
-
         // 查询验证码
         String code = redisService.getCodeVal(authUser.getUuid());
         // 清除验证码
@@ -73,21 +71,23 @@ public class AuthenticationController {
         if (StringUtils.isBlank(authUser.getCode()) || !authUser.getCode().equalsIgnoreCase(code)) {
             throw new BadRequestException("验证码错误");
         }
-        final JwtUser jwtUser = (JwtUser) userDetailsService.loadUserByUsername(authUser.getUsername());
+        UsernamePasswordAuthenticationToken authenticationToken =
+                new UsernamePasswordAuthenticationToken(authUser.getUsername(), authUser.getPassword());
 
-        if(!jwtUser.getPassword().equals(EncryptUtils.encryptPassword(authUser.getPassword()))){
-            throw new AccountExpiredException("密码错误");
-        }
-
-        if(!jwtUser.isEnabled()){
-            throw new AccountExpiredException("账号已停用，请联系管理员");
-        }
+        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        boolean rememberMe = (authUser.getRememberMe() == null) ? false : authUser.getRememberMe();
         // 生成令牌
-        final String token = jwtTokenUtil.generateToken(jwtUser);
+        String token = tokenProvider.createToken(authentication, rememberMe);
+        final JwtUser jwtUser = (JwtUser) authentication.getPrincipal();
         // 保存在线信息
         onlineUserService.save(jwtUser, token, request);
-        // 返回 token
-        return ResponseEntity.ok(new AuthInfo(token,jwtUser));
+        // 返回 token 与 用户信息
+        Map<String,Object> authInfo = new HashMap<String,Object>(2){{
+            put("token", properties.getTokenStartWith() + token);
+            put("user", jwtUser);
+        }};
+        return ResponseEntity.ok(authInfo);
     }
 
     @ApiOperation("获取用户信息")
@@ -100,23 +100,28 @@ public class AuthenticationController {
     @ApiOperation("获取验证码")
     @AnonymousAccess
     @GetMapping(value = "/code")
-    public ImgResult getCode(){
+    public ResponseEntity getCode(){
         // 算术类型 https://gitee.com/whvse/EasyCaptcha
         ArithmeticCaptcha captcha = new ArithmeticCaptcha(111, 36);
         // 几位数运算，默认是两位
         captcha.setLen(2);
-        // 获取运算的结果：5
+        // 获取运算的结果
         String result = captcha.text();
-        String uuid = codeKey + IdUtil.simpleUUID();
+        String uuid = properties.getCodeKey() + IdUtil.simpleUUID();
         redisService.saveCode(uuid,result);
-        return new ImgResult(captcha.toBase64(),uuid);
+        // 验证码信息
+        Map<String,Object> imgResult = new HashMap<String,Object>(2){{
+            put("img", captcha.toBase64());
+            put("uuid", uuid);
+        }};
+        return ResponseEntity.ok(imgResult);
     }
 
     @ApiOperation("退出登录")
     @AnonymousAccess
     @DeleteMapping(value = "/logout")
     public ResponseEntity logout(HttpServletRequest request){
-        onlineUserService.logout(jwtTokenUtil.getToken(request));
+        onlineUserService.logout(tokenProvider.getToken(request));
         return new ResponseEntity(HttpStatus.OK);
     }
 }

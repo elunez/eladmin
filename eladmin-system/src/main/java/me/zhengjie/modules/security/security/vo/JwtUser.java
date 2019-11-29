@@ -1,4 +1,4 @@
-package me.zhengjie.modules.security.security;
+package me.zhengjie.modules.security.security.vo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
