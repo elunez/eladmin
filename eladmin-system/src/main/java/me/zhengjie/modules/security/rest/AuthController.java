@@ -97,8 +97,8 @@ public class AuthController {
         return ResponseEntity.ok(jwtUser);
     }
 
-    @ApiOperation("获取验证码")
     @AnonymousAccess
+    @ApiOperation("获取验证码")
     @GetMapping(value = "/code")
     public ResponseEntity getCode(){
         // 算术类型 https://gitee.com/whvse/EasyCaptcha

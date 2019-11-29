@@ -2,6 +2,7 @@ package me.zhengjie.utils;
 
 import cn.hutool.core.util.ObjectUtil;
 import me.zhengjie.exception.BadRequestException;
+import org.hibernate.validator.internal.constraintvalidators.hv.EmailValidator;
 
 /**
  * 验证工具
@@ -23,11 +24,7 @@ public class ValidationUtil{
     /**
      * 验证是否为邮箱
      */
-    public static boolean isEmail(String string) {
-        if (string == null){
-            return false;
-        }
-        String regEx1 = "^([a-z0-9A-Z]+[-|.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$";
-        return string.matches(regEx1);
+    public static boolean isEmail(String email) {
+        return new EmailValidator().isValid(email, null);
     }
 }
