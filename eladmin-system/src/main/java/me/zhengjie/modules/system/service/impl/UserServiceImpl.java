@@ -1,6 +1,5 @@
 package me.zhengjie.modules.system.service.impl;
 
-import me.zhengjie.modules.monitor.service.RedisService;
 import me.zhengjie.modules.system.domain.User;
 import me.zhengjie.exception.EntityExistException;
 import me.zhengjie.exception.EntityNotFoundException;
@@ -42,17 +41,17 @@ public class UserServiceImpl implements UserService {
 
     private final UserMapper userMapper;
 
-    private final RedisService redisService;
+    private final RedisUtils redisUtils;
 
     private final UserAvatarRepository userAvatarRepository;
 
     @Value("${file.avatar}")
     private String avatar;
 
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, RedisService redisService, UserAvatarRepository userAvatarRepository) {
+    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, RedisUtils redisUtils, UserAvatarRepository userAvatarRepository) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
-        this.redisService = redisService;
+        this.redisUtils = redisUtils;
         this.userAvatarRepository = userAvatarRepository;
     }
 
@@ -116,9 +115,9 @@ public class UserServiceImpl implements UserService {
         // 如果用户的角色改变了，需要手动清理下缓存
         if (!resources.getRoles().equals(user.getRoles())) {
             String key = "role::loadPermissionByUser:" + user.getUsername();
-            redisService.delete(key);
+            redisUtils.del(key);
             key = "role::findByUsers_Id:" + user.getId();
-            redisService.delete(key);
+            redisUtils.del(key);
         }
 
         user.setUsername(resources.getUsername());
