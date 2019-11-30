@@ -127,6 +127,19 @@ public class UserServiceImpl implements UserService {
         user.setDept(resources.getDept());
         user.setJob(resources.getJob());
         user.setPhone(resources.getPhone());
+        user.setNickName(resources.getNickName());
+        user.setSex(resources.getSex());
+        userRepository.save(user);
+    }
+
+    @Override
+    @CacheEvict(allEntries = true)
+    @Transactional(rollbackFor = Exception.class)
+    public void updateCenter(User resources) {
+        User user = userRepository.findById(resources.getId()).orElseGet(User::new);
+        user.setNickName(resources.getNickName());
+        user.setPhone(resources.getPhone());
+        user.setSex(resources.getSex());
         userRepository.save(user);
     }
 

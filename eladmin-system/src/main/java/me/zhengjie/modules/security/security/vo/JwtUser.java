@@ -18,10 +18,13 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class JwtUser implements UserDetails {
 
-    @JsonIgnore
     private final Long id;
 
     private final String username;
+
+    private final String nickName;
+
+    private final String sex;
 
     @JsonIgnore
     private final String password;

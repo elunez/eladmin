@@ -19,8 +19,6 @@ public class AuthUser {
     @NotBlank
     private String password;
 
-    private Boolean rememberMe;
-
     private String code;
 
     private String uuid = "";

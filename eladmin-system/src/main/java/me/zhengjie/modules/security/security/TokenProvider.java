@@ -41,18 +41,13 @@ public class TokenProvider implements InitializingBean {
       this.key = Keys.hmacShaKeyFor(keyBytes);
    }
 
-   public String createToken(Authentication authentication, boolean rememberMe) {
+   public String createToken(Authentication authentication) {
       String authorities = authentication.getAuthorities().stream()
          .map(GrantedAuthority::getAuthority)
          .collect(Collectors.joining(","));
 
       long now = (new Date()).getTime();
-      Date validity;
-      if (rememberMe) {
-         validity = new Date(now + properties.getTokenValidityInSecondsForRememberMe());
-      } else {
-         validity = new Date(now + properties.getTokenValidityInSeconds());
-      }
+      Date validity = new Date(now + properties.getTokenValidityInSeconds());
 
       return Jwts.builder()
          .setSubject(authentication.getName())

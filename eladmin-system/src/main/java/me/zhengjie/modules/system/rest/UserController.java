@@ -119,6 +119,18 @@ public class UserController {
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
+    @Log("修改用户：个人中心")
+    @ApiOperation("修改用户：个人中心")
+    @PutMapping(value = "center")
+    public ResponseEntity center(@Validated(User.Update.class) @RequestBody User resources){
+        UserDto userDto = userService.findByName(SecurityUtils.getUsername());
+        if(!resources.getId().equals(userDto.getId())){
+            throw new BadRequestException("不能修改他人资料");
+        }
+        userService.updateCenter(resources);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
+
     @Log("删除用户")
     @ApiOperation("删除用户")
     @DeleteMapping(value = "/{id}")

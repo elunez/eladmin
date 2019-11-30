@@ -80,9 +80,8 @@ public class AuthController {
 
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        boolean rememberMe = (authUser.getRememberMe() == null) ? false : authUser.getRememberMe();
         // 生成令牌
-        String token = tokenProvider.createToken(authentication, rememberMe);
+        String token = tokenProvider.createToken(authentication);
         final JwtUser jwtUser = (JwtUser) authentication.getPrincipal();
         // 保存在线信息
         onlineUserService.save(jwtUser, token, request);
