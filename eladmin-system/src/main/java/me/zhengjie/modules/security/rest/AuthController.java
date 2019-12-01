@@ -1,6 +1,8 @@
 package me.zhengjie.modules.security.rest;
 
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.crypto.asymmetric.KeyType;
+import cn.hutool.crypto.asymmetric.RSA;
 import com.wf.captcha.ArithmeticCaptcha;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -44,6 +46,8 @@ public class AuthController {
 
     @Value("${loginCode.expiration}")
     private Long expiration;
+    @Value("${rsa.private_key}")
+    private String privateKey;
     private final SecurityProperties properties;
     private final RedisUtils redisUtils;
     private final UserDetailsService userDetailsService;
@@ -65,6 +69,9 @@ public class AuthController {
     @AnonymousAccess
     @PostMapping(value = "/login")
     public ResponseEntity login(@Validated @RequestBody AuthUser authUser, HttpServletRequest request){
+        // 密码解密
+        RSA rsa = new RSA(privateKey, null);
+        String password = new String(rsa.decrypt(authUser.getPassword(), KeyType.PrivateKey));
         // 查询验证码
         String code = (String) redisUtils.get(authUser.getUuid());
         // 清除验证码
@@ -76,7 +83,7 @@ public class AuthController {
             throw new BadRequestException("验证码错误");
         }
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(authUser.getUsername(), authUser.getPassword());
+                new UsernamePasswordAuthenticationToken(authUser.getUsername(), password);
 
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
