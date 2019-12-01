@@ -1,6 +1,5 @@
 package me.zhengjie.utils;
 
-import org.springframework.util.DigestUtils;
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
@@ -81,12 +80,5 @@ public class EncryptUtils {
             b2[n / 2] = (byte) Integer.parseInt(item, 16);
         }
         return b2;
-    }
-
-    /**
-     * 密码加密
-     */
-    public static String encryptPassword(String password){
-        return  DigestUtils.md5DigestAsHex(password.getBytes());
     }
 }

@@ -32,6 +32,13 @@ public class User implements Serializable {
     @Column(unique = true)
     private String username;
 
+    /** 用户昵称 */
+    @NotBlank
+    private String nickName;
+
+    /** 性别 */
+    private String sex;
+
     @OneToOne
     @JoinColumn(name = "avatar_id")
     private UserAvatar userAvatar;

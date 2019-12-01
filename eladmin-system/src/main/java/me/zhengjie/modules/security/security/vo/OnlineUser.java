@@ -1,4 +1,4 @@
-package me.zhengjie.modules.security.security;
+package me.zhengjie.modules.security.security.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,6 +15,8 @@ import java.util.Date;
 public class OnlineUser {
 
     private String userName;
+
+    private String nickName;
 
     private String job;
 

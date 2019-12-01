@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author Zheng Jie
@@ -36,9 +37,9 @@ public interface MenuRepository extends JpaRepository<Menu, Long>, JpaSpecificat
 
     /**
      * 根据角色ID与菜单类型查询菜单
-     * @param id roleID
+     * @param roleIds roleIDs
      * @param type 类型
      * @return /
      */
-    LinkedHashSet<Menu> findByRoles_IdAndTypeIsNotInOrderBySortAsc(Long id, Integer type);
+    LinkedHashSet<Menu> findByRoles_IdInAndTypeNotOrderBySortAsc(Set<Long> roleIds, int type);
 }

@@ -90,4 +90,10 @@ public interface UserService {
      * @throws IOException /
      */
     void download(List<UserDto> queryAll, HttpServletResponse response) throws IOException;
+
+    /**
+     * 用户自助修改资料
+     * @param resources /
+     */
+    void updateCenter(User resources);
 }

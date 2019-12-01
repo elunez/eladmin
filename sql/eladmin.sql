@@ -257,7 +257,6 @@ INSERT INTO `menu` VALUES (3, b'0', '角色管理', 'system/role/index', 1, 3, '
 INSERT INTO `menu` VALUES (5, b'0', '菜单管理', 'system/menu/index', 1, 5, 'menu', 'menu', b'0', b'0', 'Menu', '2018-12-18 15:17:28', 'menu:list', 1);
 INSERT INTO `menu` VALUES (6, b'0', '系统监控', NULL, 0, 10, 'monitor', 'monitor', b'0', b'0', NULL, '2018-12-18 15:17:48', NULL, 0);
 INSERT INTO `menu` VALUES (7, b'0', '操作日志', 'monitor/log/index', 6, 11, 'log', 'logs', b'0', b'0', 'Log', '2018-12-18 15:18:26', NULL, 1);
-INSERT INTO `menu` VALUES (8, b'0', '系统缓存', 'monitor/redis/index', 6, 15, 'redis', 'redis', b'0', b'0', 'Redis', '2018-12-18 15:19:01', 'redis:list', 1);
 INSERT INTO `menu` VALUES (9, b'0', 'SQL监控', 'monitor/sql/index', 6, 18, 'sqlMonitor', 'druid', b'0', b'0', 'Sql', '2018-12-18 15:19:34', NULL, 1);
 INSERT INTO `menu` VALUES (10, b'0', '组件管理', NULL, 0, 50, 'zujian', 'components', b'0', b'0', NULL, '2018-12-19 13:38:16', NULL, 0);
 INSERT INTO `menu` VALUES (11, b'0', '图标库', 'components/icons/index', 10, 51, 'icon', 'icon', b'0', b'0', 'Icons', '2018-12-19 13:38:49', NULL, 1);
@@ -603,7 +602,6 @@ INSERT INTO `roles_menus` VALUES (3, 1);
 INSERT INTO `roles_menus` VALUES (5, 1);
 INSERT INTO `roles_menus` VALUES (6, 1);
 INSERT INTO `roles_menus` VALUES (7, 1);
-INSERT INTO `roles_menus` VALUES (8, 1);
 INSERT INTO `roles_menus` VALUES (9, 1);
 INSERT INTO `roles_menus` VALUES (10, 1);
 INSERT INTO `roles_menus` VALUES (11, 1);
@@ -670,7 +668,6 @@ INSERT INTO `roles_menus` VALUES (2, 2);
 INSERT INTO `roles_menus` VALUES (3, 2);
 INSERT INTO `roles_menus` VALUES (5, 2);
 INSERT INTO `roles_menus` VALUES (6, 2);
-INSERT INTO `roles_menus` VALUES (8, 2);
 INSERT INTO `roles_menus` VALUES (9, 2);
 INSERT INTO `roles_menus` VALUES (10, 2);
 INSERT INTO `roles_menus` VALUES (11, 2);
@@ -728,7 +725,7 @@ CREATE TABLE `user`  (
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES (1, NULL, 'admin@eladmin.net', 1, 'e10adc3949ba59abbe56e057f20f883e', 'admin', 2, '18888888888', 11, '2018-08-23 09:11:56', '2019-05-18 17:34:21');
+INSERT INTO `user` VALUES (1, NULL, 'admin@eladmin.net', 1, '$2a$10$fP.426qKaTmix50Oln8L.uav55gELhAd0Eg66Av4oG86u8km7D/Ky', 'admin', 2, '18888888888', 11, '2018-08-23 09:11:56', '2019-05-18 17:34:21');
 INSERT INTO `user` VALUES (3, NULL, 'test@eladmin.net', 1, 'e10adc3949ba59abbe56e057f20f883e', 'test', 2, '17777777777', 12, '2018-12-27 20:05:26', '2019-04-01 09:15:24');
 
 -- ----------------------------
