@@ -51,4 +51,11 @@ public interface DatabaseService {
      * @param id /
      */
     void delete(String id);
+
+	/**
+	 * 测试连接数据库
+	 * @param resources
+	 * @return
+	 */
+	boolean testConnection(Database resources);
 }

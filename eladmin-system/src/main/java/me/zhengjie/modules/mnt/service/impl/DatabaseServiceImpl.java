@@ -1,12 +1,14 @@
 package me.zhengjie.modules.mnt.service.impl;
 
 import cn.hutool.core.util.IdUtil;
+import lombok.extern.slf4j.Slf4j;
 import me.zhengjie.modules.mnt.domain.Database;
 import me.zhengjie.modules.mnt.repository.DatabaseRepository;
 import me.zhengjie.modules.mnt.service.DatabaseService;
 import me.zhengjie.modules.mnt.service.dto.DatabaseDto;
 import me.zhengjie.modules.mnt.service.dto.DatabaseQueryCriteria;
 import me.zhengjie.modules.mnt.service.mapper.DatabaseMapper;
+import me.zhengjie.modules.mnt.util.SqlUtils;
 import me.zhengjie.utils.PageUtil;
 import me.zhengjie.utils.QueryHelp;
 import me.zhengjie.utils.ValidationUtil;
@@ -21,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 * @date 2019-08-24
 */
 @Service
+@Slf4j
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class DatabaseServiceImpl implements DatabaseService {
 
@@ -72,4 +75,15 @@ public class DatabaseServiceImpl implements DatabaseService {
     public void delete(String id) {
         databaseRepository.deleteById(id);
     }
+
+	@Override
+	public boolean testConnection(Database resources) {
+		try {
+			return SqlUtils.testConnection(resources.getJdbcUrl(), resources.getUserName(), resources.getPwd());
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return false;
+		}
+
+	}
 }
