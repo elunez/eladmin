@@ -38,11 +38,8 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-
     private final UserMapper userMapper;
-
     private final RedisUtils redisUtils;
-
     private final UserAvatarRepository userAvatarRepository;
 
     @Value("${file.avatar}")
@@ -81,17 +78,12 @@ public class UserServiceImpl implements UserService {
     @CacheEvict(allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     public UserDto create(User resources) {
-
         if(userRepository.findByUsername(resources.getUsername())!=null){
             throw new EntityExistException(User.class,"username",resources.getUsername());
         }
-
         if(userRepository.findByEmail(resources.getEmail())!=null){
             throw new EntityExistException(User.class,"email",resources.getEmail());
         }
-
-        // 默认密码 123456，此密码是加密后的字符
-        resources.setPassword("e10adc3949ba59abbe56e057f20f883e");
         return userMapper.toDto(userRepository.save(resources));
     }
 
