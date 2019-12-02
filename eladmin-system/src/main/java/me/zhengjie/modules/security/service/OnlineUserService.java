@@ -3,42 +3,34 @@ package me.zhengjie.modules.security.service;
 import me.zhengjie.modules.security.config.SecurityProperties;
 import me.zhengjie.modules.security.security.vo.JwtUser;
 import me.zhengjie.modules.security.security.vo.OnlineUser;
-import me.zhengjie.utils.EncryptUtils;
-import me.zhengjie.utils.FileUtil;
-import me.zhengjie.utils.PageUtil;
-import me.zhengjie.utils.StringUtils;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
+import me.zhengjie.utils.*;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author Zheng Jie
  * @Date 2019年10月26日21:56:27
  */
 @Service
-@SuppressWarnings({"unchecked","all"})
 public class OnlineUserService {
 
     private final SecurityProperties properties;
-    private final RedisTemplate redisTemplate;
+    private RedisUtils redisUtils;
 
-    public OnlineUserService(SecurityProperties properties, RedisTemplate redisTemplate) {
+    public OnlineUserService(SecurityProperties properties, RedisUtils redisUtils) {
         this.properties = properties;
-        this.redisTemplate = redisTemplate;
+        this.redisUtils = redisUtils;
     }
 
     /**
      * 保存在线用户信息
-     * @param jwtUser
-     * @param token
-     * @param request
+     * @param jwtUser /
+     * @param token /
+     * @param request /
      */
     public void save(JwtUser jwtUser, String token, HttpServletRequest request){
         String job = jwtUser.getDept() + "/" + jwtUser.getJob();
@@ -47,39 +39,38 @@ public class OnlineUserService {
         String address = StringUtils.getCityInfo(ip);
         OnlineUser onlineUser = null;
         try {
-            onlineUser = new OnlineUser(jwtUser.getUsername(), job, browser , ip, address, EncryptUtils.desEncrypt(token), new Date());
+            onlineUser = new OnlineUser(jwtUser.getUsername(), jwtUser.getNickName(), job, browser , ip, address, EncryptUtils.desEncrypt(token), new Date());
         } catch (Exception e) {
             e.printStackTrace();
         }
-        redisTemplate.opsForValue().set(properties.getOnlineKey() + token, onlineUser);
-        redisTemplate.expire(properties.getOnlineKey() + token,properties.getTokenValidityInSeconds(), TimeUnit.MILLISECONDS);
+        redisUtils.set(properties.getOnlineKey() + token, onlineUser, properties.getTokenValidityInSeconds()/1000);
     }
 
     /**
      * 查询全部数据
-     * @param filter
-     * @param pageable
-     * @return
+     * @param filter /
+     * @param pageable /
+     * @return /
      */
-    public Page<OnlineUser> getAll(String filter, Pageable pageable){
+    public Map<String,Object> getAll(String filter, Pageable pageable){
         List<OnlineUser> onlineUsers = getAll(filter);
-        return new PageImpl<OnlineUser>(
+        return PageUtil.toPage(
                 PageUtil.toPage(pageable.getPageNumber(),pageable.getPageSize(),onlineUsers),
-                pageable,
-                onlineUsers.size());
+                onlineUsers.size()
+        );
     }
 
     /**
      * 查询全部数据，不分页
-     * @param filter
-     * @return
+     * @param filter /
+     * @return /
      */
     public List<OnlineUser> getAll(String filter){
-        List<String> keys = new ArrayList<>(redisTemplate.keys(properties.getOnlineKey() + "*"));
+        List<String> keys = redisUtils.scan(properties.getOnlineKey() + "*");
         Collections.reverse(keys);
         List<OnlineUser> onlineUsers = new ArrayList<>();
         for (String key : keys) {
-            OnlineUser onlineUser = (OnlineUser) redisTemplate.opsForValue().get(key);
+            OnlineUser onlineUser = (OnlineUser) redisUtils.get(key);
             if(StringUtils.isNotBlank(filter)){
                 if(onlineUser.toString().contains(filter)){
                     onlineUsers.add(onlineUser);
@@ -88,36 +79,34 @@ public class OnlineUserService {
                 onlineUsers.add(onlineUser);
             }
         }
-        Collections.sort(onlineUsers, (o1, o2) -> {
-            return o2.getLoginTime().compareTo(o1.getLoginTime());
-        });
+        onlineUsers.sort((o1, o2) -> o2.getLoginTime().compareTo(o1.getLoginTime()));
         return onlineUsers;
     }
 
     /**
      * 踢出用户
-     * @param val
-     * @throws Exception
+     * @param key /
+     * @throws Exception /
      */
-    public void kickOut(String val) throws Exception {
-        String key = properties.getOnlineKey() + EncryptUtils.desDecrypt(val);
-        redisTemplate.delete(key);
+    public void kickOut(String key) throws Exception {
+        key = properties.getOnlineKey() + EncryptUtils.desDecrypt(key);
+        redisUtils.del(key);
     }
 
     /**
      * 退出登录
-     * @param token
+     * @param token /
      */
     public void logout(String token) {
         String key = properties.getOnlineKey() + token;
-        redisTemplate.delete(key);
+        redisUtils.del(key);
     }
 
     /**
      * 导出
-     * @param all
-     * @param response
-     * @throws IOException
+     * @param all /
+     * @param response /
+     * @throws IOException /
      */
     public void download(List<OnlineUser> all, HttpServletResponse response) throws IOException {
         List<Map<String, Object>> list = new ArrayList<>();
@@ -136,10 +125,10 @@ public class OnlineUserService {
 
     /**
      * 查询用户
-     * @param key
-     * @return
+     * @param key /
+     * @return /
      */
     public OnlineUser getOne(String key) {
-        return (OnlineUser)redisTemplate.opsForValue().get(key);
+        return (OnlineUser)redisUtils.get(key);
     }
 }

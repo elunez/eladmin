@@ -16,6 +16,8 @@ public class OnlineUser {
 
     private String userName;
 
+    private String nickName;
+
     private String job;
 
     private String browser;

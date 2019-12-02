@@ -6,6 +6,7 @@ import me.zhengjie.modules.mnt.service.ServerDeployService;
 import me.zhengjie.modules.mnt.service.dto.ServerDeployDto;
 import me.zhengjie.modules.mnt.service.dto.ServerDeployQueryCriteria;
 import me.zhengjie.modules.mnt.service.mapper.ServerDeployMapper;
+import me.zhengjie.modules.mnt.util.ExecuteShellUtil;
 import me.zhengjie.utils.PageUtil;
 import me.zhengjie.utils.QueryHelp;
 import me.zhengjie.utils.ValidationUtil;
@@ -56,7 +57,22 @@ public class ServerDeployServiceImpl implements ServerDeployService {
         return serverDeployMapper.toDto(deploy);
     }
 
-    @Override
+	@Override
+	public Boolean testConnect(ServerDeploy resources) {
+		ExecuteShellUtil executeShellUtil = null;
+		try {
+			executeShellUtil = new ExecuteShellUtil(resources.getIp(), resources.getAccount(), resources.getPassword(),resources.getPort());
+			return executeShellUtil.execute("ls")==0;
+		} catch (Exception e) {
+			return false;
+		}finally {
+			if (executeShellUtil != null) {
+				executeShellUtil.close();
+			}
+		}
+	}
+
+	@Override
     @Transactional(rollbackFor = Exception.class)
     public ServerDeployDto create(ServerDeploy resources) {
 		return serverDeployMapper.toDto(serverDeployRepository.save(resources));

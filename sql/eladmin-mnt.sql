@@ -1,8 +1,8 @@
-  
+
 -- ----------------------------
 -- Records of menu
 -- ----------------------------
- 
+
 INSERT INTO `menu` VALUES (80, b'0', '服务监控', 'monitor/server/index', 6, 14, 'codeConsole', 'server', b'0', b'0', 'ServerMonitor', '2019-11-07 13:06:39', 'server:list', 1);
 INSERT INTO `menu` VALUES (83, b'0', '图表库', 'components/Echarts', 10, 50, 'chart', 'echarts', b'1', b'0', 'Echarts', '2019-11-21 09:04:32', '', 1);
 INSERT INTO `menu` VALUES (90, b'0', '运维管理', '', 0, 20, 'mnt', 'mnt', b'0', b'0', 'Mnt', '2019-11-09 10:31:08', NULL, 1);
@@ -46,7 +46,7 @@ CREATE TABLE `mnt_app`  (
 -- ----------------------------
 -- Records of mnt_app
 -- ----------------------------
-INSERT INTO `mnt_app` VALUES (1, 'eladmin-monitor-2.3.jar', '/opt/upload', '/opt/monitor', '/opt/backup', 8777, 'cd /opt/monitor/\nnohup java -jar eladmin-monitor-2.2.jar >nohup.out 2>&1 &\n', 'mv /opt/upload/eladmin-monitor-2.2.jar /opt/monitor/\ncd /opt/monitor\nnohup java -jar eladmin-monitor-2.2.jar >nohup.out 2>&1 &\n', '2019-11-24 20:52:59');
+INSERT INTO `mnt_app` VALUES (1, 'eladmin-monitor-2.3.jar', '/opt/upload', '/opt/monitor', '/opt/backup', 8777, 'cd /opt/monitor\nnohup java -jar eladmin-monitor-2.3.jar >nohup.out 2>&1 &\n', 'mkdir -p /opt/monitor\nmv -f /opt/upload/eladmin-monitor-2.3.jar /opt/monitor\n', '2019-11-24 20:52:59');
 
 -- ----------------------------
 -- Table structure for mnt_database

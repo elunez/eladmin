@@ -16,7 +16,6 @@ public class PageUtil extends cn.hutool.core.util.PageUtil {
     public static List toPage(int page, int size , List list) {
         int fromIndex = page * size;
         int toIndex = page * size + size;
-
         if(fromIndex > list.size()){
             return new ArrayList();
         } else if(toIndex >= list.size()) {
@@ -43,7 +42,6 @@ public class PageUtil extends cn.hutool.core.util.PageUtil {
         Map<String,Object> map = new LinkedHashMap<>(2);
         map.put("content",object);
         map.put("totalElements",totalElements);
-
         return map;
     }
 
