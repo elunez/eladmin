@@ -38,9 +38,18 @@ public class LogController {
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check()")
     public void download(HttpServletResponse response, LogQueryCriteria criteria) throws IOException {
+        criteria.setLogType("INFO");
         logService.download(logService.queryAll(criteria), response);
     }
 
+    @Log("导出错误数据")
+    @ApiOperation("导出错误数据")
+    @GetMapping(value = "/error/download")
+    @PreAuthorize("@el.check()")
+    public void errorDownload(HttpServletResponse response, LogQueryCriteria criteria) throws IOException {
+        criteria.setLogType("ERROR");
+        logService.download(logService.queryAll(criteria), response);
+    }
     @GetMapping
     @ApiOperation("日志查询")
     @PreAuthorize("@el.check()")
