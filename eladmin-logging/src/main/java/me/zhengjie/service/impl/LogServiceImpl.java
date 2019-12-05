@@ -137,4 +137,16 @@ public class LogServiceImpl implements LogService {
         }
         FileUtil.downloadExcel(list, response);
     }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void delAllByError() {
+        logRepository.deleteByLogType("ERROR");
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void delAllByInfo() {
+        logRepository.deleteByLogType("INFO");
+    }
 }
