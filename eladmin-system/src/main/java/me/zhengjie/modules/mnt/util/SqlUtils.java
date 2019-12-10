@@ -5,14 +5,17 @@ import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.util.StringUtils;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
-
 import javax.sql.DataSource;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.sql.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author /
+ */
 @Slf4j
 public class SqlUtils {
 
@@ -36,17 +39,17 @@ public class SqlUtils {
 	/**
 	 * 获取数据源
 	 *
-	 * @param jdbcUrl
-	 * @param userName
-	 * @param password
-	 * @return
+	 * @param jdbcUrl /
+	 * @param userName /
+	 * @param password /
+	 * @return DataSource
 	 */
 	private static DataSource getDataSource(String jdbcUrl, String userName, String password) {
 		String key = getKey(jdbcUrl, userName, password);
 		if (!map.containsKey(key) || null == map.get(key)) {
 			DruidDataSource druidDataSource = new DruidDataSource();
 
-			String className = null;
+			String className;
 			try {
 				className = DriverManager.getDriver(jdbcUrl.trim()).getClass().getName();
 			} catch (SQLException e) {
@@ -98,11 +101,10 @@ public class SqlUtils {
 		Connection connection = null;
 		try {
 			connection = dataSource.getConnection();
-		} catch (Exception e) {
-			connection = null;
-		}
+		} catch (Exception ignored) {}
 		try {
-			if (null == connection || connection.isClosed() || !connection.isValid(5)) {
+			int timeOut = 5;
+			if (null == connection || connection.isClosed() || !connection.isValid(timeOut)) {
 				log.info("connection is closed or invalid, retry get connection!");
 				connection = dataSource.getConnection();
 			}
@@ -117,10 +119,9 @@ public class SqlUtils {
 		if (null != connection) {
 			try {
 				connection.close();
-				connection = null;
 			} catch (Exception e) {
 				e.printStackTrace();
-				log.error("connection close error", e.getMessage());
+				log.error("connection close error：" + e.getMessage());
 			}
 		}
 	}
@@ -130,7 +131,6 @@ public class SqlUtils {
 		if (rs != null) {
 			try {
 				rs.close();
-				rs = null;
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -145,7 +145,7 @@ public class SqlUtils {
 				return true;
 			}
 		} catch (Exception e) {
-			log.info("Get connection failed:", e.getMessage());
+			log.info("Get connection failed:" + e.getMessage());
 		} finally {
 			releaseConnection(connection);
 		}
@@ -168,9 +168,8 @@ public class SqlUtils {
 
 	/**
 	 * 批量执行sql
-	 * @param connection
-	 * @param sqlList
-	 * @return
+	 * @param connection /
+	 * @param sqlList /
 	 */
 	public static void batchExecute(Connection connection, List<String> sqlList) throws SQLException {
 			Statement st = connection.createStatement();
@@ -185,18 +184,16 @@ public class SqlUtils {
 
 	/**
 	 * 将文件中的sql语句以；为单位读取到列表中
-	 * @param sqlFile
-	 * @return
-	 * @throws Exception
+	 * @param sqlFile /
+	 * @return /
+	 * @throws Exception e
 	 */
 	private static List<String> readSqlList(File sqlFile) throws Exception {
 		List<String> sqlList = Lists.newArrayList();
 		StringBuilder sb = new StringBuilder();
-		BufferedReader reader = null;
-		try {
-			reader = new BufferedReader(new InputStreamReader(
-					new FileInputStream(sqlFile), "UTF-8"));
-			String tmp = null;
+		try (BufferedReader reader = new BufferedReader(new InputStreamReader(
+				new FileInputStream(sqlFile), StandardCharsets.UTF_8))) {
+			String tmp;
 			while ((tmp = reader.readLine()) != null) {
 				log.info("line:{}", tmp);
 				if (tmp.endsWith(";")) {
@@ -209,11 +206,6 @@ public class SqlUtils {
 			}
 			if (!"".endsWith(sb.toString().trim())) {
 				sqlList.add(sb.toString());
-			}
-		} finally {
-			try {
-				reader.close();
-			} catch (IOException e1) {
 			}
 		}
 
