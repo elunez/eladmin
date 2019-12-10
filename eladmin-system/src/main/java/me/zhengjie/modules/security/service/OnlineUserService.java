@@ -136,7 +136,7 @@ public class OnlineUserService {
 
     /**
      * 检测用户是否在之前已经登录，已经登录踢下线
-     * @param userName
+     * @param userName 用户名
      */
     public void checkLoginOnUser(String userName, String igoreToken){
         List<OnlineUser> onlineUsers = getAll(userName);

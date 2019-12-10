@@ -38,7 +38,7 @@ public class PictureController {
     @PreAuthorize("@el.check('pictures:list')")
     @GetMapping
     @ApiOperation("查询图片")
-    public ResponseEntity getRoles(PictureQueryCriteria criteria, Pageable pageable){
+    public ResponseEntity<Object> getRoles(PictureQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity<>(pictureService.queryAll(criteria,pageable),HttpStatus.OK);
     }
 
@@ -54,7 +54,7 @@ public class PictureController {
     @PreAuthorize("@el.check('pictures:add')")
     @PostMapping
     @ApiOperation("上传图片")
-    public ResponseEntity upload(@RequestParam MultipartFile file){
+    public ResponseEntity<Object> upload(@RequestParam MultipartFile file){
         String userName = SecurityUtils.getUsername();
         Picture picture = pictureService.upload(file,userName);
         Map<String,Object> map = new HashMap<>(3);
@@ -68,9 +68,9 @@ public class PictureController {
     @ApiOperation("删除图片")
     @PreAuthorize("@el.check('pictures:del')")
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity delete(@PathVariable Long id) {
+    public ResponseEntity<Object> delete(@PathVariable Long id) {
         pictureService.delete(pictureService.findById(id));
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Log("多选删除图片")

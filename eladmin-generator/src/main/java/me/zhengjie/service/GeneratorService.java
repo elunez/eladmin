@@ -61,14 +61,14 @@ public interface GeneratorService {
      * @param columns 字段信息
      * @return /
      */
-    ResponseEntity preview(GenConfig genConfig, List<ColumnInfo> columns);
+    ResponseEntity<Object> preview(GenConfig genConfig, List<ColumnInfo> columns);
 
     /**
      * 打包下载
      * @param genConfig 配置信息
      * @param columns 字段信息
-     * @param request
-     * @param response
+     * @param request /
+     * @param response /
      */
     void download(GenConfig genConfig, List<ColumnInfo> columns, HttpServletRequest request, HttpServletResponse response);
 }

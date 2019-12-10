@@ -183,7 +183,8 @@ public class DeployServiceImpl implements DeployService {
 	private void backupApp(ExecuteShellUtil executeShellUtil, String ip, String fileSavePath, String appName, String backupPath, Long id) {
 		String deployDate = DateUtil.format(new Date(), DatePattern.PURE_DATETIME_PATTERN);
 		StringBuilder sb = new StringBuilder();
-		if (!backupPath.endsWith(FILE_SEPARATOR)&&!backupPath.endsWith("\\")) {
+		String endsWith = "\\";
+		if (!backupPath.endsWith(FILE_SEPARATOR)&&!backupPath.endsWith(endsWith)) {
 			backupPath += FILE_SEPARATOR;
 		}
 		backupPath += appName + FILE_SEPARATOR + deployDate + "\n";
@@ -259,8 +260,7 @@ public class DeployServiceImpl implements DeployService {
 	}
 
 	private boolean checkFile(ExecuteShellUtil executeShellUtil, AppDto appDTO) {
-		StringBuilder sb = new StringBuilder("find ").append(appDTO.getDeployPath()).append(" -name ").append(appDTO.getName());
-		String result = executeShellUtil.executeForResult(sb.toString());
+		String result = executeShellUtil.executeForResult("find " + appDTO.getDeployPath() + " -name " + appDTO.getName());
 		return result.indexOf("/tcp:")>0;
 	}
 

@@ -27,10 +27,9 @@ public interface LogRepository extends JpaRepository<Log,Long>, JpaSpecification
 
     /**
      * 根据日志类型删除信息
-     * @param logType
+     * @param logType 日志类型
      */
     @Query(nativeQuery = true,value = "delete from log where log_type = ?1")
     @Modifying
-    @Transactional
     void deleteByLogType(String logType);
 }

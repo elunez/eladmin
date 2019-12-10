@@ -73,7 +73,7 @@ public class UserController {
     @ApiOperation("查询用户")
     @GetMapping
     @PreAuthorize("@el.check('user:list')")
-    public ResponseEntity getUsers(UserQueryCriteria criteria, Pageable pageable){
+    public ResponseEntity<Object> getUsers(UserQueryCriteria criteria, Pageable pageable){
         Set<Long> deptSet = new HashSet<>();
         Set<Long> result = new HashSet<>();
         if (!ObjectUtils.isEmpty(criteria.getDeptId())) {
@@ -107,7 +107,7 @@ public class UserController {
     @ApiOperation("新增用户")
     @PostMapping
     @PreAuthorize("@el.check('user:add')")
-    public ResponseEntity create(@Validated @RequestBody User resources){
+    public ResponseEntity<Object> create(@Validated @RequestBody User resources){
         checkLevel(resources);
         // 默认密码 123456
         resources.setPassword(passwordEncoder.encode("123456"));
@@ -118,29 +118,29 @@ public class UserController {
     @ApiOperation("修改用户")
     @PutMapping
     @PreAuthorize("@el.check('user:edit')")
-    public ResponseEntity update(@Validated(User.Update.class) @RequestBody User resources){
+    public ResponseEntity<Object> update(@Validated(User.Update.class) @RequestBody User resources){
         checkLevel(resources);
         userService.update(resources);
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @Log("修改用户：个人中心")
     @ApiOperation("修改用户：个人中心")
     @PutMapping(value = "center")
-    public ResponseEntity center(@Validated(User.Update.class) @RequestBody User resources){
+    public ResponseEntity<Object> center(@Validated(User.Update.class) @RequestBody User resources){
         UserDto userDto = userService.findByName(SecurityUtils.getUsername());
         if(!resources.getId().equals(userDto.getId())){
             throw new BadRequestException("不能修改他人资料");
         }
         userService.updateCenter(resources);
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @Log("删除用户")
     @ApiOperation("删除用户")
     @DeleteMapping(value = "/{id}")
     @PreAuthorize("@el.check('user:del')")
-    public ResponseEntity delete(@PathVariable Long id){
+    public ResponseEntity<Object> delete(@PathVariable Long id){
         UserDto user = userService.findByName(SecurityUtils.getUsername());
         Integer currentLevel =  Collections.min(roleService.findByUsersId(user.getId()).stream().map(RoleSmallDto::getLevel).collect(Collectors.toList()));
         Integer optLevel =  Collections.min(roleService.findByUsersId(id).stream().map(RoleSmallDto::getLevel).collect(Collectors.toList()));
@@ -149,12 +149,12 @@ public class UserController {
             throw new BadRequestException("角色权限不足");
         }
         userService.delete(id);
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @ApiOperation("修改密码")
     @PostMapping(value = "/updatePass")
-    public ResponseEntity updatePass(@RequestBody UserPassVo passVo){
+    public ResponseEntity<Object> updatePass(@RequestBody UserPassVo passVo){
         // 密码解密
         RSA rsa = new RSA(privateKey, null);
         String oldPass = new String(rsa.decrypt(passVo.getOldPass(), KeyType.PrivateKey));
@@ -167,20 +167,20 @@ public class UserController {
             throw new BadRequestException("新密码不能与旧密码相同");
         }
         userService.updatePass(user.getUsername(),passwordEncoder.encode(newPass));
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @ApiOperation("修改头像")
     @PostMapping(value = "/updateAvatar")
-    public ResponseEntity updateAvatar(@RequestParam MultipartFile file){
+    public ResponseEntity<Object> updateAvatar(@RequestParam MultipartFile file){
         userService.updateAvatar(file);
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Log("修改邮箱")
     @ApiOperation("修改邮箱")
     @PostMapping(value = "/updateEmail/{code}")
-    public ResponseEntity updateEmail(@PathVariable String code,@RequestBody User user){
+    public ResponseEntity<Object> updateEmail(@PathVariable String code,@RequestBody User user){
         // 密码解密
         RSA rsa = new RSA(privateKey, null);
         String password = new String(rsa.decrypt(user.getPassword(), KeyType.PrivateKey));
@@ -191,7 +191,7 @@ public class UserController {
         VerificationCode verificationCode = new VerificationCode(code, ElAdminConstant.RESET_MAIL,"email",user.getEmail());
         verificationCodeService.validated(verificationCode);
         userService.updateEmail(userDto.getUsername(),user.getEmail());
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     /**

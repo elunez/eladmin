@@ -28,23 +28,23 @@ public class EmailController {
     }
 
     @GetMapping
-    public ResponseEntity get(){
+    public ResponseEntity<Object> get(){
         return new ResponseEntity<>(emailService.find(),HttpStatus.OK);
     }
 
     @Log("配置邮件")
     @PutMapping
     @ApiOperation("配置邮件")
-    public ResponseEntity emailConfig(@Validated @RequestBody EmailConfig emailConfig){
+    public ResponseEntity<Object> emailConfig(@Validated @RequestBody EmailConfig emailConfig){
         emailService.update(emailConfig,emailService.find());
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Log("发送邮件")
     @PostMapping
     @ApiOperation("发送邮件")
-    public ResponseEntity send(@Validated @RequestBody EmailVo emailVo) throws Exception {
+    public ResponseEntity<Object> send(@Validated @RequestBody EmailVo emailVo) throws Exception {
         emailService.send(emailVo,emailService.find());
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

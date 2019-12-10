@@ -11,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
@@ -50,14 +49,14 @@ public class LogController {
     @GetMapping
     @ApiOperation("日志查询")
     @PreAuthorize("@el.check()")
-    public ResponseEntity getLogs(LogQueryCriteria criteria, Pageable pageable){
+    public ResponseEntity<Object> getLogs(LogQueryCriteria criteria, Pageable pageable){
         criteria.setLogType("INFO");
         return new ResponseEntity<>(logService.queryAll(criteria,pageable), HttpStatus.OK);
     }
 
     @GetMapping(value = "/user")
     @ApiOperation("用户日志查询")
-    public ResponseEntity getUserLogs(LogQueryCriteria criteria, Pageable pageable){
+    public ResponseEntity<Object> getUserLogs(LogQueryCriteria criteria, Pageable pageable){
         criteria.setLogType("INFO");
         criteria.setBlurry(SecurityUtils.getUsername());
         return new ResponseEntity<>(logService.queryAllByUser(criteria,pageable), HttpStatus.OK);
@@ -66,7 +65,7 @@ public class LogController {
     @GetMapping(value = "/error")
     @ApiOperation("错误日志查询")
     @PreAuthorize("@el.check()")
-    public ResponseEntity getErrorLogs(LogQueryCriteria criteria, Pageable pageable){
+    public ResponseEntity<Object> getErrorLogs(LogQueryCriteria criteria, Pageable pageable){
         criteria.setLogType("ERROR");
         return new ResponseEntity<>(logService.queryAll(criteria,pageable), HttpStatus.OK);
     }
@@ -74,24 +73,24 @@ public class LogController {
     @GetMapping(value = "/error/{id}")
     @ApiOperation("日志异常详情查询")
     @PreAuthorize("@el.check()")
-    public ResponseEntity getErrorLogs(@PathVariable Long id){
+    public ResponseEntity<Object> getErrorLogs(@PathVariable Long id){
         return new ResponseEntity<>(logService.findByErrDetail(id), HttpStatus.OK);
     }
     @DeleteMapping(value = "/del/error")
     @Log("删除所有ERROR日志")
     @ApiOperation("删除所有ERROR日志")
     @PreAuthorize("@el.check()")
-    public ResponseEntity delAllByError(){
+    public ResponseEntity<Object> delAllByError(){
         logService.delAllByError();
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/del/info")
     @Log("删除所有INFO日志")
     @ApiOperation("删除所有INFO日志")
     @PreAuthorize("@el.check()")
-    public ResponseEntity delAllByInfo(){
+    public ResponseEntity<Object> delAllByInfo(){
         logService.delAllByInfo();
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

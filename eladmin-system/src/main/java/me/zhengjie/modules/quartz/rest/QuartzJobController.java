@@ -40,7 +40,7 @@ public class QuartzJobController {
     @ApiOperation("查询定时任务")
     @GetMapping
     @PreAuthorize("@el.check('timing:list')")
-    public ResponseEntity getJobs(JobQueryCriteria criteria, Pageable pageable){
+    public ResponseEntity<Object> getJobs(JobQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity<>(quartzJobService.queryAll(criteria,pageable), HttpStatus.OK);
     }
 
@@ -63,7 +63,7 @@ public class QuartzJobController {
     @ApiOperation("查询任务执行日志")
     @GetMapping(value = "/logs")
     @PreAuthorize("@el.check('timing:list')")
-    public ResponseEntity getJobLogs(JobQueryCriteria criteria, Pageable pageable){
+    public ResponseEntity<Object> getJobLogs(JobQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity<>(quartzJobService.queryAllLog(criteria,pageable), HttpStatus.OK);
     }
 
@@ -71,7 +71,7 @@ public class QuartzJobController {
     @ApiOperation("新增定时任务")
     @PostMapping
     @PreAuthorize("@el.check('timing:add')")
-    public ResponseEntity create(@Validated @RequestBody QuartzJob resources){
+    public ResponseEntity<Object> create(@Validated @RequestBody QuartzJob resources){
         if (resources.getId() != null) {
             throw new BadRequestException("A new "+ ENTITY_NAME +" cannot already have an ID");
         }
@@ -82,35 +82,35 @@ public class QuartzJobController {
     @ApiOperation("修改定时任务")
     @PutMapping
     @PreAuthorize("@el.check('timing:edit')")
-    public ResponseEntity update(@Validated(QuartzJob.Update.class) @RequestBody QuartzJob resources){
+    public ResponseEntity<Object> update(@Validated(QuartzJob.Update.class) @RequestBody QuartzJob resources){
         quartzJobService.update(resources);
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @Log("更改定时任务状态")
     @ApiOperation("更改定时任务状态")
     @PutMapping(value = "/{id}")
     @PreAuthorize("@el.check('timing:edit')")
-    public ResponseEntity updateIsPause(@PathVariable Long id){
+    public ResponseEntity<Object> updateIsPause(@PathVariable Long id){
         quartzJobService.updateIsPause(quartzJobService.findById(id));
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @Log("执行定时任务")
     @ApiOperation("执行定时任务")
     @PutMapping(value = "/exec/{id}")
     @PreAuthorize("@el.check('timing:edit')")
-    public ResponseEntity execution(@PathVariable Long id){
+    public ResponseEntity<Object> execution(@PathVariable Long id){
         quartzJobService.execution(quartzJobService.findById(id));
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @Log("删除定时任务")
     @ApiOperation("删除定时任务")
     @DeleteMapping(value = "/{id}")
     @PreAuthorize("@el.check('timing:del')")
-    public ResponseEntity delete(@PathVariable Long id){
+    public ResponseEntity<Object> delete(@PathVariable Long id){
         quartzJobService.delete(quartzJobService.findById(id));
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
