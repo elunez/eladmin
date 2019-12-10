@@ -367,6 +367,8 @@ CREATE TABLE `mnt_database`  (
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
+INSERT INTO `mnt_database` VALUES ('604dd98ae8b44b128544c2135628f87d', '本机', 'jdbc:log4jdbc:mysql://localhost:3306/eladmin?serverTimezone=UTC', 'root', '123456');
+
 -- ----------------------------
 -- Table structure for mnt_deploy
 -- ----------------------------
