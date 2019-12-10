@@ -1,5 +1,6 @@
 package me.zhengjie.modules.security.service;
 
+import lombok.extern.slf4j.Slf4j;
 import me.zhengjie.modules.security.config.SecurityProperties;
 import me.zhengjie.modules.security.security.vo.JwtUser;
 import me.zhengjie.modules.security.security.vo.OnlineUser;
@@ -16,6 +17,7 @@ import java.util.*;
  * @Date 2019年10月26日21:56:27
  */
 @Service
+@Slf4j
 public class OnlineUserService {
 
     private final SecurityProperties properties;
@@ -131,4 +133,30 @@ public class OnlineUserService {
     public OnlineUser getOne(String key) {
         return (OnlineUser)redisUtils.get(key);
     }
+
+    /**
+     * 检测用户是否在之前已经登录，已经登录踢下线
+     * @param userName
+     */
+    public void checkLoginOnUser(String userName, String igoreToken){
+        List<OnlineUser> onlineUsers = getAll(userName);
+        if(onlineUsers ==null || onlineUsers.isEmpty()){
+            return;
+        }
+        for(OnlineUser onlineUser:onlineUsers){
+            if(onlineUser.getUserName().equals(userName)){
+                try {
+                    String token =EncryptUtils.desDecrypt(onlineUser.getKey());
+                    if(StringUtils.isNotBlank(igoreToken)&&!igoreToken.equals(token)){
+                        this.kickOut(onlineUser.getKey());
+                    }else if(StringUtils.isBlank(igoreToken)){
+                        this.kickOut(onlineUser.getKey());
+                    }
+                } catch (Exception e) {
+                    log.error("checkUser is error",e);
+                }
+            }
+        }
+    }
+
 }

@@ -10,10 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -38,9 +35,18 @@ public class LogController {
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check()")
     public void download(HttpServletResponse response, LogQueryCriteria criteria) throws IOException {
+        criteria.setLogType("INFO");
         logService.download(logService.queryAll(criteria), response);
     }
 
+    @Log("导出错误数据")
+    @ApiOperation("导出错误数据")
+    @GetMapping(value = "/error/download")
+    @PreAuthorize("@el.check()")
+    public void errorDownload(HttpServletResponse response, LogQueryCriteria criteria) throws IOException {
+        criteria.setLogType("ERROR");
+        logService.download(logService.queryAll(criteria), response);
+    }
     @GetMapping
     @ApiOperation("日志查询")
     @PreAuthorize("@el.check()")
@@ -70,5 +76,22 @@ public class LogController {
     @PreAuthorize("@el.check()")
     public ResponseEntity getErrorLogs(@PathVariable Long id){
         return new ResponseEntity<>(logService.findByErrDetail(id), HttpStatus.OK);
+    }
+    @DeleteMapping(value = "/del/error")
+    @Log("删除所有ERROR日志")
+    @ApiOperation("删除所有ERROR日志")
+    @PreAuthorize("@el.check()")
+    public ResponseEntity delAllByError(){
+        logService.delAllByError();
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @DeleteMapping(value = "/del/info")
+    @Log("删除所有INFO日志")
+    @ApiOperation("删除所有INFO日志")
+    @PreAuthorize("@el.check()")
+    public ResponseEntity delAllByInfo(){
+        logService.delAllByInfo();
+        return new ResponseEntity(HttpStatus.OK);
     }
 }
