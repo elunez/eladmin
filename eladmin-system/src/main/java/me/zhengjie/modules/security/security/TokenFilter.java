@@ -51,7 +51,6 @@ public class TokenFilter extends GenericFilterBean {
       } else {
          log.debug("no valid JWT token found, uri: {}", requestRri);
       }
-
       filterChain.doFilter(servletRequest, servletResponse);
    }
 

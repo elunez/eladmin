@@ -125,8 +125,14 @@ public class RoleServiceImpl implements RoleService {
     @Override
     @CacheEvict(allEntries = true)
     @Transactional(rollbackFor = Exception.class)
-    public void delete(Long id) {
-        roleRepository.deleteById(id);
+    public void delete(Set<Long> ids) {
+        for (Long id : ids) {
+            try {
+                roleRepository.deleteById(id);
+            }catch (Throwable e){
+                ThrowableUtil.throwForeignKeyException(e, "该角色存在用户关联，请取消关联后再试");
+            }
+        }
     }
 
     @Override

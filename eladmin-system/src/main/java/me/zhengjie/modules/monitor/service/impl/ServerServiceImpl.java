@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
 * @author Zhang houying
@@ -91,8 +92,10 @@ public class ServerServiceImpl implements ServerService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void delete(Integer id) {
-        serverRepository.deleteById(id);
+    public void delete(Set<Integer> ids) {
+        for (Integer id : ids) {
+            serverRepository.deleteById(id);
+        }
     }
 
 }

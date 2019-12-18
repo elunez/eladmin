@@ -15,10 +15,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
+import java.util.Set;
 
 /**
 * @author Zheng Jie
@@ -80,13 +79,13 @@ public class JobController {
 
     @Log("删除岗位")
     @ApiOperation("删除岗位")
-    @DeleteMapping(value = "/{id}")
+    @DeleteMapping
     @PreAuthorize("@el.check('job:del')")
-    public ResponseEntity<Object> delete(@PathVariable Long id){
+    public ResponseEntity<Object> delete(@RequestBody Set<Long> ids){
         try {
-            jobService.delete(id);
+            jobService.delete(ids);
         }catch (Throwable e){
-            ThrowableUtil.throwForeignKeyException(e, "该岗位存在用户关联，请取消关联后再试");
+            ThrowableUtil.throwForeignKeyException(e, "所选岗位存在用户关联，请取消关联后再试");
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }

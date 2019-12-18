@@ -5,7 +5,6 @@ import me.zhengjie.modules.system.service.dto.RoleDto;
 import me.zhengjie.modules.system.service.dto.RoleQueryCriteria;
 import me.zhengjie.modules.system.service.dto.RoleSmallDto;
 import me.zhengjie.modules.system.service.dto.UserDto;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -43,9 +42,9 @@ public interface RoleService {
 
     /**
      * 删除
-     * @param id /
+     * @param ids /
      */
-    void delete(Long id);
+    void delete(Set<Long> ids);
 
     /**
      * 根据用户ID查询

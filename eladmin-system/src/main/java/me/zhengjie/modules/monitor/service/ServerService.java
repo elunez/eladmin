@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
 * @author Zhang houying
@@ -53,6 +54,6 @@ public interface ServerService {
      * 删除
      * @param id /
      */
-    void delete(Integer id);
+    void delete(Set<Integer> id);
 
 }

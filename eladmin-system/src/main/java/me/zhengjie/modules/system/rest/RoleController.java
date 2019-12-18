@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -116,14 +117,10 @@ public class RoleController {
 
     @Log("删除角色")
     @ApiOperation("删除角色")
-    @DeleteMapping(value = "/{id}")
+    @DeleteMapping
     @PreAuthorize("@el.check('roles:del')")
-    public ResponseEntity<Object> delete(@PathVariable Long id){
-        try {
-            roleService.delete(id);
-        }catch (Throwable e){
-            ThrowableUtil.throwForeignKeyException(e, "该角色存在用户关联，请取消关联后再试");
-        }
+    public ResponseEntity<Object> delete(@RequestBody Set<Long> ids){
+        roleService.delete(ids);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

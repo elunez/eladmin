@@ -138,17 +138,18 @@ public class UserController {
 
     @Log("删除用户")
     @ApiOperation("删除用户")
-    @DeleteMapping(value = "/{id}")
+    @DeleteMapping
     @PreAuthorize("@el.check('user:del')")
-    public ResponseEntity<Object> delete(@PathVariable Long id){
+    public ResponseEntity<Object> delete(@RequestBody Set<Long> ids){
         UserDto user = userService.findByName(SecurityUtils.getUsername());
-        Integer currentLevel =  Collections.min(roleService.findByUsersId(user.getId()).stream().map(RoleSmallDto::getLevel).collect(Collectors.toList()));
-        Integer optLevel =  Collections.min(roleService.findByUsersId(id).stream().map(RoleSmallDto::getLevel).collect(Collectors.toList()));
-
-        if (currentLevel > optLevel) {
-            throw new BadRequestException("角色权限不足");
+        for (Long id : ids) {
+            Integer currentLevel =  Collections.min(roleService.findByUsersId(user.getId()).stream().map(RoleSmallDto::getLevel).collect(Collectors.toList()));
+            Integer optLevel =  Collections.min(roleService.findByUsersId(id).stream().map(RoleSmallDto::getLevel).collect(Collectors.toList()));
+            if (currentLevel > optLevel) {
+                throw new BadRequestException("角色权限不足，不能删除：" + userService.findByName(SecurityUtils.getUsername()).getUsername());
+            }
         }
-        userService.delete(id);
+        userService.delete(ids);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

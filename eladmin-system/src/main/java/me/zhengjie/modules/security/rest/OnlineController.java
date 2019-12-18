@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Set;
 
 /**
  * @author Zheng Jie
@@ -43,10 +44,12 @@ public class OnlineController {
     }
 
     @ApiOperation("踢出用户")
-    @DeleteMapping(value = "/{key}")
+    @DeleteMapping
     @PreAuthorize("@el.check()")
-    public ResponseEntity<Object> delete(@PathVariable String key) throws Exception {
-        onlineUserService.kickOut(key);
+    public ResponseEntity<Object> delete(@RequestBody Set<String> keys) throws Exception {
+        for (String key : keys) {
+            onlineUserService.kickOut(key);
+        }
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

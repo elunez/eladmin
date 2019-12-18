@@ -44,9 +44,10 @@ public interface DeptService {
 
     /**
      * 删除
-     * @param id /
+     * @param deptDtos /
+     *
      */
-    void delete(Long id);
+    void delete(Set<DeptDto> deptDtos);
 
     /**
      * 构建树形数据
@@ -76,4 +77,12 @@ public interface DeptService {
      * @throws IOException /
      */
     void download(List<DeptDto> queryAll, HttpServletResponse response) throws IOException;
+
+    /**
+     * 获取待删除的部门
+     * @param deptList /
+     * @param deptDtos /
+     * @return /
+     */
+    Set<DeptDto> getDeleteDepts(List<Dept> deptList, Set<DeptDto> deptDtos);
 }

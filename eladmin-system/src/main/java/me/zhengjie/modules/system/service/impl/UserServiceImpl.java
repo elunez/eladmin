@@ -138,8 +138,10 @@ public class UserServiceImpl implements UserService {
     @Override
     @CacheEvict(allEntries = true)
     @Transactional(rollbackFor = Exception.class)
-    public void delete(Long id) {
-        userRepository.deleteById(id);
+    public void delete(Set<Long> ids) {
+        for (Long id : ids) {
+            userRepository.deleteById(id);
+        }
     }
 
     @Override

@@ -22,10 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
 * @author Zheng Jie
@@ -94,8 +91,10 @@ public class JobServiceImpl implements JobService {
     @Override
     @CacheEvict(allEntries = true)
     @Transactional(rollbackFor = Exception.class)
-    public void delete(Long id) {
-        jobRepository.deleteById(id);
+    public void delete(Set<Long> ids) {
+        for (Long id : ids) {
+            jobRepository.deleteById(id);
+        }
     }
 
     @Override

@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
-
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
@@ -129,8 +128,10 @@ public class DeptServiceImpl implements DeptService {
     @Override
     @CacheEvict(allEntries = true)
     @Transactional(rollbackFor = Exception.class)
-    public void delete(Long id) {
-        deptRepository.deleteById(id);
+    public void delete(Set<DeptDto> deptDtos) {
+        for (DeptDto deptDto : deptDtos) {
+            deptRepository.deleteById(deptDto.getId());
+        }
     }
 
     @Override
@@ -144,5 +145,17 @@ public class DeptServiceImpl implements DeptService {
             list.add(map);
         }
         FileUtil.downloadExcel(list, response);
+    }
+
+    @Override
+    public Set<DeptDto> getDeleteDepts(List<Dept> menuList, Set<DeptDto> deptDtos) {
+        for (Dept dept : menuList) {
+            deptDtos.add(deptMapper.toDto(dept));
+            List<Dept> depts = deptRepository.findByPid(dept.getId());
+            if(depts!=null && depts.size()!=0){
+                getDeleteDepts(depts, deptDtos);
+            }
+        }
+        return deptDtos;
     }
 }

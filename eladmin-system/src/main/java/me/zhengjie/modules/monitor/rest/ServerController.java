@@ -13,6 +13,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Set;
+
 /**
 * @author Zhang houying
 * @date 2019-11-03
@@ -53,12 +55,12 @@ public class ServerController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @DeleteMapping(value = "/{id}")
+    @DeleteMapping
     @Log("删除服务监控")
     @ApiOperation("删除服务监控")
     @PreAuthorize("@el.check('server:del')")
-    public ResponseEntity delete(@PathVariable Integer id){
-        serverService.delete(id);
-        return new ResponseEntity(HttpStatus.OK);
+    public ResponseEntity<Object> delete(@RequestBody Set<Integer> ids){
+        serverService.delete(ids);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

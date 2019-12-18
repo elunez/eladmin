@@ -103,13 +103,15 @@ public class MenuController {
 
     @Log("删除菜单")
     @ApiOperation("删除菜单")
-    @DeleteMapping(value = "/{id}")
+    @DeleteMapping
     @PreAuthorize("@el.check('menu:del')")
-    public ResponseEntity<Object> delete(@PathVariable Long id){
-        List<Menu> menuList = menuService.findByPid(id);
+    public ResponseEntity<Object> delete(@RequestBody Set<Long> ids){
         Set<Menu> menuSet = new HashSet<>();
-        menuSet.add(menuService.findOne(id));
-        menuSet = menuService.getDeleteMenus(menuList, menuSet);
+        for (Long id : ids) {
+            List<Menu> menuList = menuService.findByPid(id);
+            menuSet.add(menuService.findOne(id));
+            menuSet = menuService.getDeleteMenus(menuList, menuSet);
+        }
         menuService.delete(menuSet);
         return new ResponseEntity<>(HttpStatus.OK);
     }
