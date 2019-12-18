@@ -27,7 +27,7 @@ public class GlobalExceptionHandler {
      * 处理所有不可知的异常
      */
     @ExceptionHandler(Throwable.class)
-    public ResponseEntity handleException(Throwable e){
+    public ResponseEntity<ApiError> handleException(Throwable e){
         // 打印堆栈信息
         log.error(ThrowableUtil.getStackTrace(e));
         return buildResponseEntity(ApiError.error(e.getMessage()));
@@ -37,7 +37,7 @@ public class GlobalExceptionHandler {
      * BadCredentialsException
      */
     @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity badCredentialsException(BadCredentialsException e){
+    public ResponseEntity<ApiError> badCredentialsException(BadCredentialsException e){
         // 打印堆栈信息
         String message = "坏的凭证".equals(e.getMessage()) ? "用户名或密码不正确" : e.getMessage();
         log.error(message);

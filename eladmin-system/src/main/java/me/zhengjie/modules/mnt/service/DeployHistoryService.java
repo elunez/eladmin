@@ -5,6 +5,11 @@ import me.zhengjie.modules.mnt.service.dto.DeployHistoryDto;
 import me.zhengjie.modules.mnt.service.dto.DeployHistoryQueryCriteria;
 import org.springframework.data.domain.Pageable;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.List;
+import java.util.Set;
+
 /**
  * @author zhanghouying
  */
@@ -23,7 +28,7 @@ public interface DeployHistoryService {
      * @param criteria 条件
      * @return /
      */
-    Object queryAll(DeployHistoryQueryCriteria criteria);
+    List<DeployHistoryDto> queryAll(DeployHistoryQueryCriteria criteria);
 
     /**
      * 根据ID查询
@@ -41,7 +46,14 @@ public interface DeployHistoryService {
 
     /**
      * 删除
-     * @param id /
+     * @param ids /
      */
-    void delete(String id);
+    void delete(Set<String> ids);
+
+    /**
+     * 导出数据
+     * @param queryAll /
+     * @param response /
+     */
+    void download(List<DeployHistoryDto> queryAll, HttpServletResponse response) throws IOException;
 }

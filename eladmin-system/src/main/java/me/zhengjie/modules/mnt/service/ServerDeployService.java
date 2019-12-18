@@ -5,6 +5,11 @@ import me.zhengjie.modules.mnt.service.dto.ServerDeployDto;
 import me.zhengjie.modules.mnt.service.dto.ServerDeployQueryCriteria;
 import org.springframework.data.domain.Pageable;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.List;
+import java.util.Set;
+
 /**
 * @author zhanghouying
 * @date 2019-08-24
@@ -24,7 +29,7 @@ public interface ServerDeployService {
      * @param criteria 条件
      * @return /
      */
-    Object queryAll(ServerDeployQueryCriteria criteria);
+    List<ServerDeployDto> queryAll(ServerDeployQueryCriteria criteria);
 
     /**
      * 根据ID查询
@@ -48,9 +53,9 @@ public interface ServerDeployService {
 
     /**
      * 删除
-     * @param id /
+     * @param ids /
      */
-    void delete(Long id);
+    void delete(Set<Long> ids);
 
     /**
      * 根据IP查询
@@ -61,8 +66,15 @@ public interface ServerDeployService {
 
 	/**
 	 * 测试登录服务器
-	 * @param resources
-	 * @return
+	 * @param resources /
+	 * @return /
 	 */
 	Boolean testConnect(ServerDeploy resources);
+
+    /**
+     * 导出数据
+     * @param queryAll /
+     * @param response /
+     */
+    void download(List<ServerDeployDto> queryAll, HttpServletResponse response) throws IOException;
 }

@@ -25,7 +25,7 @@ public class ServerMonitorController {
 	private static final double GB = 1024*1024*1024.00;
 
 	@GetMapping
-    public ResponseEntity getServerInfo(){
+    public ResponseEntity<Object> getServerInfo(){
     	Map<String,Object> resultMap = new HashMap<>(8);
 		try {
 			CpuInfo[] infoList = sigar.getCpuInfoList();

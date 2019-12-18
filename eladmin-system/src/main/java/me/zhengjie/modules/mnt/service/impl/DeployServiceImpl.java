@@ -12,30 +12,22 @@ import me.zhengjie.modules.mnt.repository.DeployRepository;
 import me.zhengjie.modules.mnt.service.DeployHistoryService;
 import me.zhengjie.modules.mnt.service.DeployService;
 import me.zhengjie.modules.mnt.service.ServerDeployService;
-import me.zhengjie.modules.mnt.service.dto.AppDto;
-import me.zhengjie.modules.mnt.service.dto.DeployDto;
-import me.zhengjie.modules.mnt.service.dto.DeployQueryCriteria;
-import me.zhengjie.modules.mnt.service.dto.ServerDeployDto;
+import me.zhengjie.modules.mnt.service.dto.*;
 import me.zhengjie.modules.mnt.service.mapper.DeployMapper;
 import me.zhengjie.modules.mnt.util.ExecuteShellUtil;
 import me.zhengjie.modules.mnt.util.ScpClientUtil;
 import me.zhengjie.modules.mnt.websocket.MsgType;
 import me.zhengjie.modules.mnt.websocket.SocketMsg;
 import me.zhengjie.modules.mnt.websocket.WebSocketServer;
-import me.zhengjie.utils.PageUtil;
-import me.zhengjie.utils.QueryHelp;
-import me.zhengjie.utils.SecurityUtils;
-import me.zhengjie.utils.ValidationUtil;
+import me.zhengjie.utils.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author zhanghouying
@@ -99,8 +91,10 @@ public class DeployServiceImpl implements DeployService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void delete(Long id) {
-		deployRepository.deleteById(id);
+	public void delete(Set<Long> ids) {
+		for (Long id : ids) {
+			deployRepository.deleteById(id);
+		}
 	}
 
 	@Override
@@ -111,9 +105,8 @@ public class DeployServiceImpl implements DeployService {
 	/**
 	 * @param fileSavePath 本机路径
 	 * @param id ID
-	 * @return string
 	 */
-	private String deployApp(String fileSavePath, Long id) {
+	private void deployApp(String fileSavePath, Long id) {
 
 		DeployDto deploy = findById(id);
 		if (deploy == null) {
@@ -169,7 +162,6 @@ public class DeployServiceImpl implements DeployService {
 			sendResultMsg(result, sb);
 			executeShellUtil.close();
 		}
-		return "部署结束";
 	}
 
 	private void sleep(int second) {
@@ -399,5 +391,18 @@ public class DeployServiceImpl implements DeployService {
 			sb.append("<br>启动失败!");
 			sendMsg(sb.toString(), MsgType.ERROR);
 		}
+	}
+
+	@Override
+	public void download(List<DeployDto> queryAll, HttpServletResponse response) throws IOException {
+		List<Map<String, Object>> list = new ArrayList<>();
+		for (DeployDto deployDto : queryAll) {
+			Map<String,Object> map = new LinkedHashMap<>();
+			map.put("应用名称", deployDto.getApp().getName());
+			map.put("服务器", deployDto.getServers());
+			map.put("部署日期", deployDto.getCreateTime());
+			list.add(map);
+		}
+		FileUtil.downloadExcel(list, response);
 	}
 }

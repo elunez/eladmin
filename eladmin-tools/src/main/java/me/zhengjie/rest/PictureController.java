@@ -77,8 +77,8 @@ public class PictureController {
     @ApiOperation("多选删除图片")
     @PreAuthorize("@el.check('pictures:del')")
     @DeleteMapping
-    public ResponseEntity deleteAll(@RequestBody Long[] ids) {
+    public ResponseEntity<Object> deleteAll(@RequestBody Long[] ids) {
         pictureService.deleteAll(ids);
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

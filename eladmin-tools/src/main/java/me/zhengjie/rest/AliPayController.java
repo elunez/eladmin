@@ -101,7 +101,7 @@ public class AliPayController {
     @AnonymousAccess
     @SuppressWarnings("all")
     @ApiOperation("支付异步通知(要公网访问)，接收异步通知，检查通知内容app_id、out_trade_no、total_amount是否与请求中的一致，根据trade_status进行后续业务处理")
-    public ResponseEntity notify(HttpServletRequest request){
+    public ResponseEntity<Object> notify(HttpServletRequest request){
         AlipayConfig alipay = alipayService.find();
         Map<String, String[]> parameterMap = request.getParameterMap();
         //内容验签，防止黑客篡改参数
@@ -118,8 +118,8 @@ public class AliPayController {
             if(tradeStatus.equals(AliPayStatusEnum.SUCCESS.getValue())||tradeStatus.equals(AliPayStatusEnum.FINISHED.getValue())){
                // 验证通过后应该根据业务需要处理订单
             }
-            return new ResponseEntity(HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.OK);
         }
-        return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 }

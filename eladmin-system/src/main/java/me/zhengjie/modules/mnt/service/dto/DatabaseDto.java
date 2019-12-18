@@ -2,6 +2,7 @@ package me.zhengjie.modules.mnt.service.dto;
 
 import lombok.Data;
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 
 /**
@@ -36,4 +37,5 @@ public class DatabaseDto implements Serializable {
 	 */
     private String userName;
 
+	private Timestamp createTime;
 }

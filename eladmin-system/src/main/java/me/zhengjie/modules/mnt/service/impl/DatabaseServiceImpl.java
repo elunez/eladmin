@@ -9,6 +9,7 @@ import me.zhengjie.modules.mnt.service.dto.DatabaseDto;
 import me.zhengjie.modules.mnt.service.dto.DatabaseQueryCriteria;
 import me.zhengjie.modules.mnt.service.mapper.DatabaseMapper;
 import me.zhengjie.modules.mnt.util.SqlUtils;
+import me.zhengjie.utils.FileUtil;
 import me.zhengjie.utils.PageUtil;
 import me.zhengjie.utils.QueryHelp;
 import me.zhengjie.utils.ValidationUtil;
@@ -17,6 +18,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.*;
 
 /**
 * @author zhanghouying
@@ -43,7 +48,7 @@ public class DatabaseServiceImpl implements DatabaseService {
     }
 
     @Override
-    public Object queryAll(DatabaseQueryCriteria criteria){
+    public List<DatabaseDto> queryAll(DatabaseQueryCriteria criteria){
         return databaseMapper.toDto(databaseRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder)));
     }
 
@@ -72,8 +77,10 @@ public class DatabaseServiceImpl implements DatabaseService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void delete(String id) {
-        databaseRepository.deleteById(id);
+    public void delete(Set<String> ids) {
+        for (String id : ids) {
+            databaseRepository.deleteById(id);
+        }
     }
 
 	@Override
@@ -84,6 +91,19 @@ public class DatabaseServiceImpl implements DatabaseService {
 			log.error(e.getMessage());
 			return false;
 		}
-
 	}
+
+    @Override
+    public void download(List<DatabaseDto> queryAll, HttpServletResponse response) throws IOException {
+        List<Map<String, Object>> list = new ArrayList<>();
+        for (DatabaseDto databaseDto : queryAll) {
+            Map<String,Object> map = new LinkedHashMap<>();
+            map.put("数据库名称", databaseDto.getName());
+            map.put("数据库连接地址", databaseDto.getJdbcUrl());
+            map.put("用户名", databaseDto.getUserName());
+            map.put("创建日期", databaseDto.getCreateTime());
+            list.add(map);
+        }
+        FileUtil.downloadExcel(list, response);
+    }
 }

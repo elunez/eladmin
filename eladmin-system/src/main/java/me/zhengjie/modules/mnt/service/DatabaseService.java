@@ -5,6 +5,11 @@ import me.zhengjie.modules.mnt.service.dto.DatabaseDto;
 import me.zhengjie.modules.mnt.service.dto.DatabaseQueryCriteria;
 import org.springframework.data.domain.Pageable;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.List;
+import java.util.Set;
+
 /**
  * @author ZhangHouYing
  * @date 2019-08-24
@@ -24,7 +29,7 @@ public interface DatabaseService {
      * @param criteria 条件
      * @return /
      */
-    Object queryAll(DatabaseQueryCriteria criteria);
+    List<DatabaseDto> queryAll(DatabaseQueryCriteria criteria);
 
     /**
      * 根据ID查询
@@ -48,14 +53,21 @@ public interface DatabaseService {
 
     /**
      * 删除
-     * @param id /
+     * @param ids /
      */
-    void delete(String id);
+    void delete(Set<String> ids);
 
 	/**
 	 * 测试连接数据库
-	 * @param resources
-	 * @return
+	 * @param resources /
+	 * @return /
 	 */
 	boolean testConnection(Database resources);
+
+    /**
+     * 导出数据
+     * @param queryAll /
+     * @param response /
+     */
+    void download(List<DatabaseDto> queryAll, HttpServletResponse response) throws IOException;
 }

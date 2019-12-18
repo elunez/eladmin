@@ -17,9 +17,11 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.io.IOException;
+import java.util.Set;
 
 /**
 * @author zhanghouying
@@ -38,11 +40,19 @@ public class DatabaseController {
         this.databaseService = databaseService;
     }
 
+	@Log("导出数据库数据")
+	@ApiOperation("导出数据库数据")
+	@GetMapping(value = "/download")
+	@PreAuthorize("@el.check('database:list')")
+	public void download(HttpServletResponse response, DatabaseQueryCriteria criteria) throws IOException {
+		databaseService.download(databaseService.queryAll(criteria), response);
+	}
+
     @Log("查询数据库")
     @ApiOperation(value = "查询数据库")
     @GetMapping
 	@PreAuthorize("@el.check('database:list')")
-    public ResponseEntity getDatabases(DatabaseQueryCriteria criteria, Pageable pageable){
+    public ResponseEntity<Object> getDatabases(DatabaseQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity<>(databaseService.queryAll(criteria,pageable),HttpStatus.OK);
     }
 
@@ -50,7 +60,7 @@ public class DatabaseController {
     @ApiOperation(value = "新增数据库")
     @PostMapping
 	@PreAuthorize("@el.check('database:add')")
-    public ResponseEntity create(@Validated @RequestBody Database resources){
+    public ResponseEntity<Object> create(@Validated @RequestBody Database resources){
         return new ResponseEntity<>(databaseService.create(resources),HttpStatus.CREATED);
     }
 
@@ -58,25 +68,25 @@ public class DatabaseController {
     @ApiOperation(value = "修改数据库")
     @PutMapping
 	@PreAuthorize("@el.check('database:edit')")
-    public ResponseEntity update(@Validated @RequestBody Database resources){
+    public ResponseEntity<Object> update(@Validated @RequestBody Database resources){
         databaseService.update(resources);
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @Log("删除数据库")
     @ApiOperation(value = "删除数据库")
-    @DeleteMapping(value = "/{id}")
+    @DeleteMapping
 	@PreAuthorize("@el.check('database:del')")
-    public ResponseEntity delete(@PathVariable String id){
-        databaseService.delete(id);
-        return new ResponseEntity(HttpStatus.OK);
+    public ResponseEntity<Object> delete(@RequestBody Set<String> ids){
+        databaseService.delete(ids);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 	@Log("测试数据库链接")
 	@ApiOperation(value = "测试数据库链接")
 	@PostMapping("/testConnect")
 	@PreAuthorize("@el.check('database:testConnect')")
-	public ResponseEntity testConnect(@Validated @RequestBody Database resources){
+	public ResponseEntity<Object> testConnect(@Validated @RequestBody Database resources){
 		return new ResponseEntity<>(databaseService.testConnection(resources),HttpStatus.CREATED);
 	}
 
@@ -84,7 +94,7 @@ public class DatabaseController {
 	@ApiOperation(value = "执行SQL脚本")
 	@PostMapping(value = "/upload")
 	@PreAuthorize("@el.check('database:add')")
-	public ResponseEntity upload(@RequestBody MultipartFile file, HttpServletRequest request)throws Exception{
+	public ResponseEntity<Object> upload(@RequestBody MultipartFile file, HttpServletRequest request)throws Exception{
 		String id = request.getParameter("id");
 		DatabaseDto database = databaseService.findById(id);
 		String fileName = "";

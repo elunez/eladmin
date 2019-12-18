@@ -16,10 +16,13 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 /**
 * @author zhanghouying
@@ -38,11 +41,19 @@ public class DeployController {
 		this.deployService = deployService;
 	}
 
+	@Log("导出部署数据")
+	@ApiOperation("导出部署数据")
+	@GetMapping(value = "/download")
+	@PreAuthorize("@el.check('database:list')")
+	public void download(HttpServletResponse response, DeployQueryCriteria criteria) throws IOException {
+		deployService.download(deployService.queryAll(criteria), response);
+	}
+
 	@Log("查询部署")
     @ApiOperation(value = "查询部署")
     @GetMapping
 	@PreAuthorize("@el.check('deploy:list')")
-    public ResponseEntity getDeploys(DeployQueryCriteria criteria, Pageable pageable){
+    public ResponseEntity<Object> getDeploys(DeployQueryCriteria criteria, Pageable pageable){
     	return new ResponseEntity<>(deployService.queryAll(criteria,pageable),HttpStatus.OK);
     }
 
@@ -50,7 +61,7 @@ public class DeployController {
     @ApiOperation(value = "新增部署")
     @PostMapping
 	@PreAuthorize("@el.check('deploy:add')")
-    public ResponseEntity create(@Validated @RequestBody Deploy resources){
+    public ResponseEntity<Object> create(@Validated @RequestBody Deploy resources){
         return new ResponseEntity<>(deployService.create(resources),HttpStatus.CREATED);
     }
 
@@ -58,25 +69,25 @@ public class DeployController {
     @ApiOperation(value = "修改部署")
     @PutMapping
 	@PreAuthorize("@el.check('deploy:edit')")
-    public ResponseEntity update(@Validated @RequestBody Deploy resources){
+    public ResponseEntity<Object> update(@Validated @RequestBody Deploy resources){
         deployService.update(resources);
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 	@Log("删除部署")
 	@ApiOperation(value = "删除部署")
-	@DeleteMapping(value = "/{id}")
+	@DeleteMapping
 	@PreAuthorize("@el.check('deploy:del')")
-	public ResponseEntity delete(@PathVariable Long id){
-		deployService.delete(id);
-		return new ResponseEntity(HttpStatus.OK);
+	public ResponseEntity<Object> delete(@RequestBody Set<Long> ids){
+		deployService.delete(ids);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	@Log("上传文件部署")
 	@ApiOperation(value = "上传文件部署")
 	@PostMapping(value = "/upload")
 	@PreAuthorize("@el.check('deploy:edit')")
-	public ResponseEntity upload(@RequestBody MultipartFile file, HttpServletRequest request)throws Exception{
+	public ResponseEntity<Object> upload(@RequestBody MultipartFile file, HttpServletRequest request)throws Exception{
 		Long id = Long.valueOf(request.getParameter("id"));
 		String fileName = "";
 		if(file != null){
@@ -99,7 +110,7 @@ public class DeployController {
 	@ApiOperation(value = "系统还原")
 	@PostMapping(value = "/serverReduction")
 	@PreAuthorize("@el.check('deploy:edit')")
-	public ResponseEntity serverReduction(@Validated @RequestBody DeployHistory resources){
+	public ResponseEntity<Object> serverReduction(@Validated @RequestBody DeployHistory resources){
 		String result = deployService.serverReduction(resources);
 		return new ResponseEntity<>(result,HttpStatus.OK);
 	}
@@ -107,7 +118,7 @@ public class DeployController {
 	@ApiOperation(value = "服务运行状态")
 	@PostMapping(value = "/serverStatus")
 	@PreAuthorize("@el.check('deploy:edit')")
-	public ResponseEntity serverStatus(@Validated @RequestBody Deploy resources){
+	public ResponseEntity<Object> serverStatus(@Validated @RequestBody Deploy resources){
 		String result = deployService.serverStatus(resources);
     	return new ResponseEntity<>(result,HttpStatus.OK);
 	}
@@ -115,7 +126,7 @@ public class DeployController {
 	@ApiOperation(value = "启动服务")
 	@PostMapping(value = "/startServer")
 	@PreAuthorize("@el.check('deploy:edit')")
-	public ResponseEntity startServer(@Validated @RequestBody Deploy resources){
+	public ResponseEntity<Object> startServer(@Validated @RequestBody Deploy resources){
 		String result = deployService.startServer(resources);
 		return new ResponseEntity<>(result,HttpStatus.OK);
 	}
@@ -123,7 +134,7 @@ public class DeployController {
 	@ApiOperation(value = "停止服务")
 	@PostMapping(value = "/stopServer")
 	@PreAuthorize("@el.check('deploy:edit')")
-	public ResponseEntity stopServer(@Validated @RequestBody Deploy resources){
+	public ResponseEntity<Object> stopServer(@Validated @RequestBody Deploy resources){
 		String result = deployService.stopServer(resources);
 		return new ResponseEntity<>(result,HttpStatus.OK);
 	}

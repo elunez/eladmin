@@ -198,7 +198,7 @@ public class UserServiceImpl implements UserService {
     public void download(List<UserDto> queryAll, HttpServletResponse response) throws IOException {
         List<Map<String, Object>> list = new ArrayList<>();
         for (UserDto userDTO : queryAll) {
-            List roles = userDTO.getRoles().stream().map(RoleSmallDto::getName).collect(Collectors.toList());
+            List<String> roles = userDTO.getRoles().stream().map(RoleSmallDto::getName).collect(Collectors.toList());
             Map<String,Object> map = new LinkedHashMap<>();
             map.put("用户名", userDTO.getUsername());
             map.put("头像", userDTO.getAvatar());

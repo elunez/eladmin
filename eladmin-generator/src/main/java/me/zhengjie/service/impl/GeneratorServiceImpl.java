@@ -134,7 +134,7 @@ public class GeneratorServiceImpl implements GeneratorService {
     }
 
     @Override
-    public ResponseEntity preview(GenConfig genConfig, List<ColumnInfo> columns) {
+    public ResponseEntity<Object> preview(GenConfig genConfig, List<ColumnInfo> columns) {
         if(genConfig.getId() == null){
             throw new BadRequestException("请先配置生成器");
         }

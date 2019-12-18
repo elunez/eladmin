@@ -3,6 +3,9 @@ package me.zhengjie.modules.mnt.service.dto;
 import lombok.Data;
 import me.zhengjie.annotation.Query;
 
+import java.sql.Timestamp;
+import java.util.List;
+
 /**
 * @author zhanghouying
 * @date 2019-08-24
@@ -21,4 +24,7 @@ public class DatabaseQueryCriteria{
 	 */
     @Query
     private String jdbcUrl;
+
+	@Query(type = Query.Type.BETWEEN)
+	private List<Timestamp> createTime;
 }

@@ -6,6 +6,7 @@ import me.zhengjie.modules.mnt.service.AppService;
 import me.zhengjie.modules.mnt.service.dto.AppDto;
 import me.zhengjie.modules.mnt.service.dto.AppQueryCriteria;
 import me.zhengjie.modules.mnt.service.mapper.AppMapper;
+import me.zhengjie.utils.FileUtil;
 import me.zhengjie.utils.PageUtil;
 import me.zhengjie.utils.QueryHelp;
 import me.zhengjie.utils.ValidationUtil;
@@ -14,6 +15,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.*;
 
 /**
 * @author zhanghouying
@@ -39,7 +43,7 @@ public class AppServiceImpl implements AppService {
     }
 
     @Override
-    public Object queryAll(AppQueryCriteria criteria){
+    public List<AppDto> queryAll(AppQueryCriteria criteria){
         return appMapper.toDto(appRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder)));
     }
 
@@ -67,7 +71,27 @@ public class AppServiceImpl implements AppService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void delete(Long id) {
-        appRepository.deleteById(id);
+    public void delete(Set<Long> ids) {
+        for (Long id : ids) {
+            appRepository.deleteById(id);
+        }
+    }
+
+    @Override
+    public void download(List<AppDto> queryAll, HttpServletResponse response) throws IOException {
+        List<Map<String, Object>> list = new ArrayList<>();
+        for (AppDto appDto : queryAll) {
+            Map<String,Object> map = new LinkedHashMap<>();
+            map.put("应用名称", appDto.getName());
+            map.put("端口", appDto.getPort());
+            map.put("上传目录", appDto.getUploadPath());
+            map.put("部署目录", appDto.getDeployPath());
+            map.put("备份目录", appDto.getBackupPath());
+            map.put("启动脚本", appDto.getStartScript());
+            map.put("部署脚本", appDto.getDeployScript());
+            map.put("创建日期", appDto.getCreateTime());
+            list.add(map);
+        }
+        FileUtil.downloadExcel(list, response);
     }
 }

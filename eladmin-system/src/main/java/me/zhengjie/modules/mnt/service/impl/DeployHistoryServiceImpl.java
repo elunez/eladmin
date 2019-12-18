@@ -7,6 +7,7 @@ import me.zhengjie.modules.mnt.service.DeployHistoryService;
 import me.zhengjie.modules.mnt.service.dto.DeployHistoryDto;
 import me.zhengjie.modules.mnt.service.dto.DeployHistoryQueryCriteria;
 import me.zhengjie.modules.mnt.service.mapper.DeployHistoryMapper;
+import me.zhengjie.utils.FileUtil;
 import me.zhengjie.utils.PageUtil;
 import me.zhengjie.utils.QueryHelp;
 import me.zhengjie.utils.ValidationUtil;
@@ -15,6 +16,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.*;
 
 /**
 * @author zhanghouying
@@ -40,7 +45,7 @@ public class DeployHistoryServiceImpl implements DeployHistoryService {
     }
 
     @Override
-    public Object queryAll(DeployHistoryQueryCriteria criteria){
+    public List<DeployHistoryDto> queryAll(DeployHistoryQueryCriteria criteria){
         return deployhistoryMapper.toDto(deployhistoryRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder)));
     }
 
@@ -60,7 +65,24 @@ public class DeployHistoryServiceImpl implements DeployHistoryService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void delete(String id) {
-        deployhistoryRepository.deleteById(id);
+    public void delete(Set<String> ids) {
+        for (String id : ids) {
+            deployhistoryRepository.deleteById(id);
+        }
+    }
+
+    @Override
+    public void download(List<DeployHistoryDto> queryAll, HttpServletResponse response) throws IOException {
+        List<Map<String, Object>> list = new ArrayList<>();
+        for (DeployHistoryDto deployHistoryDto : queryAll) {
+            Map<String,Object> map = new LinkedHashMap<>();
+            map.put("部署编号", deployHistoryDto.getDeployId());
+            map.put("应用名称", deployHistoryDto.getAppName());
+            map.put("部署IP", deployHistoryDto.getIp());
+            map.put("部署时间", deployHistoryDto.getDeployDate());
+            map.put("部署人员", deployHistoryDto.getDeployUser());
+            list.add(map);
+        }
+        FileUtil.downloadExcel(list, response);
     }
 }
