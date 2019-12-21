@@ -15,8 +15,11 @@ public class DeployHistoryQueryCriteria{
 	/**
 	 * 精确
 	 */
-	@Query(blurry = "appName,ip,deployUser,deployId")
+	@Query(blurry = "appName,ip,deployUser")
 	private String blurry;
+
+	@Query
+	private Long deployId;
 
 	@Query(type = Query.Type.BETWEEN)
 	private List<Timestamp> deployDate;

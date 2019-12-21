@@ -1,5 +1,6 @@
 package me.zhengjie.modules.mnt.service.impl;
 
+import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.modules.mnt.domain.App;
 import me.zhengjie.modules.mnt.repository.AppRepository;
 import me.zhengjie.modules.mnt.service.AppService;
@@ -57,16 +58,32 @@ public class AppServiceImpl implements AppService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public AppDto create(App resources) {
+        verification(resources);
         return appMapper.toDto(appRepository.save(resources));
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void update(App resources) {
+        verification(resources);
         App app = appRepository.findById(resources.getId()).orElseGet(App::new);
         ValidationUtil.isNull(app.getId(),"App","id",resources.getId());
         app.copy(resources);
         appRepository.save(app);
+    }
+
+    private void verification(App resources){
+        String opt = "/opt";
+        String home = "/home";
+        if (!(resources.getUploadPath().startsWith(opt) || resources.getUploadPath().startsWith(home))) {
+            throw new BadRequestException("文件只能上传在opt目录或者home目录 ");
+        }
+        if (!(resources.getDeployPath().startsWith(opt) || resources.getDeployPath().startsWith(home))) {
+            throw new BadRequestException("文件只能部署在opt目录或者home目录 ");
+        }
+        if (!(resources.getBackupPath().startsWith(opt) || resources.getBackupPath().startsWith(home))) {
+            throw new BadRequestException("文件只能备份在opt目录或者home目录 ");
+        }
     }
 
     @Override

@@ -155,7 +155,7 @@ public class SqlUtils {
 	public static String executeFile(String jdbcUrl, String userName, String password, File sqlFile) {
 		Connection connection = getConnection(jdbcUrl, userName, password);
 		try {
-			batchExecute(connection, readSqlList( sqlFile));
+			batchExecute(connection, readSqlList(sqlFile));
 		} catch (Exception e) {
 			log.error("sql脚本执行发生异常:{}",e.getMessage());
 			return e.getMessage();

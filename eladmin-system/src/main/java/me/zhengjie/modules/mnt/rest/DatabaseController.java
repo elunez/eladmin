@@ -97,7 +97,7 @@ public class DatabaseController {
 	public ResponseEntity<Object> upload(@RequestBody MultipartFile file, HttpServletRequest request)throws Exception{
 		String id = request.getParameter("id");
 		DatabaseDto database = databaseService.findById(id);
-		String fileName = "";
+		String fileName;
 		if(database != null){
 			fileName = file.getOriginalFilename();
 			File executeFile = new File(fileSavePath+fileName);
