@@ -1,7 +1,6 @@
 package me.zhengjie.modules.system.rest;
 
 import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.util.IdUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import me.zhengjie.aop.log.Log;
@@ -11,7 +10,6 @@ import me.zhengjie.modules.system.domain.Dept;
 import me.zhengjie.modules.system.service.DeptService;
 import me.zhengjie.modules.system.service.dto.DeptDto;
 import me.zhengjie.modules.system.service.dto.DeptQueryCriteria;
-import me.zhengjie.utils.RedisUtils;
 import me.zhengjie.utils.ThrowableUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

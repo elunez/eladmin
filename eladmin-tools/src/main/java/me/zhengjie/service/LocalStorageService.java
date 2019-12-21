@@ -52,12 +52,6 @@ public interface LocalStorageService {
     void update(LocalStorage resources);
 
     /**
-     * 根据ID删除
-     * @param id /
-     */
-    void delete(Long id);
-
-    /**
      * 多选删除
      * @param ids /
      */

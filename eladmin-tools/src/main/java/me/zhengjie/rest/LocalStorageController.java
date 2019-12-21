@@ -61,14 +61,6 @@ public class LocalStorageController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @ApiOperation("删除文件")
-    @DeleteMapping(value = "/{id}")
-    @PreAuthorize("@el.check('storage:del')")
-    public ResponseEntity<Object> delete(@PathVariable Long id){
-        localStorageService.delete(id);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
     @Log("多选删除")
     @DeleteMapping
     @ApiOperation("多选删除")

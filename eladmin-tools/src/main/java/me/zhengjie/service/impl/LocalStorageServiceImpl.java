@@ -116,15 +116,6 @@ public class LocalStorageServiceImpl implements LocalStorageService {
     @Override
     @CacheEvict(allEntries = true)
     @Transactional(rollbackFor = Exception.class)
-    public void delete(Long id) {
-        LocalStorage storage = localStorageRepository.findById(id).orElseGet(LocalStorage::new);
-        FileUtil.del(storage.getPath());
-        localStorageRepository.delete(storage);
-    }
-
-    @Override
-    @CacheEvict(allEntries = true)
-    @Transactional(rollbackFor = Exception.class)
     public void deleteAll(Long[] ids) {
         for (Long id : ids) {
             LocalStorage storage = localStorageRepository.findById(id).orElseGet(LocalStorage::new);
