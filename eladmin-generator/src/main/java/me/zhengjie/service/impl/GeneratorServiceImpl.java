@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author Zheng Jie
@@ -86,6 +87,7 @@ public class GeneratorServiceImpl implements GeneratorService {
         }
     }
 
+    @Override
     public List<ColumnInfo> query(String tableName){
         // 使用预编译防止sql注入
         String sql = "select column_name, is_nullable, data_type, column_comment, column_key, extra from information_schema.columns " +
@@ -111,8 +113,35 @@ public class GeneratorServiceImpl implements GeneratorService {
     }
 
     @Override
-    public void sync(List<ColumnInfo> columnInfos) {
-
+    public void sync(List<ColumnInfo> columnInfos, List<ColumnInfo> columnInfoList) {
+        // 第一种情况，数据库类字段改变或者新增字段
+        for (ColumnInfo columnInfo : columnInfoList) {
+            // 根据字段名称查找
+            List<ColumnInfo> columns = new ArrayList<ColumnInfo>(columnInfos.stream().filter(c-> c.getColumnName().equals(columnInfo.getColumnName())).collect(Collectors.toList()));
+            // 如果能找到，就修改部分可能被字段
+            if(CollectionUtil.isNotEmpty(columns)){
+                ColumnInfo column = columns.get(0);
+                column.setColumnType(columnInfo.getColumnType());
+                column.setExtra(columnInfo.getExtra());
+                column.setKeyType(columnInfo.getKeyType());
+                if(StringUtils.isBlank(column.getRemark())){
+                    column.setRemark(columnInfo.getRemark());
+                }
+                columnInfoRepository.save(column);
+            } else {
+                // 如果找不到，则保存新字段信息
+                columnInfoRepository.save(columnInfo);
+            }
+        }
+        // 第二种情况，数据库字段删除了
+        for (ColumnInfo columnInfo : columnInfos) {
+            // 根据字段名称查找
+            List<ColumnInfo> columns = new ArrayList<ColumnInfo>(columnInfoList.stream().filter(c-> c.getColumnName().equals(columnInfo.getColumnName())).collect(Collectors.toList()));
+            // 如果找不到，就代表字段被删除了，则需要删除该字段
+            if(CollectionUtil.isEmpty(columns)){
+                columnInfoRepository.delete(columnInfo);
+            }
+        }
     }
 
     @Override

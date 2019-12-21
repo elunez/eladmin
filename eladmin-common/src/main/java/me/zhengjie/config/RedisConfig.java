@@ -42,14 +42,14 @@ import java.util.Map;
 public class RedisConfig extends CachingConfigurerSupport {
 
     /**
-     *  设置 redis 数据默认过期时间，默认6小时
+     *  设置 redis 数据默认过期时间，默认2小时
      *  设置@cacheable 序列化方式
      */
     @Bean
     public RedisCacheConfiguration redisCacheConfiguration(){
         FastJsonRedisSerializer<Object> fastJsonRedisSerializer = new FastJsonRedisSerializer<>(Object.class);
         RedisCacheConfiguration configuration = RedisCacheConfiguration.defaultCacheConfig();
-        configuration = configuration.serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(fastJsonRedisSerializer)).entryTtl(Duration.ofHours(6));
+        configuration = configuration.serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(fastJsonRedisSerializer)).entryTtl(Duration.ofHours(2));
         return configuration;
     }
 

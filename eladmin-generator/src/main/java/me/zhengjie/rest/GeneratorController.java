@@ -55,8 +55,6 @@ public class GeneratorController {
     @GetMapping(value = "/columns")
     public ResponseEntity<Object> getTables(@RequestParam String tableName){
         List<ColumnInfo> columnInfos = generatorService.getColumns(tableName);
-        // 异步同步表信息
-        generatorService.sync(columnInfos);
         return new ResponseEntity<>(PageUtil.toPage(columnInfos,columnInfos.size()), HttpStatus.OK);
     }
 
@@ -64,6 +62,15 @@ public class GeneratorController {
     @PutMapping
     public ResponseEntity<HttpStatus> save(@RequestBody List<ColumnInfo> columnInfos){
         generatorService.save(columnInfos);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @ApiOperation("同步字段数据")
+    @PostMapping(value = "sync")
+    public ResponseEntity<HttpStatus> sync(@RequestBody List<String> tables){
+        for (String table : tables) {
+            generatorService.sync(generatorService.getColumns(table), generatorService.query(table));
+        }
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
