@@ -4,6 +4,7 @@
 -- ----------------------------
 
 INSERT INTO `menu` VALUES (80, b'0', '服务监控', 'monitor/server/index', 6, 14, 'codeConsole', 'server', b'0', b'0', 'ServerMonitor', '2019-11-07 13:06:39', 'server:list', 1);
+INSERT INTO `menu` VALUES (82, b'0', '生成配置', 'generator/config', 36, 33, 'dev', 'generator/config/:tableName', b'1', b'1', 'GeneratorConfig', '2019-11-17 20:08:56', '', 1);
 INSERT INTO `menu` VALUES (83, b'0', '图表库', 'components/Echarts', 10, 50, 'chart', 'echarts', b'1', b'0', 'Echarts', '2019-11-21 09:04:32', '', 1);
 INSERT INTO `menu` VALUES (90, b'0', '运维管理', '', 0, 20, 'mnt', 'mnt', b'0', b'0', 'Mnt', '2019-11-09 10:31:08', NULL, 1);
 INSERT INTO `menu` VALUES (92, b'0', '服务器', 'mnt/server/index', 90, 22, 'server', 'mnt/serverDeploy', b'0', b'0', 'ServerDeploy', '2019-11-10 10:29:25', 'serverDeploy:list', 1);
@@ -24,14 +25,32 @@ INSERT INTO `menu` VALUES (111, b'0', '部署删除', '', 94, 999, '', '', b'0',
 INSERT INTO `menu` VALUES (112, b'0', '数据库新增', '', 98, 999, '', '', b'0', b'0', '', '2019-11-17 11:12:43', 'database:add', 2);
 INSERT INTO `menu` VALUES (113, b'0', '数据库编辑', '', 98, 999, '', '', b'0', b'0', '', '2019-11-17 11:12:58', 'database:edit', 2);
 INSERT INTO `menu` VALUES (114, b'0', '数据库删除', '', 98, 999, '', '', b'0', b'0', '', '2019-11-17 11:13:14', 'database:del', 2);
-INSERT INTO `menu` VALUES (115, b'0', '测试生成', 'gen/index', 1, 999, 'Steve-Jobs', 'genTest', b'0', b'0', NULL, '2019-11-25 18:10:29', 'gen:list', 1);
+
+/*
+ Navicat Premium Data Transfer
+
+ Source Server         : localhost
+ Source Server Type    : MySQL
+ Source Server Version : 50562
+ Source Host           : localhost:3306
+ Source Schema         : eladmin
+
+ Target Server Type    : MySQL
+ Target Server Version : 50562
+ File Encoding         : 65001
+
+ Date: 22/12/2019 15:25:28
+*/
+
+SET NAMES utf8mb4;
+SET FOREIGN_KEY_CHECKS = 0;
 
 -- ----------------------------
 -- Table structure for mnt_app
 -- ----------------------------
 DROP TABLE IF EXISTS `mnt_app`;
 CREATE TABLE `mnt_app`  (
-  `id` bigint(20) NOT NULL COMMENT '应用ID',
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '应用ID',
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '应用名称',
   `upload_path` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '上传目录',
   `deploy_path` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '部署路径',
@@ -41,12 +60,13 @@ CREATE TABLE `mnt_app`  (
   `deploy_script` varchar(4000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '部署脚本',
   `create_time` datetime NULL DEFAULT NULL COMMENT '创建日期',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '应用管理' ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of mnt_app
 -- ----------------------------
-INSERT INTO `mnt_app` VALUES (1, 'eladmin-monitor-2.3.jar', '/opt/upload', '/opt/monitor', '/opt/backup', 8777, 'cd /opt/monitor\nnohup java -jar eladmin-monitor-2.3.jar >nohup.out 2>&1 &\n', 'mkdir -p /opt/monitor\nmv -f /opt/upload/eladmin-monitor-2.3.jar /opt/monitor\n', '2019-11-24 20:52:59');
+INSERT INTO `mnt_app` VALUES (1, 'eladmin-monitor-2.4.jar', '/opt/upload', '/opt/monitor', '/opt/backup', 8777, 'cd /opt/monitor\nnohup java -jar eladmin-monitor-2.4.jar >nohup.out 2>&1 &', 'mv -f /opt/upload/eladmin-monitor-2.4.jar /opt/monitor\ncd /opt/monitor\nnohup java -jar eladmin-monitor-2.4.jar >nohup.out 2>&1 &', '2019-11-24 20:52:59');
+INSERT INTO `mnt_app` VALUES (2, 'eladmin-system-2.4.jar', '/opt/upload', '/opt/eladmin', '/opt/backup/eladmin', 8000, 'cd /opt/eladmin\nnohup java -jar eladmin-system-2.3.jar --spring.profiles.active=prod >nohup.out 2>&1 &', 'mv -f /opt/upload/eladmin-system-2.3.jar /opt/eladmin/\ncd /opt/eladmin\nnohup java -jar eladmin-system-2.3.jar --spring.profiles.active=prod >nohup.out 2>&1 &', '2019-12-21 16:39:57');
 
 -- ----------------------------
 -- Table structure for mnt_database
@@ -58,8 +78,14 @@ CREATE TABLE `mnt_database`  (
   `jdbc_url` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'jdbc连接',
   `user_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '账号',
   `pwd` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '密码',
+  `create_time` datetime NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '数据库管理' ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Records of mnt_database
+-- ----------------------------
+INSERT INTO `mnt_database` VALUES ('c4109eefc5724c65857ca9dd2690e0dd', 'eladmin', 'jdbc:mysql://localhost:3306/eladmin?serverTimezone=Asia/Shanghai', 'root', '123456', '2019-12-21 21:11:17');
 
 -- ----------------------------
 -- Table structure for mnt_deploy
@@ -72,7 +98,13 @@ CREATE TABLE `mnt_deploy`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `FK6sy157pseoxx4fmcqr1vnvvhy`(`app_id`) USING BTREE,
   CONSTRAINT `FK6sy157pseoxx4fmcqr1vnvvhy` FOREIGN KEY (`app_id`) REFERENCES `mnt_app` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '部署管理' ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Records of mnt_deploy
+-- ----------------------------
+INSERT INTO `mnt_deploy` VALUES (3, 1, '2019-12-21 15:53:06');
+INSERT INTO `mnt_deploy` VALUES (6, 2, '2019-12-21 17:09:02');
 
 -- ----------------------------
 -- Table structure for mnt_deploy_history
@@ -86,7 +118,7 @@ CREATE TABLE `mnt_deploy_history`  (
   `ip` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '服务器IP',
   `deploy_id` bigint(20) NULL DEFAULT NULL COMMENT '部署编号',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '部署历史管理' ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for mnt_deploy_server
@@ -99,7 +131,13 @@ CREATE TABLE `mnt_deploy_server`  (
   INDEX `FKeaaha7jew9a02b3bk9ghols53`(`server_id`) USING BTREE,
   CONSTRAINT `FK3cehr56tedph6nk3gxsmeq0pb` FOREIGN KEY (`deploy_id`) REFERENCES `mnt_deploy` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `FKeaaha7jew9a02b3bk9ghols53` FOREIGN KEY (`server_id`) REFERENCES `mnt_server` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '应用与服务器关联' ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Records of mnt_deploy_server
+-- ----------------------------
+INSERT INTO `mnt_deploy_server` VALUES (3, 1);
+INSERT INTO `mnt_deploy_server` VALUES (6, 1);
 
 -- ----------------------------
 -- Table structure for mnt_server
@@ -114,26 +152,11 @@ CREATE TABLE `mnt_server`  (
   `port` int(11) NULL DEFAULT NULL COMMENT '端口',
   `create_time` datetime NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '服务器管理' ROW_FORMAT = Compact;
 
 -- ----------------------------
--- Table structure for monitor_server
+-- Records of mnt_server
 -- ----------------------------
-DROP TABLE IF EXISTS `monitor_server`;
-CREATE TABLE `monitor_server`  (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `cpu_core` int(11) NULL DEFAULT NULL COMMENT 'CPU内核数',
-  `cpu_rate` double NULL DEFAULT NULL COMMENT 'CPU使用率',
-  `disk_total` double NULL DEFAULT NULL COMMENT '磁盘总量',
-  `disk_used` double NULL DEFAULT NULL COMMENT '磁盘使用量',
-  `mem_total` double NULL DEFAULT NULL COMMENT '内存总数',
-  `mem_used` double NULL DEFAULT NULL COMMENT '内存使用量',
-  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '名称',
-  `port` int(11) NULL DEFAULT NULL COMMENT '访问端口',
-  `sort` int(11) NULL DEFAULT NULL COMMENT '排序',
-  `state` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '状态',
-  `swap_total` double NULL DEFAULT NULL COMMENT '交换区总量',
-  `swap_used` double NULL DEFAULT NULL COMMENT '交换区使用量',
-  `address` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '服务地址',
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+INSERT INTO `mnt_server` VALUES (1, 'root', '132.232.129.20', '腾讯云', '123456', 8013, '2019-11-24 20:35:02');
+
+SET FOREIGN_KEY_CHECKS = 1;

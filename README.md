@@ -1,4 +1,4 @@
-<h1 style="text-align: center">el-admin 后台管理系统</h1>
+<h1 style="text-align: center">EL-ADMIN 后台管理系统</h1>
 <div style="text-align: center">
 
 [![AUR](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg)](https://github.com/elunez/eladmin/blob/master/LICENSE)
@@ -11,11 +11,9 @@
 #### 项目简介
 一个基于 Spring Boot 2.1.0 、 Spring Boot Jpa、 JWT、Spring Security、Redis、Vue的前后端分离的后台管理系统
 
-**项目开发文档：**  [https://docs.auauz.net/](https://docs.auauz.net)
+**开发文档：**  [https://docs.auauz.net/](https://docs.auauz.net)
 
-**稳定版本体验地址：**  [https://auauz.net/](https://auauz.net/)
-
-**开发版本体验地址：**  [http://dev.auauz.net/](http://dev.auauz.net/)
+**体验地址：**  [https://auauz.net/](https://auauz.net/)
 
 **账号密码：** `admin/123456` (默认密码都是123456)
 
