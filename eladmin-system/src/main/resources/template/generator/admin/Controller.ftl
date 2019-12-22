@@ -62,17 +62,8 @@ public class ${className}Controller {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @DeleteMapping(value = "/{${pkChangeColName}}")
     @Log("删除${apiAlias}")
     @ApiOperation("删除${apiAlias}")
-    @PreAuthorize("@el.check('${changeClassName}:del')")
-    public ResponseEntity<Object> delete(@PathVariable ${pkColumnType} ${pkChangeColName}){
-        ${changeClassName}Service.delete(${pkChangeColName});
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @Log("多选删除${apiAlias}")
-    @ApiOperation("多选删除${apiAlias}")
     @PreAuthorize("@el.check('${changeClassName}:del')")
     @DeleteMapping
     public ResponseEntity<Object> deleteAll(@RequestBody ${pkColumnType}[] ids) {

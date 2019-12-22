@@ -38,6 +38,11 @@ public class ${className}QueryCriteria{
     @Query(type = Query.Type.NOT_EQUAL)
     private ${column.columnType} ${column.changeColumnName};
 </#if>
+<#if column.queryType = 'NotNull'>
+    /** 不为空 */
+    @Query(type = Query.Type.NOT_NULL)
+    private ${column.columnType} ${column.changeColumnName};
+</#if>
 <#if column.queryType = '>='>
     /** 大于等于 */
     @Query(type = Query.Type.GREATER_THAN)

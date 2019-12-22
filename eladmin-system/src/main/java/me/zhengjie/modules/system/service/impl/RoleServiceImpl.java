@@ -98,12 +98,16 @@ public class RoleServiceImpl implements RoleService {
         if(role1 != null && !role1.getId().equals(role.getId())){
             throw new EntityExistException(Role.class,"username",resources.getName());
         }
-
+        role1 = roleRepository.findByPermission(resources.getPermission());
+        if(role1 != null && !role1.getId().equals(role.getId())){
+            throw new EntityExistException(Role.class,"permission",resources.getPermission());
+        }
         role.setName(resources.getName());
         role.setRemark(resources.getRemark());
         role.setDataScope(resources.getDataScope());
         role.setDepts(resources.getDepts());
         role.setLevel(resources.getLevel());
+        role.setPermission(resources.getPermission());
         roleRepository.save(role);
     }
 
@@ -127,11 +131,7 @@ public class RoleServiceImpl implements RoleService {
     @Transactional(rollbackFor = Exception.class)
     public void delete(Set<Long> ids) {
         for (Long id : ids) {
-            try {
-                roleRepository.deleteById(id);
-            }catch (Throwable e){
-                ThrowableUtil.throwForeignKeyException(e, "该角色存在用户关联，请取消关联后再试");
-            }
+            roleRepository.deleteById(id);
         }
     }
 
