@@ -1,9 +1,9 @@
 package me.zhengjie.modules.system.service;
 
 import me.zhengjie.modules.system.domain.Menu;
-import me.zhengjie.modules.system.service.dto.MenuDTO;
+import me.zhengjie.modules.system.service.dto.MenuDto;
 import me.zhengjie.modules.system.service.dto.MenuQueryCriteria;
-import me.zhengjie.modules.system.service.dto.RoleSmallDTO;
+import me.zhengjie.modules.system.service.dto.RoleSmallDto;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -17,29 +17,94 @@ import java.util.Set;
  */
 public interface MenuService {
 
-    List<MenuDTO> queryAll(MenuQueryCriteria criteria);
+    /**
+     * 查询全部数据
+     * @param criteria 条件
+     * @return /
+     */
+    List<MenuDto> queryAll(MenuQueryCriteria criteria);
 
-    MenuDTO findById(long id);
+    /**
+     * 根据ID查询
+     * @param id /
+     * @return /
+     */
+    MenuDto findById(long id);
 
-    MenuDTO create(Menu resources);
+    /**
+     * 创建
+     * @param resources /
+     * @return /
+     */
+    MenuDto create(Menu resources);
 
+    /**
+     * 编辑
+     * @param resources /
+     */
     void update(Menu resources);
 
+    /**
+     * 获取待删除的菜单
+     * @param menuList /
+     * @param menuSet /
+     * @return /
+     */
     Set<Menu> getDeleteMenus(List<Menu> menuList, Set<Menu> menuSet);
 
+    /**
+     * 获取菜单树
+     * @param menus /
+     * @return /
+     */
     Object getMenuTree(List<Menu> menus);
 
+    /**
+     * 根据pid查询
+     * @param pid /
+     * @return /
+     */
     List<Menu> findByPid(long pid);
 
-    Map<String,Object> buildTree(List<MenuDTO> menuDTOS);
+    /**
+     * 构建菜单树
+     * @param menuDtos 原始数据
+     * @return /
+     */
+    Map<String,Object> buildTree(List<MenuDto> menuDtos);
 
-    List<MenuDTO> findByRoles(List<RoleSmallDTO> roles);
+    /**
+     * 根据角色查询
+     * @param roles /
+     * @return /
+     */
+    List<MenuDto> findByRoles(List<RoleSmallDto> roles);
 
-    Object buildMenus(List<MenuDTO> byRoles);
+    /**
+     * 构建菜单树
+     * @param menuDtos /
+     * @return /
+     */
+    Object buildMenus(List<MenuDto> menuDtos);
 
+    /**
+     * 根据ID查询
+     * @param id /
+     * @return /
+     */
     Menu findOne(Long id);
 
+    /**
+     * 删除
+     * @param menuSet /
+     */
     void delete(Set<Menu> menuSet);
 
-    void download(List<MenuDTO> queryAll, HttpServletResponse response) throws IOException;
+    /**
+     * 导出
+     * @param queryAll 待导出的数据
+     * @param response /
+     * @throws IOException /
+     */
+    void download(List<MenuDto> queryAll, HttpServletResponse response) throws IOException;
 }

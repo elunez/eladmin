@@ -12,7 +12,11 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Set;
 
+/**
+ * @author Zheng Jie
+ */
 @RestController
 @RequestMapping("/auth/online")
 @Api(tags = "系统：在线用户管理")
@@ -27,7 +31,7 @@ public class OnlineController {
     @ApiOperation("查询在线用户")
     @GetMapping
     @PreAuthorize("@el.check()")
-    public ResponseEntity getAll(String filter, Pageable pageable){
+    public ResponseEntity<Object> getAll(String filter, Pageable pageable){
         return new ResponseEntity<>(onlineUserService.getAll(filter, pageable),HttpStatus.OK);
     }
 
@@ -40,10 +44,12 @@ public class OnlineController {
     }
 
     @ApiOperation("踢出用户")
-    @DeleteMapping(value = "/{key}")
+    @DeleteMapping
     @PreAuthorize("@el.check()")
-    public ResponseEntity delete(@PathVariable String key) throws Exception {
-        onlineUserService.kickOut(key);
-        return new ResponseEntity(HttpStatus.OK);
+    public ResponseEntity<Object> delete(@RequestBody Set<String> keys) throws Exception {
+        for (String key : keys) {
+            onlineUserService.kickOut(key);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

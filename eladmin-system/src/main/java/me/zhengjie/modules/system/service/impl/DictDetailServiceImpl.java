@@ -7,7 +7,7 @@ import me.zhengjie.utils.QueryHelp;
 import me.zhengjie.utils.ValidationUtil;
 import me.zhengjie.modules.system.repository.DictDetailRepository;
 import me.zhengjie.modules.system.service.DictDetailService;
-import me.zhengjie.modules.system.service.dto.DictDetailDTO;
+import me.zhengjie.modules.system.service.dto.DictDetailDto;
 import me.zhengjie.modules.system.service.mapper.DictDetailMapper;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
@@ -39,14 +39,14 @@ public class DictDetailServiceImpl implements DictDetailService {
 
     @Override
     @Cacheable
-    public Map queryAll(DictDetailQueryCriteria criteria, Pageable pageable) {
+    public Map<String,Object> queryAll(DictDetailQueryCriteria criteria, Pageable pageable) {
         Page<DictDetail> page = dictDetailRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable);
         return PageUtil.toPage(page.map(dictDetailMapper::toDto));
     }
 
     @Override
     @Cacheable(key = "#p0")
-    public DictDetailDTO findById(Long id) {
+    public DictDetailDto findById(Long id) {
         DictDetail dictDetail = dictDetailRepository.findById(id).orElseGet(DictDetail::new);
         ValidationUtil.isNull(dictDetail.getId(),"DictDetail","id",id);
         return dictDetailMapper.toDto(dictDetail);
@@ -55,7 +55,7 @@ public class DictDetailServiceImpl implements DictDetailService {
     @Override
     @CacheEvict(allEntries = true)
     @Transactional(rollbackFor = Exception.class)
-    public DictDetailDTO create(DictDetail resources) {
+    public DictDetailDto create(DictDetail resources) {
         return dictDetailMapper.toDto(dictDetailRepository.save(resources));
     }
 

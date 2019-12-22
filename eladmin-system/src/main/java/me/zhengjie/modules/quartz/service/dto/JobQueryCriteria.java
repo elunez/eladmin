@@ -4,6 +4,7 @@ import lombok.Data;
 import me.zhengjie.annotation.Query;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 /**
  * @author Zheng Jie
@@ -18,9 +19,6 @@ public class JobQueryCriteria {
     @Query
     private Boolean isSuccess;
 
-    @Query(type = Query.Type.GREATER_THAN,propName = "createTime")
-    private Timestamp startTime;
-
-    @Query(type = Query.Type.LESS_THAN,propName = "createTime")
-    private Timestamp endTime;
+    @Query(type = Query.Type.BETWEEN)
+    private List<Timestamp> createTime;
 }

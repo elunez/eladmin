@@ -13,22 +13,21 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 </#if>
 
-
 /**
 * @author ${author}
 * @date ${date}
 */
 @Data
-public class ${className}DTO implements Serializable {
+public class ${className}Dto implements Serializable {
 <#if columns??>
     <#list columns as column>
 
-    <#if column.columnComment != ''>
-    // ${column.columnComment}
+    <#if column.remark != ''>
+    /** ${column.remark} */
     </#if>
     <#if column.columnKey = 'PRI'>
     <#if !auto && pkColumnType = 'Long'>
-    // 处理精度丢失问题
+    /** 防止精度丢失 */
     @JsonSerialize(using= ToStringSerializer.class)
     </#if>
     </#if>

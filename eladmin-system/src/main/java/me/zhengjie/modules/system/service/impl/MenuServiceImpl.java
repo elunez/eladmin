@@ -10,9 +10,9 @@ import me.zhengjie.exception.EntityExistException;
 import me.zhengjie.modules.system.repository.MenuRepository;
 import me.zhengjie.modules.system.service.MenuService;
 import me.zhengjie.modules.system.service.RoleService;
-import me.zhengjie.modules.system.service.dto.MenuDTO;
+import me.zhengjie.modules.system.service.dto.MenuDto;
 import me.zhengjie.modules.system.service.dto.MenuQueryCriteria;
-import me.zhengjie.modules.system.service.dto.RoleSmallDTO;
+import me.zhengjie.modules.system.service.dto.RoleSmallDto;
 import me.zhengjie.modules.system.service.mapper.MenuMapper;
 import me.zhengjie.utils.FileUtil;
 import me.zhengjie.utils.QueryHelp;
@@ -21,7 +21,6 @@ import me.zhengjie.utils.ValidationUtil;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +29,9 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * @author Zheng Jie
+ */
 @Service
 @CacheConfig(cacheNames = "menu")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
@@ -49,32 +51,29 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     @Cacheable
-    public List<MenuDTO> queryAll(MenuQueryCriteria criteria){
+    public List<MenuDto> queryAll(MenuQueryCriteria criteria){
 //        Sort sort = new Sort(Sort.Direction.DESC,"id");
         return menuMapper.toDto(menuRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder)));
     }
 
     @Override
     @Cacheable(key = "#p0")
-    public MenuDTO findById(long id) {
+    public MenuDto findById(long id) {
         Menu menu = menuRepository.findById(id).orElseGet(Menu::new);
         ValidationUtil.isNull(menu.getId(),"Menu","id",id);
         return menuMapper.toDto(menu);
     }
 
     @Override
-    public List<MenuDTO> findByRoles(List<RoleSmallDTO> roles) {
-        Set<Menu> menus = new LinkedHashSet<>();
-        for (RoleSmallDTO role : roles) {
-            List<Menu> menus1 = new ArrayList<>(menuRepository.findByRoles_IdAndTypeIsNotInOrderBySortAsc(role.getId(), 2));
-            menus.addAll(menus1);
-        }
+    public List<MenuDto> findByRoles(List<RoleSmallDto> roles) {
+        Set<Long> roleIds = roles.stream().map(RoleSmallDto::getId).collect(Collectors.toSet());
+        LinkedHashSet<Menu> menus = menuRepository.findByRoles_IdInAndTypeNotOrderBySortAsc(roleIds, 2);
         return menus.stream().map(menuMapper::toDto).collect(Collectors.toList());
     }
 
     @Override
     @CacheEvict(allEntries = true)
-    public MenuDTO create(Menu resources) {
+    public MenuDto create(Menu resources) {
         if(menuRepository.findByName(resources.getName()) != null){
             throw new EntityExistException(Menu.class,"name",resources.getName());
         }
@@ -84,7 +83,8 @@ public class MenuServiceImpl implements MenuService {
             }
         }
         if(resources.getIFrame()){
-            if (!(resources.getPath().toLowerCase().startsWith("http://")||resources.getPath().toLowerCase().startsWith("https://"))) {
+            String http = "http://", https = "https://";
+            if (!(resources.getPath().toLowerCase().startsWith(http)||resources.getPath().toLowerCase().startsWith(https))) {
                 throw new BadRequestException("外链必须以http://或者https://开头");
             }
         }
@@ -101,7 +101,8 @@ public class MenuServiceImpl implements MenuService {
         ValidationUtil.isNull(menu.getId(),"Permission","id",resources.getId());
 
         if(resources.getIFrame()){
-            if (!(resources.getPath().toLowerCase().startsWith("http://")||resources.getPath().toLowerCase().startsWith("https://"))) {
+            String http = "http://", https = "https://";
+            if (!(resources.getPath().toLowerCase().startsWith(http)||resources.getPath().toLowerCase().startsWith(https))) {
                 throw new BadRequestException("外链必须以http://或者https://开头");
             }
         }
@@ -162,7 +163,7 @@ public class MenuServiceImpl implements MenuService {
         menus.forEach(menu -> {
                     if (menu!=null){
                         List<Menu> menuList = menuRepository.findByPid(menu.getId());
-                        Map<String,Object> map = new HashMap<>();
+                        Map<String,Object> map = new HashMap<>(16);
                         map.put("id",menu.getId());
                         map.put("label",menu.getName());
                         if(menuList!=null && menuList.size()!=0){
@@ -182,14 +183,14 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
-    public Map<String,Object> buildTree(List<MenuDTO> menuDTOS) {
-        List<MenuDTO> trees = new ArrayList<>();
+    public Map<String,Object> buildTree(List<MenuDto> menuDtos) {
+        List<MenuDto> trees = new ArrayList<>();
         Set<Long> ids = new HashSet<>();
-        for (MenuDTO menuDTO : menuDTOS) {
+        for (MenuDto menuDTO : menuDtos) {
             if (menuDTO.getPid() == 0) {
                 trees.add(menuDTO);
             }
-            for (MenuDTO it : menuDTOS) {
+            for (MenuDto it : menuDtos) {
                 if (it.getPid().equals(menuDTO.getId())) {
                     if (menuDTO.getChildren() == null) {
                         menuDTO.setChildren(new ArrayList<>());
@@ -199,21 +200,21 @@ public class MenuServiceImpl implements MenuService {
                 }
             }
         }
-        Map<String,Object> map = new HashMap<>();
+        Map<String,Object> map = new HashMap<>(2);
         if(trees.size() == 0){
-            trees = menuDTOS.stream().filter(s -> !ids.contains(s.getId())).collect(Collectors.toList());
+            trees = menuDtos.stream().filter(s -> !ids.contains(s.getId())).collect(Collectors.toList());
         }
         map.put("content",trees);
-        map.put("totalElements", menuDTOS.size());
+        map.put("totalElements", menuDtos.size());
         return map;
     }
 
     @Override
-    public List<MenuVo> buildMenus(List<MenuDTO> menuDTOS) {
+    public List<MenuVo> buildMenus(List<MenuDto> menuDtos) {
         List<MenuVo> list = new LinkedList<>();
-        menuDTOS.forEach(menuDTO -> {
+        menuDtos.forEach(menuDTO -> {
             if (menuDTO!=null){
-                List<MenuDTO> menuDTOList = menuDTO.getChildren();
+                List<MenuDto> menuDtoList = menuDTO.getChildren();
                 MenuVo menuVo = new MenuVo();
                 menuVo.setName(ObjectUtil.isNotEmpty(menuDTO.getComponentName())  ? menuDTO.getComponentName() : menuDTO.getName());
                 // 一级目录需要加斜杠，不然会报警告
@@ -228,10 +229,10 @@ public class MenuServiceImpl implements MenuService {
                     }
                 }
                 menuVo.setMeta(new MenuMetaVo(menuDTO.getName(),menuDTO.getIcon(),!menuDTO.getCache()));
-                if(menuDTOList!=null && menuDTOList.size()!=0){
+                if(menuDtoList !=null && menuDtoList.size()!=0){
                     menuVo.setAlwaysShow(true);
                     menuVo.setRedirect("noredirect");
-                    menuVo.setChildren(buildMenus(menuDTOList));
+                    menuVo.setChildren(buildMenus(menuDtoList));
                     // 处理是一级菜单并且没有子菜单的情况
                 } else if(menuDTO.getPid() == 0){
                     MenuVo menuVo1 = new MenuVo();
@@ -266,9 +267,9 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
-    public void download(List<MenuDTO> menuDTOS, HttpServletResponse response) throws IOException {
+    public void download(List<MenuDto> menuDtos, HttpServletResponse response) throws IOException {
         List<Map<String, Object>> list = new ArrayList<>();
-        for (MenuDTO menuDTO : menuDTOS) {
+        for (MenuDto menuDTO : menuDtos) {
             Map<String,Object> map = new LinkedHashMap<>();
             map.put("菜单名称", menuDTO.getName());
             map.put("菜单类型", menuDTO.getType() == 0 ? "目录" : menuDTO.getType() == 1 ? "菜单" : "按钮");

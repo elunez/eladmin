@@ -44,9 +44,17 @@ public class DictController {
 
     @Log("查询字典")
     @ApiOperation("查询字典")
+    @GetMapping(value = "/all")
+    @PreAuthorize("@el.check('dict:list')")
+    public ResponseEntity<Object> all(){
+        return new ResponseEntity<>(dictService.queryAll(new DictQueryCriteria()),HttpStatus.OK);
+    }
+
+    @Log("查询字典")
+    @ApiOperation("查询字典")
     @GetMapping
     @PreAuthorize("@el.check('dict:list')")
-    public ResponseEntity getDicts(DictQueryCriteria resources, Pageable pageable){
+    public ResponseEntity<Object> getDicts(DictQueryCriteria resources, Pageable pageable){
         return new ResponseEntity<>(dictService.queryAll(resources,pageable),HttpStatus.OK);
     }
 
@@ -54,7 +62,7 @@ public class DictController {
     @ApiOperation("新增字典")
     @PostMapping
     @PreAuthorize("@el.check('dict:add')")
-    public ResponseEntity create(@Validated @RequestBody Dict resources){
+    public ResponseEntity<Object> create(@Validated @RequestBody Dict resources){
         if (resources.getId() != null) {
             throw new BadRequestException("A new "+ ENTITY_NAME +" cannot already have an ID");
         }
@@ -65,17 +73,17 @@ public class DictController {
     @ApiOperation("修改字典")
     @PutMapping
     @PreAuthorize("@el.check('dict:edit')")
-    public ResponseEntity update(@Validated(Dict.Update.class) @RequestBody Dict resources){
+    public ResponseEntity<Object> update(@Validated(Dict.Update.class) @RequestBody Dict resources){
         dictService.update(resources);
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @Log("删除字典")
     @ApiOperation("删除字典")
     @DeleteMapping(value = "/{id}")
     @PreAuthorize("@el.check('dict:del')")
-    public ResponseEntity delete(@PathVariable Long id){
+    public ResponseEntity<Object> delete(@PathVariable Long id){
         dictService.delete(id);
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

@@ -9,7 +9,7 @@ import me.zhengjie.utils.QueryHelp;
 import me.zhengjie.utils.ValidationUtil;
 import me.zhengjie.modules.system.repository.JobRepository;
 import me.zhengjie.modules.system.service.JobService;
-import me.zhengjie.modules.system.service.dto.JobDTO;
+import me.zhengjie.modules.system.service.dto.JobDto;
 import me.zhengjie.modules.system.service.mapper.JobMapper;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
@@ -22,10 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
 * @author Zheng Jie
@@ -52,7 +49,7 @@ public class JobServiceImpl implements JobService {
     @Cacheable
     public Map<String,Object> queryAll(JobQueryCriteria criteria, Pageable pageable) {
         Page<Job> page = jobRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable);
-        List<JobDTO> jobs = new ArrayList<>();
+        List<JobDto> jobs = new ArrayList<>();
         for (Job job : page.getContent()) {
             jobs.add(jobMapper.toDto(job,deptRepository.findNameById(job.getDept().getPid())));
         }
@@ -61,14 +58,14 @@ public class JobServiceImpl implements JobService {
 
     @Override
     @Cacheable
-    public List<JobDTO> queryAll(JobQueryCriteria criteria) {
+    public List<JobDto> queryAll(JobQueryCriteria criteria) {
         List<Job> list = jobRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder));
         return jobMapper.toDto(list);
     }
 
     @Override
     @Cacheable(key = "#p0")
-    public JobDTO findById(Long id) {
+    public JobDto findById(Long id) {
         Job job = jobRepository.findById(id).orElseGet(Job::new);
         ValidationUtil.isNull(job.getId(),"Job","id",id);
         return jobMapper.toDto(job);
@@ -77,7 +74,7 @@ public class JobServiceImpl implements JobService {
     @Override
     @CacheEvict(allEntries = true)
     @Transactional(rollbackFor = Exception.class)
-    public JobDTO create(Job resources) {
+    public JobDto create(Job resources) {
         return jobMapper.toDto(jobRepository.save(resources));
     }
 
@@ -94,14 +91,16 @@ public class JobServiceImpl implements JobService {
     @Override
     @CacheEvict(allEntries = true)
     @Transactional(rollbackFor = Exception.class)
-    public void delete(Long id) {
-        jobRepository.deleteById(id);
+    public void delete(Set<Long> ids) {
+        for (Long id : ids) {
+            jobRepository.deleteById(id);
+        }
     }
 
     @Override
-    public void download(List<JobDTO> jobDTOs, HttpServletResponse response) throws IOException {
+    public void download(List<JobDto> jobDtos, HttpServletResponse response) throws IOException {
         List<Map<String, Object>> list = new ArrayList<>();
-        for (JobDTO jobDTO : jobDTOs) {
+        for (JobDto jobDTO : jobDtos) {
             Map<String,Object> map = new LinkedHashMap<>();
             map.put("岗位名称", jobDTO.getName());
             map.put("所属部门", jobDTO.getDept().getName());

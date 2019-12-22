@@ -31,29 +31,29 @@ public class VerificationCodeController {
 
     @PostMapping(value = "/resetEmail")
     @ApiOperation("重置邮箱，发送验证码")
-    public ResponseEntity resetEmail(@RequestBody VerificationCode code) throws Exception {
+    public ResponseEntity<Object> resetEmail(@RequestBody VerificationCode code) throws Exception {
         code.setScenes(ElAdminConstant.RESET_MAIL);
         EmailVo emailVo = verificationCodeService.sendEmail(code);
         emailService.send(emailVo,emailService.find());
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping(value = "/email/resetPass")
     @ApiOperation("重置密码，发送验证码")
-    public ResponseEntity resetPass(@RequestParam String email) throws Exception {
+    public ResponseEntity<Object> resetPass(@RequestParam String email) throws Exception {
         VerificationCode code = new VerificationCode();
         code.setType("email");
         code.setValue(email);
         code.setScenes(ElAdminConstant.RESET_MAIL);
         EmailVo emailVo = verificationCodeService.sendEmail(code);
         emailService.send(emailVo,emailService.find());
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping(value = "/validated")
     @ApiOperation("验证码验证")
-    public ResponseEntity validated(VerificationCode code){
+    public ResponseEntity<Object> validated(VerificationCode code){
         verificationCodeService.validated(code);
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

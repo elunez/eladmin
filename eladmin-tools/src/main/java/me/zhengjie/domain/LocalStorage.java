@@ -3,7 +3,6 @@ package me.zhengjie.domain;
 import lombok.*;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
-import me.zhengjie.base.BaseEntity;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
@@ -26,31 +25,31 @@ public class LocalStorage  implements Serializable {
     @Column(name = "id")
     private Long id;
 
-    // 真实文件名
+    /** 真实文件名 */
     @Column(name = "real_name")
     private String realName;
 
-    // 文件名
+    /**文件名 */
     @Column(name = "name")
     private String name;
 
-    // 后缀
+    /**后缀 */
     @Column(name = "suffix")
     private String suffix;
 
-    // 路径
+    /** 路径 */
     @Column(name = "path")
     private String path;
 
-    // 类型
+    /** 类型 */
     @Column(name = "type")
     private String type;
 
-    // 大小
+    /** 大小 */
     @Column(name = "size")
     private String size;
 
-    // 操作人
+    /** 操作人 */
     @Column(name = "operate")
     private String operate;
 

@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 * @author ${author}
 * @date ${date}
 */
-@Api(tags = "${className}管理")
+@Api(tags = "${apiAlias}管理")
 @RestController
 @RequestMapping("/api/${changeClassName}")
 public class ${className}Controller {
@@ -38,36 +38,36 @@ public class ${className}Controller {
     }
 
     @GetMapping
-    @Log("查询${className}")
-    @ApiOperation("查询${className}")
+    @Log("查询${apiAlias}")
+    @ApiOperation("查询${apiAlias}")
     @PreAuthorize("@el.check('${changeClassName}:list')")
-    public ResponseEntity get${className}s(${className}QueryCriteria criteria, Pageable pageable){
+    public ResponseEntity<Object> get${className}s(${className}QueryCriteria criteria, Pageable pageable){
         return new ResponseEntity<>(${changeClassName}Service.queryAll(criteria,pageable),HttpStatus.OK);
     }
 
     @PostMapping
-    @Log("新增${className}")
-    @ApiOperation("新增${className}")
+    @Log("新增${apiAlias}")
+    @ApiOperation("新增${apiAlias}")
     @PreAuthorize("@el.check('${changeClassName}:add')")
-    public ResponseEntity create(@Validated @RequestBody ${className} resources){
+    public ResponseEntity<Object> create(@Validated @RequestBody ${className} resources){
         return new ResponseEntity<>(${changeClassName}Service.create(resources),HttpStatus.CREATED);
     }
 
     @PutMapping
-    @Log("修改${className}")
-    @ApiOperation("修改${className}")
+    @Log("修改${apiAlias}")
+    @ApiOperation("修改${apiAlias}")
     @PreAuthorize("@el.check('${changeClassName}:edit')")
-    public ResponseEntity update(@Validated @RequestBody ${className} resources){
+    public ResponseEntity<Object> update(@Validated @RequestBody ${className} resources){
         ${changeClassName}Service.update(resources);
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @DeleteMapping(value = "/{${pkChangeColName}}")
-    @Log("删除${className}")
-    @ApiOperation("删除${className}")
+    @Log("删除${apiAlias}")
+    @ApiOperation("删除${apiAlias}")
     @PreAuthorize("@el.check('${changeClassName}:del')")
-    public ResponseEntity delete(@PathVariable ${pkColumnType} ${pkChangeColName}){
-        ${changeClassName}Service.delete(${pkChangeColName});
-        return new ResponseEntity(HttpStatus.OK);
+    @DeleteMapping
+    public ResponseEntity<Object> deleteAll(@RequestBody ${pkColumnType}[] ids) {
+        ${changeClassName}Service.deleteAll(ids);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

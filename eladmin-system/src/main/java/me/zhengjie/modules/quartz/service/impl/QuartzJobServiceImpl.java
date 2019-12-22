@@ -23,10 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Zheng Jie
@@ -125,18 +122,21 @@ public class QuartzJobServiceImpl implements QuartzJobService {
         if(quartzJob.getId().equals(1L)){
             throw new BadRequestException("该任务不可操作");
         }
-        quartzManage.runAJobNow(quartzJob);
+        quartzManage.runJobNow(quartzJob);
     }
 
     @Override
     @CacheEvict(allEntries = true)
     @Transactional(rollbackFor = Exception.class)
-    public void delete(QuartzJob quartzJob) {
-        if(quartzJob.getId().equals(1L)){
-            throw new BadRequestException("该任务不可操作");
+    public void delete(Set<Long> ids) {
+        for (Long id : ids) {
+            if(id.equals(1L)){
+                throw new BadRequestException("更新访客记录不可删除，你可以在后台代码中取消该限制");
+            }
+            QuartzJob quartzJob = findById(id);
+            quartzManage.deleteJob(quartzJob);
+            quartzJobRepository.delete(quartzJob);
         }
-        quartzManage.deleteJob(quartzJob);
-        quartzJobRepository.delete(quartzJob);
     }
 
     @Override

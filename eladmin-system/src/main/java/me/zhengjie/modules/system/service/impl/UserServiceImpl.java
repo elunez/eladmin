@@ -1,6 +1,5 @@
 package me.zhengjie.modules.system.service.impl;
 
-import me.zhengjie.modules.monitor.service.RedisService;
 import me.zhengjie.modules.system.domain.User;
 import me.zhengjie.exception.EntityExistException;
 import me.zhengjie.exception.EntityNotFoundException;
@@ -8,8 +7,8 @@ import me.zhengjie.modules.system.domain.UserAvatar;
 import me.zhengjie.modules.system.repository.UserAvatarRepository;
 import me.zhengjie.modules.system.repository.UserRepository;
 import me.zhengjie.modules.system.service.UserService;
-import me.zhengjie.modules.system.service.dto.RoleSmallDTO;
-import me.zhengjie.modules.system.service.dto.UserDTO;
+import me.zhengjie.modules.system.service.dto.RoleSmallDto;
+import me.zhengjie.modules.system.service.dto.UserDto;
 import me.zhengjie.modules.system.service.dto.UserQueryCriteria;
 import me.zhengjie.modules.system.service.mapper.UserMapper;
 import me.zhengjie.utils.*;
@@ -39,20 +38,17 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-
     private final UserMapper userMapper;
-
-    private final RedisService redisService;
-
+    private final RedisUtils redisUtils;
     private final UserAvatarRepository userAvatarRepository;
 
     @Value("${file.avatar}")
     private String avatar;
 
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, RedisService redisService, UserAvatarRepository userAvatarRepository) {
+    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, RedisUtils redisUtils, UserAvatarRepository userAvatarRepository) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
-        this.redisService = redisService;
+        this.redisUtils = redisUtils;
         this.userAvatarRepository = userAvatarRepository;
     }
 
@@ -65,14 +61,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Cacheable
-    public List<UserDTO> queryAll(UserQueryCriteria criteria) {
+    public List<UserDto> queryAll(UserQueryCriteria criteria) {
         List<User> users = userRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder));
         return userMapper.toDto(users);
     }
 
     @Override
     @Cacheable(key = "#p0")
-    public UserDTO findById(long id) {
+    public UserDto findById(long id) {
         User user = userRepository.findById(id).orElseGet(User::new);
         ValidationUtil.isNull(user.getId(),"User","id",id);
         return userMapper.toDto(user);
@@ -81,18 +77,13 @@ public class UserServiceImpl implements UserService {
     @Override
     @CacheEvict(allEntries = true)
     @Transactional(rollbackFor = Exception.class)
-    public UserDTO create(User resources) {
-
+    public UserDto create(User resources) {
         if(userRepository.findByUsername(resources.getUsername())!=null){
             throw new EntityExistException(User.class,"username",resources.getUsername());
         }
-
         if(userRepository.findByEmail(resources.getEmail())!=null){
             throw new EntityExistException(User.class,"email",resources.getEmail());
         }
-
-        // 默认密码 123456，此密码是加密后的字符
-        resources.setPassword("e10adc3949ba59abbe56e057f20f883e");
         return userMapper.toDto(userRepository.save(resources));
     }
 
@@ -116,9 +107,9 @@ public class UserServiceImpl implements UserService {
         // 如果用户的角色改变了，需要手动清理下缓存
         if (!resources.getRoles().equals(user.getRoles())) {
             String key = "role::loadPermissionByUser:" + user.getUsername();
-            redisService.delete(key);
+            redisUtils.del(key);
             key = "role::findByUsers_Id:" + user.getId();
-            redisService.delete(key);
+            redisUtils.del(key);
         }
 
         user.setUsername(resources.getUsername());
@@ -128,19 +119,34 @@ public class UserServiceImpl implements UserService {
         user.setDept(resources.getDept());
         user.setJob(resources.getJob());
         user.setPhone(resources.getPhone());
+        user.setNickName(resources.getNickName());
+        user.setSex(resources.getSex());
         userRepository.save(user);
     }
 
     @Override
     @CacheEvict(allEntries = true)
     @Transactional(rollbackFor = Exception.class)
-    public void delete(Long id) {
-        userRepository.deleteById(id);
+    public void updateCenter(User resources) {
+        User user = userRepository.findById(resources.getId()).orElseGet(User::new);
+        user.setNickName(resources.getNickName());
+        user.setPhone(resources.getPhone());
+        user.setSex(resources.getSex());
+        userRepository.save(user);
+    }
+
+    @Override
+    @CacheEvict(allEntries = true)
+    @Transactional(rollbackFor = Exception.class)
+    public void delete(Set<Long> ids) {
+        for (Long id : ids) {
+            userRepository.deleteById(id);
+        }
     }
 
     @Override
     @Cacheable(key = "'loadUserByUsername:'+#p0")
-    public UserDTO findByName(String userName) {
+    public UserDto findByName(String userName) {
         User user;
         if(ValidationUtil.isEmail(userName)){
             user = userRepository.findByEmail(userName);
@@ -189,10 +195,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void download(List<UserDTO> queryAll, HttpServletResponse response) throws IOException {
+    public void download(List<UserDto> queryAll, HttpServletResponse response) throws IOException {
         List<Map<String, Object>> list = new ArrayList<>();
-        for (UserDTO userDTO : queryAll) {
-            List roles = userDTO.getRoles().stream().map(RoleSmallDTO::getName).collect(Collectors.toList());
+        for (UserDto userDTO : queryAll) {
+            List<String> roles = userDTO.getRoles().stream().map(RoleSmallDto::getName).collect(Collectors.toList());
             Map<String,Object> map = new LinkedHashMap<>();
             map.put("用户名", userDTO.getUsername());
             map.put("头像", userDTO.getAvatar());

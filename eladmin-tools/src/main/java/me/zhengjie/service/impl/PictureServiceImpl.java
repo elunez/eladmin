@@ -1,25 +1,24 @@
 package me.zhengjie.service.impl;
 
+import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import me.zhengjie.domain.Picture;
-import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.repository.PictureRepository;
 import me.zhengjie.service.PictureService;
 import me.zhengjie.service.dto.PictureQueryCriteria;
+import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.utils.*;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
@@ -35,6 +34,9 @@ import java.util.*;
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class PictureServiceImpl implements PictureService {
 
+    @Value("${smms.token}")
+    private String token;
+
     private final PictureRepository pictureRepository;
 
     private static final String SUCCESS = "success";
@@ -48,7 +50,6 @@ public class PictureServiceImpl implements PictureService {
     }
 
     @Override
-    @Cacheable
     public Object queryAll(PictureQueryCriteria criteria, Pageable pageable){
         return PageUtil.toPage(pictureRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable));
     }
@@ -59,7 +60,6 @@ public class PictureServiceImpl implements PictureService {
     }
 
     @Override
-    @CacheEvict(allEntries = true)
     @Transactional(rollbackFor = Throwable.class)
     public Picture upload(MultipartFile multipartFile, String username) {
         File file = FileUtil.toFile(multipartFile);
@@ -70,7 +70,12 @@ public class PictureServiceImpl implements PictureService {
         }
         HashMap<String, Object> paramMap = new HashMap<>(1);
         paramMap.put("smfile", file);
-        String result= HttpUtil.post(ElAdminConstant.Url.SM_MS_URL, paramMap);
+        // 上传文件
+        String result= HttpRequest.post(ElAdminConstant.Url.SM_MS_URL + "/v2/upload")
+                .header("Authorization", token)
+                .form(paramMap)
+                .timeout(20000)
+                .execute().body();
         JSONObject jsonObject = JSONUtil.parseObj(result);
         if(!jsonObject.get(CODE).toString().equals(SUCCESS)){
             throw new BadRequestException(TranslatorUtil.translate(jsonObject.get(MSG).toString()));
@@ -88,7 +93,6 @@ public class PictureServiceImpl implements PictureService {
     }
 
     @Override
-    @Cacheable(key = "#p0")
     public Picture findById(Long id) {
         Picture picture = pictureRepository.findById(id).orElseGet(Picture::new);
         ValidationUtil.isNull(picture.getId(),"Picture","id",id);
@@ -96,22 +100,35 @@ public class PictureServiceImpl implements PictureService {
     }
 
     @Override
-    @CacheEvict(allEntries = true)
-    @Transactional(rollbackFor = Exception.class)
-    public void delete(Picture picture) {
-        try {
-            HttpUtil.get(picture.getDelete());
-            pictureRepository.delete(picture);
-        } catch(Exception e){
-            pictureRepository.delete(picture);
+    public void deleteAll(Long[] ids) {
+        for (Long id : ids) {
+            Picture picture = findById(id);
+            try {
+                HttpUtil.get(picture.getDelete());
+                pictureRepository.delete(picture);
+            } catch(Exception e){
+                pictureRepository.delete(picture);
+            }
         }
     }
 
     @Override
-    @CacheEvict(allEntries = true)
-    public void deleteAll(Long[] ids) {
-        for (Long id : ids) {
-            delete(findById(id));
+    public void synchronize() {
+        //链式构建请求
+        String result = HttpRequest.get(ElAdminConstant.Url.SM_MS_URL + "/v2/upload_history")
+                //头信息，多个头信息多次调用此方法即可
+                .header("Authorization", token)
+                .timeout(20000)
+                .execute().body();
+        JSONObject jsonObject = JSONUtil.parseObj(result);
+        List<Picture> pictures = JSON.parseArray(jsonObject.get("data").toString(), Picture.class);
+        for (Picture picture : pictures) {
+            if(!pictureRepository.existsByUrl(picture.getUrl())){
+                picture.setSize(FileUtil.getSize(Integer.parseInt(picture.getSize())));
+                picture.setUsername("System Sync");
+                picture.setMd5Code("");
+                pictureRepository.save(picture);
+            }
         }
     }
 

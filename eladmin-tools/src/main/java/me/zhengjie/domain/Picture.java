@@ -41,7 +41,7 @@ public class Picture implements Serializable {
     @Column(name = "create_time")
     private Timestamp createTime;
 
-    // 用于检测文件是否重复
+    /** 用于检测文件是否重复 */
     private String md5Code;
 
     @Override

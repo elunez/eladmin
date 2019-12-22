@@ -11,14 +11,14 @@ import com.qiniu.storage.model.FileInfo;
 import com.qiniu.util.Auth;
 import me.zhengjie.domain.QiniuConfig;
 import me.zhengjie.domain.QiniuContent;
+import me.zhengjie.repository.QiniuContentRepository;
+import me.zhengjie.service.dto.QiniuQueryCriteria;
+import me.zhengjie.utils.QiNiuUtil;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.repository.QiNiuConfigRepository;
-import me.zhengjie.repository.QiniuContentRepository;
 import me.zhengjie.service.QiNiuService;
-import me.zhengjie.service.dto.QiniuQueryCriteria;
 import me.zhengjie.utils.FileUtil;
 import me.zhengjie.utils.PageUtil;
-import me.zhengjie.utils.QiNiuUtil;
 import me.zhengjie.utils.QueryHelp;
 import me.zhengjie.utils.ValidationUtil;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,7 +31,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
@@ -79,7 +78,8 @@ public class QiNiuServiceImpl implements QiNiuService {
     @CachePut(cacheNames = "qiNiuConfig", key = "'1'")
     @Transactional(rollbackFor = Exception.class)
     public QiniuConfig update(QiniuConfig qiniuConfig) {
-        if (!(qiniuConfig.getHost().toLowerCase().startsWith("http://")||qiniuConfig.getHost().toLowerCase().startsWith("https://"))) {
+        String http = "http://", https = "https://";
+        if (!(qiniuConfig.getHost().toLowerCase().startsWith(http)||qiniuConfig.getHost().toLowerCase().startsWith(https))) {
             throw new BadRequestException("外链域名必须以http://或者https://开头");
         }
         qiniuConfig.setId(1L);
@@ -134,8 +134,8 @@ public class QiNiuServiceImpl implements QiNiuService {
     @Cacheable
     public String download(QiniuContent content,QiniuConfig config){
         String finalUrl;
-        String TYPE = "公开";
-        if(TYPE.equals(content.getType())){
+        String type = "公开";
+        if(type.equals(content.getType())){
             finalUrl  = content.getUrl();
         } else {
             Auth auth = Auth.create(config.getAccessKey(), config.getSecretKey());

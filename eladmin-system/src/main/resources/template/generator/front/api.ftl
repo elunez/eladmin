@@ -8,10 +8,11 @@ export function add(data) {
   })
 }
 
-export function del(${pkChangeColName}) {
+export function del(ids) {
   return request({
-    url: 'api/${changeClassName}/' + ${pkChangeColName},
-    method: 'delete'
+    url: 'api/${changeClassName}/',
+    method: 'delete',
+    data: ids
   })
 }
 
@@ -23,11 +24,4 @@ export function edit(data) {
   })
 }
 
-export function download${className}(params) {
-  return request({
-    url: 'api/${changeClassName}/download',
-    method: 'get',
-    params,
-    responseType: 'blob'
-  })
-}
+export default { add, edit, del }

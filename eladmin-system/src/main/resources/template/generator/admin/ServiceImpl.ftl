@@ -14,7 +14,7 @@ import me.zhengjie.utils.ValidationUtil;
 import me.zhengjie.utils.FileUtil;
 import ${package}.repository.${className}Repository;
 import ${package}.service.${className}Service;
-import ${package}.service.dto.${className}DTO;
+import ${package}.service.dto.${className}Dto;
 import ${package}.service.dto.${className}QueryCriteria;
 import ${package}.service.mapper.${className}Mapper;
 import org.springframework.stereotype.Service;
@@ -27,9 +27,10 @@ import cn.hutool.core.util.IdUtil;
 <#if !auto && pkColumnType = 'String'>
 import cn.hutool.core.util.IdUtil;
 </#if>
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
+// 默认不使用缓存
+//import org.springframework.cache.annotation.CacheConfig;
+//import org.springframework.cache.annotation.CacheEvict;
+//import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import me.zhengjie.utils.PageUtil;
@@ -46,7 +47,7 @@ import java.util.LinkedHashMap;
 * @date ${date}
 */
 @Service
-@CacheConfig(cacheNames = "${changeClassName}")
+//@CacheConfig(cacheNames = "${changeClassName}")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class ${className}ServiceImpl implements ${className}Service {
 
@@ -60,30 +61,30 @@ public class ${className}ServiceImpl implements ${className}Service {
     }
 
     @Override
-    @Cacheable
+    //@Cacheable
     public Map<String,Object> queryAll(${className}QueryCriteria criteria, Pageable pageable){
         Page<${className}> page = ${changeClassName}Repository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable);
         return PageUtil.toPage(page.map(${changeClassName}Mapper::toDto));
     }
 
     @Override
-    @Cacheable
-    public List<${className}DTO> queryAll(${className}QueryCriteria criteria){
+    //@Cacheable
+    public List<${className}Dto> queryAll(${className}QueryCriteria criteria){
         return ${changeClassName}Mapper.toDto(${changeClassName}Repository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder)));
     }
 
     @Override
-    @Cacheable(key = "#p0")
-    public ${className}DTO findById(${pkColumnType} ${pkChangeColName}) {
+    //@Cacheable(key = "#p0")
+    public ${className}Dto findById(${pkColumnType} ${pkChangeColName}) {
         ${className} ${changeClassName} = ${changeClassName}Repository.findById(${pkChangeColName}).orElseGet(${className}::new);
         ValidationUtil.isNull(${changeClassName}.get${pkCapitalColName}(),"${className}","${pkChangeColName}",${pkChangeColName});
         return ${changeClassName}Mapper.toDto(${changeClassName});
     }
 
     @Override
-    @CacheEvict(allEntries = true)
+    //@CacheEvict(allEntries = true)
     @Transactional(rollbackFor = Exception.class)
-    public ${className}DTO create(${className} resources) {
+    public ${className}Dto create(${className} resources) {
 <#if !auto && pkColumnType = 'Long'>
         Snowflake snowflake = IdUtil.createSnowflake(1, 1);
         resources.set${pkCapitalColName}(snowflake.nextId()); 
@@ -104,7 +105,7 @@ public class ${className}ServiceImpl implements ${className}Service {
     }
 
     @Override
-    @CacheEvict(allEntries = true)
+    //@CacheEvict(allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     public void update(${className} resources) {
         ${className} ${changeClassName} = ${changeClassName}Repository.findById(resources.get${pkCapitalColName}()).orElseGet(${className}::new);
@@ -127,22 +128,22 @@ public class ${className}ServiceImpl implements ${className}Service {
     }
 
     @Override
-    @CacheEvict(allEntries = true)
-    @Transactional(rollbackFor = Exception.class)
-    public void delete(${pkColumnType} ${pkChangeColName}) {
-        ${changeClassName}Repository.deleteById(${pkChangeColName});
+    //@CacheEvict(allEntries = true)
+    public void deleteAll(${pkColumnType}[] ids) {
+        for (${pkColumnType} id : ids) {
+            ${changeClassName}Repository.deleteById(${pkChangeColName});
+        }
     }
 
-
     @Override
-    public void download(List<${className}DTO> all, HttpServletResponse response) throws IOException {
+    public void download(List<${className}Dto> all, HttpServletResponse response) throws IOException {
         List<Map<String, Object>> list = new ArrayList<>();
-        for (${className}DTO ${changeClassName} : all) {
+        for (${className}Dto ${changeClassName} : all) {
             Map<String,Object> map = new LinkedHashMap<>();
         <#list columns as column>
             <#if column.columnKey != 'PRI'>
-            <#if column.columnComment != ''>
-            map.put("${column.columnComment}", ${changeClassName}.get${column.capitalColumnName}());
+            <#if column.remark != ''>
+            map.put("${column.remark}", ${changeClassName}.get${column.capitalColumnName}());
             <#else>
             map.put(" ${column.changeColumnName}",  ${changeClassName}.get${column.capitalColumnName}());
             </#if>

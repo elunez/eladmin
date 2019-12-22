@@ -38,11 +38,11 @@ public class Menu implements Serializable {
 
     private String component;
 
-    // 类型
+    /** 类型，目录、菜单、按钮 */
     @Column(name = "type")
     private Integer type;
 
-    // 权限
+    /** 权限 */
     @Column(name = "permission")
     private String permission;
 
@@ -57,11 +57,11 @@ public class Menu implements Serializable {
     @Column(columnDefinition = "bit(1) default 0")
     private Boolean hidden;
 
-    // 上级菜单ID
+    /** 上级菜单ID */
     @Column(name = "pid",nullable = false)
     private Long pid;
 
-    // 是否为外链 true/false
+    /** 是否为外链 true/false */
     @Column(name = "i_frame")
     private Boolean iFrame;
 
@@ -77,8 +77,12 @@ public class Menu implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Menu menu = (Menu) o;
         return Objects.equals(id, menu.id);
     }

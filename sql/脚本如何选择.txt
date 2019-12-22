@@ -1,0 +1,3 @@
+1、eladmin.sql  为 eladmin 完整的sql脚本，适合于第一次导入脚本的用户
+2、eladmin-gen.sql  为 eladmin 代码生成模块更新的sql脚本
+3、eladmin-mnt.sql  为 eladmin 运维管理模块更新的sql脚本

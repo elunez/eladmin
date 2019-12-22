@@ -4,12 +4,14 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -31,12 +33,19 @@ public class User implements Serializable {
     @Column(unique = true)
     private String username;
 
+    /** 用户昵称 */
+    @NotBlank
+    private String nickName;
+
+    /** 性别 */
+    private String sex;
+
     @OneToOne
     @JoinColumn(name = "avatar_id")
     private UserAvatar userAvatar;
 
     @NotBlank
-    @Pattern(regexp = "([a-z0-9A-Z]+[-|.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}",message = "格式错误")
+    @Email
     private String email;
 
     @NotBlank
@@ -67,4 +76,22 @@ public class User implements Serializable {
     private Dept dept;
 
     public @interface Update {}
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        User user = (User) o;
+        return Objects.equals(id, user.id) &&
+                Objects.equals(username, user.username);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, username);
+    }
 }

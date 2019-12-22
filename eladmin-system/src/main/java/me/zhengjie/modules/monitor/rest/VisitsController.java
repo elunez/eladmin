@@ -28,20 +28,20 @@ public class VisitsController {
 
     @PostMapping
     @ApiOperation("创建访问记录")
-    public ResponseEntity create(){
+    public ResponseEntity<Object> create(){
         visitsService.count(RequestHolder.getHttpServletRequest());
-        return new ResponseEntity(HttpStatus.CREATED);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @GetMapping
     @ApiOperation("查询")
-    public ResponseEntity get(){
+    public ResponseEntity<Object> get(){
         return new ResponseEntity<>(visitsService.get(),HttpStatus.OK);
     }
 
     @GetMapping(value = "/chartData")
     @ApiOperation("查询图表数据")
-    public ResponseEntity getChartData(){
+    public ResponseEntity<Object> getChartData(){
         return new ResponseEntity<>(visitsService.getChartData(),HttpStatus.OK);
     }
 }

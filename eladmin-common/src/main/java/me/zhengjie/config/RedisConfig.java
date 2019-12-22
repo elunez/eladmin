@@ -42,17 +42,18 @@ import java.util.Map;
 public class RedisConfig extends CachingConfigurerSupport {
 
     /**
-     *  设置 redis 数据默认过期时间，默认6小时
+     *  设置 redis 数据默认过期时间，默认2小时
      *  设置@cacheable 序列化方式
      */
     @Bean
     public RedisCacheConfiguration redisCacheConfiguration(){
         FastJsonRedisSerializer<Object> fastJsonRedisSerializer = new FastJsonRedisSerializer<>(Object.class);
         RedisCacheConfiguration configuration = RedisCacheConfiguration.defaultCacheConfig();
-        configuration = configuration.serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(fastJsonRedisSerializer)).entryTtl(Duration.ofHours(6));
+        configuration = configuration.serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(fastJsonRedisSerializer)).entryTtl(Duration.ofHours(2));
         return configuration;
     }
 
+    @SuppressWarnings("all")
     @Bean(name = "redisTemplate")
     @ConditionalOnMissingBean(name = "redisTemplate")
     public RedisTemplate<Object, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
@@ -65,13 +66,7 @@ public class RedisConfig extends CachingConfigurerSupport {
         // 全局开启AutoType，这里方便开发，使用全局的方式
         ParserConfig.getGlobalInstance().setAutoTypeSupport(true);
         // 建议使用这种方式，小范围指定白名单
-//        ParserConfig.getGlobalInstance().addAccept("me.zhengjie.domain");
-//        ParserConfig.getGlobalInstance().addAccept("me.zhengjie.modules.system.service.dto");
-//        ParserConfig.getGlobalInstance().addAccept("me.zhengjie.service.dto");
-//        ParserConfig.getGlobalInstance().addAccept("me.zhengjie.modules.system.domain");
-//        ParserConfig.getGlobalInstance().addAccept("me.zhengjie.modules.quartz.domain");
-//        ParserConfig.getGlobalInstance().addAccept("me.zhengjie.modules.monitor.domain");
-//        ParserConfig.getGlobalInstance().addAccept("me.zhengjie.modules.security.security");
+        // ParserConfig.getGlobalInstance().addAccept("me.zhengjie.domain");
         // key的序列化采用StringRedisSerializer
         template.setKeySerializer(new StringRedisSerializer());
         template.setHashKeySerializer(new StringRedisSerializer());
@@ -86,7 +81,7 @@ public class RedisConfig extends CachingConfigurerSupport {
     @Override
     public KeyGenerator keyGenerator() {
         return (target, method, params) -> {
-            Map<String,Object> container = new HashMap<>();
+            Map<String,Object> container = new HashMap<>(3);
             Class<?> targetClassClass = target.getClass();
             // 类地址
             container.put("class",targetClassClass.toGenericString());

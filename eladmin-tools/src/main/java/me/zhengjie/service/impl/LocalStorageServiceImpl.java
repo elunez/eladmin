@@ -2,13 +2,13 @@ package me.zhengjie.service.impl;
 
 import cn.hutool.core.util.ObjectUtil;
 import me.zhengjie.domain.LocalStorage;
+import me.zhengjie.service.dto.LocalStorageDto;
+import me.zhengjie.service.dto.LocalStorageQueryCriteria;
+import me.zhengjie.service.mapper.LocalStorageMapper;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.utils.*;
 import me.zhengjie.repository.LocalStorageRepository;
 import me.zhengjie.service.LocalStorageService;
-import me.zhengjie.service.dto.LocalStorageDTO;
-import me.zhengjie.service.dto.LocalStorageQueryCriteria;
-import me.zhengjie.service.mapper.LocalStorageMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
@@ -62,13 +62,13 @@ public class LocalStorageServiceImpl implements LocalStorageService {
 
     @Override
     @Cacheable
-    public List<LocalStorageDTO> queryAll(LocalStorageQueryCriteria criteria){
+    public List<LocalStorageDto> queryAll(LocalStorageQueryCriteria criteria){
         return localStorageMapper.toDto(localStorageRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder)));
     }
 
     @Override
     @Cacheable(key = "#p0")
-    public LocalStorageDTO findById(Long id){
+    public LocalStorageDto findById(Long id){
         LocalStorage localStorage = localStorageRepository.findById(id).orElseGet(LocalStorage::new);
         ValidationUtil.isNull(localStorage.getId(),"LocalStorage","id",id);
         return localStorageMapper.toDto(localStorage);
@@ -77,11 +77,9 @@ public class LocalStorageServiceImpl implements LocalStorageService {
     @Override
     @CacheEvict(allEntries = true)
     @Transactional(rollbackFor = Exception.class)
-    public LocalStorageDTO create(String name, MultipartFile multipartFile) {
+    public LocalStorageDto create(String name, MultipartFile multipartFile) {
         FileUtil.checkSize(maxSize, multipartFile.getSize());
         String suffix = FileUtil.getExtensionName(multipartFile.getOriginalFilename());
-        // 可自行选择方式
-//        String type = FileUtil.getFileTypeByMimeType(suffix);
         String type = FileUtil.getFileType(suffix);
         File file = FileUtil.upload(multipartFile, path + type +  File.separator);
         if(ObjectUtil.isNull(file)){
@@ -118,15 +116,6 @@ public class LocalStorageServiceImpl implements LocalStorageService {
     @Override
     @CacheEvict(allEntries = true)
     @Transactional(rollbackFor = Exception.class)
-    public void delete(Long id) {
-        LocalStorage storage = localStorageRepository.findById(id).orElseGet(LocalStorage::new);
-        FileUtil.del(storage.getPath());
-        localStorageRepository.delete(storage);
-    }
-
-    @Override
-    @CacheEvict(allEntries = true)
-    @Transactional(rollbackFor = Exception.class)
     public void deleteAll(Long[] ids) {
         for (Long id : ids) {
             LocalStorage storage = localStorageRepository.findById(id).orElseGet(LocalStorage::new);
@@ -136,9 +125,9 @@ public class LocalStorageServiceImpl implements LocalStorageService {
     }
 
     @Override
-    public void download(List<LocalStorageDTO> queryAll, HttpServletResponse response) throws IOException {
+    public void download(List<LocalStorageDto> queryAll, HttpServletResponse response) throws IOException {
         List<Map<String, Object>> list = new ArrayList<>();
-        for (LocalStorageDTO localStorageDTO : queryAll) {
+        for (LocalStorageDto localStorageDTO : queryAll) {
             Map<String,Object> map = new LinkedHashMap<>();
             map.put("文件名", localStorageDTO.getRealName());
             map.put("备注名", localStorageDTO.getName());

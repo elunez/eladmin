@@ -13,9 +13,9 @@ import java.util.*;
  * @date 2019-6-4 14:59:48
  */
 @Slf4j
+@SuppressWarnings({"unchecked","all"})
 public class QueryHelp {
 
-    @SuppressWarnings("unchecked")
     public static <R, Q> Predicate getPredicate(Root<R> root, Q query, CriteriaBuilder cb) {
         List<Predicate> list = new ArrayList<>();
 
@@ -101,10 +101,22 @@ public class QueryHelp {
                         case RIGHT_LIKE:
                             list.add(cb.like(getExpression(attributeName,join,root)
                                     .as(String.class), val.toString() + "%"));
+                            break;
                         case IN:
                             if (CollUtil.isNotEmpty((Collection<Long>)val)) {
                                 list.add(getExpression(attributeName,join,root).in((Collection<Long>) val));
                             }
+                            break;
+                        case NOT_EQUAL:
+                            list.add(cb.notEqual(getExpression(attributeName,join,root), val));
+                            break;
+                        case NOT_NULL:
+                            list.add(cb.isNotNull(getExpression(attributeName,join,root)));
+                            break;
+                        case BETWEEN:
+                            List<Object> between = new ArrayList<>((List<Object>)val);
+                            list.add(cb.between(getExpression(attributeName, join, root).as((Class<? extends Comparable>) between.get(0).getClass()),
+                                    (Comparable) between.get(0), (Comparable) between.get(1)));
                             break;
                         default: break;
                     }

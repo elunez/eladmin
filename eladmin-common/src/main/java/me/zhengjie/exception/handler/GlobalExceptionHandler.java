@@ -8,6 +8,7 @@ import me.zhengjie.utils.ThrowableUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -26,20 +27,21 @@ public class GlobalExceptionHandler {
      * 处理所有不可知的异常
      */
     @ExceptionHandler(Throwable.class)
-    public ResponseEntity handleException(Throwable e){
+    public ResponseEntity<ApiError> handleException(Throwable e){
         // 打印堆栈信息
         log.error(ThrowableUtil.getStackTrace(e));
         return buildResponseEntity(ApiError.error(e.getMessage()));
     }
 
     /**
-     * 处理 接口无权访问异常AccessDeniedException
+     * BadCredentialsException
      */
-    @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity handleAccessDeniedException(AccessDeniedException e){
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ApiError> badCredentialsException(BadCredentialsException e){
         // 打印堆栈信息
-        log.error(ThrowableUtil.getStackTrace(e));
-        return buildResponseEntity(ApiError.error(FORBIDDEN.value(),e.getMessage()));
+        String message = "坏的凭证".equals(e.getMessage()) ? "用户名或密码不正确" : e.getMessage();
+        log.error(message);
+        return buildResponseEntity(ApiError.error(message));
     }
 
     /**
@@ -81,7 +83,8 @@ public class GlobalExceptionHandler {
         log.error(ThrowableUtil.getStackTrace(e));
         String[] str = Objects.requireNonNull(e.getBindingResult().getAllErrors().get(0).getCodes())[1].split("\\.");
         String message = e.getBindingResult().getAllErrors().get(0).getDefaultMessage();
-        if("不能为空".equals(message)){
+        String msg = "不能为空";
+        if(msg.equals(message)){
             message = str[1] + ":" + message;
         }
         return buildResponseEntity(ApiError.error(message));

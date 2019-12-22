@@ -9,10 +9,7 @@ import me.zhengjie.service.LogService;
 import me.zhengjie.service.dto.LogQueryCriteria;
 import me.zhengjie.service.mapper.LogErrorMapper;
 import me.zhengjie.service.mapper.LogSmallMapper;
-import me.zhengjie.utils.FileUtil;
-import me.zhengjie.utils.PageUtil;
-import me.zhengjie.utils.QueryHelp;
-import me.zhengjie.utils.StringUtils;
+import me.zhengjie.utils.*;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.data.domain.Page;
@@ -52,7 +49,8 @@ public class LogServiceImpl implements LogService {
     @Override
     public Object queryAll(LogQueryCriteria criteria, Pageable pageable){
         Page<Log> page = logRepository.findAll(((root, criteriaQuery, cb) -> QueryHelp.getPredicate(root, criteria, cb)),pageable);
-        if ("ERROR".equals(criteria.getLogType())) {
+        String status = "ERROR";
+        if (status.equals(criteria.getLogType())) {
             return PageUtil.toPage(page.map(logErrorMapper::toDto));
         }
         return page;
@@ -97,8 +95,8 @@ public class LogServiceImpl implements LogService {
         assert log != null;
         log.setRequestIp(ip);
 
-        String LOGINPATH = "login";
-        if(LOGINPATH.equals(signature.getName())){
+        String loginPath = "login";
+        if(loginPath.equals(signature.getName())){
             try {
                 assert argValues != null;
                 username = new JSONObject(argValues[0]).get("username").toString();
@@ -116,7 +114,9 @@ public class LogServiceImpl implements LogService {
 
     @Override
     public Object findByErrDetail(Long id) {
-        byte[] details = logRepository.findExceptionById(id).getExceptionDetail();
+        Log log = logRepository.findById(id).orElseGet(Log::new);
+        ValidationUtil.isNull( log.getId(),"Log","id", id);
+        byte[] details = log.getExceptionDetail();
         return Dict.create().set("exception",new String(ObjectUtil.isNotNull(details) ? details : "".getBytes()));
     }
 
@@ -136,5 +136,17 @@ public class LogServiceImpl implements LogService {
             list.add(map);
         }
         FileUtil.downloadExcel(list, response);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void delAllByError() {
+        logRepository.deleteByLogType("ERROR");
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void delAllByInfo() {
+        logRepository.deleteByLogType("INFO");
     }
 }

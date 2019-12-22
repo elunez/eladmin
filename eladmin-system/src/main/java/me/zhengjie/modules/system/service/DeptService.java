@@ -1,7 +1,7 @@
 package me.zhengjie.modules.system.service;
 
 import me.zhengjie.modules.system.domain.Dept;
-import me.zhengjie.modules.system.service.dto.DeptDTO;
+import me.zhengjie.modules.system.service.dto.DeptDto;
 import me.zhengjie.modules.system.service.dto.DeptQueryCriteria;
 
 import javax.servlet.http.HttpServletResponse;
@@ -15,21 +15,74 @@ import java.util.Set;
 */
 public interface DeptService {
 
-    List<DeptDTO> queryAll(DeptQueryCriteria criteria);
+    /**
+     * 查询所有数据
+     * @param criteria 条件
+     * @return /
+     */
+    List<DeptDto> queryAll(DeptQueryCriteria criteria);
 
-    DeptDTO findById(Long id);
+    /**
+     * 根据ID查询
+     * @param id /
+     * @return /
+     */
+    DeptDto findById(Long id);
 
-    DeptDTO create(Dept resources);
+    /**
+     * 创建
+     * @param resources /
+     * @return /
+     */
+    DeptDto create(Dept resources);
 
+    /**
+     * 编辑
+     * @param resources /
+     */
     void update(Dept resources);
 
-    void delete(Long id);
+    /**
+     * 删除
+     * @param deptDtos /
+     *
+     */
+    void delete(Set<DeptDto> deptDtos);
 
-    Object buildTree(List<DeptDTO> deptDTOS);
+    /**
+     * 构建树形数据
+     * @param deptDtos 原始数据
+     * @return /
+     */
+    Object buildTree(List<DeptDto> deptDtos);
 
+    /**
+     * 根据PID查询
+     * @param pid /
+     * @return /
+     */
     List<Dept> findByPid(long pid);
 
+    /**
+     * 根据角色ID查询
+     * @param id /
+     * @return /
+     */
     Set<Dept> findByRoleIds(Long id);
 
-    void download(List<DeptDTO> queryAll, HttpServletResponse response) throws IOException;
+    /**
+     * 导出数据
+     * @param queryAll 待导出的数据
+     * @param response /
+     * @throws IOException /
+     */
+    void download(List<DeptDto> queryAll, HttpServletResponse response) throws IOException;
+
+    /**
+     * 获取待删除的部门
+     * @param deptList /
+     * @param deptDtos /
+     * @return /
+     */
+    Set<DeptDto> getDeleteDepts(List<Dept> deptList, Set<DeptDto> deptDtos);
 }
