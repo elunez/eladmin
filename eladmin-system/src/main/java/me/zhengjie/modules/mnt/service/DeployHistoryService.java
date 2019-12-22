@@ -54,6 +54,7 @@ public interface DeployHistoryService {
      * 导出数据
      * @param queryAll /
      * @param response /
+     * @throws IOException /
      */
     void download(List<DeployHistoryDto> queryAll, HttpServletResponse response) throws IOException;
 }

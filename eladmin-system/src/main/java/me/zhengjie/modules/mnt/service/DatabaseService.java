@@ -68,6 +68,7 @@ public interface DatabaseService {
      * 导出数据
      * @param queryAll /
      * @param response /
+     * @throws IOException e
      */
     void download(List<DatabaseDto> queryAll, HttpServletResponse response) throws IOException;
 }

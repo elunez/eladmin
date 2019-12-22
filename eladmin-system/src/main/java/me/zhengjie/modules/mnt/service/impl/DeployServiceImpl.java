@@ -48,6 +48,9 @@ public class DeployServiceImpl implements DeployService {
 
 	private final DeployHistoryService deployHistoryService;
 
+	// 循环次数
+	private final Integer count = 30;
+
 	public DeployServiceImpl(DeployRepository deployRepository, DeployMapper deployMapper, ServerDeployService serverDeployService, DeployHistoryService deployHistoryService) {
 		this.deployRepository = deployRepository;
 		this.deployMapper = deployMapper;
@@ -158,7 +161,7 @@ public class DeployServiceImpl implements DeployService {
 			int i  = 0;
 			boolean result = false;
 			// 由于启动应用需要时间，所以需要循环获取状态，如果超过30次，则认为是启动失败
-			while (i++ < 30){
+			while (i++ < count){
 				result = checkIsRunningStatus(port, executeShellUtil);
 				if(result){
 					break;
@@ -286,7 +289,7 @@ public class DeployServiceImpl implements DeployService {
 			int i  = 0;
 			boolean result = false;
 			// 由于启动应用需要时间，所以需要循环获取状态，如果超过30次，则认为是启动失败
-			while (i++ < 30){
+			while (i++ < count){
 				result = checkIsRunningStatus(app.getPort(), executeShellUtil);
 				if(result){
 					break;
@@ -371,7 +374,7 @@ public class DeployServiceImpl implements DeployService {
 		int i  = 0;
 		boolean result = false;
 		// 由于启动应用需要时间，所以需要循环获取状态，如果超过30次，则认为是启动失败
-		while (i++ < 30){
+		while (i++ < count){
 			result = checkIsRunningStatus(app.getPort(), executeShellUtil);
 			if(result){
 				break;

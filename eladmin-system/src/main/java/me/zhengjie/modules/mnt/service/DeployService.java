@@ -96,6 +96,7 @@ public interface DeployService {
      * 导出数据
      * @param queryAll /
      * @param response /
+     * @throws IOException /
      */
     void download(List<DeployDto> queryAll, HttpServletResponse response) throws IOException;
 }
