@@ -155,6 +155,19 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public InvoiceDetailDTO create(CreateInvoiceRequest createInvoiceRequest) {
+        List<String> repeatProductCodeList =createInvoiceRequest.getInvoiceProductList().stream().
+                collect(Collectors.groupingBy(dog->dog.getProductCode() ,Collectors.counting()))
+                .entrySet().stream()
+                .filter(entry->entry.getValue()>1)
+                .map(entry->entry.getKey())
+                .collect(Collectors.toList());
+
+        if(!CollectionUtils.isEmpty(repeatProductCodeList)){
+            String repeatProductCodeStr = me.zhengjie.utils.StringUtils.join(repeatProductCodeList.toArray(), ",");
+            throw new BadRequestException("产品" + repeatProductCodeStr + "请合并为一条记录");
+        }
+
+
         Invoice invoice = new Invoice();
         // 客户订单编号
         String customerOrderCode = createInvoiceRequest.getCustomerOrderCode();
@@ -223,6 +236,19 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void update(UpdateInvoiceRequest updateInvoiceRequest) {
+
+        List<String> repeatProductCodeList =updateInvoiceRequest.getInvoiceProductList().stream().
+                collect(Collectors.groupingBy(dog->dog.getProductCode() ,Collectors.counting()))
+                .entrySet().stream()
+                .filter(entry->entry.getValue()>1)
+                .map(entry->entry.getKey())
+                .collect(Collectors.toList());
+
+        if(!CollectionUtils.isEmpty(repeatProductCodeList)){
+            String repeatProductCodeStr = me.zhengjie.utils.StringUtils.join(repeatProductCodeList.toArray(), ",");
+            throw new BadRequestException("产品" + repeatProductCodeStr + "请合并为一条记录");
+        }
+
         Invoice invoice = new Invoice();
         BeanUtils.copyProperties(updateInvoiceRequest, invoice);
         // 修改发货单概要信息

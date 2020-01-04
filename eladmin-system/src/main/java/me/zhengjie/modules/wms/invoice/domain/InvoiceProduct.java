@@ -61,9 +61,13 @@ public class InvoiceProduct implements Serializable {
     @Column(name = "actual_invoice_number",nullable = false)
     private Long actualInvoiceNumber;
 
-    // 瘦瘦金额
+    // 销售金额
     @Column(name = "sale_price")
     private Long salePrice;
+
+    // 单价
+    @Column(name = "unit_price")
+    private Long unitPrice;
 
     // 备注
     @Column(name = "remark")
