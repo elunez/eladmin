@@ -1,9 +1,13 @@
 package me.zhengjie.modules.wms.qualityCheckSheet.service.impl;
 
 import me.zhengjie.exception.BadRequestException;
+import me.zhengjie.modules.wms.outSourceProductSheet.domain.OutSourceInspectionCertificate;
+import me.zhengjie.modules.wms.outSourceProductSheet.domain.OutSourceInspectionCertificateProduct;
 import me.zhengjie.modules.wms.outSourceProductSheet.domain.OutSourceProcessSheet;
 import me.zhengjie.modules.wms.outSourceProductSheet.domain.OutSourceProcessSheetProduct;
 import me.zhengjie.modules.wms.outSourceProductSheet.request.OutSourceProcessSheetProductRequest;
+import me.zhengjie.modules.wms.outSourceProductSheet.service.dto.OutSourceInspectionCertificateDTO;
+import me.zhengjie.modules.wms.outSourceProductSheet.service.dto.OutSourceInspectionCertificateProductDTO;
 import me.zhengjie.modules.wms.outSourceProductSheet.service.dto.OutSourceProcessSheetDTO;
 import me.zhengjie.modules.wms.outSourceProductSheet.service.dto.OutSourceProcessSheetProductDTO;
 import me.zhengjie.modules.wms.qualityCheckSheet.domain.QualityCheckSheet;
@@ -22,10 +26,13 @@ import me.zhengjie.modules.wms.qualityCheckSheet.service.dto.QualityCheckSheetQu
 import me.zhengjie.modules.wms.qualityCheckSheet.service.mapper.QualityCheckSheetMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +46,11 @@ import me.zhengjie.utils.PageUtil;
 import me.zhengjie.utils.QueryHelp;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 /**
 * @author huangxingxing
@@ -62,20 +74,79 @@ public class QualityCheckSheetServiceImpl implements QualityCheckSheetService {
 
     @Override
     public Object queryAll(QualityCheckSheetQueryCriteria criteria, Pageable pageable){
-        Page<QualityCheckSheet> page = qualityCheckSheetRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable);
-        return PageUtil.toPage(page.map(qualityCheckSheetMapper::toDto));
+        Specification<QualityCheckSheet> specification = new Specification<QualityCheckSheet>() {
+            @Override
+            public Predicate toPredicate(Root<QualityCheckSheet> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+
+                List<Predicate> targetPredicateList = new ArrayList<>();
+
+                Predicate statusPredicate = criteriaBuilder.equal(root.get("status"), 1);
+                targetPredicateList.add(statusPredicate);
+
+                if(CollectionUtils.isEmpty(targetPredicateList)){
+                    return null;
+                }else{
+                    return criteriaBuilder.and(targetPredicateList.toArray(new Predicate[targetPredicateList.size()]));
+                }
+            }
+        };
+        Page<QualityCheckSheet> page = qualityCheckSheetRepository.findAll(specification,pageable);
+
+        Page<QualityCheckSheetDTO> qualityCheckSheetDTOPage = page.map(qualityCheckSheetMapper::toDto);
+        if(null != qualityCheckSheetDTOPage){
+            List<QualityCheckSheetDTO> qualityCheckSheetDTOList = qualityCheckSheetDTOPage.getContent();
+            if(!CollectionUtils.isEmpty(qualityCheckSheetDTOList)){
+                for(QualityCheckSheetDTO qualityCheckSheetDTO : qualityCheckSheetDTOList){
+                    Timestamp createTime = qualityCheckSheetDTO.getCreateTime();
+                    qualityCheckSheetDTO.setCreateTimeStr(new SimpleDateFormat("yyyy-MM-dd").format(createTime));
+
+                    // 查询对应的委外加工单的产品信息
+                    List<QualityCheckSheetProduct> outSourceProcessSheetProductList = qualityCheckSheetProductRepository.queryByQualityCheckSheetIdAndStatusTrue(qualityCheckSheetDTO.getId());
+                    if(!CollectionUtils.isEmpty(outSourceProcessSheetProductList)){
+                        List<QualityCheckSheetProductDTO> qualityCheckSheetProductDTOList = qualityCheckSheetProductMapper.toDto(outSourceProcessSheetProductList);
+                        qualityCheckSheetDTO.setQualityCheckSheetProductList(qualityCheckSheetProductDTOList);
+                    }
+                }
+            }
+        }
+        Map map = PageUtil.toPage(qualityCheckSheetDTOPage);
+        return map;
     }
 
     @Override
     public Object queryAll(QualityCheckSheetQueryCriteria criteria){
-        return qualityCheckSheetMapper.toDto(qualityCheckSheetRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder)));
+        Specification<QualityCheckSheetQueryCriteria> specification = new Specification<QualityCheckSheetQueryCriteria>() {
+            @Override
+            public Predicate toPredicate(Root<QualityCheckSheetQueryCriteria> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+
+                List<Predicate> targetPredicateList = new ArrayList<>();
+
+                Predicate statusPredicate = criteriaBuilder.equal(root.get("status"), 1);
+                targetPredicateList.add(statusPredicate);
+
+                if(CollectionUtils.isEmpty(targetPredicateList)){
+                    return null;
+                }else{
+                    return criteriaBuilder.and(targetPredicateList.toArray(new Predicate[targetPredicateList.size()]));
+                }
+            }
+        };
+        return qualityCheckSheetMapper.toDto(qualityCheckSheetRepository.findAll(specification));
     }
 
     @Override
     public QualityCheckSheetDTO findById(Long id) {
-        Optional<QualityCheckSheet> qualityCheckSheet = qualityCheckSheetRepository.findById(id);
-        ValidationUtil.isNull(qualityCheckSheet,"QualityCheckSheet","id",id);
-        return qualityCheckSheetMapper.toDto(qualityCheckSheet.get());
+        Optional<QualityCheckSheet> invoiceOptional = qualityCheckSheetRepository.findById(id);
+        QualityCheckSheet qualityCheckSheet = invoiceOptional.get();
+        QualityCheckSheetDTO qualityCheckSheetDTO = qualityCheckSheetMapper.toDto(qualityCheckSheet);
+
+
+        List<QualityCheckSheetProduct> qualityCheckSheetProductList = qualityCheckSheetProductRepository.queryByQualityCheckSheetIdAndStatusTrue(id);
+        if(!CollectionUtils.isEmpty(qualityCheckSheetProductList)){
+            List<QualityCheckSheetProductDTO> qualityCheckSheetProductDTOList = qualityCheckSheetProductMapper.toDto(qualityCheckSheetProductList);
+            qualityCheckSheetDTO.setQualityCheckSheetProductList(qualityCheckSheetProductDTOList);
+        }
+        return qualityCheckSheetDTO;
     }
 
     @Override

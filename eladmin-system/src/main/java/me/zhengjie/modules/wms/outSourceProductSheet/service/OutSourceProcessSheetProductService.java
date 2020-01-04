@@ -32,7 +32,7 @@ public interface OutSourceProcessSheetProductService {
     * @return
     */
     //@Cacheable(keyGenerator = "keyGenerator")
-    public Object queryAll(OutSourceProcessSheetProductQueryCriteria criteria);
+    Object queryAll(OutSourceProcessSheetProductQueryCriteria criteria);
 
     /**
      * findById

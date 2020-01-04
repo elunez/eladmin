@@ -1,16 +1,17 @@
 package me.zhengjie.modules.wms.qualityCheckSheet.rest;
 
 import me.zhengjie.aop.log.Log;
-import me.zhengjie.modules.wms.qualityCheckSheet.domain.QualityCheckSheet;
+import me.zhengjie.modules.wms.outSourceProductSheet.service.dto.OutSourceProcessSheetProductQueryCriteria;
 import me.zhengjie.modules.wms.qualityCheckSheet.request.CreateQualityCheckSheetRequest;
 import me.zhengjie.modules.wms.qualityCheckSheet.request.UpdateQualityCheckSheetRequest;
+import me.zhengjie.modules.wms.qualityCheckSheet.service.QualityCheckSheetProductService;
 import me.zhengjie.modules.wms.qualityCheckSheet.service.QualityCheckSheetService;
+import me.zhengjie.modules.wms.qualityCheckSheet.service.dto.QualityCheckSheetProductQueryCriteria;
 import me.zhengjie.modules.wms.qualityCheckSheet.service.dto.QualityCheckSheetQueryCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.annotations.*;
@@ -30,11 +31,14 @@ public class QualityCheckSheetController {
     @Autowired
     private QualityCheckSheetService qualityCheckSheetService;
 
+    @Autowired
+    private QualityCheckSheetProductService qualityCheckSheetProductService;
+
     @Log("分页查询质量管理检验单")
-    @ApiOperation(value = "查询QualityCheckSheet")
-    @GetMapping(value = "/qualityCheckSheet")
+    @ApiOperation(value = "分页查询质量检验单")
+    @GetMapping(value = "/queryQualityCheckSheetPage")
 //    @PreAuthorize("hasAnyRole('ADMIN','QUALITYCHECKSHEET_ALL','QUALITYCHECKSHEET_SELECT')")
-    public ResponseEntity getQualityCheckSheets(QualityCheckSheetQueryCriteria criteria, Pageable pageable){
+    public ResponseEntity queryQualityCheckSheetPage(QualityCheckSheetQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity(qualityCheckSheetService.queryAll(criteria,pageable),HttpStatus.OK);
     }
 
@@ -72,5 +76,20 @@ public class QualityCheckSheetController {
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS");//设置日期格式
         String supplierCode = "QCS"+ LocalDateTime.now().format(fmt);
         return new ResponseEntity(supplierCode,HttpStatus.OK);
+    }
+
+
+    @Log("查看质量检验单")
+    @ApiOperation(value = "查看委外加工单")
+    @GetMapping(value = "/qualityCheckSheet/{id}")
+    public ResponseEntity getQualityCheckSheet(@PathVariable Long id){
+        return new ResponseEntity(qualityCheckSheetService.findById(id), HttpStatus.OK);
+    }
+
+    @Log("查看委外加工单产品信息")
+    @ApiOperation(value = "查看委外加工单产品信息")
+    @GetMapping(value = "/qualityCheckSheetProductList")
+    public ResponseEntity queryQualityCheckSheetProductList(QualityCheckSheetProductQueryCriteria criteria){
+        return new ResponseEntity(qualityCheckSheetProductService.queryAll(criteria), HttpStatus.OK);
     }
 }

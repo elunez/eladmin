@@ -20,7 +20,11 @@ public class QualityCheckSheetDTO implements Serializable {
 
     private Timestamp createTime;
 
+    private String createTimeStr;
+
     private Timestamp updateTime;
+
+    private String updateTimeStr;
 
     private Boolean status;
 
