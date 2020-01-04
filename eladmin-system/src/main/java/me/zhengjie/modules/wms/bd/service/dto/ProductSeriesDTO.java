@@ -24,7 +24,7 @@ public class ProductSeriesDTO implements Serializable {
     private String productSeriesName;
 
     // 状态
-    private Integer status;
+    private Boolean status;
 
     // 创建时间
     private Timestamp createTime;
