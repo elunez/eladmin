@@ -7,6 +7,7 @@ import me.zhengjie.modules.wms.bd.repository.CustomerInfoRepository;
 import me.zhengjie.modules.wms.bd.repository.ProductInfoRepository;
 import me.zhengjie.modules.wms.customerOrder.domain.CustomerOrder;
 import me.zhengjie.modules.wms.customerOrder.domain.CustomerOrderProduct;
+import me.zhengjie.modules.wms.customerOrder.request.CustomerOrderProductRequest;
 import me.zhengjie.modules.wms.customerOrder.service.dto.CustomerOrderDTO;
 import me.zhengjie.modules.wms.customerOrder.service.dto.CustomerOrderProductDTO;
 import me.zhengjie.modules.wms.invoice.domain.Invoice;
@@ -32,10 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -203,6 +201,39 @@ public class InvoiceServiceImpl implements InvoiceService {
             throw new BadRequestException("发货单产品信息不能为空!");
         }
 
+        // 校验
+        for(InvoiceProduct invoiceProduct : invoiceProductRequestList){
+            String productCode = invoiceProduct.getProductCode();
+            if(StringUtils.isEmpty(productCode)){
+                throw new BadRequestException("产品编号不能为空!");
+            }
+            String productName = invoiceProduct.getProductName();
+            if(StringUtils.isEmpty(productName)){
+                throw new BadRequestException("产品编号" + productCode+"对应的产品名称不能为空!");
+            }
+            String specifications = invoiceProduct.getSpecifications();
+            if(StringUtils.isEmpty(specifications)){
+                throw new BadRequestException("产品编号" + productCode+"对应的产品规格不能为空!");
+            }
+            Long unitPrice = invoiceProduct.getUnitPrice();
+            if(null == unitPrice){
+                throw new BadRequestException("产品编号" + productCode+"对应的产品单价不能为空!");
+            }
+            Long customerOrderNumber = invoiceProduct.getCustomerOrderNumber();
+            if(null == customerOrderNumber){
+                throw new BadRequestException("产品编号" + productCode+"对应的订单数量不能为空!");
+            }
+            Long actualInvoiceNumber = invoiceProduct.getActualInvoiceNumber();
+            if(null == actualInvoiceNumber){
+                throw new BadRequestException("产品编号" + productCode+"对应的实发数量不能为空!");
+            }
+            Long salePrice = invoiceProduct.getSalePrice();
+            if(null == salePrice){
+                throw new BadRequestException("产品编号" + productCode+"对应的销售金额不能为空!");
+            }
+
+        }
+
         BeanUtils.copyProperties(createInvoiceRequest, invoice);
         invoice.setStatus(true);
         invoiceRepository.save(invoice);
@@ -249,9 +280,18 @@ public class InvoiceServiceImpl implements InvoiceService {
             throw new BadRequestException("产品" + repeatProductCodeStr + "请合并为一条记录");
         }
 
+        Optional<Invoice> invoiceOptional = invoiceRepository.findById(updateInvoiceRequest.getId());
+        ValidationUtil.isNull(invoiceOptional,"SInvoice","id",updateInvoiceRequest.getId());
+        Invoice invoiceOrigin = invoiceOptional.get();
+
+
         Invoice invoice = new Invoice();
         BeanUtils.copyProperties(updateInvoiceRequest, invoice);
         // 修改发货单概要信息
+        invoice.setCreateTime(invoiceOrigin.getCreateTime());
+        Timestamp updateTime = new Timestamp(System.currentTimeMillis());
+        invoice.setUpdateTime(updateTime);
+        invoice.setStatus(true);
         invoiceRepository.save(invoice);
 
         // 修改产品信息之前，查询该订单中原来的产品信息，key为产品code

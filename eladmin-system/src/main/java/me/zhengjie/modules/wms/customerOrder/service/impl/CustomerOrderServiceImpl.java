@@ -153,12 +153,16 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
             throw new BadRequestException("产品" + repeatProductCodeStr + "请合并为一条记录");
         }
 
+
         Long totalMoney = 0L;
         //插入客户订单对应的产品信息
         List<CustomerOrderProductRequest> customerOrderProductRequestList = createCustomerOrderRequest.getCustomerOrderProductList();
+
+
         if(CollectionUtils.isEmpty(customerOrderProductRequestList)){
             throw new BadRequestException("订单产品不能为空!");
         }
+
 
         CustomerOrder customerOrder = new CustomerOrder();
         BeanUtils.copyProperties(createCustomerOrderRequest, customerOrder);

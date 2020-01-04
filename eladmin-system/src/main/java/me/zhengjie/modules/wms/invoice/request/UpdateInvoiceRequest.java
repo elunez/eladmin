@@ -6,8 +6,14 @@ import lombok.Data;
 import me.zhengjie.modules.wms.invoice.domain.Invoice;
 import me.zhengjie.modules.wms.invoice.domain.InvoiceProduct;
 import me.zhengjie.modules.wms.invoice.service.dto.InvoiceProductDTO;
+import org.hibernate.annotations.CreationTimestamp;
 
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -16,8 +22,11 @@ import java.util.List;
  */
 @Data
 public class UpdateInvoiceRequest implements Serializable {
-    // 主键
     private Long id;
+
+    private Timestamp createTime;
+
+    private Timestamp updateTime;
 
     // 客户订单编号
     private String customerOrderCode;
@@ -37,14 +46,21 @@ public class UpdateInvoiceRequest implements Serializable {
     // 物流公司
     private String logisticsCompany;
 
+    // 物流单号
+    private String logisticsCode;
+
     // 销售发货单号
     private String saleInvoiceCode;
+
+    // 状态
+    private Boolean status;
 
     // 备注
     private String remark;
 
-    // 客户ID
     private Long customerId;
+
+    private String customerName;
 
     private List<InvoiceProductDTO> invoiceProductList;
 

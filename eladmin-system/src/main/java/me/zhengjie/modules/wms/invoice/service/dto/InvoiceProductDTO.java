@@ -44,6 +44,8 @@ public class InvoiceProductDTO implements Serializable {
     // 瘦瘦金额
     private Long salePrice;
 
+    private Long unitPrice;
+
     // 备注
     private String remark;
 }
