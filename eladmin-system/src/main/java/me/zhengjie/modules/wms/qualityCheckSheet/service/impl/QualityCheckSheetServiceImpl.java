@@ -100,6 +100,9 @@ public class QualityCheckSheetServiceImpl implements QualityCheckSheetService {
                     Timestamp createTime = qualityCheckSheetDTO.getCreateTime();
                     qualityCheckSheetDTO.setCreateTimeStr(new SimpleDateFormat("yyyy-MM-dd").format(createTime));
 
+                    Timestamp updateTime = qualityCheckSheetDTO.getUpdateTime();
+                    qualityCheckSheetDTO.setUpdateTimeStr(new SimpleDateFormat("yyyy-MM-dd").format(updateTime));
+
                     // 查询对应的委外加工单的产品信息
                     List<QualityCheckSheetProduct> outSourceProcessSheetProductList = qualityCheckSheetProductRepository.queryByQualityCheckSheetIdAndStatusTrue(qualityCheckSheetDTO.getId());
                     if(!CollectionUtils.isEmpty(outSourceProcessSheetProductList)){
