@@ -21,6 +21,7 @@ import me.zhengjie.modules.wms.customerOrder.request.CreateCustomerOrderRequest;
 import me.zhengjie.modules.wms.customerOrder.request.CustomerOrderProductRequest;
 import me.zhengjie.modules.wms.customerOrder.service.dto.CustomerOrderDTO;
 import me.zhengjie.modules.wms.customerOrder.service.mapper.CustomerOrderMapper;
+import me.zhengjie.utils.StringUtils;
 import me.zhengjie.utils.ValidationUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -139,6 +140,19 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public CustomerOrderDTO create(CreateCustomerOrderRequest createCustomerOrderRequest) {
+
+        List<String> repeatProductCodeList =createCustomerOrderRequest.getCustomerOrderProductList().stream().
+                collect(Collectors.groupingBy(dog->dog.getProductCode() ,Collectors.counting()))
+                .entrySet().stream()
+                .filter(entry->entry.getValue()>1)
+                .map(entry->entry.getKey())
+                .collect(Collectors.toList());
+
+        if(!CollectionUtils.isEmpty(repeatProductCodeList)){
+            String repeatProductCodeStr = StringUtils.join(repeatProductCodeList.toArray(), ",");
+            throw new BadRequestException("产品" + repeatProductCodeStr + "请合并为一条记录");
+        }
+
         Long totalMoney = 0L;
         //插入客户订单对应的产品信息
         List<CustomerOrderProductRequest> customerOrderProductRequestList = createCustomerOrderRequest.getCustomerOrderProductList();
@@ -201,6 +215,18 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void update(UpdateCustomerOrderRequest updateCustomerOrderRequest) {
+
+        List<String> repeatProductCodeList =updateCustomerOrderRequest.getCustomerOrderProductList().stream().
+                collect(Collectors.groupingBy(dog->dog.getProductCode() ,Collectors.counting()))
+                .entrySet().stream()
+                .filter(entry->entry.getValue()>1)
+                .map(entry->entry.getKey())
+                .collect(Collectors.toList());
+
+        if(!CollectionUtils.isEmpty(repeatProductCodeList)){
+            String repeatProductCodeStr = StringUtils.join(repeatProductCodeList.toArray(), ",");
+            throw new BadRequestException("产品" + repeatProductCodeStr + "请合并为一条记录");
+        }
 
         CustomerOrder customerOrder = new CustomerOrder();
         BeanUtils.copyProperties(updateCustomerOrderRequest, customerOrder);

@@ -16,8 +16,6 @@ import java.sql.Timestamp;
 public class ProductSeriesDTO implements Serializable {
 
     // 主键
-    // 处理精度丢失问题
-    @JsonSerialize(using= ToStringSerializer.class)
     private Long id;
 
     // 产品系列名称

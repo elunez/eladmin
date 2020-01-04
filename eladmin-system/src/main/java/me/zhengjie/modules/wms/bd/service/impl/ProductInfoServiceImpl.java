@@ -223,6 +223,15 @@ public class ProductInfoServiceImpl implements ProductInfoService {
         }
 
 
+        Long productSeriesId = updateProductInfoRequest.getProductSeriesId();
+        if(null == productSeriesId){
+            throw new BadRequestException("产品系列不能为空!");
+        }
+        Optional<ProductSeries> productSeriesOptional = productSeriesRepository.findById(productSeriesId);
+        ProductSeries productSeries = productSeriesOptional.get();
+        if(null == productSeries){
+            throw new BadRequestException("产品系列不存在!");
+        }
 
         // 产品资料-仓库预警修改目标
         List<ProductInventoryWarning> productInventoryWarningListTarget = updateProductInfoRequest.getProductInventoryWarning();
@@ -255,6 +264,9 @@ public class ProductInfoServiceImpl implements ProductInfoService {
             productInfo.setProductInitialSetup(productInitialSetupStr);
         }
 
+        productInfo.setProductCategoryName(productCategory.getName());
+        productInfo.setMeasureUnitName(measureUnit.getName());
+        productInfo.setProductSeriesName(productSeries.getProductSeriesName());
         productInfo.setCreateTime(createTime);
         productInfo.setStatus(true);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

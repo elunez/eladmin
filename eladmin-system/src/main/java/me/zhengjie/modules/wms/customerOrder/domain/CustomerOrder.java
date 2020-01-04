@@ -1,9 +1,11 @@
 package me.zhengjie.modules.wms.customerOrder.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -36,6 +38,8 @@ public class CustomerOrder implements Serializable {
     private Timestamp orderDate;
 
     // 交货日期
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "delivery_date")
     private Timestamp deliveryDate;
 
