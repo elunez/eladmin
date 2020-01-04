@@ -19,6 +19,10 @@ public class CreateProductInfoRequest implements Serializable {
     // 产品分类名称
     private String productCategoryName;
 
+    private Long productSeriesId;
+
+    private String productSeriesName;
+
     // 产品编号
     private String productCode;
 

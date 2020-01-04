@@ -40,6 +40,39 @@ public class ProductCount implements Serializable {
     @CreationTimestamp
     private Timestamp gmtUpdate;
 
+    @Column(name = "product_category_id")
+    private Long productCategoryId;
+
+    @Column(name = "product_category_name")
+    private String productCategoryName;
+
+    @Column(name = "product_series_id")
+    private Long productSeriesId;
+
+    @Column(name = "product_series_name")
+    private String productSeriesName;
+
+    @Column(name = "mp_number")
+    private Long mpNumber;
+
+    @Column(name = "hj_number")
+    private Long hjNumber;
+
+    @Column(name = "bjc_number")
+    private Long bjcNumber;
+
+    @Column(name = "jc_number")
+    private Long jcNumber;
+
+    @Column(name = "jm_number")
+    private Long jmNumber;
+
+    @Column(name = "dph_number")
+    private Long dphNumber;
+
+    @Column(name = "cm_number")
+    private Long cmNumber;
+
     public void copy(ProductCount source){
         BeanUtil.copyProperties(source,this, CopyOptions.create().setIgnoreNullValue(true));
     }

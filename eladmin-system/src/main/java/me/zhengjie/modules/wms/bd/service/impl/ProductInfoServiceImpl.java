@@ -6,6 +6,7 @@ import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.modules.wms.bd.domain.*;
 import me.zhengjie.modules.wms.bd.repository.MeasureUnitRepository;
 import me.zhengjie.modules.wms.bd.repository.ProductCategoryRepository;
+import me.zhengjie.modules.wms.bd.repository.ProductSeriesRepository;
 import me.zhengjie.modules.wms.bd.request.*;
 import me.zhengjie.modules.wms.bd.service.dto.*;
 import me.zhengjie.utils.ValidationUtil;
@@ -56,6 +57,9 @@ public class ProductInfoServiceImpl implements ProductInfoService {
 
     @Autowired
     private ProductCategoryRepository productCategoryRepository;
+
+    @Autowired
+    private ProductSeriesRepository productSeriesRepository;
 
     @Override
     public Object queryAll(ProductInfoQueryCriteria criteria, Pageable pageable){
@@ -150,6 +154,15 @@ public class ProductInfoServiceImpl implements ProductInfoService {
             throw new BadRequestException("产品类别不存在!");
         }
 
+        Long productSeriesId = createProductInfoRequest.getProductSeriesId();
+        if(null == productSeriesId){
+            throw new BadRequestException("产品系列不能为空!");
+        }
+        Optional<ProductSeries> productSeriesOptional = productSeriesRepository.findById(productSeriesId);
+        ProductSeries productSeries = productSeriesOptional.get();
+        if(null == productSeries){
+            throw new BadRequestException("产品系列不存在!");
+        }
 
 
         ProductInfoDetailDTO productInfoDetailDTO = new ProductInfoDetailDTO();
@@ -172,6 +185,7 @@ public class ProductInfoServiceImpl implements ProductInfoService {
 
         productInfo.setProductCategoryName(productCategory.getName());
         productInfo.setMeasureUnitName(measureUnit.getName());
+        productInfo.setProductSeriesName(productSeries.getProductSeriesName());
 
         productInfo = productInfoRepository.save(productInfo);
         ProductInfoDTO productInfoDTO = productInfoMapper.toDto(productInfo);

@@ -44,4 +44,10 @@ public class ProductInfoDTO implements Serializable {
 
     // 更新时间
     private Timestamp updateTime;
+
+    // 产品系列主键
+    private Long productSeriesId;
+
+    // 产品系列名称
+    private String productSeriesName;
 }

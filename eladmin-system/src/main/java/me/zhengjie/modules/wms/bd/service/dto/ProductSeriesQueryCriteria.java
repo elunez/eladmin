@@ -9,5 +9,7 @@ import me.zhengjie.annotation.Query;
 * @date 2020-01-04
 */
 @Data
-public class ProductSeriesQueryCriteria {
+public class
+
+ProductSeriesQueryCriteria {
 }

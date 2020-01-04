@@ -33,6 +33,14 @@ public class ProductInfo implements Serializable {
     @Column(name = "product_category_name",nullable = false)
     private String productCategoryName;
 
+    // 产品系列主键
+    @Column(name = "product_series_id",nullable = false)
+    private Long productSeriesId;
+
+    // 产品系列名称
+    @Column(name = "product_series_name",nullable = false)
+    private String productSeriesName;
+
     // 产品编号
     @Column(name = "product_code")
     private String productCode;
