@@ -9,10 +9,14 @@ import me.zhengjie.modules.wms.bd.repository.ProductCategoryRepository;
 import me.zhengjie.modules.wms.bd.repository.ProductSeriesRepository;
 import me.zhengjie.modules.wms.bd.request.*;
 import me.zhengjie.modules.wms.bd.service.dto.*;
+import me.zhengjie.modules.wms.sr.productCount.domain.ProductCount;
+import me.zhengjie.modules.wms.sr.productCount.repository.ProductCountRepository;
 import me.zhengjie.utils.ValidationUtil;
 import me.zhengjie.modules.wms.bd.repository.ProductInfoRepository;
 import me.zhengjie.modules.wms.bd.service.ProductInfoService;
 import me.zhengjie.modules.wms.bd.service.mapper.ProductInfoMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
@@ -46,6 +50,8 @@ import javax.persistence.criteria.Root;
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class ProductInfoServiceImpl implements ProductInfoService {
 
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
+
     @Autowired
     private ProductInfoRepository productInfoRepository;
 
@@ -60,6 +66,9 @@ public class ProductInfoServiceImpl implements ProductInfoService {
 
     @Autowired
     private ProductSeriesRepository productSeriesRepository;
+
+    @Autowired
+    private ProductCountRepository productCountRepository;
 
     @Override
     public Object queryAll(ProductInfoQueryCriteria criteria, Pageable pageable){
@@ -190,6 +199,15 @@ public class ProductInfoServiceImpl implements ProductInfoService {
         productInfo = productInfoRepository.save(productInfo);
         ProductInfoDTO productInfoDTO = productInfoMapper.toDto(productInfo);
         BeanUtils.copyProperties(productInfoDTO, productInfoDetailDTO);
+
+        // 新增产品统计数据
+        ProductCount productCount = new ProductCount();
+        productCount.setProductName(productInfo.getName());
+        productCount.setProductCategoryId(productInfo.getProductCategoryId());
+        productCount.setProductCategoryName(productInfo.getProductCategoryName());
+        productCount.setProductSeriesId(productInfo.getProductSeriesId());
+        productCount.setProductSeriesName(productInfo.getProductSeriesName());
+        productCountRepository.save(productCount);
         return productInfoDetailDTO;
     }
 
@@ -274,6 +292,26 @@ public class ProductInfoServiceImpl implements ProductInfoService {
         productInfo.setProductCategoryName(productCategory.getName());
         // 修改客户资料
         productInfoRepository.save(productInfo);
+
+        // 根据产品主键查看产品统计是否存在，如果存在则不操作，不存在则插入
+        ProductCount productCount = productCountRepository.findByProductId(productInfoId);
+        if(null == productCount){
+            productCount = new ProductCount();
+            productCount.setProductId(productInfoId);
+            productCount.setProductName(productInfo.getName());
+            productCount.setProductSeriesName(productInfo.getProductSeriesName());
+            productCount.setProductSeriesId(productInfo.getProductSeriesId());
+            productCount.setProductCategoryName(productInfo.getProductCategoryName());
+            productCount.setProductCategoryId(productInfo.getProductCategoryId());
+            logger.info("新增产品统计;[]", new Gson().toJson(productCount));
+            productCountRepository.save(productCount);
+        }else{
+            productCount.setProductSeriesId(productInfo.getProductSeriesId());
+            productCount.setProductSeriesName(productInfo.getProductSeriesName());
+            productCount.setProductCategoryId(productInfo.getProductCategoryId());
+            productCount.setProductCategoryName(productInfo.getProductCategoryName());
+            productCountRepository.save(productCount);
+        }
     }
 
     @Override

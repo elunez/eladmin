@@ -41,6 +41,13 @@ public interface ProductCountService {
     ProductCountDTO findById(Long id);
 
     /**
+     * 根据productId查看产品统计
+     * @param productId
+     * @return
+     */
+    public ProductCountDTO findByProductId(Long productId);
+
+    /**
      * create
      * @param resources
      * @return

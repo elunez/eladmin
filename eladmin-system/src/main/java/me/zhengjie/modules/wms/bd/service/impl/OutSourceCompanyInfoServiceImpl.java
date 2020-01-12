@@ -98,7 +98,7 @@ public class OutSourceCompanyInfoServiceImpl implements OutSourceCompanyInfoServ
                             List<OutSourceCompanyContact> outSourceCompanyContactList = new Gson().fromJson(outSourceCompanyJsonStr,new TypeToken<ArrayList<OutSourceCompanyContact>>() {}.getType());
                             if(!CollectionUtils.isEmpty(outSourceCompanyContactList)){
                                 for(OutSourceCompanyContact outSourceCompanyContact : outSourceCompanyContactList){
-                                    if(outSourceCompanyContact.getFirstTag() == 1){
+                                    if(!StringUtils.isEmpty(outSourceCompanyContact.getFirstTag()) && outSourceCompanyContact.getFirstTag() == 1){
                                         outSourceCompanyInfoDTO.setFirstContactMobile(outSourceCompanyContact.getMobile());
                                         outSourceCompanyInfoDTO.setFirstContactName(outSourceCompanyContact.getName());
                                     }
@@ -188,10 +188,51 @@ public class OutSourceCompanyInfoServiceImpl implements OutSourceCompanyInfoServ
         }
         List<OutSourceCompanyContact> outSourceCompanyContactList = createOutSourceCompanyInfoRequest.getOutSourceCompanyContact();
         if(!CollectionUtils.isEmpty(outSourceCompanyContactList)){
+            Boolean firstTagFlag = false;
+            for(OutSourceCompanyContact outSourceCompanyContact: outSourceCompanyContactList){
+                String name = outSourceCompanyContact.getName();
+                if(StringUtils.isEmpty(name)){
+                    throw new BadRequestException("联系人姓名不能为空!");
+                }
+                String mobile = outSourceCompanyContact.getMobile();
+                if(StringUtils.isEmpty(mobile)){
+                    throw new BadRequestException("联系人" + name +"对应的手机号码不能为空!");
+                }
+                String phone = outSourceCompanyContact.getPhone();
+                if(StringUtils.isEmpty(phone)){
+                    throw new BadRequestException("联系人" + name +"对应的座机不能为空!");
+                }
+                String email = outSourceCompanyContact.getEmail();
+                if(StringUtils.isEmpty(email)){
+                    throw new BadRequestException("联系人" + name +"对应的邮箱不能为空!");
+                }
+                String weixin = outSourceCompanyContact.getWeixin();
+                if(StringUtils.isEmpty(weixin)){
+                    throw new BadRequestException("联系人" + name +"对应的微信不能为空!");
+                }
+                String qq = outSourceCompanyContact.getQq();
+                if(StringUtils.isEmpty(qq)){
+                    throw new BadRequestException("联系人" + name +"对应的qq不能为空!");
+                }
+                Integer firstTag = outSourceCompanyContact.getFirstTag();
+                if(null == firstTag){
+                    throw new BadRequestException("联系人" + name +"对应的首要联系人不能为空!");
+                }
+                if(firstTag == 1){
+                    firstTagFlag = true;
+                }
+            }
+            if(!firstTagFlag){
+                throw new BadRequestException("委外公司联系人必须设置一个首要联系人!");
+            }
             String outSourceCompanyContactStr = new Gson().toJson(outSourceCompanyContactList);
             outSourceCompanyInfo.setOutSourceCompanyContact(outSourceCompanyContactStr);
             outSourceCompanyInfoDetailDTO.setOutSourceCompanyContact(outSourceCompanyContactList);
+        }else{
+            throw new BadRequestException("委外公司联系人不能为空!");
         }
+
+
 
         outSourceCompanyInfo = outSourceCompanyInfoRepository.save(outSourceCompanyInfo);
         OutSourceCompanyInfoDTO outSourceCompanyInfoDTO = outSourceCompanyInfoMapper.toDto(outSourceCompanyInfo);

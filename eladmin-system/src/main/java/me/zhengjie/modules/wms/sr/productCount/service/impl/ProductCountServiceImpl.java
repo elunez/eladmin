@@ -60,6 +60,13 @@ public class ProductCountServiceImpl implements ProductCountService {
     }
 
     @Override
+    public ProductCountDTO findByProductId(Long productId) {
+
+        ProductCount productCount = productCountMapper.findByProductId(productId);
+        return productCountMapper.toDto(productCount);
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public ProductCountDTO create(ProductCount resources) {
         Long productId = resources.getProductId();
