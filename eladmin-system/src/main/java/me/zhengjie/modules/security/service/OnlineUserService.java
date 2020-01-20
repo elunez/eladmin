@@ -148,9 +148,9 @@ public class OnlineUserService {
                 try {
                     String token =EncryptUtils.desDecrypt(onlineUser.getKey());
                     if(StringUtils.isNotBlank(igoreToken)&&!igoreToken.equals(token)){
-                        this.kickOut(onlineUser.getKey());
+                        this.logout(token);
                     }else if(StringUtils.isBlank(igoreToken)){
-                        this.kickOut(onlineUser.getKey());
+                        this.logout(token);
                     }
                 } catch (Exception e) {
                     log.error("checkUser is error",e);
