@@ -85,7 +85,9 @@ public class GenUtil {
     }
 
     public static String download(List<ColumnInfo> columns, GenConfig genConfig) throws IOException {
-        String tempPath =System.getProperty("java.io.tmpdir") + "eladmin-gen-temp" + File.separator + genConfig.getTableName() + File.separator;
+        // 拼接的路径：/tmpeladmin-gen-temp/，这个路径在Linux下需要root用户才有权限创建,非root用户会权限错误而失败，更改为： /tmp/eladmin-gen-temp/
+        // String tempPath =System.getProperty("java.io.tmpdir") + "eladmin-gen-temp" + File.separator + genConfig.getTableName() + File.separator;
+        String tempPath =System.getProperty("java.io.tmpdir") + File.separator + "eladmin-gen-temp" + File.separator + genConfig.getTableName() + File.separator;
         Map<String,Object> genMap = getGenMap(columns, genConfig);
         TemplateEngine engine = TemplateUtil.createEngine(new TemplateConfig("template", TemplateConfig.ResourceMode.CLASSPATH));
         // 生成后端代码
