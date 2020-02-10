@@ -90,8 +90,8 @@ public class OnlineUserService {
      * @param key /
      * @throws Exception /
      */
-    public void kickOut(String key) throws Exception {
-        key = properties.getOnlineKey() + EncryptUtils.desDecrypt(key);
+    public void kickOut(String key){
+        key = properties.getOnlineKey() + key;
         redisUtils.del(key);
     }
 
@@ -148,9 +148,9 @@ public class OnlineUserService {
                 try {
                     String token =EncryptUtils.desDecrypt(onlineUser.getKey());
                     if(StringUtils.isNotBlank(igoreToken)&&!igoreToken.equals(token)){
-                        this.kickOut(onlineUser.getKey());
+                        this.kickOut(token);
                     }else if(StringUtils.isBlank(igoreToken)){
-                        this.kickOut(onlineUser.getKey());
+                        this.kickOut(token);
                     }
                 } catch (Exception e) {
                     log.error("checkUser is error",e);
