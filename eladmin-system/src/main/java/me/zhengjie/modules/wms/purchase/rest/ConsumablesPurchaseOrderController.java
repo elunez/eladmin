@@ -78,7 +78,7 @@ public class ConsumablesPurchaseOrderController {
     @Log("审核耗材采购单")
     @ApiOperation(value = "审核耗材采购单")
     @PostMapping(value = "/auditConsumablesPurchaseOrder")
-    @PreAuthorize("hasAnyRole('ADMIN','PRODUCTPURCHASEORDER_ALL','PRODUCTPURCHASEORDER_DELETE')")
+    @PreAuthorize("hasAnyRole('ADMIN','PRODUCTPURCHASEORDER_ALL','PRODUCTPURCHASEORDER_AUDIT')")
     public ResponseEntity auditConsumablesPurchaseOrder(@Validated @RequestBody AuditConsumablesPurchaseOrderRequest auditConsumablesPurchaseOrderRequest){
         consumablesPurchaseOrderService.auditConsumablesPurchaseOrder(auditConsumablesPurchaseOrderRequest);
         return new ResponseEntity(HttpStatus.OK);
@@ -86,6 +86,7 @@ public class ConsumablesPurchaseOrderController {
 
     @Log("初始化耗材采购单编号")
     @GetMapping(value = "/initConsumablesPurchaseOrderCode")
+    @PreAuthorize("hasAnyRole('ADMIN','PRODUCTPURCHASEORDER_ALL')")
     public ResponseEntity initConsumablesPurchaseOrderCode(){
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS");//设置日期格式
         String supplierCode = "CP"+ LocalDateTime.now().format(fmt);
@@ -95,6 +96,7 @@ public class ConsumablesPurchaseOrderController {
     @Log("查看耗材采购详情")
     @ApiOperation(value = "查看产品采购详情")
     @GetMapping(value = "/consumablesPurchaseOrder/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN','PRODUCTPURCHASEORDER_ALL','PRODUCTPURCHASEORDER_DETAIL_BY_I')")
     public ResponseEntity getOutSourceInspectionCertificate(@PathVariable Long id){
         return new ResponseEntity(consumablesPurchaseOrderService.findById(id), HttpStatus.OK);
     }

@@ -70,7 +70,7 @@ public class ProductPurchaseOrderController {
     @Log("审核产品采购单")
     @ApiOperation(value = "审核产品采购单")
     @PostMapping(value = "/auditProductPurchaseOrder")
-    @PreAuthorize("hasAnyRole('ADMIN','PRODUCTPURCHASEORDER_ALL','PRODUCTPURCHASEORDER_DELETE')")
+    @PreAuthorize("hasAnyRole('ADMIN','PRODUCTPURCHASEORDER_ALL','PRODUCTPURCHASEORDER_AUDIT')")
     public ResponseEntity auditProductPurchaseOrder(@Validated @RequestBody AuditProductPurchaseOrderRequest auditProductPurchaseOrderRequest){
         productPurchaseOrderService.auditProductPurchaseOrder(auditProductPurchaseOrderRequest);
         return new ResponseEntity(HttpStatus.OK);
@@ -78,6 +78,7 @@ public class ProductPurchaseOrderController {
 
     @Log("初始化产品采购单编号")
     @GetMapping(value = "/initProductPurchaseOrderCode")
+    @PreAuthorize("hasAnyRole('ADMIN','PRODUCTPURCHASEORDER_ALL')")
     public ResponseEntity initProductPurchaseOrderCode(){
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS");//设置日期格式
         String supplierCode = "PP"+ LocalDateTime.now().format(fmt);
@@ -87,6 +88,7 @@ public class ProductPurchaseOrderController {
     @Log("查看产品采购详情")
     @ApiOperation(value = "查看产品采购详情")
     @GetMapping(value = "/productPurchaseOrder/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN','PRODUCTPURCHASEORDER_ALL','PRODUCTPURCHASEORDER_DETAIL_BY_ID')")
     public ResponseEntity getOutSourceInspectionCertificate(@PathVariable Long id){
         return new ResponseEntity(productPurchaseOrderService.findById(id), HttpStatus.OK);
     }
