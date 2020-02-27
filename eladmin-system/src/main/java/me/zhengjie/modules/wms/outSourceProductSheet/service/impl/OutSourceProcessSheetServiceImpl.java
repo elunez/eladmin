@@ -1,6 +1,15 @@
 package me.zhengjie.modules.wms.outSourceProductSheet.service.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import me.zhengjie.exception.BadRequestException;
+import me.zhengjie.modules.system.cons.MessageModulePath;
+import me.zhengjie.modules.system.cons.MessageModuleType;
+import me.zhengjie.modules.system.cons.MessageReadStatus;
+import me.zhengjie.modules.system.domain.Message;
+import me.zhengjie.modules.system.repository.MessageRepository;
+import me.zhengjie.modules.system.service.UserService;
+import me.zhengjie.modules.system.service.dto.UserDTO;
+import me.zhengjie.modules.system.service.dto.UserQueryCriteria;
 import me.zhengjie.modules.wms.invoice.domain.Invoice;
 import me.zhengjie.modules.wms.invoice.domain.InvoiceProduct;
 import me.zhengjie.modules.wms.invoice.service.dto.InvoiceDTO;
@@ -55,6 +64,7 @@ import javax.persistence.criteria.Root;
 * @author jie
 * @date 2019-08-17
 */
+@Slf4j
 @Service
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class OutSourceProcessSheetServiceImpl implements OutSourceProcessSheetService {
@@ -70,6 +80,12 @@ public class OutSourceProcessSheetServiceImpl implements OutSourceProcessSheetSe
 
     @Autowired
     private OutSourceProcessSheetProductMapper outSourceProcessSheetProductMapper;
+
+    @Autowired
+    private MessageRepository messageRepository;
+
+    @Autowired
+    private UserService userService;
 
     @Override
     public Object queryAll(OutSourceProcessSheetQueryCriteria criteria, Pageable pageable){
@@ -196,6 +212,32 @@ public class OutSourceProcessSheetServiceImpl implements OutSourceProcessSheetSe
                 outSourceProcessSheetProductDTOList.add(outSourceProcessSheetProductDTO);
             }
             outSourceProcessSheetDTO.setOutSourceProcessSheetProductList(outSourceProcessSheetProductDTOList);
+        }
+
+        /**
+         * 新增消息通知
+         */
+        try {
+            // 查看所有用户
+            UserQueryCriteria userQueryCriteria = new UserQueryCriteria();
+            List<UserDTO> userDTOList =(List<UserDTO>)userService.queryAll(userQueryCriteria);
+            if(!CollectionUtils.isEmpty(userDTOList)){
+                List<Message> messageList = new ArrayList<>();
+                for(UserDTO userDTO : userDTOList){
+                    Message message = new Message();
+                    message.setUserIdAccept(userDTO.getId());
+                    String messageContent = MessageModuleType.OUT_SOURCE_PROCESS.getName() + "(" + outSourceProcessSheetCode + ")";
+                    message.setMessContent(messageContent);
+                    message.setModulePath(MessageModulePath.OUT_SOURCE_LIST.getCode());
+                    message.setModuleTypeName(MessageModuleType.OUT_SOURCE_PROCESS.getCode());
+                    message.setReadStatus(MessageReadStatus.NO_READ.getStatus());
+                    message.setInitCode(outSourceProcessSheetCode);
+                    messageList.add(message);
+                }
+                messageRepository.saveAll(messageList);
+            }
+        }catch (Exception e){
+            log.error("单据编号:插入消息失败!");
         }
 
         return outSourceProcessSheetDTO;

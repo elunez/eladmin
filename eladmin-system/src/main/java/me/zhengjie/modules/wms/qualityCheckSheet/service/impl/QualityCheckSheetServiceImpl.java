@@ -1,6 +1,15 @@
 package me.zhengjie.modules.wms.qualityCheckSheet.service.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import me.zhengjie.exception.BadRequestException;
+import me.zhengjie.modules.system.cons.MessageModulePath;
+import me.zhengjie.modules.system.cons.MessageModuleType;
+import me.zhengjie.modules.system.cons.MessageReadStatus;
+import me.zhengjie.modules.system.domain.Message;
+import me.zhengjie.modules.system.repository.MessageRepository;
+import me.zhengjie.modules.system.service.UserService;
+import me.zhengjie.modules.system.service.dto.UserDTO;
+import me.zhengjie.modules.system.service.dto.UserQueryCriteria;
 import me.zhengjie.modules.wms.outSourceProductSheet.domain.OutSourceInspectionCertificate;
 import me.zhengjie.modules.wms.outSourceProductSheet.domain.OutSourceInspectionCertificateProduct;
 import me.zhengjie.modules.wms.outSourceProductSheet.domain.OutSourceProcessSheet;
@@ -56,6 +65,7 @@ import javax.persistence.criteria.Root;
 * @author huangxingxing
 * @date 2019-11-12
 */
+@Slf4j
 @Service
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class QualityCheckSheetServiceImpl implements QualityCheckSheetService {
@@ -71,6 +81,12 @@ public class QualityCheckSheetServiceImpl implements QualityCheckSheetService {
 
     @Autowired
     private QualityCheckSheetProductMapper qualityCheckSheetProductMapper;
+
+    @Autowired
+    private MessageRepository messageRepository;
+
+    @Autowired
+    private UserService userService;
 
     @Override
     public Object queryAll(QualityCheckSheetQueryCriteria criteria, Pageable pageable){
@@ -195,6 +211,32 @@ public class QualityCheckSheetServiceImpl implements QualityCheckSheetService {
                 qualityCheckSheetProductDTOList.add(qualityCheckSheetProductDTO);
             }
             qualityCheckSheetDTO.setQualityCheckSheetProductList(qualityCheckSheetProductDTOList);
+        }
+
+        /**
+         * 新增消息通知
+         */
+        try {
+            // 查看所有用户
+            UserQueryCriteria userQueryCriteria = new UserQueryCriteria();
+            List<UserDTO> userDTOList =(List<UserDTO>)userService.queryAll(userQueryCriteria);
+            if(!CollectionUtils.isEmpty(userDTOList)){
+                List<Message> messageList = new ArrayList<>();
+                for(UserDTO userDTO : userDTOList){
+                    Message message = new Message();
+                    message.setUserIdAccept(userDTO.getId());
+                    String messageContent = MessageModuleType.QUALITY_CHECK_SHEET.getName() + "(" + qualityCheekSheetCode + ")";
+                    message.setMessContent(messageContent);
+                    message.setModulePath(MessageModulePath.QUALITY_CHECKSHEET_LIST.getCode());
+                    message.setModuleTypeName(MessageModuleType.QUALITY_CHECK_SHEET.getCode());
+                    message.setReadStatus(MessageReadStatus.NO_READ.getStatus());
+                    message.setInitCode(qualityCheekSheetCode);
+                    messageList.add(message);
+                }
+                messageRepository.saveAll(messageList);
+            }
+        }catch (Exception e){
+            log.error("单据编号:插入消息失败!");
         }
 
         return qualityCheckSheetDTO;

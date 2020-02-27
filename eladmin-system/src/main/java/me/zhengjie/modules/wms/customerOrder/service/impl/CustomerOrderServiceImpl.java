@@ -250,6 +250,7 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
                     message.setModulePath(MessageModulePath.CUSTOMER_ORDER_LIST.getCode());
                     message.setModuleTypeName(MessageModuleType.CUSTOMER_ORDER.getCode());
                     message.setReadStatus(MessageReadStatus.NO_READ.getStatus());
+                    message.setInitCode(customerOrderCode);
                     messageList.add(message);
                 }
                 messageRepository.saveAll(messageList);

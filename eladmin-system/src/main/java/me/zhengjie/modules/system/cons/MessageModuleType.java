@@ -6,7 +6,12 @@ package me.zhengjie.modules.system.cons;
  */
 public enum MessageModuleType {
     CUSTOMER_ORDER("客户订单", "CUSTOMER_ORDER"),
-    INVOICE("销售发货单", "INVOICE")
+    INVOICE("销售发货单", "INVOICE"),
+    OUT_SOURCE_PROCESS("委外加工单", "OUT_SOURCE_PROCESS"),
+    OUT_SOURCE_INSPECTION_CERTIFICATE("委外验收单", "OUT_SOURCE_INSPECTION_CERTIFICATE"),
+    PRODUCT_PURCHASE("产品采购单", "PRODUCT_PURCHASE"),
+    CONSUMABLES_PURCHASE("耗材采购单", "CONSUMABLES_PURCHASE"),
+    QUALITY_CHECK_SHEET("质量检验单", "QUALITY_CHECK_SHEET"),
 
     ;
     private String name;

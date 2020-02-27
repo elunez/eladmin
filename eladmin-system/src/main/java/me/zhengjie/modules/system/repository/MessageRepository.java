@@ -1,6 +1,5 @@
 package me.zhengjie.modules.system.repository;
 
-import me.zhengjie.modules.system.domain.Menu;
 import me.zhengjie.modules.system.domain.Message;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;

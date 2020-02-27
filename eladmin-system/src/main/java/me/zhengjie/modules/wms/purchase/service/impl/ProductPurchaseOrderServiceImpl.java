@@ -1,6 +1,15 @@
 package me.zhengjie.modules.wms.purchase.service.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import me.zhengjie.exception.BadRequestException;
+import me.zhengjie.modules.system.cons.MessageModulePath;
+import me.zhengjie.modules.system.cons.MessageModuleType;
+import me.zhengjie.modules.system.cons.MessageReadStatus;
+import me.zhengjie.modules.system.domain.Message;
+import me.zhengjie.modules.system.repository.MessageRepository;
+import me.zhengjie.modules.system.service.UserService;
+import me.zhengjie.modules.system.service.dto.UserDTO;
+import me.zhengjie.modules.system.service.dto.UserQueryCriteria;
 import me.zhengjie.modules.wms.purchase.cons.AuditStatus;
 import me.zhengjie.modules.wms.purchase.domain.ConsumablesPurchaseOrder;
 import me.zhengjie.modules.wms.purchase.domain.ProductPurchaseOrder;
@@ -48,6 +57,7 @@ import javax.persistence.criteria.Root;
 * @author jie
 * @date 2019-10-06
 */
+@Slf4j
 @Service
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class ProductPurchaseOrderServiceImpl implements ProductPurchaseOrderService {
@@ -63,6 +73,12 @@ public class ProductPurchaseOrderServiceImpl implements ProductPurchaseOrderServ
 
     @Autowired
     private ProductPurchaseOrderProductMapper productPurchaseOrderProductMapper;
+
+    @Autowired
+    private MessageRepository messageRepository;
+
+    @Autowired
+    private UserService userService;
 
     @Override
     public Object queryAll(ProductPurchaseOrderQueryCriteria criteria, Pageable pageable){
@@ -189,6 +205,32 @@ public class ProductPurchaseOrderServiceImpl implements ProductPurchaseOrderServ
             productPurchaseOrderDTO.setProductPurchaseOrderProductList(productPurchaseOrderProductDTOList);
         }
 
+
+        /**
+         * 新增消息通知
+         */
+        try {
+            // 查看所有用户
+            UserQueryCriteria userQueryCriteria = new UserQueryCriteria();
+            List<UserDTO> userDTOList =(List<UserDTO>)userService.queryAll(userQueryCriteria);
+            if(!CollectionUtils.isEmpty(userDTOList)){
+                List<Message> messageList = new ArrayList<>();
+                for(UserDTO userDTO : userDTOList){
+                    Message message = new Message();
+                    message.setUserIdAccept(userDTO.getId());
+                    String messageContent = MessageModuleType.PRODUCT_PURCHASE.getName() + "(" + productPurchaseOrderCode + ")";
+                    message.setMessContent(messageContent);
+                    message.setModulePath(MessageModulePath.PRODUCT_PURCHASE_LIST.getCode());
+                    message.setModuleTypeName(MessageModuleType.PRODUCT_PURCHASE.getCode());
+                    message.setReadStatus(MessageReadStatus.NO_READ.getStatus());
+                    message.setInitCode(productPurchaseOrderCode);
+                    messageList.add(message);
+                }
+                messageRepository.saveAll(messageList);
+            }
+        }catch (Exception e){
+            log.error("单据编号:插入消息失败!");
+        }
         return productPurchaseOrderDTO;
     }
 

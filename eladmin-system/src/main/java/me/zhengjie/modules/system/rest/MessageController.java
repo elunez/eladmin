@@ -25,14 +25,14 @@ public class MessageController {
     private MessageService messageService;
 
     @ApiOperation(value = "我的消息列表")
-    @GetMapping(value = "/queryInvoiceList")
+    @GetMapping(value = "/queryMessageList")
     @PreAuthorize("hasAnyRole('ADMIN','MESSAGE_ALL','MESSAGE_ALL')")
-    public ResponseEntity queryInvoiceList(MessageCriteria criteria){
+    public ResponseEntity queryMessageList(MessageCriteria criteria){
         return new ResponseEntity(messageService.queryAll(criteria), HttpStatus.OK);
     }
 
     @Log("修改消息")
-    @PutMapping(value = "/menus")
+    @PutMapping(value = "/message")
     @PreAuthorize("hasAnyRole('ADMIN','MESSAGE_ALL','MESSAGE_EDIT')")
     public ResponseEntity update(@Validated(Menu.Update.class) @RequestBody Message resources){
         messageService.update(resources);
