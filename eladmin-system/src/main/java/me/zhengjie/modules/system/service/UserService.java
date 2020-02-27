@@ -80,4 +80,7 @@ public interface UserService {
 
     @Cacheable(keyGenerator = "keyGenerator")
     Object queryAll(UserQueryCriteria criteria, Pageable pageable);
+
+
+    Object queryAll(UserQueryCriteria criteria);
 }

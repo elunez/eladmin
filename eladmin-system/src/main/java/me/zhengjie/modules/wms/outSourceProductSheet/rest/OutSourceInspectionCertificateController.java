@@ -42,8 +42,8 @@ public class OutSourceInspectionCertificateController {
     @ApiOperation(value = "查询委外验收单列表")
     @GetMapping(value = "/queryOutSourceInspectionCertificateList")
     @PreAuthorize("hasAnyRole('ADMIN','SOUTSOURCEINSPECTIONCERTIFICATE_ALL','SOUTSOURCEINSPECTIONCERTIFICATE_SELECT')")
-    public ResponseEntity queryOutSourceInspectionCertificateList(OutSourceInspectionCertificateQueryCriteria criteria, Pageable pageable){
-        return new ResponseEntity(outSourceInspectionCertificateService.queryAll(criteria,pageable),HttpStatus.OK);
+    public ResponseEntity queryOutSourceInspectionCertificateList(OutSourceInspectionCertificateQueryCriteria criteria){
+        return new ResponseEntity(outSourceInspectionCertificateService.queryAll(criteria),HttpStatus.OK);
     }
 
 

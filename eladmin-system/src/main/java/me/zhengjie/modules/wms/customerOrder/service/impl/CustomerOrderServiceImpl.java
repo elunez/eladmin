@@ -1,6 +1,16 @@
 package me.zhengjie.modules.wms.customerOrder.service.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import me.zhengjie.exception.BadRequestException;
+import me.zhengjie.modules.system.cons.MessageModulePath;
+import me.zhengjie.modules.system.cons.MessageModuleType;
+import me.zhengjie.modules.system.cons.MessageReadStatus;
+import me.zhengjie.modules.system.domain.Message;
+import me.zhengjie.modules.system.repository.MessageRepository;
+import me.zhengjie.modules.system.service.MessageService;
+import me.zhengjie.modules.system.service.UserService;
+import me.zhengjie.modules.system.service.dto.UserDTO;
+import me.zhengjie.modules.system.service.dto.UserQueryCriteria;
 import me.zhengjie.modules.wms.bd.domain.CustomerInfo;
 import me.zhengjie.modules.wms.bd.domain.ProductInfo;
 import me.zhengjie.modules.wms.bd.domain.SupplierInfo;
@@ -54,6 +64,7 @@ import javax.persistence.criteria.Root;
 * @author jie
 * @date 2019-08-03
 */
+@Slf4j
 @Service
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class CustomerOrderServiceImpl implements CustomerOrderService {
@@ -78,6 +89,14 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
 
     @Autowired
     private ProductInfoRepository productInfoRepository;
+
+    @Autowired
+    private MessageRepository messageRepository;
+
+    @Autowired
+    private UserService userService;
+
+
 
     @Override
     public Object queryAll(CustomerOrderQueryCriteria criteria, Pageable pageable){
@@ -140,6 +159,7 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public CustomerOrderDTO create(CreateCustomerOrderRequest createCustomerOrderRequest) {
+        String customerOrderCode = createCustomerOrderRequest.getCustomerOrderCode();
 
         List<String> repeatProductCodeList =createCustomerOrderRequest.getCustomerOrderProductList().stream().
                 collect(Collectors.groupingBy(dog->dog.getProductCode() ,Collectors.counting()))
@@ -213,6 +233,30 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
         customerOrderDTO.setCustomerOrderProductList(customerOrderProductDTOList);
 
 
+        /**
+         * 新增消息通知
+         */
+        try {
+            // 查看所有用户
+            UserQueryCriteria userQueryCriteria = new UserQueryCriteria();
+            List<UserDTO> userDTOList =(List<UserDTO>)userService.queryAll(userQueryCriteria);
+            if(!CollectionUtils.isEmpty(userDTOList)){
+                List<Message> messageList = new ArrayList<>();
+                for(UserDTO userDTO : userDTOList){
+                    Message message = new Message();
+                    message.setUserIdAccept(userDTO.getId());
+                    String messageContent = MessageModuleType.CUSTOMER_ORDER.getName() + "(" + customerOrderCode + ")";
+                    message.setMessContent(messageContent);
+                    message.setModulePath(MessageModulePath.CUSTOMER_ORDER_LIST.getCode());
+                    message.setModuleTypeName(MessageModuleType.CUSTOMER_ORDER.getCode());
+                    message.setReadStatus(MessageReadStatus.NO_READ.getStatus());
+                    messageList.add(message);
+                }
+                messageRepository.saveAll(messageList);
+            }
+        }catch (Exception e){
+            log.error("单据编号:插入消息失败!");
+        }
         return customerOrderDTO;
     }
 

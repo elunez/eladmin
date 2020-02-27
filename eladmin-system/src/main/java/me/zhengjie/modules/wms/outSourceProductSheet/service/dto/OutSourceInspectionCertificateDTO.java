@@ -1,6 +1,5 @@
 package me.zhengjie.modules.wms.outSourceProductSheet.service.dto;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import lombok.Data;
 import java.sql.Timestamp;
 import java.io.Serializable;

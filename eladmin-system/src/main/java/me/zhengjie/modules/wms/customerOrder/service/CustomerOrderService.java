@@ -31,7 +31,7 @@ public interface CustomerOrderService {
     * @return
     */
     //@Cacheable(keyGenerator = "keyGenerator")
-    public Object queryAll(CustomerOrderQueryCriteria criteria);
+    Object queryAll(CustomerOrderQueryCriteria criteria);
 
     /**
      * findById
