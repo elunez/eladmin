@@ -73,6 +73,7 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void delete(Long id) {
         messageRepository.deleteMessageById(id);;
     }

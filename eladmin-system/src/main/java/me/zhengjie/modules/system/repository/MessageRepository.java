@@ -13,6 +13,6 @@ import org.springframework.data.jpa.repository.Query;
 public interface MessageRepository extends JpaRepository<Message, Long>, JpaSpecificationExecutor {
 
     @Modifying
-    @Query(value = "delete from meessage where id = ?1", nativeQuery = true)
-    void deleteMessageById(long id);
+    @Query(value = "delete from message where id = ?1", nativeQuery = true)
+    void deleteMessageById(Long id);
 }

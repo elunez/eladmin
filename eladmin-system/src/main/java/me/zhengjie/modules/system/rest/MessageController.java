@@ -41,7 +41,7 @@ public class MessageController {
 
     @Log("删除消息")
     @ApiOperation(value = "删除消息")
-    @DeleteMapping(value = "/messagee/{id}")
+    @DeleteMapping(value = "/message/{id}")
     @PreAuthorize("hasAnyRole('ADMIN','MESSAGE_ALL','MESSAGE_DELETE')")
     public ResponseEntity delete(@PathVariable Long id){
         messageService.delete(id);
