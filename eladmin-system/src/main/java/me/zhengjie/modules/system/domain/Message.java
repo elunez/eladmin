@@ -41,7 +41,7 @@ public class Message implements Serializable {
     private Long userIdSend;
 
     @Column(name = "user_name_send")
-    private Long userNameSend;
+    private String userNameSend;
 
     @Column(name = "user_id_accept")
     private Long userIdAccept;

@@ -3,6 +3,8 @@ package me.zhengjie.modules.system.repository;
 import me.zhengjie.modules.system.domain.Message;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 
 /**
  * @author 黄星星
@@ -10,4 +12,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
  */
 public interface MessageRepository extends JpaRepository<Message, Long>, JpaSpecificationExecutor {
 
+    @Modifying
+    @Query(value = "delete from meessage where id = ?1", nativeQuery = true)
+    void deleteMessageById(long id);
 }

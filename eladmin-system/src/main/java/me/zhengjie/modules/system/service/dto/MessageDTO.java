@@ -18,14 +18,17 @@ public class MessageDTO {
     // 更新时间
     private Timestamp updateTime;
 
+    // 状态
+    private Boolean status;
+
     private Long userIdSend;
 
-    private Long userNameSend;
+    private String userNameSend;
 
     private Long userIdAccept;
 
     /**
-     * 消息类型
+     * 消息内容
      */
     private String messContent;
 
@@ -39,7 +42,9 @@ public class MessageDTO {
     /**
      * 模块类型
      */
-    private String moduleType;
+    private String moduleTypeCode;
+
+    private String moduleTypeName;
 
 
     /**

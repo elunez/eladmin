@@ -202,6 +202,8 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
 
         customerOrder.setCustomerName(customerInfo.getCustomerName());
 
+        customerOrder.setCompleteStatus(false);
+
         //插入客户订单
         customerOrderRepository.save(customerOrder);
         customerOrder= customerOrderRepository.findByCustomerOrderCodeAndStatusTrue(createCustomerOrderRequest.getCustomerOrderCode());
@@ -245,7 +247,7 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
                 for(UserDTO userDTO : userDTOList){
                     Message message = new Message();
                     message.setUserIdAccept(userDTO.getId());
-                    String messageContent = MessageModuleType.CUSTOMER_ORDER.getName() + "(" + customerOrderCode + ")";
+                    String messageContent = MessageModuleType.CUSTOMER_ORDER.getName() + "(" + customerOrderCode + ")" + "新录入";
                     message.setMessContent(messageContent);
                     message.setModulePath(MessageModulePath.CUSTOMER_ORDER_LIST.getCode());
                     message.setModuleTypeName(MessageModuleType.CUSTOMER_ORDER.getCode());

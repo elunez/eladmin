@@ -38,4 +38,13 @@ public class MessageController {
         messageService.update(resources);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
+
+    @Log("删除消息")
+    @ApiOperation(value = "删除消息")
+    @DeleteMapping(value = "/messagee/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN','MESSAGE_ALL','MESSAGE_DELETE')")
+    public ResponseEntity delete(@PathVariable Long id){
+        messageService.delete(id);
+        return new ResponseEntity(HttpStatus.OK);
+    }
 }
