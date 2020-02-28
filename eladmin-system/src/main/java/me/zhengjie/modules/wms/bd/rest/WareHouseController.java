@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -30,6 +31,7 @@ public class WareHouseController {
 
     @Log("新增仓库")
     @PostMapping(value = "/wareHouse")
+    @PreAuthorize("hasAnyRole('ADMIN','WARE_HOUSEE_ALL','WARE_HOUSEE_CREATE')")
     public ResponseEntity create(@RequestBody WareHouse resources){
         if (resources.getId() != null) {
             throw new BadRequestException("A new "+ ENTITY_NAME +" cannot already have an ID");
@@ -48,12 +50,14 @@ public class WareHouseController {
 
     @Log("查看仓库详情")
     @GetMapping(value = "/wareHouse/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN','WARE_HOUSEE_ALL','WARE_HOUSEE_DETAIL_BY_ID')")
     public ResponseEntity getMessureUnits(@PathVariable Long id){
         return new ResponseEntity(wareHouseService.findById(id), HttpStatus.OK);
     }
 
     @Log("删除仓库")
     @DeleteMapping(value = "/wareHouse/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN','WARE_HOUSEE_ALL','WARE_HOUSEE_DELETE')")
     public ResponseEntity delete(@PathVariable Long id){
         wareHouseService.delete(id);
         return new ResponseEntity(HttpStatus.OK);
@@ -61,12 +65,14 @@ public class WareHouseController {
 
     @Log("分页查询仓库")
     @GetMapping(value = "/queryWareHousePage")
+    @PreAuthorize("hasAnyRole('ADMIN','WARE_HOUSEE_ALL','WARE_HOUSEE_SELECT')")
     public ResponseEntity queryWareHousePage(WareHouseQueryCriteria wareHouseQueryCriteria, Pageable pageable){
         return new ResponseEntity(wareHouseService.queryAll(wareHouseQueryCriteria,pageable),HttpStatus.OK);
     }
 
     @Log("查询仓库列表")
     @GetMapping(value = "/queryWareHouseList")
+    @PreAuthorize("hasAnyRole('ADMIN','WARE_HOUSEE_ALL','WARE_HOUSEE_SELECT')")
     public ResponseEntity queryWareHouseList(WareHouseQueryCriteria wareHouseQueryCriteria){
         return new ResponseEntity(wareHouseService.queryAll(wareHouseQueryCriteria),HttpStatus.OK);
     }

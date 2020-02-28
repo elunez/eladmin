@@ -28,7 +28,7 @@ public class ConsumablesInfoController {
     @Log("分页查询耗材列表")
     @ApiOperation(value = "分页查询耗材列表")
     @GetMapping(value = "/queryConsumablesInfoPageList")
-    @PreAuthorize("hasAnyRole('ADMIN','BDCONSUMABLESINFO_ALL','BDCONSUMABLESINFO_SELECT')")
+    @PreAuthorize("hasAnyRole('ADMIN','CONSUMABLES_INFO_ALL','CONSUMABLES_INFO_SELECT')")
     public ResponseEntity queryConsumablesInfoPageList(ConsumablesInfoQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity(consumablesInfoService.queryAll(criteria,pageable),HttpStatus.OK);
     }
@@ -36,7 +36,7 @@ public class ConsumablesInfoController {
     @Log("分页查询耗材列表")
     @ApiOperation(value = "分页查询耗材列表")
     @GetMapping(value = "/queryConsumablesInfoList")
-    @PreAuthorize("hasAnyRole('ADMIN','BDCONSUMABLESINFO_ALL','BDCONSUMABLESINFO_SELECT')")
+    @PreAuthorize("hasAnyRole('ADMIN','CONSUMABLES_INFO_ALL','CONSUMABLES_INFO_SELECT')")
     public ResponseEntity queryConsumablesInfoList(ConsumablesInfoQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity(consumablesInfoService.queryAll(criteria,pageable),HttpStatus.OK);
     }
@@ -44,7 +44,7 @@ public class ConsumablesInfoController {
     @Log("新增耗材")
     @ApiOperation(value = "新增耗材")
     @PostMapping(value = "/consumablesInfo")
-    @PreAuthorize("hasAnyRole('ADMIN','BDCONSUMABLESINFO_ALL','BDCONSUMABLESINFO_CREATE')")
+    @PreAuthorize("hasAnyRole('ADMIN','BCONSUMABLES_INFO_ALL','CONSUMABLES_INFO_CREATE')")
     public ResponseEntity create(@Validated @RequestBody ConsumablesInfo resources){
         return new ResponseEntity(consumablesInfoService.create(resources),HttpStatus.CREATED);
     }
@@ -52,7 +52,7 @@ public class ConsumablesInfoController {
     @Log("修改耗材信息")
     @ApiOperation(value = "修改耗材信息")
     @PutMapping(value = "/consumablesInfo")
-    @PreAuthorize("hasAnyRole('ADMIN','BDCONSUMABLESINFO_ALL','BDCONSUMABLESINFO_EDIT')")
+    @PreAuthorize("hasAnyRole('ADMIN','CONSUMABLES_INFO_ALL','CONSUMABLES_INFO_EDIT')")
     public ResponseEntity update(@Validated @RequestBody ConsumablesInfo resources){
         consumablesInfoService.update(resources);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
@@ -61,7 +61,7 @@ public class ConsumablesInfoController {
     @Log("删除耗材")
     @ApiOperation(value = "删除耗材")
     @DeleteMapping(value = "/consumablesInfo/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN','BDCONSUMABLESINFO_ALL','BDCONSUMABLESINFO_DELETE')")
+    @PreAuthorize("hasAnyRole('ADMIN','CONSUMABLES_INFO_ALL','CONSUMABLES_INFO_DELETE')")
     public ResponseEntity delete(@PathVariable Long id){
         consumablesInfoService.delete(id);
         return new ResponseEntity(HttpStatus.OK);
@@ -69,6 +69,7 @@ public class ConsumablesInfoController {
 
     @Log("查看耗材详情")
     @GetMapping(value = "/consumablesInfo/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN','CONSUMABLES_INFO_ALL','CONSUMABLES_INFO_DETAIL_BY_ID')")
     public ResponseEntity getConsumablesInfo(@PathVariable Long id){
         return new ResponseEntity(consumablesInfoService.findById(id), HttpStatus.OK);
     }

@@ -32,7 +32,6 @@ public class MaterialInfoController {
     @Log("初始化物料资料编号")
     @ApiOperation(value = "初始化物料资料编号")
     @GetMapping(value = "/initMaterialInfoCode")
-    @PreAuthorize("hasAnyRole('ADMIN','BDSUPPLIERINFO_ALL','BDSUPPLIERINFO_SELECT')")
     public ResponseEntity initMaterialInfoCode(){
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS");//设置日期格式
         String supplierCode = "WL"+ LocalDateTime.now().format(fmt);
@@ -42,6 +41,7 @@ public class MaterialInfoController {
     @Log("分页查询物料资料")
     @ApiOperation(value = "分页查询物料资料")
     @GetMapping(value = "/queryMaterialInfoPage")
+    @PreAuthorize("hasAnyRole('ADMIN','MATERIAL_INFO_ALL','MATERIAL_INFO_SELECT')")
     public ResponseEntity queryMaterialInfoPage(MaterialInfoQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity(materialInfoService.queryAll(criteria,pageable),HttpStatus.OK);
     }
@@ -49,6 +49,7 @@ public class MaterialInfoController {
     @Log("查询所有物料资料")
     @ApiOperation(value = "查询所有物料资料")
     @GetMapping(value = "/queryMaterialInfoList")
+    @PreAuthorize("hasAnyRole('ADMIN','MATERIAL_INFO_ALL','MATERIAL_INFO_SELECT')")
     public ResponseEntity queryMaterialInfoList(MaterialInfoQueryCriteria criteria){
         return new ResponseEntity(materialInfoService.queryAll(criteria),HttpStatus.OK);
     }
@@ -56,6 +57,7 @@ public class MaterialInfoController {
     @Log("新增物料资料")
     @ApiOperation(value = "新增物料资料")
     @PostMapping(value = "/materialInfo")
+    @PreAuthorize("hasAnyRole('ADMIN','MATERIAL_INFO_ALL','MATERIAL_INFO_CREATE')")
     public ResponseEntity create(@RequestBody CreateMaterialInfoRequest createMaterialInfoRequest){
         return new ResponseEntity(materialInfoService.create(createMaterialInfoRequest),HttpStatus.CREATED);
     }
@@ -63,6 +65,7 @@ public class MaterialInfoController {
     @Log("修改物料资料")
     @ApiOperation(value = "修改物料资料")
     @PutMapping(value = "/materialInfo/update")
+    @PreAuthorize("hasAnyRole('ADMIN','MATERIAL_INFO_ALL','MATERIAL_INFO_EIDT')")
     public ResponseEntity update(@RequestBody UpdateMaterialInfoRequest updateMaterialInfoRequest){
         materialInfoService.update(updateMaterialInfoRequest);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
@@ -71,6 +74,7 @@ public class MaterialInfoController {
     @Log("删除物料资料")
     @ApiOperation(value = "删除物料资料")
     @DeleteMapping(value = "/materialInfo/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN','MATERIAL_INFO_ALL','MATERIAL_INFO_DELETE')")
     public ResponseEntity deleteMaterialInfoById(@PathVariable Integer id){
         materialInfoService.delete(id);
         return new ResponseEntity(HttpStatus.OK);
@@ -78,6 +82,7 @@ public class MaterialInfoController {
 
     @Log("查看物料资料详情")
     @GetMapping(value = "/materialInfo/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN','MATERIAL_INFO_ALL','MATERIAL_INFO_DETAIL_BY_IDD')")
     public ResponseEntity getMaterialInfoById(@PathVariable Long id){
         return new ResponseEntity(materialInfoService.findById(id), HttpStatus.OK);
     }

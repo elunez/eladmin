@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,6 +29,7 @@ public class MaterialCategoryController {
 
     @Log("新增物料类别")
     @PostMapping(value = "/materialCategory")
+    @PreAuthorize("hasAnyRole('ADMIN','MATERIAL_CATEGORY_ALL','MATERIAL_CATEGORY_CREATE')")
     public ResponseEntity create(@Validated @RequestBody MaterialCategory resources){
         if (resources.getId() != null) {
             throw new BadRequestException("A new "+ ENTITY_NAME +" cannot already have an ID");
@@ -37,12 +39,14 @@ public class MaterialCategoryController {
 
     @Log("查看物料类别")
     @GetMapping(value = "/materialCategory/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN','MATERIAL_CATEGORY_ALL','MATERIAL_CATEGORY_DETAIL_BY_ID')")
     public ResponseEntity getMessureUnit(@PathVariable Long id){
         return new ResponseEntity(materialCategoryService.findById(id), HttpStatus.OK);
     }
 
     @Log("删除物料类别")
     @DeleteMapping(value = "/materialCategory/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN','MATERIAL_CATEGORY_ALL','MATERIAL_CATEGORY_DELETE')")
     public ResponseEntity delete(@PathVariable Long id){
         materialCategoryService.delete(id);
         return new ResponseEntity(HttpStatus.OK);
@@ -50,12 +54,14 @@ public class MaterialCategoryController {
 
     @Log("分页查询物料类别")
     @GetMapping(value = "/queryMaterialCategoryPage")
+    @PreAuthorize("hasAnyRole('ADMIN','MATERIAL_CATEGORY_ALL','MATERIAL_CATEGORY_SELECT')")
     public ResponseEntity queryMaterialCategoryPage(MaterialCategoryDTO resources, Pageable pageable){
         return new ResponseEntity(materialCategoryService.queryAll(resources,pageable),HttpStatus.OK);
     }
 
     @Log("查询物料类别")
     @GetMapping(value = "/queryMaterialCategoryList")
+    @PreAuthorize("hasAnyRole('ADMIN','MATERIAL_CATEGORY_ALL','MATERIAL_CATEGORY_SELECT')")
     public ResponseEntity queryMaterialCategoryList(MaterialCategoryDTO resources){
         return new ResponseEntity(materialCategoryService.queryAll(resources),HttpStatus.OK);
     }
