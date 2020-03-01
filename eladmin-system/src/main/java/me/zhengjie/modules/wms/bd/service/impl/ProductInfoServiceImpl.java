@@ -81,6 +81,18 @@ public class ProductInfoServiceImpl implements ProductInfoService {
                 Predicate statusPredicate = criteriaBuilder.equal(root.get("status"), 1);
                 targetPredicateList.add(statusPredicate);
 
+                String productCode = criteria.getProductCode();
+                if(!StringUtils.isEmpty(productCode)){
+                    Predicate productCodePredicate = criteriaBuilder.equal(root.get("productCode"), productCode);
+                    targetPredicateList.add(productCodePredicate);
+                }
+
+                Long productSeriesId = criteria.getProductSeriesId();
+                if(null != productSeriesId){
+                    Predicate productCodePredicate = criteriaBuilder.equal(root.get("productSeriesId"), productSeriesId);
+                    targetPredicateList.add(productCodePredicate);
+                }
+
                 if(CollectionUtils.isEmpty(targetPredicateList)){
                     return null;
                 }else{

@@ -57,4 +57,6 @@ public class MessageDTO {
      * 单据编号
      */
     private String initCode;
+
+    private Integer completeStatus;
 }

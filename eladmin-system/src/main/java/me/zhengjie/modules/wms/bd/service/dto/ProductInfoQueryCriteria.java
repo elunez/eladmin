@@ -10,4 +10,8 @@ import me.zhengjie.annotation.Query;
 */
 @Data
 public class ProductInfoQueryCriteria {
+
+    private Long productSeriesId;
+
+    private String productCode;
 }

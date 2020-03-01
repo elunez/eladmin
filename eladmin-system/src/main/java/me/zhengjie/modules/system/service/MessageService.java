@@ -23,6 +23,6 @@ public interface MessageService {
 
     Object queryAll(MessageCriteria criteria);
 
-    void update(Message resources);
+    MessageDTO update(Message resources);
 
 }

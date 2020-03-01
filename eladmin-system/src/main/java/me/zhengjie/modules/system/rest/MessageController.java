@@ -6,6 +6,7 @@ import me.zhengjie.modules.system.domain.Menu;
 import me.zhengjie.modules.system.domain.Message;
 import me.zhengjie.modules.system.service.MessageService;
 import me.zhengjie.modules.system.service.dto.MessageCriteria;
+import me.zhengjie.modules.system.service.dto.MessageDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,12 +31,12 @@ public class MessageController {
         return new ResponseEntity(messageService.queryAll(criteria), HttpStatus.OK);
     }
 
-    @Log("修改消息")
-    @PutMapping(value = "/message")
+    @Log("查看消息")
+    @GetMapping(value = "/message/{id}")
 //    @PreAuthorize("hasAnyRole('ADMIN','MESSAGE_ALL','MESSAGE_EDIT')")
-    public ResponseEntity update(@Validated(Menu.Update.class) @RequestBody Message resources){
-        messageService.update(resources);
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    public ResponseEntity findById(@PathVariable Long id){
+        MessageDTO messageDTO = messageService.findById(id);
+        return new ResponseEntity(messageDTO, HttpStatus.OK);
     }
 
     @Log("删除消息")

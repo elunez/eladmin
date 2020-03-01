@@ -43,7 +43,14 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public MessageDTO findById(long id) {
-        return null;
+        Optional<Message> messageOptional = messageRepository.findById(id);
+        Message message = messageOptional.get();
+        message.setStatus(false);
+        messageRepository.save(message);
+
+        MessageDTO messageDTO = messageMapper.toDto(message);
+        messageDTO.setCompleteStatus(1);
+        return messageDTO;
     }
 
     @Override
@@ -88,7 +95,7 @@ public class MessageServiceImpl implements MessageService {
 
                 Predicate statusPredicate = criteriaBuilder.equal(root.get("status"), 1);
                 targetPredicateList.add(statusPredicate);
-
+                criteriaQuery.orderBy(criteriaBuilder.desc(root.get("createTime")),criteriaBuilder.desc(root.get("createTime")));
                 if(CollectionUtils.isEmpty(targetPredicateList)){
                     return null;
                 }else{
@@ -103,10 +110,14 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public void update(Message resources) {
+    public MessageDTO update(Message resources) {
         Optional<Message> messageOptional = messageRepository.findById(resources.getId());
         Message message = messageOptional.get();
         message.setStatus(false);
         messageRepository.save(resources);
+
+        MessageDTO messageDTO = messageMapper.toDto(message);
+        messageDTO.setCompleteStatus(1);
+        return messageDTO;
     }
 }
