@@ -6,7 +6,9 @@ import me.zhengjie.modules.system.cons.MessageModulePath;
 import me.zhengjie.modules.system.cons.MessageModuleType;
 import me.zhengjie.modules.system.cons.MessageReadStatus;
 import me.zhengjie.modules.system.domain.Message;
+import me.zhengjie.modules.system.domain.User;
 import me.zhengjie.modules.system.repository.MessageRepository;
+import me.zhengjie.modules.system.repository.UserRepository;
 import me.zhengjie.modules.system.service.UserService;
 import me.zhengjie.modules.system.service.dto.UserDTO;
 import me.zhengjie.modules.system.service.dto.UserQueryCriteria;
@@ -22,6 +24,7 @@ import me.zhengjie.modules.wms.purchase.request.UpdateProductPurchaseOrderReques
 import me.zhengjie.modules.wms.purchase.service.dto.ConsumablesPurchaseOrderDTO;
 import me.zhengjie.modules.wms.purchase.service.dto.ProductPurchaseOrderProductDTO;
 import me.zhengjie.modules.wms.purchase.service.mapper.ProductPurchaseOrderProductMapper;
+import me.zhengjie.utils.SecurityUtils;
 import me.zhengjie.utils.ValidationUtil;
 import me.zhengjie.modules.wms.purchase.repository.ProductPurchaseOrderRepository;
 import me.zhengjie.modules.wms.purchase.service.ProductPurchaseOrderService;
@@ -78,7 +81,7 @@ public class ProductPurchaseOrderServiceImpl implements ProductPurchaseOrderServ
     private MessageRepository messageRepository;
 
     @Autowired
-    private UserService userService;
+    private UserRepository userRepository;
 
     @Override
     public Object queryAll(ProductPurchaseOrderQueryCriteria criteria, Pageable pageable){
@@ -210,19 +213,23 @@ public class ProductPurchaseOrderServiceImpl implements ProductPurchaseOrderServ
          * 新增消息通知
          */
         try {
-            // 查看所有用户
             UserQueryCriteria userQueryCriteria = new UserQueryCriteria();
-            List<UserDTO> userDTOList =(List<UserDTO>)userService.queryAll(userQueryCriteria);
-            if(!CollectionUtils.isEmpty(userDTOList)){
+            List<User> userList =(List<User>)userRepository.findByEnabled(true);
+            if(!CollectionUtils.isEmpty(userList)){
                 List<Message> messageList = new ArrayList<>();
-                for(UserDTO userDTO : userDTOList){
+                for(User user : userList){
                     Message message = new Message();
-                    message.setUserIdAccept(userDTO.getId());
+                    message.setUserIdAccept(user.getId());
                     String messageContent = MessageModuleType.PRODUCT_PURCHASE.getName() + "(" + productPurchaseOrderCode + ")";
                     message.setMessContent(messageContent);
                     message.setModulePath(MessageModulePath.PRODUCT_PURCHASE_LIST.getCode());
-                    message.setModuleTypeName(MessageModuleType.PRODUCT_PURCHASE.getCode());
+                    message.setModuleTypeName(MessageModuleType.PRODUCT_PURCHASE.getName());
                     message.setReadStatus(MessageReadStatus.NO_READ.getStatus());
+                    message.setInitCode(productPurchaseOrderCode);
+                    message.setModuleTypeCode(productPurchaseOrderCode);
+                    message.setStatus(true);
+                    message.setUserIdSend(SecurityUtils.getUserId());
+                    message.setUserNameSend(SecurityUtils.getUsername());
                     message.setInitCode(productPurchaseOrderCode);
                     messageList.add(message);
                 }

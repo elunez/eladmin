@@ -6,7 +6,9 @@ import me.zhengjie.modules.system.cons.MessageModulePath;
 import me.zhengjie.modules.system.cons.MessageModuleType;
 import me.zhengjie.modules.system.cons.MessageReadStatus;
 import me.zhengjie.modules.system.domain.Message;
+import me.zhengjie.modules.system.domain.User;
 import me.zhengjie.modules.system.repository.MessageRepository;
+import me.zhengjie.modules.system.repository.UserRepository;
 import me.zhengjie.modules.system.service.MessageService;
 import me.zhengjie.modules.system.service.UserService;
 import me.zhengjie.modules.system.service.dto.UserDTO;
@@ -31,8 +33,7 @@ import me.zhengjie.modules.wms.customerOrder.request.CreateCustomerOrderRequest;
 import me.zhengjie.modules.wms.customerOrder.request.CustomerOrderProductRequest;
 import me.zhengjie.modules.wms.customerOrder.service.dto.CustomerOrderDTO;
 import me.zhengjie.modules.wms.customerOrder.service.mapper.CustomerOrderMapper;
-import me.zhengjie.utils.StringUtils;
-import me.zhengjie.utils.ValidationUtil;
+import me.zhengjie.utils.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
@@ -51,8 +52,6 @@ import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import me.zhengjie.utils.PageUtil;
-import me.zhengjie.utils.QueryHelp;
 import org.springframework.util.CollectionUtils;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -94,7 +93,7 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
     private MessageRepository messageRepository;
 
     @Autowired
-    private UserService userService;
+    private UserRepository userRepository;
 
 
 
@@ -241,17 +240,21 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
         try {
             // 查看所有用户
             UserQueryCriteria userQueryCriteria = new UserQueryCriteria();
-            List<UserDTO> userDTOList =(List<UserDTO>)userService.queryAll(userQueryCriteria);
-            if(!CollectionUtils.isEmpty(userDTOList)){
+            List<User> userList =(List<User>)userRepository.findByEnabled(true);
+            if(!CollectionUtils.isEmpty(userList)){
                 List<Message> messageList = new ArrayList<>();
-                for(UserDTO userDTO : userDTOList){
+                for(User user : userList){
                     Message message = new Message();
-                    message.setUserIdAccept(userDTO.getId());
-                    String messageContent = MessageModuleType.CUSTOMER_ORDER.getName() + "(" + customerOrderCode + ")" + "新录入";
+                    message.setUserIdAccept(user.getId());
+                    String messageContent = MessageModuleType.CUSTOMER_ORDER.getName() + "(" + customerOrderCode + ")" + "新录入,请查看";
                     message.setMessContent(messageContent);
                     message.setModulePath(MessageModulePath.CUSTOMER_ORDER_LIST.getCode());
-                    message.setModuleTypeName(MessageModuleType.CUSTOMER_ORDER.getCode());
+                    message.setModuleTypeName(MessageModuleType.CUSTOMER_ORDER.getName());
                     message.setReadStatus(MessageReadStatus.NO_READ.getStatus());
+                    message.setModuleTypeCode(customerOrderCode);
+                    message.setStatus(true);
+                    message.setUserIdSend(SecurityUtils.getUserId());
+                    message.setUserNameSend(SecurityUtils.getUsername());
                     message.setInitCode(customerOrderCode);
                     messageList.add(message);
                 }

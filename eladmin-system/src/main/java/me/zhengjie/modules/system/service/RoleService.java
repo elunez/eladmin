@@ -17,7 +17,7 @@ import java.util.Set;
  * @author Zheng Jie
  * @date 2018-12-03
  */
-@CacheConfig(cacheNames = "role")
+//@CacheConfig(cacheNames = "role")
 public interface RoleService {
 
     /**
@@ -25,7 +25,7 @@ public interface RoleService {
      * @param id
      * @return
      */
-    @Cacheable(key = "#p0")
+//    @Cacheable(key = "#p0")
     RoleDTO findById(long id);
 
     /**
@@ -33,21 +33,21 @@ public interface RoleService {
      * @param resources
      * @return
      */
-    @CacheEvict(allEntries = true)
+//    @CacheEvict(allEntries = true)
     RoleDTO create(Role resources);
 
     /**
      * update
      * @param resources
      */
-    @CacheEvict(allEntries = true)
+//    @CacheEvict(allEntries = true)
     void update(Role resources);
 
     /**
      * delete
      * @param id
      */
-    @CacheEvict(allEntries = true)
+//    @CacheEvict(allEntries = true)
     void delete(Long id);
 
     /**
@@ -56,10 +56,10 @@ public interface RoleService {
      * @param id
      * @return
      */
-    @Cacheable(key = "'findByUsers_Id:' + #p0")
+//    @Cacheable(key = "'findByUsers_Id:' + #p0")
     List<RoleSmallDTO> findByUsers_Id(Long id);
 
-    @Cacheable(keyGenerator = "keyGenerator")
+//    @Cacheable(keyGenerator = "keyGenerator")
     Integer findByRoles(Set<Role> roles);
 
     /**
@@ -67,7 +67,7 @@ public interface RoleService {
      * @param resources
      * @param roleDTO
      */
-    @CacheEvict(allEntries = true)
+//    @CacheEvict(allEntries = true)
     void updatePermission(Role resources, RoleDTO roleDTO);
 
     /**
@@ -75,10 +75,10 @@ public interface RoleService {
      * @param resources
      * @param roleDTO
      */
-    @CacheEvict(allEntries = true)
+//    @CacheEvict(allEntries = true)
     void updateMenu(Role resources, RoleDTO roleDTO);
 
-    @CacheEvict(allEntries = true)
+//    @CacheEvict(allEntries = true)
     void untiedMenu(Menu menu);
 
     /**

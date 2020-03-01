@@ -33,7 +33,7 @@ public class InvoiceController {
     @Log("分页查询销售发货单")
     @ApiOperation(value = "分页查询销售发货单")
     @GetMapping(value = "/queryInvoicePage")
-    @PreAuthorize("hasAnyRole('ADMIN','SINVOICE_ALL','SINVOICE_SELECT')")
+    @PreAuthorize("hasAnyRole('ADMIN','INVOICE_ALL','INVOICE_SELECT')")
     public ResponseEntity queryInvoicePage(InvoiceQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity(invoiceService.queryAll(criteria,pageable),HttpStatus.OK);
     }
@@ -42,7 +42,7 @@ public class InvoiceController {
     @Log("查询销售发货单列表")
     @ApiOperation(value = "查询销售发货单列表")
     @GetMapping(value = "/queryInvoiceList")
-    @PreAuthorize("hasAnyRole('ADMIN','SINVOICE_ALL','SINVOICE_SELECT')")
+    @PreAuthorize("hasAnyRole('ADMIN','INVOICE_ALL','INVOICE_SELECT')")
     public ResponseEntity queryInvoiceList(InvoiceQueryCriteria criteria){
         return new ResponseEntity(invoiceService.queryAll(criteria),HttpStatus.OK);
     }
@@ -50,7 +50,7 @@ public class InvoiceController {
     @Log("新增销售发货单")
     @ApiOperation(value = "新增销售发货单")
     @PostMapping(value = "/invoice")
-    @PreAuthorize("hasAnyRole('ADMIN','SINVOICE_ALL','SINVOICE_CREATE')")
+    @PreAuthorize("hasAnyRole('ADMIN','INVOICE_ALL','INVOICE_CREATE')")
     public ResponseEntity create(@RequestBody CreateInvoiceRequest createInvoiceRequest){
         return new ResponseEntity(invoiceService.create(createInvoiceRequest),HttpStatus.CREATED);
     }
@@ -58,7 +58,7 @@ public class InvoiceController {
     @Log("修改销售发货单")
     @ApiOperation(value = "修改销售发货单")
     @PutMapping(value = "/invoice")
-    @PreAuthorize("hasAnyRole('ADMIN','SINVOICE_ALL','SINVOICE_EDIT')")
+    @PreAuthorize("hasAnyRole('ADMIN','INVOICE_ALL','INVOICE_EDIT')")
     public ResponseEntity update(@RequestBody UpdateInvoiceRequest updateInvoiceRequest){
         invoiceService.update(updateInvoiceRequest);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
@@ -67,7 +67,7 @@ public class InvoiceController {
     @Log("删除销售发货单")
     @ApiOperation(value = "删除销售发货单")
     @DeleteMapping(value = "/invoice/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN','SINVOICE_ALL','SINVOICE_DELETE')")
+    @PreAuthorize("hasAnyRole('ADMIN','INVOICE_ALL','INVOICE_DELETE')")
     public ResponseEntity delete(@PathVariable Long id){
         invoiceService.delete(id);
         return new ResponseEntity(HttpStatus.OK);
@@ -83,6 +83,7 @@ public class InvoiceController {
 
     @Log("查看发货单详情")
     @GetMapping(value = "/invoice/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN','INVOICE_ALL','INVOICE_SELECT_DETAIL_BY_ID')")
     public ResponseEntity getInvoiceInfo(@PathVariable Long id){
         return new ResponseEntity(invoiceService.findById(id), HttpStatus.OK);
     }

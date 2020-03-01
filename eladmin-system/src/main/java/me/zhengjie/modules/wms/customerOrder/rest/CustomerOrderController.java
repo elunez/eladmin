@@ -31,7 +31,7 @@ public class CustomerOrderController {
     @Log("分页查询客户订单列表")
     @ApiOperation(value = "分页查询客户订单列表")
     @GetMapping(value = "/queryCustomerOrderPage")
-    @PreAuthorize("hasAnyRole('ADMIN','SCUSTOMERORDER_ALL','SCUSTOMERORDER_SELECT')")
+    @PreAuthorize("hasAnyRole('ADMIN','CUSTOMER_ORDER_ALL','CUSTOMER_ORDER_SELECT')")
     public ResponseEntity queryCustomerOrderPage(CustomerOrderQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity(customerOrderService.queryAll(criteria,pageable),HttpStatus.OK);
     }
@@ -39,7 +39,7 @@ public class CustomerOrderController {
     @Log("新增客户订单")
     @ApiOperation(value = "新增客户订单")
     @PostMapping(value = "/customerOrder")
-    @PreAuthorize("hasAnyRole('ADMIN','SCUSTOMERORDER_ALL','SCUSTOMERORDER_CREATE')")
+    @PreAuthorize("hasAnyRole('ADMIN','CUSTOMER_ORDER_ALL','CUSTOMER_ORDER_CREATE')")
     public ResponseEntity create(@RequestBody CreateCustomerOrderRequest createCustomerOrderRequest){
         return new ResponseEntity(customerOrderService.create(createCustomerOrderRequest),HttpStatus.CREATED);
     }
@@ -47,7 +47,7 @@ public class CustomerOrderController {
     @Log("修改客户订单")
     @ApiOperation(value = "修改SCustomerOrder")
     @PutMapping(value = "/customerOrder")
-    @PreAuthorize("hasAnyRole('ADMIN','SCUSTOMERORDER_ALL','SCUSTOMERORDER_EDIT')")
+    @PreAuthorize("hasAnyRole('ADMIN','CUSTOMER_ORDER_ALL','CUSTOMER_ORDER_EDIT')")
     public ResponseEntity update(@RequestBody UpdateCustomerOrderRequest updateCustomerOrderRequest){
         customerOrderService.update(updateCustomerOrderRequest);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
@@ -56,7 +56,7 @@ public class CustomerOrderController {
     @Log("删除客户订单")
     @ApiOperation(value = "删除SCustomerOrder")
     @DeleteMapping(value = "/customerOrder/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN','SCUSTOMERORDER_ALL','SCUSTOMERORDER_DELETE')")
+    @PreAuthorize("hasAnyRole('ADMIN','CUSTOMER_ORDER_ALL','CUSTOMER_ORDER_DELETE')")
     public ResponseEntity delete(@PathVariable Long id){
         customerOrderService.delete(id);
         return new ResponseEntity(HttpStatus.OK);
@@ -64,6 +64,7 @@ public class CustomerOrderController {
 
     @Log("初始化客户订单编号")
     @GetMapping(value = "/initCustomerOrderCode")
+    @PreAuthorize("hasAnyRole('ADMIN','CUSTOMER_ORDER_ALL')")
     public ResponseEntity initCustomerOrderCode(){
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS");//设置日期格式
         String supplierCode = "DD"+ LocalDateTime.now().format(fmt);
@@ -72,6 +73,7 @@ public class CustomerOrderController {
 
     @Log("查看客户订单详情")
     @GetMapping(value = "/customerOrder/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN','CUSTOMER_ORDER_ALL','CUSTOMER_ORDER_DETAIL_BY_ID')")
     public ResponseEntity getCustomerOrderInfo(@PathVariable Long id){
         return new ResponseEntity(customerOrderService.findById(id), HttpStatus.OK);
     }

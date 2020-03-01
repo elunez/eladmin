@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.annotations.*;
@@ -37,7 +38,7 @@ public class QualityCheckSheetController {
     @Log("分页查询质量管理检验单")
     @ApiOperation(value = "分页查询质量检验单")
     @GetMapping(value = "/queryQualityCheckSheetPage")
-//    @PreAuthorize("hasAnyRole('ADMIN','QUALITYCHECKSHEET_ALL','QUALITYCHECKSHEET_SELECT')")
+    @PreAuthorize("hasAnyRole('ADMIN','QUALITY_CHECK_SHEET_ALL','QUALITY_CHECK_SHEET_SELECT')")
     public ResponseEntity queryQualityCheckSheetPage(QualityCheckSheetQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity(qualityCheckSheetService.queryAll(criteria,pageable),HttpStatus.OK);
     }
@@ -45,7 +46,7 @@ public class QualityCheckSheetController {
     @Log("新增质量检验单")
     @ApiOperation(value = "新增质量检验单")
     @PostMapping(value = "/qualityCheckSheet")
-//    @PreAuthorize("hasAnyRole('ADMIN','QUALITYCHECKSHEET_ALL','QUALITYCHECKSHEET_CREATE')")
+    @PreAuthorize("hasAnyRole('ADMIN','QUALITY_CHECK_SHEET_ALL','QUALITY_CHECK_SHEET_CREATE')")
     public ResponseEntity create(@Validated @RequestBody CreateQualityCheckSheetRequest createQualityCheckSheetRequest){
         return new ResponseEntity(qualityCheckSheetService.create(createQualityCheckSheetRequest),HttpStatus.CREATED);
     }
@@ -53,7 +54,7 @@ public class QualityCheckSheetController {
     @Log("修改质量检验单")
     @ApiOperation(value = "修改质量检验单")
     @PutMapping(value = "/qualityCheckSheet")
-//    @PreAuthorize("hasAnyRole('ADMIN','QUALITYCHECKSHEET_ALL','QUALITYCHECKSHEET_EDIT')")
+    @PreAuthorize("hasAnyRole('ADMIN','QUALITY_CHECK_SHEET_ALL','QUALITY_CHECK_SHEET_EDIT')")
     public ResponseEntity update(@Validated @RequestBody UpdateQualityCheckSheetRequest updateQualityCheckSheetRequest){
         qualityCheckSheetService.update(updateQualityCheckSheetRequest);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
@@ -62,7 +63,7 @@ public class QualityCheckSheetController {
     @Log("删除质量检验单")
     @ApiOperation(value = "删除质量检验单")
     @DeleteMapping(value = "/qualityCheckSheet/{id}")
-//    @PreAuthorize("hasAnyRole('ADMIN','QUALITYCHECKSHEET_ALL','QUALITYCHECKSHEET_DELETE')")
+    @PreAuthorize("hasAnyRole('ADMIN','QUALITY_CHECK_SHEET_ALL','QUALITY_CHECK_SHEET_DELETE')")
     public ResponseEntity delete(@PathVariable Long id){
         qualityCheckSheetService.delete(id);
         return new ResponseEntity(HttpStatus.OK);
@@ -72,6 +73,7 @@ public class QualityCheckSheetController {
     @Log("初始化质量检验单单据编号")
     @ApiOperation(value = "初始化质量检验单单据编号")
     @GetMapping(value = "/initQualityCheckSheetCode")
+    @PreAuthorize("hasAnyRole('ADMIN','QUALITY_CHECK_SHEET_ALL')")
     public ResponseEntity initQualityCheckSheetCode(){
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS");//设置日期格式
         String supplierCode = "QCS"+ LocalDateTime.now().format(fmt);
@@ -82,6 +84,7 @@ public class QualityCheckSheetController {
     @Log("查看质量检验单")
     @ApiOperation(value = "查看委外加工单")
     @GetMapping(value = "/qualityCheckSheet/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN','QUALITY_CHECK_SHEET_ALL','QUALITY_CHECK_SHEET_DETAIL_BY_ID')")
     public ResponseEntity getQualityCheckSheet(@PathVariable Long id){
         return new ResponseEntity(qualityCheckSheetService.findById(id), HttpStatus.OK);
     }
@@ -89,6 +92,7 @@ public class QualityCheckSheetController {
     @Log("查看委外加工单产品信息")
     @ApiOperation(value = "查看委外加工单产品信息")
     @GetMapping(value = "/qualityCheckSheetProductList")
+    @PreAuthorize("hasAnyRole('ADMIN','QUALITY_CHECK_SHEET_ALL','QUALITY_CHECK_SHEET_SELECT')")
     public ResponseEntity queryQualityCheckSheetProductList(QualityCheckSheetProductQueryCriteria criteria){
         return new ResponseEntity(qualityCheckSheetProductService.queryAll(criteria), HttpStatus.OK);
     }

@@ -11,7 +11,7 @@ import org.springframework.data.domain.Pageable;
 * @author Zheng Jie
 * @date 2019-04-10
 */
-@CacheConfig(cacheNames = "dict")
+//@CacheConfig(cacheNames = "dict")
 public interface DictService {
 
     /**
@@ -20,7 +20,7 @@ public interface DictService {
      * @param pageable
      * @return
      */
-    @Cacheable(keyGenerator = "keyGenerator")
+//    @Cacheable(keyGenerator = "keyGenerator")
     Object queryAll(DictDTO dict, Pageable pageable);
 
     /**
@@ -28,7 +28,7 @@ public interface DictService {
      * @param id
      * @return
      */
-    @Cacheable(key = "#p0")
+//    @Cacheable(key = "#p0")
     DictDTO findById(Long id);
 
     /**
@@ -36,20 +36,20 @@ public interface DictService {
      * @param resources
      * @return
      */
-    @CacheEvict(allEntries = true)
+//    @CacheEvict(allEntries = true)
     DictDTO create(Dict resources);
 
     /**
      * update
      * @param resources
      */
-    @CacheEvict(allEntries = true)
+//    @CacheEvict(allEntries = true)
     void update(Dict resources);
 
     /**
      * delete
      * @param id
      */
-    @CacheEvict(allEntries = true)
+//    @CacheEvict(allEntries = true)
     void delete(Long id);
 }

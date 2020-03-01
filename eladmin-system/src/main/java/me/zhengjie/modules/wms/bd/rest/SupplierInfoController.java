@@ -34,7 +34,7 @@ public class SupplierInfoController {
     @Log("分页查询供应商资料列表")
     @ApiOperation(value = "分页查询供应商资料列表")
     @GetMapping(value = "/querySupplierInfoPage")
-    @PreAuthorize("hasAnyRole('ADMIN','BDSUPPLIERINFO_ALL','BDSUPPLIERINFO_SELECT')")
+    @PreAuthorize("hasAnyRole('ADMIN','SUPPLIER_INFO_ALL','SUPPLIER_INFO_SELECT')")
     public ResponseEntity querySupplierInfoPage(SupplierInfoQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity(supplierInfoService.queryAll(criteria,pageable),HttpStatus.OK);
     }
@@ -42,7 +42,7 @@ public class SupplierInfoController {
     @Log("初始化供应商编号")
     @ApiOperation(value = "初始化供应商编号")
     @GetMapping(value = "/initSupplierCode")
-    @PreAuthorize("hasAnyRole('ADMIN','BDSUPPLIERINFO_ALL','BDSUPPLIERINFO_SELECT')")
+    @PreAuthorize("hasAnyRole('ADMIN','SUPPLIER_INFO_ALL')")
     public ResponseEntity initSupplierCode(){
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS");//设置日期格式
         String supplierCode = "GYS"+ LocalDateTime.now().format(fmt);
@@ -52,7 +52,7 @@ public class SupplierInfoController {
     @Log("查询供应商资料列表")
     @ApiOperation(value = "查询供应商资料列表")
     @GetMapping(value = "/querySupplierInfoList")
-    @PreAuthorize("hasAnyRole('ADMIN','BDSUPPLIERINFO_ALL','BDSUPPLIERINFO_SELECT')")
+    @PreAuthorize("hasAnyRole('ADMIN','SUPPLIER_INFO_ALL','SUPPLIER_INFO_SELECT')")
     public ResponseEntity querySupplierInfoList(SupplierInfoQueryCriteria criteria){
         return new ResponseEntity(supplierInfoService.queryAll(criteria),HttpStatus.OK);
     }
@@ -60,7 +60,7 @@ public class SupplierInfoController {
     @Log("查看供应商详情")
     @ApiOperation(value = "查看供应商详情")
     @GetMapping(value = "/supplierInfo/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN','BDSUPPLIERINFO_ALL','BDSUPPLIERINFO_SELECT')")
+    @PreAuthorize("hasAnyRole('ADMIN','SUPPLIER_INFO_ALL','SUPPLIER_INFO_DETAIL_BY_ID')")
     public ResponseEntity findSupplierInfo(@PathVariable("id") Long id){
         return new ResponseEntity(supplierInfoService.findById(id),HttpStatus.OK);
     }
@@ -68,7 +68,7 @@ public class SupplierInfoController {
     @Log("新增供应商资料")
     @ApiOperation(value = "新增供应商资料")
     @PostMapping(value = "/supplierInfo")
-    @PreAuthorize("hasAnyRole('ADMIN','BDSUPPLIERINFO_ALL','BDSUPPLIERINFO_CREATE')")
+    @PreAuthorize("hasAnyRole('ADMIN','SUPPLIER_INFO_ALL','SUPPLIER_INFO_CREATE')")
     public ResponseEntity create(@RequestBody CreateSupplierInfoRequest createSupplierInfoRequest){
         return new ResponseEntity(supplierInfoService.create(createSupplierInfoRequest),HttpStatus.CREATED);
     }
@@ -76,7 +76,7 @@ public class SupplierInfoController {
     @Log("修改供应商资料")
     @ApiOperation(value = "修改供应商资料")
     @PutMapping(value = "/updateSupplierInfo")
-    @PreAuthorize("hasAnyRole('ADMIN','BDSUPPLIERINFO_ALL','BDSUPPLIERINFO_EDIT')")
+    @PreAuthorize("hasAnyRole('ADMIN','SUPPLIER_INFO_ALL','SUPPLIER_INFO_EDIT')")
     public ResponseEntity updateSupplierInfo(@RequestBody UpdateSupplierInfoRequest updateSupplierInfoRequest){
         supplierInfoService.updateSupplierInfo(updateSupplierInfoRequest);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
@@ -85,7 +85,7 @@ public class SupplierInfoController {
     @Log("删除供应商资料")
     @ApiOperation(value = "删除供应商资料")
     @DeleteMapping(value = "/supplierInfo/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN','BDSUPPLIERINFO_ALL','BDSUPPLIERINFO_DELETE')")
+    @PreAuthorize("hasAnyRole('ADMIN','SUPPLIER_INFO_ALL','SUPPLIER_INFO_DELETE')")
     public ResponseEntity delete(@PathVariable Long id){
         supplierInfoService.delete(id);
         return new ResponseEntity(HttpStatus.OK);

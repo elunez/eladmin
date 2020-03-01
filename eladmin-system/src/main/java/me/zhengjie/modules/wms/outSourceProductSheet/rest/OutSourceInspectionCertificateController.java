@@ -33,7 +33,7 @@ public class OutSourceInspectionCertificateController {
     @Log("分页查询委外验收单")
     @ApiOperation(value = "分页查询委外验收单")
     @GetMapping(value = "/queryOutSourceInspectionCertificatePageList")
-    @PreAuthorize("hasAnyRole('ADMIN','SOUTSOURCEINSPECTIONCERTIFICATE_ALL','SOUTSOURCEINSPECTIONCERTIFICATE_SELECT')")
+    @PreAuthorize("hasAnyRole('ADMIN','OUT_SOURCE_INSPECTION_CERTIFICATE_ALL','OUT_SOURCE_INSPECTION_CERTIFICATE_SELECT')")
     public ResponseEntity queryOutSourceInspectionCertificatePageList(OutSourceInspectionCertificateQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity(outSourceInspectionCertificateService.queryAll(criteria,pageable),HttpStatus.OK);
     }
@@ -41,7 +41,7 @@ public class OutSourceInspectionCertificateController {
     @Log("查询委外验收单列表")
     @ApiOperation(value = "查询委外验收单列表")
     @GetMapping(value = "/queryOutSourceInspectionCertificateList")
-    @PreAuthorize("hasAnyRole('ADMIN','SOUTSOURCEINSPECTIONCERTIFICATE_ALL','SOUTSOURCEINSPECTIONCERTIFICATE_SELECT')")
+    @PreAuthorize("hasAnyRole('ADMIN','OUT_SOURCE_INSPECTION_CERTIFICATE_ALL','OUT_SOURCE_INSPECTION_CERTIFICATE_SELECT')")
     public ResponseEntity queryOutSourceInspectionCertificateList(OutSourceInspectionCertificateQueryCriteria criteria){
         return new ResponseEntity(outSourceInspectionCertificateService.queryAll(criteria),HttpStatus.OK);
     }
@@ -50,7 +50,7 @@ public class OutSourceInspectionCertificateController {
     @Log("新增委外验收单")
     @ApiOperation(value = "新增委外验收单")
     @PostMapping(value = "/outSourceInspectionCertificate")
-    @PreAuthorize("hasAnyRole('ADMIN','SOUTSOURCEINSPECTIONCERTIFICATE_ALL','SOUTSOURCEINSPECTIONCERTIFICATE_CREATE')")
+    @PreAuthorize("hasAnyRole('ADMIN','OUT_SOURCE_INSPECTION_CERTIFICATE_ALL','OUT_SOURCE_INSPECTION_CERTIFICATE_CREATE')")
     public ResponseEntity create(@Validated @RequestBody CreateOutSourceInspectionCertificateRequest createOutSourceInspectionCertificateRequest){
         return new ResponseEntity(outSourceInspectionCertificateService.create(createOutSourceInspectionCertificateRequest),HttpStatus.CREATED);
     }
@@ -58,7 +58,7 @@ public class OutSourceInspectionCertificateController {
     @Log("修改委外验收单")
     @ApiOperation(value = "修改委外验收单")
     @PutMapping(value = "/outSourceInspectionCertificate")
-    @PreAuthorize("hasAnyRole('ADMIN','SOUTSOURCEINSPECTIONCERTIFICATE_ALL','SOUTSOURCEINSPECTIONCERTIFICATE_EDIT')")
+    @PreAuthorize("hasAnyRole('ADMIN','OUT_SOURCE_INSPECTION_CERTIFICATE_ALL','OUT_SOURCE_INSPECTION_CERTIFICATE_EDIT')")
     public ResponseEntity update(@Validated @RequestBody UpdateOutSourceInspectionCertificateRequest updateOutSourceInspectionCertificateRequest){
         outSourceInspectionCertificateService.update(updateOutSourceInspectionCertificateRequest);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
@@ -67,7 +67,7 @@ public class OutSourceInspectionCertificateController {
     @Log("删除委外验收单")
     @ApiOperation(value = "删除委外验收单")
     @DeleteMapping(value = "/outSourceInspectionCertificate/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN','SOUTSOURCEINSPECTIONCERTIFICATE_ALL','SOUTSOURCEINSPECTIONCERTIFICATE_DELETE')")
+    @PreAuthorize("hasAnyRole('ADMIN','OUT_SOURCE_INSPECTION_CERTIFICATE_ALL','OUT_SOURCE_INSPECTION_CERTIFICATE_DELETE')")
     public ResponseEntity delete(@PathVariable Long id){
         outSourceInspectionCertificateService.delete(id);
         return new ResponseEntity(HttpStatus.OK);
@@ -76,6 +76,7 @@ public class OutSourceInspectionCertificateController {
     @Log("查看委外验收单详情")
     @ApiOperation(value = "查看委外验收单详情")
     @GetMapping(value = "/outSourceInspectionCertificate/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN','OUT_SOURCE_INSPECTION_CERTIFICATE_ALL','OUT_SOURCE_INSPECTION_CERTIFICATE_DETAIL_BY_ID')")
     public ResponseEntity getOutSourceInspectionCertificate(@PathVariable Long id){
         return new ResponseEntity(outSourceInspectionCertificateService.findById(id), HttpStatus.OK);
     }

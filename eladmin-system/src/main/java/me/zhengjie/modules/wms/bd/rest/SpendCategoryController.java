@@ -54,7 +54,7 @@ public class SpendCategoryController {
 
     @Log("查询支出类别")
     @GetMapping(value = "/querySpendCategoryPage")
-    @PreAuthorize("hasAnyRole('ADMIN','SPEND_CATEGORY_ALL','SPEND_CATEGORY_SELECT)")
+    @PreAuthorize("hasAnyRole('ADMIN','SPEND_CATEGORY_ALL','SPEND_CATEGORY_SELECT')")
     public ResponseEntity querySpendCategoryPage(SpendCategoryDTO resources, Pageable pageable){
         return new ResponseEntity(spendCategoryService.queryAll(resources,pageable),HttpStatus.OK);
     }

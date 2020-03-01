@@ -14,7 +14,7 @@ import java.util.List;
  * @author Zheng Jie
  * @date 2018-12-08
  */
-@CacheConfig(cacheNames = "permission")
+//@CacheConfig(cacheNames = "permission")
 public interface PermissionService {
 
     /**
@@ -22,7 +22,7 @@ public interface PermissionService {
      * @param id
      * @return
      */
-    @Cacheable(key = "#p0")
+//    @Cacheable(key = "#p0")
     PermissionDTO findById(long id);
 
     /**
@@ -30,28 +30,28 @@ public interface PermissionService {
      * @param resources
      * @return
      */
-    @CacheEvict(allEntries = true)
+//    @CacheEvict(allEntries = true)
     PermissionDTO create(Permission resources);
 
     /**
      * update
      * @param resources
      */
-    @CacheEvict(allEntries = true)
+//    @CacheEvict(allEntries = true)
     void update(Permission resources);
 
     /**
      * delete
      * @param id
      */
-    @CacheEvict(allEntries = true)
+//    @CacheEvict(allEntries = true)
     void delete(Long id);
 
     /**
      * permission tree
      * @return
      */
-    @Cacheable(key = "'tree'")
+//    @Cacheable(key = "'tree'")
     Object getPermissionTree(List<Permission> permissions);
 
     /**
@@ -59,15 +59,15 @@ public interface PermissionService {
      * @param pid
      * @return
      */
-    @Cacheable(key = "'pid:'+#p0")
+//    @Cacheable(key = "'pid:'+#p0")
     List<Permission> findByPid(long pid);
 
     /**
      * build Tree
      * @param permissionDTOS
      * @return
-     */
-    @Cacheable(keyGenerator = "keyGenerator")
+//     */
+//    @Cacheable(keyGenerator = "keyGenerator")
     Object buildTree(List<PermissionDTO> permissionDTOS);
 
     /**
@@ -75,6 +75,6 @@ public interface PermissionService {
      * @param criteria
      * @return
      */
-    @Cacheable(keyGenerator = "keyGenerator")
+//    @Cacheable(keyGenerator = "keyGenerator")
     List<PermissionDTO> queryAll(CommonQueryCriteria criteria);
 }

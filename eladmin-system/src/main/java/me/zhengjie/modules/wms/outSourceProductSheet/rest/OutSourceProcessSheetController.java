@@ -39,7 +39,7 @@ public class OutSourceProcessSheetController {
     @Log("分页查询委外加工单")
     @ApiOperation(value = "分页查询委外加工单")
     @GetMapping(value = "/queryOutSourceProcessSheetPage")
-    @PreAuthorize("hasAnyRole('ADMIN','SOUTSOURCEPROCESSSHEET_ALL','SOUTSOURCEPROCESSSHEET_SELECT')")
+    @PreAuthorize("hasAnyRole('ADMIN','OUT_SOURCE_PROCESS_SHEET_ALL','OUT_SOURCE_PROCESS_SHEET_SELECT')")
     public ResponseEntity queryOutSourceProcessSheetPage(OutSourceProcessSheetQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity(outSourceProcessSheetService.queryAll(criteria,pageable),HttpStatus.OK);
     }
@@ -47,7 +47,7 @@ public class OutSourceProcessSheetController {
     @Log("新增委外加工单")
     @ApiOperation(value = "新增委外加工单")
     @PostMapping(value = "/outSourceProcessSheet")
-    @PreAuthorize("hasAnyRole('ADMIN','SOUTSOURCEPROCESSSHEET_ALL','SOUTSOURCEPROCESSSHEET_CREATE')")
+    @PreAuthorize("hasAnyRole('ADMIN','OUT_SOURCE_PROCESS_SHEET_ALL','OUT_SOURCE_PROCESS_SHEET_CREATE')")
     public ResponseEntity create(@RequestBody CreateOutSourceProcessSheetRequest createOutSourceProcessSheetRequest){
         return new ResponseEntity(outSourceProcessSheetService.create(createOutSourceProcessSheetRequest),HttpStatus.CREATED);
     }
@@ -55,7 +55,7 @@ public class OutSourceProcessSheetController {
     @Log("修改委外加工单")
     @ApiOperation(value = "修改委外加工单")
     @PutMapping(value = "/outSourceProcessSheet")
-    @PreAuthorize("hasAnyRole('ADMIN','SOUTSOURCEPROCESSSHEET_ALL','SOUTSOURCEPROCESSSHEET_EDIT')")
+    @PreAuthorize("hasAnyRole('ADMIN','OUT_SOURCE_PROCESS_SHEET_ALL','OUT_SOURCE_PROCESS_SHEET_EDIT')")
     public ResponseEntity update(@RequestBody UpdateOutSourceProcessSheetRequest updateOutSourceProcessSheetRequest){
         outSourceProcessSheetService.update(updateOutSourceProcessSheetRequest);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
@@ -64,7 +64,7 @@ public class OutSourceProcessSheetController {
     @Log("删除委外加工单")
     @ApiOperation(value = "删除委外加工单")
     @DeleteMapping(value = "/outSourceProcessSheet/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN','SOUTSOURCEPROCESSSHEET_ALL','SOUTSOURCEPROCESSSHEET_DELETE')")
+    @PreAuthorize("hasAnyRole('ADMIN','OUT_SOURCE_PROCESS_SHEET_ALL','OUT_SOURCE_PROCESS_SHEET_DELETE')")
     public ResponseEntity delete(@PathVariable Long id){
         outSourceProcessSheetService.delete(id);
         return new ResponseEntity(HttpStatus.OK);
@@ -83,6 +83,7 @@ public class OutSourceProcessSheetController {
     @Log("查看委外加工单")
     @ApiOperation(value = "查看委外加工单")
     @GetMapping(value = "/outSourceProcessSheet/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN','OUT_SOURCE_PROCESS_SHEET_ALL','OUT_SOURCE_PROCESS_SHEET_DETAIL_BY_ID')")
     public ResponseEntity getOutSourceProcessSheet(@PathVariable Long id){
         return new ResponseEntity(outSourceProcessSheetService.findById(id), HttpStatus.OK);
     }
@@ -90,6 +91,7 @@ public class OutSourceProcessSheetController {
     @Log("查看委外加工单产品信息")
     @ApiOperation(value = "查看委外加工单产品信息")
     @GetMapping(value = "/queryOutSourceProcessSheetProductList")
+    @PreAuthorize("hasAnyRole('ADMIN','OUT_SOURCE_PROCESS_SHEET_ALL','OUT_SOURCE_PROCESS_SHEET_SELECT')")
     public ResponseEntity queryOutSourceProcessSheetProductList(OutSourceProcessSheetProductQueryCriteria criteria){
         return new ResponseEntity(outSourceProcessSheetProductService.queryAll(criteria), HttpStatus.OK);
     }

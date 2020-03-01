@@ -35,7 +35,6 @@ public class ProductInfoController {
     @Log("初始化产品编号")
     @ApiOperation(value = "初始化产品编号")
     @GetMapping(value = "/initProductInfoCode")
-    @PreAuthorize("hasAnyRole('ADMIN','BDSUPPLIERINFO_ALL','BDSUPPLIERINFO_SELECT')")
     public ResponseEntity initProductInfoCode(){
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS");//设置日期格式
         String supplierCode = "CP"+ LocalDateTime.now().format(fmt);
@@ -46,7 +45,7 @@ public class ProductInfoController {
     @Log("分页查询产品资料")
     @ApiOperation(value = "分页查询产品资料")
     @GetMapping(value = "/queryProductInfoPage")
-    @PreAuthorize("hasAnyRole('ADMIN','BDPRODUCTINFO_ALL','BDPRODUCTINFO_SELECT')")
+    @PreAuthorize("hasAnyRole('ADMIN','PRODUCT_INFO_ALL','PRODUCT_INFO_SELECT')")
     public ResponseEntity queryProductInfoPage(ProductInfoQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity(productInfoService.queryAll(criteria,pageable),HttpStatus.OK);
     }
@@ -54,6 +53,7 @@ public class ProductInfoController {
     @Log("查询产品资料列表")
     @ApiOperation(value = "查询产品资料列表")
     @GetMapping(value = "/queryProductInfoList")
+    @PreAuthorize("hasAnyRole('ADMIN','PRODUCT_INFO_ALL','PRODUCT_INFO_SELECT')")
     public ResponseEntity queryProductInfoList(ProductInfoQueryCriteria criteria){
         return new ResponseEntity(productInfoService.queryAll(criteria),HttpStatus.OK);
     }
@@ -61,7 +61,7 @@ public class ProductInfoController {
     @Log("新增产品资料")
     @ApiOperation(value = "新增产品资料")
     @PostMapping(value = "/productInfo")
-    @PreAuthorize("hasAnyRole('ADMIN','BDPRODUCTINFO_ALL','BDPRODUCTINFO_CREATE')")
+    @PreAuthorize("hasAnyRole('ADMIN','PRODUCT_INFO_ALL','PRODUCT_INFO_CREATE')")
     public ResponseEntity create(@RequestBody CreateProductInfoRequest createProductInfoRequest){
         return new ResponseEntity(productInfoService.create(createProductInfoRequest),HttpStatus.CREATED);
     }
@@ -69,7 +69,7 @@ public class ProductInfoController {
     @Log("修改产品资料")
     @ApiOperation(value = "修改产品资料")
     @PutMapping(value = "/productInfo")
-    @PreAuthorize("hasAnyRole('ADMIN','BDPRODUCTINFO_ALL','BDPRODUCTINFO_EDIT')")
+    @PreAuthorize("hasAnyRole('ADMIN','PRODUCT_INFO_ALL','PRODUCT_INFO_EDIT')")
     public ResponseEntity update(@RequestBody UpdateProductInfoRequest updateProductInfoRequest){
         productInfoService.update(updateProductInfoRequest);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
@@ -78,7 +78,7 @@ public class ProductInfoController {
     @Log("删除产品资料")
     @ApiOperation(value = "删除产品资料")
     @DeleteMapping(value = "/productInfo/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN','BDPRODUCTINFO_ALL','BDPRODUCTINFO_DELETE')")
+    @PreAuthorize("hasAnyRole('ADMIN','PRODUCT_INFO_ALL','PRODUCT_INFO_DELETE')")
     public ResponseEntity delete(@PathVariable Integer id){
         productInfoService.delete(id);
         return new ResponseEntity(HttpStatus.OK);
@@ -86,6 +86,7 @@ public class ProductInfoController {
 
     @Log("查看产品资料详情")
     @GetMapping(value = "/productInfo/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN','PRODUCT_INFO_ALL','PRODUCT_INFO_DETAIL_BY_ID')")
     public ResponseEntity getProductInfoById(@PathVariable Long id){
         return new ResponseEntity(productInfoService.findById(id), HttpStatus.OK);
     }

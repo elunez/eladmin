@@ -6,7 +6,9 @@ import me.zhengjie.modules.system.cons.MessageModulePath;
 import me.zhengjie.modules.system.cons.MessageModuleType;
 import me.zhengjie.modules.system.cons.MessageReadStatus;
 import me.zhengjie.modules.system.domain.Message;
+import me.zhengjie.modules.system.domain.User;
 import me.zhengjie.modules.system.repository.MessageRepository;
+import me.zhengjie.modules.system.repository.UserRepository;
 import me.zhengjie.modules.system.service.UserService;
 import me.zhengjie.modules.system.service.dto.UserDTO;
 import me.zhengjie.modules.system.service.dto.UserQueryCriteria;
@@ -23,6 +25,7 @@ import me.zhengjie.modules.wms.purchase.repository.ConsumablesPurchaseOrderProdu
 import me.zhengjie.modules.wms.purchase.request.*;
 import me.zhengjie.modules.wms.purchase.service.dto.*;
 import me.zhengjie.modules.wms.purchase.service.mapper.ConsumablesPurchaseOrderProductMapper;
+import me.zhengjie.utils.SecurityUtils;
 import me.zhengjie.utils.ValidationUtil;
 import me.zhengjie.modules.wms.purchase.repository.ConsumablesPurchaseOrderRepository;
 import me.zhengjie.modules.wms.purchase.service.ConsumablesPurchaseOrderService;
@@ -77,7 +80,7 @@ public class ConsumablesPurchaseOrderServiceImpl implements ConsumablesPurchaseO
     private MessageRepository messageRepository;
 
     @Autowired
-    private UserService userService;
+    private UserRepository userRepository;
 
     @Override
     public Object queryAll(ConsumablesPurchaseOrderQueryCriteria criteria, Pageable pageable){
@@ -211,18 +214,22 @@ public class ConsumablesPurchaseOrderServiceImpl implements ConsumablesPurchaseO
          */
         try {
             // 查看所有用户
-            UserQueryCriteria userQueryCriteria = new UserQueryCriteria();
-            List<UserDTO> userDTOList =(List<UserDTO>)userService.queryAll(userQueryCriteria);
-            if(!CollectionUtils.isEmpty(userDTOList)){
+            List<User> userList =(List<User>)userRepository.findByEnabled(true);
+            if(!CollectionUtils.isEmpty(userList)){
                 List<Message> messageList = new ArrayList<>();
-                for(UserDTO userDTO : userDTOList){
+                for(User user : userList){
                     Message message = new Message();
-                    message.setUserIdAccept(userDTO.getId());
-                    String messageContent = MessageModuleType.CONSUMABLES_PURCHASE.getName() + "(" + consumablesPurchaseOrderCode + ")";
+                    message.setUserIdAccept(user.getId());
+                    String messageContent = MessageModuleType.CONSUMABLES_PURCHASE.getName() + "(" + consumablesPurchaseOrderCode  + ")" + "新录入,请查看";
                     message.setMessContent(messageContent);
                     message.setModulePath(MessageModulePath.CONSUMABLES_PURCHASE_LIST.getCode());
-                    message.setModuleTypeName(MessageModuleType.CONSUMABLES_PURCHASE.getCode());
+                    message.setModuleTypeName(MessageModuleType.CONSUMABLES_PURCHASE.getName());
                     message.setReadStatus(MessageReadStatus.NO_READ.getStatus());
+                    message.setInitCode(consumablesPurchaseOrderCode);
+                    message.setModuleTypeCode(consumablesPurchaseOrderCode);
+                    message.setStatus(true);
+                    message.setUserIdSend(SecurityUtils.getUserId());
+                    message.setUserNameSend(SecurityUtils.getUsername());
                     message.setInitCode(consumablesPurchaseOrderCode);
                     messageList.add(message);
                 }

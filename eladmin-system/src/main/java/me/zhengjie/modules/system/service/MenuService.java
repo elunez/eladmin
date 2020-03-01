@@ -16,7 +16,7 @@ import java.util.Set;
  * @author Zheng Jie
  * @date 2018-12-17
  */
-@CacheConfig(cacheNames = "menu")
+//@CacheConfig(cacheNames = "menu")
 public interface MenuService {
 
     /**
@@ -24,7 +24,7 @@ public interface MenuService {
      * @param criteria
      * @return
      */
-    @Cacheable(keyGenerator = "keyGenerator")
+//    @Cacheable(keyGenerator = "keyGenerator")
     List<MenuDTO> queryAll(CommonQueryCriteria criteria);
 
     /**
@@ -32,7 +32,7 @@ public interface MenuService {
      * @param id
      * @return
      */
-    @Cacheable(key = "#p0")
+//    @Cacheable(key = "#p0")
     MenuDTO findById(long id);
 
     /**
@@ -40,28 +40,28 @@ public interface MenuService {
      * @param resources
      * @return
      */
-    @CacheEvict(allEntries = true)
+//    @CacheEvict(allEntries = true)
     MenuDTO create(Menu resources);
 
     /**
      * update
      * @param resources
      */
-    @CacheEvict(allEntries = true)
+//    @CacheEvict(allEntries = true)
     void update(Menu resources);
 
     /**
      * delete
      * @param id
      */
-    @CacheEvict(allEntries = true)
+//    @CacheEvict(allEntries = true)
     void delete(Long id);
 
     /**
      * permission tree
      * @return
      */
-    @Cacheable(key = "'tree'")
+//    @Cacheable(key = "'tree'")
     Object getMenuTree(List<Menu> menus);
 
     /**
@@ -69,7 +69,7 @@ public interface MenuService {
      * @param pid
      * @return
      */
-    @Cacheable(key = "'pid:'+#p0")
+//    @Cacheable(key = "'pid:'+#p0")
     List<Menu> findByPid(long pid);
 
     /**

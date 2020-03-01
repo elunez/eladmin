@@ -12,7 +12,7 @@ import org.springframework.data.domain.Pageable;
 * @author Zheng Jie
 * @date 2019-03-29
 */
-@CacheConfig(cacheNames = "job")
+//@CacheConfig(cacheNames = "job")
 public interface JobService {
 
     /**
@@ -20,7 +20,7 @@ public interface JobService {
      * @param id
      * @return
      */
-    @Cacheable(key = "#p0")
+//    @Cacheable(key = "#p0")
     JobDTO findById(Long id);
 
     /**
@@ -28,21 +28,21 @@ public interface JobService {
      * @param resources
      * @return
      */
-    @CacheEvict(allEntries = true)
+//    @CacheEvict(allEntries = true)
     JobDTO create(Job resources);
 
     /**
      * update
      * @param resources
      */
-    @CacheEvict(allEntries = true)
+//    @CacheEvict(allEntries = true)
     void update(Job resources);
 
     /**
      * delete
      * @param id
      */
-    @CacheEvict(allEntries = true)
+//    @CacheEvict(allEntries = true)
     void delete(Long id);
 
     /**

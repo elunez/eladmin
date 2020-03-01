@@ -43,7 +43,7 @@ public class CustomerInfoController {
     @Log("分页查询客户信息")
     @ApiOperation(value = "分页查询客户信息")
     @GetMapping(value = "/queryCustomerInfoPage")
-    @PreAuthorize("hasAnyRole('ADMIN','BDCUSTOMERINFO_ALL','BDCUSTOMERINFO_SELECT')")
+    @PreAuthorize("hasAnyRole('ADMIN','CUSTOMER_INFO_ALL','CUSTOMER_INFO_SELECT')")
     public ResponseEntity queryCustomerInfoPage(CustomerInfoQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity(customerInfoService.queryAll(criteria,pageable),HttpStatus.OK);
     }
@@ -51,13 +51,14 @@ public class CustomerInfoController {
     @Log("查询客户信息列表")
     @ApiOperation(value = "查询客户信息列表")
     @GetMapping(value = "/queryCustomerInfoList")
-    @PreAuthorize("hasAnyRole('ADMIN','BDCUSTOMERINFO_ALL','BDCUSTOMERINFO_SELECT')")
+    @PreAuthorize("hasAnyRole('ADMIN','CUSTOMER_INFO_ALL','CUSTOMER_INFO_SELECT')")
     public ResponseEntity queryCustomerInfoList(CustomerInfoQueryCriteria criteria){
         return new ResponseEntity(customerInfoService.queryAll(criteria),HttpStatus.OK);
     }
 
     @Log("查看客户信息资料详情")
     @GetMapping(value = "/customerInfo/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN','CUSTOMER_INFO_ALL','BDCUSTOMERINFO_DETAIL_BY_ID')")
     public ResponseEntity getCustomerInfo(@PathVariable Long id){
         return new ResponseEntity(customerInfoService.findById(id), HttpStatus.OK);
     }
@@ -65,7 +66,7 @@ public class CustomerInfoController {
     @Log("新增客户信息")
     @ApiOperation(value = "新增客户信息")
     @PostMapping(value = "/customerInfo")
-    @PreAuthorize("hasAnyRole('ADMIN','BDCUSTOMERINFO_ALL','BDCUSTOMERINFO_CREATE')")
+    @PreAuthorize("hasAnyRole('ADMIN','CUSTOMER_INFO_ALL','CUSTOMER_INFO_CREATE')")
     public ResponseEntity create(@RequestBody CreateCustomerInfoRequest createCustomerInfoRequest){
         return new ResponseEntity(customerInfoService.create(createCustomerInfoRequest),HttpStatus.CREATED);
     }
@@ -73,7 +74,7 @@ public class CustomerInfoController {
     @Log("修改客户信息")
     @ApiOperation(value = "修改客户信息")
     @PutMapping(value = "/customerInfo/update")
-    @PreAuthorize("hasAnyRole('ADMIN','BDCUSTOMERINFO_ALL','BDCUSTOMERINFO_EDIT')")
+    @PreAuthorize("hasAnyRole('ADMIN','CUSTOMER_INFO_ALL','CUSTOMER_INFO_EDIT')")
     public ResponseEntity update(@RequestBody UpdateCustomerInfoRequest updateCustomerInfoRequest){
         customerInfoService.update(updateCustomerInfoRequest);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
@@ -82,7 +83,7 @@ public class CustomerInfoController {
     @Log("删除客户信息")
     @ApiOperation(value = "删除客户信息")
     @DeleteMapping(value = "/customerInfo/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN','BDCUSTOMERINFO_ALL','BDCUSTOMERINFO_DELETE')")
+    @PreAuthorize("hasAnyRole('ADMIN','CUSTOMER_INFO_ALL','CUSTOMER_INFO_DELETE')")
     public ResponseEntity delete(@PathVariable Long id){
         customerInfoService.delete(id);
         return new ResponseEntity(HttpStatus.OK);

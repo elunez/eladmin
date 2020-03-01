@@ -28,7 +28,7 @@ public class ProductCountController {
     @Log("分页查询产品统计列表")
     @ApiOperation(value = "分页查询产品统计列表")
     @GetMapping(value = "/queryProductCountPage")
-    @PreAuthorize("hasAnyRole('ADMIN','SRPRODUCTCOUNT_ALL','SRPRODUCTCOUNT_SELECT')")
+    @PreAuthorize("hasAnyRole('ADMIN','PRODUCT_COUNT_ALL','PRODUCT_COUNT_SELECT')")
     public ResponseEntity queryProductCountPage(ProductCountQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity(productCountService.queryAll(criteria,pageable),HttpStatus.OK);
     }
@@ -36,7 +36,7 @@ public class ProductCountController {
     @Log("新增产品统计")
     @ApiOperation(value = "新增产品统计")
     @PostMapping(value = "/productCount")
-    @PreAuthorize("hasAnyRole('ADMIN','SRPRODUCTCOUNT_ALL','SRPRODUCTCOUNT_CREATE')")
+    @PreAuthorize("hasAnyRole('ADMIN','PRODUCT_COUNT_ALL','PRODUCT_COUNT_CREATE')")
     public ResponseEntity create(@RequestBody ProductCount resources){
         return new ResponseEntity(productCountService.create(resources),HttpStatus.CREATED);
     }
@@ -44,7 +44,7 @@ public class ProductCountController {
     @Log("修改产品统计")
     @ApiOperation(value = "修改产品统计")
     @PutMapping(value = "/productCount")
-    @PreAuthorize("hasAnyRole('ADMIN','SRPRODUCTCOUNT_ALL','SRPRODUCTCOUNT_EDIT')")
+    @PreAuthorize("hasAnyRole('ADMIN','PRODUCT_COUNT_ALL','PRODUCT_COUNT_EDIT')")
     public ResponseEntity update(@RequestBody ProductCount resources){
         productCountService.update(resources);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
@@ -53,7 +53,7 @@ public class ProductCountController {
     @Log("删除产品统计")
     @ApiOperation(value = "删除产品统计")
     @DeleteMapping(value = "/productCount/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN','SRPRODUCTCOUNT_ALL','SRPRODUCTCOUNT_DELETE')")
+    @PreAuthorize("hasAnyRole('ADMIN','PRODUCT_COUNT_ALL','PRODUCT_COUNT_DELETE')")
     public ResponseEntity delete(@PathVariable Long id){
         productCountService.delete(id);
         return new ResponseEntity(HttpStatus.OK);
@@ -61,6 +61,7 @@ public class ProductCountController {
 
     @Log("查看产品统计详情")
     @GetMapping(value = "/productCount/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN','PRODUCT_COUNT_ALL','PRODUCT_COUNT_DETAIL_BY_ID')")
     public ResponseEntity getProductCountInfo(@PathVariable Long id){
         return new ResponseEntity(productCountService.findById(id), HttpStatus.OK);
     }

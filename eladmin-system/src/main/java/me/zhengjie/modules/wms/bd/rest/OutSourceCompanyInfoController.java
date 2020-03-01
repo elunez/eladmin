@@ -34,7 +34,7 @@ public class OutSourceCompanyInfoController {
     @Log("初始化委外公司编号")
     @ApiOperation(value = "初始化委外公司编号")
     @GetMapping(value = "/initOutSourceCompanyCode")
-    @PreAuthorize("hasAnyRole('ADMIN','BDSUPPLIERINFO_ALL','BDSUPPLIERINFO_SELECT')")
+    @PreAuthorize("hasAnyRole('ADMIN','OUT_SOURCE_COMPANY_INFO_ALL')")
     public ResponseEntity initOutSourceCompanyCode(){
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS");//设置日期格式
         String supplierCode = "WW"+ LocalDateTime.now().format(fmt);
@@ -44,7 +44,7 @@ public class OutSourceCompanyInfoController {
     @Log("分页查询委外公司资料列表")
     @ApiOperation(value = "分页查询委外公司资料列表")
     @GetMapping(value = "/queryOutSourceCompanyInfoPage")
-    @PreAuthorize("hasAnyRole('ADMIN','BDOUTSOURCECOMPANYINFO_ALL','BDOUTSOURCECOMPANYINFO_SELECT')")
+    @PreAuthorize("hasAnyRole('ADMIN','OUT_SOURCE_COMPANY_INFO_ALL','OUT_SOURCE_COMPANY_INFO_SELECT')")
     public ResponseEntity queryOutSourceCompanyInfoPage(OutSourceCompanyInfoQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity(outSourceCompanyInfoService.queryAll(criteria,pageable),HttpStatus.OK);
     }
@@ -53,7 +53,7 @@ public class OutSourceCompanyInfoController {
     @Log("查询委外公司资料列表")
     @ApiOperation(value = "查询委外公司资料列表")
     @GetMapping(value = "/queryOutSourceCompanyInfoList")
-    @PreAuthorize("hasAnyRole('ADMIN','BDOUTSOURCECOMPANYINFO_ALL','BDOUTSOURCECOMPANYINFO_SELECT')")
+    @PreAuthorize("hasAnyRole('ADMIN','OUT_SOURCE_COMPANY_INFO_ALL','OUT_SOURCE_COMPANY_INFO_SELECT')")
     public ResponseEntity queryOutSourceCompanyInfoList(OutSourceCompanyInfoQueryCriteria criteria){
         return new ResponseEntity(outSourceCompanyInfoService.queryAll(criteria),HttpStatus.OK);
     }
@@ -62,7 +62,7 @@ public class OutSourceCompanyInfoController {
     @Log("查询委外公司详情")
     @ApiOperation(value = "查询委外公司详情")
     @GetMapping(value = "/outSourceCompanyInfo/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN','BDOUTSOURCECOMPANYINFO_ALL','BDOUTSOURCECOMPANYINFO_SELECT')")
+    @PreAuthorize("hasAnyRole('ADMIN','OUT_SOURCE_COMPANY_INFO_ALL','OUT_SOURCE_COMPANY_INFO_DETAIL_BY_ID')")
     public ResponseEntity getOutSourceCompanyInfoById(@PathVariable("id") Long id){
         OutSourceCompanyInfoDTO outSourceCompanyInfoDTO = outSourceCompanyInfoService.findById(id);
         return new ResponseEntity(outSourceCompanyInfoDTO,HttpStatus.OK);
@@ -72,7 +72,7 @@ public class OutSourceCompanyInfoController {
     @Log("新增委外公司资料")
     @ApiOperation(value = "新增委外公司资料")
     @PostMapping(value = "/outSourceCompanyInfo")
-    @PreAuthorize("hasAnyRole('ADMIN','BDOUTSOURCECOMPANYINFO_ALL','BDOUTSOURCECOMPANYINFO_CREATE')")
+    @PreAuthorize("hasAnyRole('ADMIN','OUT_SOURCE_COMPANY_INFO_ALL','OUT_SOURCE_COMPANY_INFO_CREATE')")
     public ResponseEntity create(@RequestBody CreateOutSourceCompanyInfoRequest createOutSourceCompanyInfoRequest){
         return new ResponseEntity(outSourceCompanyInfoService.create(createOutSourceCompanyInfoRequest),HttpStatus.CREATED);
     }
@@ -80,7 +80,7 @@ public class OutSourceCompanyInfoController {
     @Log("修改委外公司资料")
     @ApiOperation(value = "修改委外公司资料")
     @PutMapping(value = "/outSourceCompanyInfo/update")
-    @PreAuthorize("hasAnyRole('ADMIN','BDOUTSOURCECOMPANYINFO_ALL','BDOUTSOURCECOMPANYINFO_EDIT')")
+    @PreAuthorize("hasAnyRole('ADMIN','OUT_SOURCE_COMPANY_INFO_ALL','OUT_SOURCE_COMPANY_INFO_EDIT')")
     public ResponseEntity update(@RequestBody UpdateOutSourceCompanyInfoRequest updateOutSourceCompanyInfoRequest){
         outSourceCompanyInfoService.update(updateOutSourceCompanyInfoRequest);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
@@ -89,7 +89,7 @@ public class OutSourceCompanyInfoController {
     @Log("删除委外公司资料")
     @ApiOperation(value = "删除委外公司资料")
     @DeleteMapping(value = "/outSourceCompanyInfo/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN','BDOUTSOURCECOMPANYINFO_ALL','BDOUTSOURCECOMPANYINFO_DELETE')")
+    @PreAuthorize("hasAnyRole('ADMIN','OUT_SOURCE_COMPANY_INFO_ALL','OUT_SOURCE_COMPANY_INFO_DELETE')")
     public ResponseEntity delete(@PathVariable Long id){
         outSourceCompanyInfoService.delete(id);
         return new ResponseEntity(HttpStatus.OK);

@@ -6,7 +6,9 @@ import me.zhengjie.modules.system.cons.MessageModulePath;
 import me.zhengjie.modules.system.cons.MessageModuleType;
 import me.zhengjie.modules.system.cons.MessageReadStatus;
 import me.zhengjie.modules.system.domain.Message;
+import me.zhengjie.modules.system.domain.User;
 import me.zhengjie.modules.system.repository.MessageRepository;
+import me.zhengjie.modules.system.repository.UserRepository;
 import me.zhengjie.modules.system.service.UserService;
 import me.zhengjie.modules.system.service.dto.UserDTO;
 import me.zhengjie.modules.system.service.dto.UserQueryCriteria;
@@ -24,6 +26,7 @@ import me.zhengjie.modules.wms.outSourceProductSheet.request.QueryOutSourceProce
 import me.zhengjie.modules.wms.outSourceProductSheet.request.UpdateOutSourceProcessSheetRequest;
 import me.zhengjie.modules.wms.outSourceProductSheet.service.dto.OutSourceProcessSheetProductDTO;
 import me.zhengjie.modules.wms.outSourceProductSheet.service.mapper.OutSourceProcessSheetProductMapper;
+import me.zhengjie.utils.SecurityUtils;
 import me.zhengjie.utils.ValidationUtil;
 import me.zhengjie.modules.wms.outSourceProductSheet.repository.OutSourceProcessSheetRepository;
 import me.zhengjie.modules.wms.outSourceProductSheet.service.OutSourceProcessSheetService;
@@ -85,7 +88,7 @@ public class OutSourceProcessSheetServiceImpl implements OutSourceProcessSheetSe
     private MessageRepository messageRepository;
 
     @Autowired
-    private UserService userService;
+    private UserRepository userRepository;
 
     @Override
     public Object queryAll(OutSourceProcessSheetQueryCriteria criteria, Pageable pageable){
@@ -219,18 +222,21 @@ public class OutSourceProcessSheetServiceImpl implements OutSourceProcessSheetSe
          */
         try {
             // 查看所有用户
-            UserQueryCriteria userQueryCriteria = new UserQueryCriteria();
-            List<UserDTO> userDTOList =(List<UserDTO>)userService.queryAll(userQueryCriteria);
-            if(!CollectionUtils.isEmpty(userDTOList)){
+            List<User> userList =(List<User>)userRepository.findByEnabled(true);
+            if(!CollectionUtils.isEmpty(userList)){
                 List<Message> messageList = new ArrayList<>();
-                for(UserDTO userDTO : userDTOList){
+                for(User user : userList){
                     Message message = new Message();
-                    message.setUserIdAccept(userDTO.getId());
-                    String messageContent = MessageModuleType.OUT_SOURCE_PROCESS.getName() + "(" + outSourceProcessSheetCode + ")";
+                    message.setUserIdAccept(user.getId());
+                    String messageContent = MessageModuleType.OUT_SOURCE_PROCESS.getName() + "(" + outSourceProcessSheetCode + ")" + "新录入,请查看";
                     message.setMessContent(messageContent);
                     message.setModulePath(MessageModulePath.OUT_SOURCE_LIST.getCode());
-                    message.setModuleTypeName(MessageModuleType.OUT_SOURCE_PROCESS.getCode());
+                    message.setModuleTypeName(MessageModuleType.OUT_SOURCE_PROCESS.getName());
                     message.setReadStatus(MessageReadStatus.NO_READ.getStatus());
+                    message.setModuleTypeCode(outSourceProcessSheetCode);
+                    message.setStatus(true);
+                    message.setUserIdSend(SecurityUtils.getUserId());
+                    message.setUserNameSend(SecurityUtils.getUsername());
                     message.setInitCode(outSourceProcessSheetCode);
                     messageList.add(message);
                 }

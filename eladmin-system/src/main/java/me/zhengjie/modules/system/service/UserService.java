@@ -13,7 +13,7 @@ import org.springframework.data.domain.Pageable;
  * @author Zheng Jie
  * @date 2018-11-23
  */
-@CacheConfig(cacheNames = "user")
+//@CacheConfig(cacheNames = "user")
 public interface UserService {
 
     /**
@@ -21,7 +21,7 @@ public interface UserService {
      * @param id
      * @return
      */
-    @Cacheable(key = "#p0")
+//    @Cacheable(key = "#p0")
     UserDTO findById(long id);
 
     /**
@@ -29,21 +29,21 @@ public interface UserService {
      * @param resources
      * @return
      */
-    @CacheEvict(allEntries = true)
+//    @CacheEvict(allEntries = true)
     UserDTO create(User resources);
 
     /**
      * update
      * @param resources
      */
-    @CacheEvict(allEntries = true)
+//    @CacheEvict(allEntries = true)
     void update(User resources);
 
     /**
      * delete
      * @param id
      */
-    @CacheEvict(allEntries = true)
+//    @CacheEvict(allEntries = true)
     void delete(Long id);
 
     /**
@@ -51,7 +51,7 @@ public interface UserService {
      * @param userName
      * @return
      */
-    @Cacheable(key = "'loadUserByUsername:'+#p0")
+//    @Cacheable(key = "'loadUserByUsername:'+#p0")
     UserDTO findByName(String userName);
 
     /**
@@ -59,7 +59,7 @@ public interface UserService {
      * @param username
      * @param encryptPassword
      */
-    @CacheEvict(allEntries = true)
+//    @CacheEvict(allEntries = true)
     void updatePass(String username, String encryptPassword);
 
     /**
@@ -67,7 +67,7 @@ public interface UserService {
      * @param username
      * @param url
      */
-    @CacheEvict(allEntries = true)
+//    @CacheEvict(allEntries = true)
     void updateAvatar(String username, String url);
 
     /**
@@ -75,10 +75,10 @@ public interface UserService {
      * @param username
      * @param email
      */
-    @CacheEvict(allEntries = true)
+//    @CacheEvict(allEntries = true)
     void updateEmail(String username, String email);
 
-    @Cacheable(keyGenerator = "keyGenerator")
+//    @Cacheable(keyGenerator = "keyGenerator")
     Object queryAll(UserQueryCriteria criteria, Pageable pageable);
 
 

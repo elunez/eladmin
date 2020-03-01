@@ -6,7 +6,9 @@ import me.zhengjie.modules.system.cons.MessageModulePath;
 import me.zhengjie.modules.system.cons.MessageModuleType;
 import me.zhengjie.modules.system.cons.MessageReadStatus;
 import me.zhengjie.modules.system.domain.Message;
+import me.zhengjie.modules.system.domain.User;
 import me.zhengjie.modules.system.repository.MessageRepository;
+import me.zhengjie.modules.system.repository.UserRepository;
 import me.zhengjie.modules.system.service.UserService;
 import me.zhengjie.modules.system.service.dto.UserDTO;
 import me.zhengjie.modules.system.service.dto.UserQueryCriteria;
@@ -18,6 +20,7 @@ import me.zhengjie.modules.wms.outSourceProductSheet.repository.OutSourceInspect
 import me.zhengjie.modules.wms.outSourceProductSheet.request.*;
 import me.zhengjie.modules.wms.outSourceProductSheet.service.dto.*;
 import me.zhengjie.modules.wms.outSourceProductSheet.service.mapper.OutSourceInspectionCertificateProductMapper;
+import me.zhengjie.utils.SecurityUtils;
 import me.zhengjie.utils.ValidationUtil;
 import me.zhengjie.modules.wms.outSourceProductSheet.repository.OutSourceInspectionCertificateRepository;
 import me.zhengjie.modules.wms.outSourceProductSheet.service.OutSourceInspectionCertificateService;
@@ -74,7 +77,7 @@ public class OutSourceInspectionCertificateServiceImpl implements OutSourceInspe
     private MessageRepository messageRepository;
 
     @Autowired
-    private UserService userService;
+    private UserRepository userRepository;
 
     @Override
     public Object queryAll(OutSourceInspectionCertificateQueryCriteria criteria, Pageable pageable){
@@ -192,17 +195,21 @@ public class OutSourceInspectionCertificateServiceImpl implements OutSourceInspe
         try {
             // 查看所有用户
             UserQueryCriteria userQueryCriteria = new UserQueryCriteria();
-            List<UserDTO> userDTOList =(List<UserDTO>)userService.queryAll(userQueryCriteria);
-            if(!CollectionUtils.isEmpty(userDTOList)){
+            List<User> userList =(List<User>)userRepository.findByEnabled(true);
+            if(!CollectionUtils.isEmpty(userList)){
                 List<Message> messageList = new ArrayList<>();
-                for(UserDTO userDTO : userDTOList){
+                for(User user : userList){
                     Message message = new Message();
-                    message.setUserIdAccept(userDTO.getId());
+                    message.setUserIdAccept(user.getId());
                     String messageContent = MessageModuleType.OUT_SOURCE_INSPECTION_CERTIFICATE.getName() + "(" + outSourceInspectionCertificateCode + ")";
                     message.setMessContent(messageContent);
                     message.setModulePath(MessageModulePath.OUT_SOURCE_INSPECTION_CERTIFICATE_LIST.getCode());
-                    message.setModuleTypeName(MessageModuleType.OUT_SOURCE_INSPECTION_CERTIFICATE.getCode());
+                    message.setModuleTypeName(MessageModuleType.OUT_SOURCE_INSPECTION_CERTIFICATE.getName());
                     message.setReadStatus(MessageReadStatus.NO_READ.getStatus());
+                    message.setModuleTypeCode(outSourceInspectionCertificateCode);
+                    message.setStatus(true);
+                    message.setUserIdSend(SecurityUtils.getUserId());
+                    message.setUserNameSend(SecurityUtils.getUsername());
                     message.setInitCode(outSourceInspectionCertificateCode);
                     messageList.add(message);
                 }
