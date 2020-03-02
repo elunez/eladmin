@@ -222,7 +222,7 @@ public class ProductPurchaseOrderServiceImpl implements ProductPurchaseOrderServ
                 for(User user : userList){
                     Message message = new Message();
                     message.setUserIdAccept(user.getId());
-                    String messageContent = MessageModuleType.PRODUCT_PURCHASE.getName() + "(" + productPurchaseOrderCode + ")";
+                    String messageContent = MessageModuleType.PRODUCT_PURCHASE.getName() + "(" + productPurchaseOrderCode  + ")" + "新录入,请查看";
                     message.setMessContent(messageContent);
                     message.setModulePath(MessageModulePath.PRODUCT_PURCHASE_LIST.getCode());
                     message.setModuleTypeName(MessageModuleType.PRODUCT_PURCHASE.getName());

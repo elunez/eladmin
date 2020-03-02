@@ -202,7 +202,7 @@ public class OutSourceInspectionCertificateServiceImpl implements OutSourceInspe
                 for(User user : userList){
                     Message message = new Message();
                     message.setUserIdAccept(user.getId());
-                    String messageContent = MessageModuleType.OUT_SOURCE_INSPECTION_CERTIFICATE.getName() + "(" + outSourceInspectionCertificateCode + ")";
+                    String messageContent = MessageModuleType.OUT_SOURCE_INSPECTION_CERTIFICATE.getName() + "(" + outSourceInspectionCertificateCode  + ")" + "新录入,请查看";
                     message.setMessContent(messageContent);
                     message.setModulePath(MessageModulePath.OUT_SOURCE_INSPECTION_CERTIFICATE_LIST.getCode());
                     message.setModuleTypeName(MessageModuleType.OUT_SOURCE_INSPECTION_CERTIFICATE.getName());
