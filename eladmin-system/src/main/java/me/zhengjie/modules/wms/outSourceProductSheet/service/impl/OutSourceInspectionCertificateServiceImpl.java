@@ -90,6 +90,7 @@ public class OutSourceInspectionCertificateServiceImpl implements OutSourceInspe
                 Predicate statusPredicate = criteriaBuilder.equal(root.get("status"), 1);
                 targetPredicateList.add(statusPredicate);
 
+                criteriaQuery.orderBy(criteriaBuilder.desc(root.get("createTime")));
 
                 String outSourceProcessSheetCode = criteria.getOutSourceProcessSheetCode();
                 if(!StringUtils.isEmpty(outSourceProcessSheetCode)){

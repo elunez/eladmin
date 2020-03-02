@@ -102,6 +102,8 @@ public class QualityCheckSheetServiceImpl implements QualityCheckSheetService {
                 Predicate statusPredicate = criteriaBuilder.equal(root.get("status"), 1);
                 targetPredicateList.add(statusPredicate);
 
+                criteriaQuery.orderBy(criteriaBuilder.desc(root.get("createTime")));
+
                 if(CollectionUtils.isEmpty(targetPredicateList)){
                     return null;
                 }else{
