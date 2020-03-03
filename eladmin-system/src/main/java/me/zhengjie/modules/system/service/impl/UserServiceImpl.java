@@ -93,8 +93,8 @@ public class UserServiceImpl implements UserService {
     public void update(User resources) {
         User user = userRepository.findById(resources.getId()).orElseGet(User::new);
         ValidationUtil.isNull(user.getId(),"User","id",resources.getId());
-        User user1 = userRepository.findByUsername(user.getUsername());
-        User user2 = userRepository.findByEmail(user.getEmail());
+        User user1 = userRepository.findByUsername(resources.getUsername());
+        User user2 = userRepository.findByEmail(resources.getEmail());
 
         if(user1 !=null&&!user.getId().equals(user1.getId())){
             throw new EntityExistException(User.class,"username",resources.getUsername());
