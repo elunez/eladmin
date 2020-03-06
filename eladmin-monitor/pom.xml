@@ -75,9 +75,6 @@
 			<resource>
 				<filtering>true</filtering>
 				<directory>src/main/resources</directory>
-				<excludes>
-					<exclude>sigar-lib/**</exclude>
-				</excludes>
 			</resource>
 		</resources>
 	</build>
