@@ -123,7 +123,7 @@ CREATE TABLE `dict_detail`  (
   `id` bigint(11) NOT NULL AUTO_INCREMENT,
   `label` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '字典标签',
   `value` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '字典值',
-  `sort` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '排序',
+  `sort` smallint(6) NULL DEFAULT NULL COMMENT '排序',
   `dict_id` bigint(11) NULL DEFAULT NULL COMMENT '字典id',
   `create_time` datetime NULL DEFAULT NULL COMMENT '创建日期',
   PRIMARY KEY (`id`) USING BTREE,
@@ -134,12 +134,12 @@ CREATE TABLE `dict_detail`  (
 -- ----------------------------
 -- Records of dict_detail
 -- ----------------------------
-INSERT INTO `dict_detail` VALUES (1, '激活', 'true', '1', 1, '2019-10-27 20:31:36');
-INSERT INTO `dict_detail` VALUES (2, '禁用', 'false', '2', 1, NULL);
-INSERT INTO `dict_detail` VALUES (3, '启用', 'true', '1', 4, NULL);
-INSERT INTO `dict_detail` VALUES (4, '停用', 'false', '2', 4, '2019-10-27 20:31:36');
-INSERT INTO `dict_detail` VALUES (5, '启用', 'true', '1', 5, NULL);
-INSERT INTO `dict_detail` VALUES (6, '停用', 'false', '2', 5, '2019-10-27 20:31:36');
+INSERT INTO `dict_detail` VALUES (1, '激活', 'true', 1, 1, '2019-10-27 20:31:36');
+INSERT INTO `dict_detail` VALUES (2, '禁用', 'false', 2, 1, NULL);
+INSERT INTO `dict_detail` VALUES (3, '启用', 'true', 1, 4, NULL);
+INSERT INTO `dict_detail` VALUES (4, '停用', 'false', 2, 4, '2019-10-27 20:31:36');
+INSERT INTO `dict_detail` VALUES (5, '启用', 'true', 1, 5, NULL);
+INSERT INTO `dict_detail` VALUES (6, '停用', 'false', 2, 5, '2019-10-27 20:31:36');
 
 -- ----------------------------
 -- Table structure for email_config
