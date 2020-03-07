@@ -1,6 +1,5 @@
 package me.zhengjie.res;
 
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,8 +12,6 @@ import oshi.hardware.HardwareAbstractionLayer;
 import oshi.hardware.VirtualMemory;
 import oshi.software.os.OSFileStore;
 import oshi.software.os.OperatingSystem;
-
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
