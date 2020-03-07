@@ -19,6 +19,8 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<!-- oshi监控需要指定jna版本, 问题详见 https://github.com/oshi/oshi/issues/1040 -->
+		<jna.version>5.5.0</jna.version>
 	</properties>
 
 	<dependencies>
@@ -26,11 +28,11 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.hyperic/sigar -->
+		<!-- https://mvnrepository.com/artifact/com.github.oshi/oshi-core -->
 		<dependency>
-			<groupId>org.hyperic</groupId>
-			<artifactId>sigar</artifactId>
-			<version>1.6.5.132</version>
+			<groupId>com.github.oshi</groupId>
+			<artifactId>oshi-core</artifactId>
+			<version>4.4.2</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
@@ -73,9 +75,6 @@
 			<resource>
 				<filtering>true</filtering>
 				<directory>src/main/resources</directory>
-				<excludes>
-					<exclude>sigar-lib/**</exclude>
-				</excludes>
 			</resource>
 		</resources>
 	</build>

@@ -44,7 +44,7 @@ public class ServerServiceImpl implements ServerService {
 			try {
 				server.setState("1");
 				String url = String.format("http://%s:%d/api/serverMonitor",server.getAddress(),server.getPort());
-				String res = HttpUtil.get(url,1000);
+				String res = HttpUtil.get(url,3000);
 				JSONObject obj = JSONObject.parseObject(res);
 				server.setCpuRate(obj.getDouble("cpuRate"));
 				server.setCpuCore(obj.getInteger("cpuCore"));
