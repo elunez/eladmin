@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Set;
 
 /**
 * @author Zheng Jie
@@ -80,10 +81,10 @@ public class DictController {
 
     @Log("删除字典")
     @ApiOperation("删除字典")
-    @DeleteMapping(value = "/{id}")
+    @DeleteMapping
     @PreAuthorize("@el.check('dict:del')")
-    public ResponseEntity<Object> delete(@PathVariable Long id){
-        dictService.delete(id);
+    public ResponseEntity<Object> delete(@RequestBody Set<Long> ids){
+        dictService.delete(ids);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
