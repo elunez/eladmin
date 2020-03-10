@@ -58,7 +58,7 @@ public class LogController {
     @ApiOperation("用户日志查询")
     public ResponseEntity<Object> getUserLogs(LogQueryCriteria criteria, Pageable pageable){
         criteria.setLogType("INFO");
-        criteria.setBlurry(SecurityUtils.getUsername());
+        criteria.setBlurry(SecurityUtils.getCurrentUsername());
         return new ResponseEntity<>(logService.queryAllByUser(criteria,pageable), HttpStatus.OK);
     }
 

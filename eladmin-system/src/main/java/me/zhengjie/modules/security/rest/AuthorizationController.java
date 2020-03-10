@@ -12,8 +12,8 @@ import me.zhengjie.aop.log.Log;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.modules.security.config.SecurityProperties;
 import me.zhengjie.modules.security.security.TokenProvider;
-import me.zhengjie.modules.security.security.vo.AuthUser;
-import me.zhengjie.modules.security.security.vo.JwtUser;
+import me.zhengjie.modules.security.service.dto.AuthUserDto;
+import me.zhengjie.modules.security.service.dto.JwtUserDto;
 import me.zhengjie.modules.security.service.OnlineUserService;
 import me.zhengjie.utils.RedisUtils;
 import me.zhengjie.utils.SecurityUtils;
@@ -42,7 +42,7 @@ import java.util.concurrent.TimeUnit;
 @RestController
 @RequestMapping("/auth")
 @Api(tags = "系统：系统授权接口")
-public class AuthController {
+public class AuthorizationController {
 
     @Value("${loginCode.expiration}")
     private Long expiration;
@@ -57,7 +57,7 @@ public class AuthController {
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
-    public AuthController(SecurityProperties properties, RedisUtils redisUtils, UserDetailsService userDetailsService, OnlineUserService onlineUserService, TokenProvider tokenProvider, AuthenticationManagerBuilder authenticationManagerBuilder) {
+    public AuthorizationController(SecurityProperties properties, RedisUtils redisUtils, UserDetailsService userDetailsService, OnlineUserService onlineUserService, TokenProvider tokenProvider, AuthenticationManagerBuilder authenticationManagerBuilder) {
         this.properties = properties;
         this.redisUtils = redisUtils;
         this.userDetailsService = userDetailsService;
@@ -70,7 +70,7 @@ public class AuthController {
     @ApiOperation("登录授权")
     @AnonymousAccess
     @PostMapping(value = "/login")
-    public ResponseEntity<Object> login(@Validated @RequestBody AuthUser authUser, HttpServletRequest request){
+    public ResponseEntity<Object> login(@Validated @RequestBody AuthUserDto authUser, HttpServletRequest request){
         // 密码解密
         RSA rsa = new RSA(privateKey, null);
         String password = new String(rsa.decrypt(authUser.getPassword(), KeyType.PrivateKey));
@@ -91,13 +91,13 @@ public class AuthController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         // 生成令牌
         String token = tokenProvider.createToken(authentication);
-        final JwtUser jwtUser = (JwtUser) authentication.getPrincipal();
+        final JwtUserDto jwtUserDto = (JwtUserDto) authentication.getPrincipal();
         // 保存在线信息
-        onlineUserService.save(jwtUser, token, request);
+        onlineUserService.save(jwtUserDto, token, request);
         // 返回 token 与 用户信息
         Map<String,Object> authInfo = new HashMap<String,Object>(2){{
             put("token", properties.getTokenStartWith() + token);
-            put("user", jwtUser);
+            put("user", jwtUserDto);
         }};
         if(singleLogin){
             //踢掉之前已经登录的token
@@ -109,8 +109,8 @@ public class AuthController {
     @ApiOperation("获取用户信息")
     @GetMapping(value = "/info")
     public ResponseEntity<Object> getUserInfo(){
-        JwtUser jwtUser = (JwtUser)userDetailsService.loadUserByUsername(SecurityUtils.getUsername());
-        return ResponseEntity.ok(jwtUser);
+        JwtUserDto jwtUserDto = (JwtUserDto)userDetailsService.loadUserByUsername(SecurityUtils.getCurrentUsername());
+        return ResponseEntity.ok(jwtUserDto);
     }
 
     @AnonymousAccess

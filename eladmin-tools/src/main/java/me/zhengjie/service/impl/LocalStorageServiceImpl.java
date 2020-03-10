@@ -94,7 +94,7 @@ public class LocalStorageServiceImpl implements LocalStorageService {
                     file.getPath(),
                     type,
                     FileUtil.getSize(multipartFile.getSize()),
-                    SecurityUtils.getUsername()
+                    SecurityUtils.getCurrentUsername()
             );
             return localStorageMapper.toDto(localStorageRepository.save(localStorage));
         }catch (Exception e){

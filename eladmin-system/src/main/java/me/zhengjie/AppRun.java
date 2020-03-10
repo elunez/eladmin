@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
+ * 开启审计功能 -> @EnableJpaAuditing
  * @author Zheng Jie
  * @date 2018/11/15 9:20:19
  */
 @EnableAsync
 @RestController
-/** 开启审计功能 */
 @EnableJpaAuditing(auditorAwareRef = "auditorAware")
 @SpringBootApplication
 @EnableTransactionManagement

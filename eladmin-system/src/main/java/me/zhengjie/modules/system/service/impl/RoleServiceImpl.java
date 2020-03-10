@@ -153,7 +153,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     @Cacheable(key = "'loadPermissionByUser:' + #p0.username")
-    public Collection<GrantedAuthority> mapToGrantedAuthorities(UserDto user) {
+    public List<GrantedAuthority> mapToGrantedAuthorities(UserDto user) {
         Set<Role> roles = roleRepository.findByUsers_Id(user.getId());
         Set<String> permissions = roles.stream().filter(role -> StringUtils.isNotBlank(role.getPermission())).map(Role::getPermission).collect(Collectors.toSet());
         permissions.addAll(

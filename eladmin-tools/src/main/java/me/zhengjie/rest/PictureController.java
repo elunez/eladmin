@@ -52,7 +52,7 @@ public class PictureController {
     @PostMapping
     @ApiOperation("上传图片")
     public ResponseEntity<Object> upload(@RequestParam MultipartFile file){
-        String userName = SecurityUtils.getUsername();
+        String userName = SecurityUtils.getCurrentUsername();
         Picture picture = pictureService.upload(file,userName);
         return new ResponseEntity<>(picture,HttpStatus.OK);
     }

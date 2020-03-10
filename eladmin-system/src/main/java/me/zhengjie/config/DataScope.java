@@ -37,7 +37,7 @@ public class DataScope {
 
     public Set<Long> getDeptIds() {
 
-        UserDto user = userService.findByName(SecurityUtils.getUsername());
+        UserDto user = userService.findByName(SecurityUtils.getCurrentUsername());
 
         // 用于存储部门id
         Set<Long> deptIds = new HashSet<>();

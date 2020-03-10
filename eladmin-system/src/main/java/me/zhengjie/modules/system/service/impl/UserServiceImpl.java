@@ -171,7 +171,7 @@ public class UserServiceImpl implements UserService {
     @CacheEvict(allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     public void updateAvatar(MultipartFile multipartFile) {
-        User user = userRepository.findByUsername(SecurityUtils.getUsername());
+        User user = userRepository.findByUsername(SecurityUtils.getCurrentUsername());
         UserAvatar userAvatar = user.getUserAvatar();
         String oldPath = "";
         if(userAvatar != null){

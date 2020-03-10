@@ -7,10 +7,8 @@ import me.zhengjie.modules.system.service.dto.RoleSmallDto;
 import me.zhengjie.modules.system.service.dto.UserDto;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.GrantedAuthority;
-
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -108,5 +106,5 @@ public interface RoleService {
      * @param user 用户信息
      * @return 权限信息
      */
-    Collection<GrantedAuthority> mapToGrantedAuthorities(UserDto user);
+    List<GrantedAuthority> mapToGrantedAuthorities(UserDto user);
 }
