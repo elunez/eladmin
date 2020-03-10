@@ -128,8 +128,7 @@ public class UserController {
     @ApiOperation("修改用户：个人中心")
     @PutMapping(value = "center")
     public ResponseEntity<Object> center(@Validated(User.Update.class) @RequestBody User resources){
-        UserDto userDto = userService.findByName(SecurityUtils.getCurrentUsername());
-        if(!resources.getId().equals(userDto.getId())){
+        if(!resources.getId().equals(SecurityUtils.getCurrentUserId())){
             throw new BadRequestException("不能修改他人资料");
         }
         userService.updateCenter(resources);
@@ -141,12 +140,11 @@ public class UserController {
     @DeleteMapping
     @PreAuthorize("@el.check('user:del')")
     public ResponseEntity<Object> delete(@RequestBody Set<Long> ids){
-        UserDto user = userService.findByName(SecurityUtils.getCurrentUsername());
         for (Long id : ids) {
-            Integer currentLevel =  Collections.min(roleService.findByUsersId(user.getId()).stream().map(RoleSmallDto::getLevel).collect(Collectors.toList()));
+            Integer currentLevel =  Collections.min(roleService.findByUsersId(SecurityUtils.getCurrentUserId()).stream().map(RoleSmallDto::getLevel).collect(Collectors.toList()));
             Integer optLevel =  Collections.min(roleService.findByUsersId(id).stream().map(RoleSmallDto::getLevel).collect(Collectors.toList()));
             if (currentLevel > optLevel) {
-                throw new BadRequestException("角色权限不足，不能删除：" + userService.findByName(SecurityUtils.getCurrentUsername()).getUsername());
+                throw new BadRequestException("角色权限不足，不能删除：" + userService.findById(id).getUsername());
             }
         }
         userService.delete(ids);
@@ -200,8 +198,7 @@ public class UserController {
      * @param resources /
      */
     private void checkLevel(User resources) {
-        UserDto user = userService.findByName(SecurityUtils.getCurrentUsername());
-        Integer currentLevel =  Collections.min(roleService.findByUsersId(user.getId()).stream().map(RoleSmallDto::getLevel).collect(Collectors.toList()));
+        Integer currentLevel =  Collections.min(roleService.findByUsersId(SecurityUtils.getCurrentUserId()).stream().map(RoleSmallDto::getLevel).collect(Collectors.toList()));
         Integer optLevel = roleService.findByRoles(resources.getRoles());
         if (currentLevel > optLevel) {
             throw new BadRequestException("角色权限不足");

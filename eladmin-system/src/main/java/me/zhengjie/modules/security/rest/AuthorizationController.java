@@ -109,8 +109,7 @@ public class AuthorizationController {
     @ApiOperation("获取用户信息")
     @GetMapping(value = "/info")
     public ResponseEntity<Object> getUserInfo(){
-        JwtUserDto jwtUserDto = (JwtUserDto)userDetailsService.loadUserByUsername(SecurityUtils.getCurrentUsername());
-        return ResponseEntity.ok(jwtUserDto);
+        return ResponseEntity.ok(SecurityUtils.getCurrentUser());
     }
 
     @AnonymousAccess
