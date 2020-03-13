@@ -20,7 +20,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Table(name="dept",
-      indexs={@Index(name="idx_pid",columnList="pid")})
+	indexs={@Index(name="idx_pid",columnList="pid")})
 public class Dept implements Serializable {
 
     @Id
