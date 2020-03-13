@@ -199,6 +199,7 @@ CREATE TABLE `job`  (
   `dept_id` bigint(20) NULL DEFAULT NULL COMMENT '部门ID',
   `create_time` datetime NULL DEFAULT NULL COMMENT '创建日期',
   PRIMARY KEY (`id`) USING BTREE,
+  KEY `job_sort` (`sort`),
   INDEX `FKmvhj0rogastlctflsxf1d6k3i`(`dept_id`) USING BTREE,
   CONSTRAINT `FKmvhj0rogastlctflsxf1d6k3i` FOREIGN KEY (`dept_id`) REFERENCES `dept` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '岗位' ROW_FORMAT = Compact;
