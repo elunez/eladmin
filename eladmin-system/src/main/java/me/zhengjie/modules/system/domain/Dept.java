@@ -19,7 +19,7 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
-@Table(name="dept")
+@Table(name="dept", indexes = {@Index(name = "dept_pid", columnList = "pid")})
 public class Dept implements Serializable {
 
     @Id

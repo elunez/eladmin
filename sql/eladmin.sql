@@ -80,7 +80,8 @@ CREATE TABLE `dept`  (
   `pid` bigint(20) NOT NULL COMMENT '上级部门',
   `enabled` bit(1) NOT NULL COMMENT '状态',
   `create_time` datetime NULL DEFAULT NULL COMMENT '创建日期',
-  PRIMARY KEY (`id`) USING BTREE
+  PRIMARY KEY (`id`) USING BTREE,
+  KEY `dept_pid` (`pid`)
 ) ENGINE = InnoDB AUTO_INCREMENT = 12 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '部门' ROW_FORMAT = Compact;
 
 -- ----------------------------
