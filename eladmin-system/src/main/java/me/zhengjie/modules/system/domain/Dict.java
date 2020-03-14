@@ -18,7 +18,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@Table(name="dict")
+@Table(name="dict", indexes = {@Index(name = "dict_name", columnList = "name")})
 public class Dict implements Serializable {
 
     @Id
