@@ -268,6 +268,8 @@ CREATE TABLE `menu`  (
   `permission` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '权限',
   `type` int(11) NULL DEFAULT NULL COMMENT '类型',
   PRIMARY KEY (`id`) USING BTREE,
+  KEY `menu_name` (`name`),
+  KEY `menu_component_name` (`component_name`),
   INDEX `FKqcf9gem97gqa5qjm4d3elcqt5`(`pid`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 117 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '系统菜单' ROW_FORMAT = Compact;
 
