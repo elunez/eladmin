@@ -19,7 +19,7 @@ import java.sql.Timestamp;
 @Getter
 @Setter
 @Table(name="job",
-	indexs={@Index(name="job_sort", columnList="sort")})
+    indexs={@Index(name="job_sort", columnList="sort")})
 public class Job implements Serializable {
 
     @Id
