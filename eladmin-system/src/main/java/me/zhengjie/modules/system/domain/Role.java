@@ -18,7 +18,8 @@ import java.util.Set;
  * @date 2018-11-22
  */
 @Entity
-@Table(name = "role")
+@Table(name = "role",
+    indexes = {@Index(name = "role_level", columnList = "level")})
 @Getter
 @Setter
 public class Role implements Serializable {

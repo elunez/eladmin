@@ -605,7 +605,8 @@ CREATE TABLE `role`  (
   `level` int(255) NULL DEFAULT NULL COMMENT '角色级别',
   `create_time` datetime NULL DEFAULT NULL COMMENT '创建日期',
   `permission` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '功能权限',
-  PRIMARY KEY (`id`) USING BTREE
+  PRIMARY KEY (`id`) USING BTREE,
+  KEY `role_level` (`level`)
 ) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '角色表' ROW_FORMAT = Compact;
 
 -- ----------------------------
