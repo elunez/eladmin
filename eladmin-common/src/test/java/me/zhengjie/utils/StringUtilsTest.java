@@ -12,12 +12,6 @@ import static org.junit.Assert.*;
 public class StringUtilsTest {
 
     @Test
-    public void testInString() {
-        assertTrue(inString("?", "?"));
-        assertFalse(inString("?", new String[]{}));
-    }
-
-    @Test
     public void testToCamelCase() {
         assertNull(toCamelCase(null));
     }
@@ -44,6 +38,6 @@ public class StringUtilsTest {
 
     @Test
     public void testGetIP() {
-        assertEquals("127.0.0.1", getIP(new MockHttpServletRequest()));
+        assertEquals("127.0.0.1", getIp(new MockHttpServletRequest()));
     }
 }

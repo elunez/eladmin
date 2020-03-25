@@ -31,25 +31,37 @@ public class Menu implements Serializable {
     private String name;
 
     @Column(unique = true)
-    @NotNull
-    private Long sort;
+    private Long sort = 999L;
 
     @Column(name = "path")
     private String path;
 
     private String component;
 
+    /** 类型，目录、菜单、按钮 */
+    @Column(name = "type")
+    private Integer type;
+
+    /** 权限 */
+    @Column(name = "permission")
+    private String permission;
+
+    @Column(unique = true,name = "component_name")
+    private String componentName;
+
     private String icon;
 
-    /**
-     * 上级菜单ID
-     */
+    @Column(columnDefinition = "bit(1) default 0")
+    private Boolean cache;
+
+    @Column(columnDefinition = "bit(1) default 0")
+    private Boolean hidden;
+
+    /** 上级菜单ID */
     @Column(name = "pid",nullable = false)
     private Long pid;
 
-    /**
-     * 是否为外链 true/false
-     */
+    /** 是否为外链 true/false */
     @Column(name = "i_frame")
     private Boolean iFrame;
 
@@ -57,16 +69,20 @@ public class Menu implements Serializable {
     @JsonIgnore
     private Set<Role> roles;
 
-    @CreationTimestamp
     @Column(name = "create_time")
+    @CreationTimestamp
     private Timestamp createTime;
 
-    public interface Update{}
+    public @interface Update {}
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Menu menu = (Menu) o;
         return Objects.equals(id, menu.id);
     }

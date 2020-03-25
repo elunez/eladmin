@@ -4,12 +4,14 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -31,10 +33,19 @@ public class User implements Serializable {
     @Column(unique = true)
     private String username;
 
-    private String avatar;
+    /** 用户昵称 */
+    @NotBlank
+    private String nickName;
+
+    /** 性别 */
+    private String sex;
+
+    @OneToOne
+    @JoinColumn(name = "avatar_id")
+    private UserAvatar userAvatar;
 
     @NotBlank
-    @Pattern(regexp = "([a-z0-9A-Z]+[-|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}",message = "格式错误")
+    @Email
     private String email;
 
     @NotBlank
@@ -45,8 +56,8 @@ public class User implements Serializable {
 
     private String password;
 
-    @CreationTimestamp
     @Column(name = "create_time")
+    @CreationTimestamp
     private Timestamp createTime;
 
     @Column(name = "last_password_reset_time")
@@ -64,19 +75,23 @@ public class User implements Serializable {
     @JoinColumn(name = "dept_id")
     private Dept dept;
 
+    public @interface Update {}
+
     @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", avatar='" + avatar + '\'' +
-                ", email='" + email + '\'' +
-                ", enabled=" + enabled +
-                ", password='" + password + '\'' +
-                ", createTime=" + createTime +
-                ", lastPasswordResetTime=" + lastPasswordResetTime +
-                '}';
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        User user = (User) o;
+        return Objects.equals(id, user.id) &&
+                Objects.equals(username, user.username);
     }
 
-    public @interface Update {}
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, username);
+    }
 }

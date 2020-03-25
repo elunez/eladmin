@@ -7,24 +7,24 @@
     <groupId>me.zhengjie</groupId>
     <artifactId>eladmin</artifactId>
     <packaging>pom</packaging>
-    <version>2.1</version>
+    <version>2.4</version>
 
     <modules>
         <module>eladmin-common</module>
         <module>eladmin-logging</module>
         <module>eladmin-system</module>
         <module>eladmin-tools</module>
+		<module>eladmin-monitor</module>
         <module>eladmin-generator</module>
     </modules>
 
-    <name>el-admin</name>
+    <name>EL-ADMIN后台管理系统</name>
     <url>http://auauz.net</url>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>2.1.0.RELEASE</version>
-        <relativePath/>
     </parent>
 
     <properties>
@@ -36,13 +36,11 @@
         <swagger.version>2.9.2</swagger.version>
         <fastjson.version>1.2.54</fastjson.version>
         <druid.version>1.1.10</druid.version>
-        <hutool.version>[4.1.12,)</hutool.version>
         <commons-pool2.version>2.5.0</commons-pool2.version>
         <mapstruct.version>1.2.0.Final</mapstruct.version>
     </properties>
 
     <dependencies>
-
         <!--Spring boot start-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -143,11 +141,27 @@
             <optional>true</optional>
         </dependency>
 
-        <!--工具包-->
+        <!--https://gitee.com/lionsoul/ip2region/tree/v1.4-release/-->
         <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-all</artifactId>
-            <version>${hutool.version}</version>
+            <groupId>org.lionsoul</groupId>
+            <artifactId>ip2region</artifactId>
+            <version>1.7.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>3.17</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>3.17</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/xerces/xercesImpl -->
+        <dependency>
+            <groupId>xerces</groupId>
+            <artifactId>xercesImpl</artifactId>
+            <version>2.11.0</version>
         </dependency>
 
         <!-- fastjson -->
@@ -172,6 +186,16 @@
             <groupId>javax.inject</groupId>
             <artifactId>javax.inject</artifactId>
             <version>1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.whvcse</groupId>
+            <artifactId>easy-captcha</artifactId>
+            <version>1.6.2</version>
+        </dependency>
+        <dependency>
+            <groupId>eu.bitwalker</groupId>
+            <artifactId>UserAgentUtils</artifactId>
+            <version>1.20</version>
         </dependency>
     </dependencies>
 

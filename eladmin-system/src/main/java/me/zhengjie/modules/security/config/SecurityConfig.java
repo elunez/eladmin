@@ -1,15 +1,11 @@
 package me.zhengjie.modules.security.config;
 
-import me.zhengjie.modules.security.security.JwtAuthenticationEntryPoint;
-import me.zhengjie.modules.security.security.JwtAuthorizationTokenFilter;
-import me.zhengjie.modules.security.service.JwtUserDetailsService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import me.zhengjie.annotation.AnonymousAccess;
+import me.zhengjie.modules.security.security.*;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -19,102 +15,111 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.filter.CorsFilter;
+import org.springframework.web.method.HandlerMethod;
+import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
+/**
+ * @author Zheng Jie
+ */
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    private JwtAuthenticationEntryPoint unauthorizedHandler;
+    private final TokenProvider tokenProvider;
+    private final CorsFilter corsFilter;
+    private final JwtAuthenticationEntryPoint authenticationErrorHandler;
+    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
+    private final ApplicationContext applicationContext;
 
-    @Autowired
-    private JwtUserDetailsService jwtUserDetailsService;
-
-    /**
-     * 自定义基于JWT的安全过滤器
-     */
-    @Autowired
-    JwtAuthorizationTokenFilter authenticationTokenFilter;
-
-    @Value("${jwt.header}")
-    private String tokenHeader;
-
-    @Value("${jwt.auth.path}")
-    private String loginPath;
-
-    @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth
-                .userDetailsService(jwtUserDetailsService)
-                .passwordEncoder(passwordEncoderBean());
+    public SecurityConfig(TokenProvider tokenProvider, CorsFilter corsFilter, JwtAuthenticationEntryPoint authenticationErrorHandler, JwtAccessDeniedHandler jwtAccessDeniedHandler, ApplicationContext applicationContext) {
+        this.tokenProvider = tokenProvider;
+        this.corsFilter = corsFilter;
+        this.authenticationErrorHandler = authenticationErrorHandler;
+        this.jwtAccessDeniedHandler = jwtAccessDeniedHandler;
+        this.applicationContext = applicationContext;
     }
 
     @Bean
     GrantedAuthorityDefaults grantedAuthorityDefaults() {
-        // Remove the ROLE_ prefix
+        // 去除 ROLE_ 前缀
         return new GrantedAuthorityDefaults("");
     }
 
     @Bean
-    public PasswordEncoder passwordEncoderBean() {
+    public PasswordEncoder passwordEncoder() {
+        // 密码加密方式
         return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
     }
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
-
+        // 搜寻匿名标记 url： @AnonymousAccess
+        Map<RequestMappingInfo, HandlerMethod> handlerMethodMap = applicationContext.getBean(RequestMappingHandlerMapping.class).getHandlerMethods();
+        Set<String> anonymousUrls = new HashSet<>();
+        for (Map.Entry<RequestMappingInfo, HandlerMethod> infoEntry : handlerMethodMap.entrySet()) {
+            HandlerMethod handlerMethod = infoEntry.getValue();
+            AnonymousAccess anonymousAccess = handlerMethod.getMethodAnnotation(AnonymousAccess.class);
+            if (null != anonymousAccess) {
+                anonymousUrls.addAll(infoEntry.getKey().getPatternsCondition().getPatterns());
+            }
+        }
         httpSecurity
-
                 // 禁用 CSRF
                 .csrf().disable()
-
+                .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
                 // 授权异常
-                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
+                .exceptionHandling()
+                .authenticationEntryPoint(authenticationErrorHandler)
+                .accessDeniedHandler(jwtAccessDeniedHandler)
+
+                // 防止iframe 造成跨域
+                .and()
+                .headers()
+                .frameOptions()
+                .disable()
 
                 // 不创建会话
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+                .and()
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
-                // 过滤请求
+                .and()
                 .authorizeRequests()
+                // 静态资源等等
                 .antMatchers(
                         HttpMethod.GET,
                         "/*.html",
                         "/**/*.html",
                         "/**/*.css",
-                        "/**/*.js"
-                ).anonymous()
-
-                .antMatchers( HttpMethod.POST,"/auth/"+loginPath).anonymous()
-                .antMatchers("/auth/vCode").anonymous()
-                // 支付宝回调
-                .antMatchers("/api/aliPay/return").anonymous()
-                .antMatchers("/api/aliPay/notify").anonymous()
-
-                // swagger start
-                .antMatchers("/swagger-ui.html").anonymous()
-                .antMatchers("/swagger-resources/**").anonymous()
-                .antMatchers("/webjars/**").anonymous()
-                .antMatchers("/*/api-docs").anonymous()
-                // swagger end
-
-                // 接口限流测试
-                .antMatchers("/test/**").anonymous()
-                .antMatchers(HttpMethod.OPTIONS, "/**").anonymous()
-
-                .antMatchers("/druid/**").anonymous()
+                        "/**/*.js",
+                        "/webSocket/**"
+                ).permitAll()
+                // swagger 文档
+                .antMatchers("/swagger-ui.html").permitAll()
+                .antMatchers("/swagger-resources/**").permitAll()
+                .antMatchers("/webjars/**").permitAll()
+                .antMatchers("/*/api-docs").permitAll()
+                // 文件
+                .antMatchers("/avatar/**").permitAll()
+                .antMatchers("/file/**").permitAll()
+                // 阿里巴巴 druid
+                .antMatchers("/druid/**").permitAll()
+                // 放行OPTIONS请求
+                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                // 自定义匿名访问所有url放行 ： 允许匿名和带权限以及登录用户访问
+                .antMatchers(anonymousUrls.toArray(new String[0])).permitAll()
                 // 所有请求都需要认证
                 .anyRequest().authenticated()
-                // 防止iframe 造成跨域
-                .and().headers().frameOptions().disable();
+                .and().apply(securityConfigurerAdapter());
+    }
 
-        httpSecurity
-                .addFilterBefore(authenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
+    private TokenConfigurer securityConfigurerAdapter() {
+        return new TokenConfigurer(tokenProvider);
     }
 }

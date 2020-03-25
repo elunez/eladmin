@@ -8,5 +8,5 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 * @author Zheng Jie
 * @date 2019-04-10
 */
-public interface DictDetailRepository extends JpaRepository<DictDetail, Long>, JpaSpecificationExecutor {
+public interface DictDetailRepository extends JpaRepository<DictDetail, Long>, JpaSpecificationExecutor<DictDetail> {
 }

@@ -2,6 +2,9 @@ package me.zhengjie.modules.system.service.dto;
 
 import lombok.Data;
 import me.zhengjie.annotation.Query;
+
+import java.sql.Timestamp;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -22,4 +25,7 @@ public class DeptQueryCriteria{
 
     @Query
     private Long pid;
+
+    @Query(type = Query.Type.BETWEEN)
+    private List<Timestamp> createTime;
 }

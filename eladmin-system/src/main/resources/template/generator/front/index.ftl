@@ -4,152 +4,173 @@
     <!--工具栏-->
     <div class="head-container">
     <#if hasQuery>
-      <!-- 搜索 -->
-      <el-input v-model="query.value" clearable placeholder="输入搜索内容" style="width: 200px;" class="filter-item" @keyup.enter.native="toQuery"/>
-      <el-select v-model="query.type" clearable placeholder="类型" class="filter-item" style="width: 130px">
-        <el-option v-for="item in queryTypeOptions" :key="item.key" :label="item.display_name" :value="item.key"/>
-      </el-select>
-      <el-button class="filter-item" size="mini" type="success" icon="el-icon-search" @click="toQuery">搜索</el-button>
-    </#if>
-      <!-- 新增 -->
-      <div style="display: inline-block;margin: 0px 2px;">
-        <el-button
-          v-permission="['ADMIN','${upperCaseClassName}_ALL','${upperCaseClassName}_CREATE']"
-          class="filter-item"
-          size="mini"
-          type="primary"
-          icon="el-icon-plus"
-          @click="add">新增</el-button>
-      </div>
-    </div>
-    <!--表单组件-->
-    <eForm ref="form" :is-add="isAdd"/>
-    <!--表格渲染-->
-    <el-table v-loading="loading" :data="data" size="small" style="width: 100%;">
-      <#if columns??>
-          <#list columns as column>
-          <#if column.columnShow = 'true'>
-              <#if column.columnType != 'Timestamp'>
-      <el-table-column prop="${column.changeColumnName}" label="<#if column.columnComment != ''>${column.columnComment}<#else>${column.changeColumnName}</#if>"/>
-              <#else>
-      <el-table-column prop="${column.changeColumnName}" label="<#if column.columnComment != ''>${column.columnComment}<#else>${column.changeColumnName}</#if>">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.${column.changeColumnName}) }}</span>
-        </template>
-      </el-table-column>
-              </#if>
-          </#if>
-          </#list>
+      <div v-if="crud.props.searchToggle">
+        <!-- 搜索 -->
+        <el-input v-model="query.value" clearable placeholder="输入搜索内容" style="width: 200px;" class="filter-item" @keyup.enter.native="crud.toQuery" />
+        <el-select v-model="query.type" clearable placeholder="类型" class="filter-item" style="width: 130px">
+          <el-option v-for="item in queryTypeOptions" :key="item.key" :label="item.display_name" :value="item.key" />
+        </el-select>
+  <#if betweens??>
+    <#list betweens as column>
+      <#if column.queryType = 'BetWeen'>
+        <el-date-picker
+          v-model="query.${column.changeColumnName}"
+          :default-time="['00:00:00','23:59:59']"
+          type="daterange"
+          range-separator=":"
+          size="small"
+          class="date-item"
+          value-format="yyyy-MM-dd HH:mm:ss"
+          start-placeholder="${column.changeColumnName}Start"
+          end-placeholder="${column.changeColumnName}End"
+        />
       </#if>
-      <el-table-column v-if="checkPermission(['ADMIN','${upperCaseClassName}_ALL','${upperCaseClassName}_EDIT','${upperCaseClassName}_DELETE'])" label="操作" width="150px" align="center">
-        <template slot-scope="scope">
-          <el-button v-permission="['ADMIN','${upperCaseClassName}_ALL','${upperCaseClassName}_EDIT']" size="mini" type="primary" icon="el-icon-edit" @click="edit(scope.row)"/>
-          <el-popover
-            v-permission="['ADMIN','${upperCaseClassName}_ALL','${upperCaseClassName}_DELETE']"
-            :ref="scope.row.${pkChangeColName}"
-            placement="top"
-            width="180">
-            <p>确定删除本条数据吗？</p>
-            <div style="text-align: right; margin: 0">
-              <el-button size="mini" type="text" @click="$refs[scope.row.${pkChangeColName}].doClose()">取消</el-button>
-              <el-button :loading="delLoading" type="primary" size="mini" @click="subDelete(scope.row.${pkChangeColName})">确定</el-button>
-            </div>
-            <el-button slot="reference" type="danger" icon="el-icon-delete" size="mini"/>
-          </el-popover>
-        </template>
-      </el-table-column>
-    </el-table>
-    <!--分页组件-->
-    <el-pagination
-      :total="total"
-      style="margin-top: 8px;"
-      :current-page="page + 1"
-      layout="total, prev, pager, next, sizes"
-      @size-change="sizeChange"
-      @current-change="pageChange"/>
+    </#list>
+  </#if>
+        <rrOperation :crud="crud" />
+      </div>
+    </#if>
+      <!--如果想在工具栏加入更多按钮，可以使用插槽方式， slot = 'left' or 'right'-->
+      <crudOperation :permission="permission" />
+      <!--表单组件-->
+      <el-dialog :close-on-click-modal="false" :before-close="crud.cancelCU" :visible.sync="crud.status.cu > 0" :title="crud.status.title" width="500px">
+        <el-form ref="form" :model="form" <#if isNotNullColumns??>:rules="rules"</#if> size="small" label-width="80px">
+    <#if columns??>
+      <#list columns as column>
+        <#if column.formShow>
+          <el-form-item label="<#if column.remark != ''>${column.remark}<#else>${column.changeColumnName}</#if>"<#if column.istNotNull> prop="${column.changeColumnName}"</#if>>
+            <#if column.formType = 'Input'>
+            <el-input v-model="form.${column.changeColumnName}" style="width: 370px;" />
+            <#elseif column.formType = 'Textarea'>
+            <el-input :rows="3" v-model="form.${column.changeColumnName}" type="textarea" style="width: 370px;" />
+            <#elseif column.formType = 'Radio'>
+              <#if column.dictName??>
+            <el-radio v-for="item in dict.${column.dictName}" :key="item.id" v-model="form.${column.changeColumnName}" :label="item.value">{{ item.label }}</el-radio>
+              <#else>
+                未设置字典，请手动设置 Radio
+              </#if>
+            <#elseif column.formType = 'Select'>
+              <#if column.dictName??>
+            <el-select v-model="form.${column.changeColumnName}" filterable placeholder="请选择">
+              <el-option
+                v-for="item in dict.${column.dictName}"
+                :key="item.id"
+                :label="item.label"
+                :value="item.value" />
+            </el-select>
+              <#else>
+            未设置字典，请手动设置 Select
+              </#if>
+            <#else>
+            <el-date-picker v-model="form.${column.changeColumnName}" type="datetime" style="width: 370px;" />
+            </#if>
+          </el-form-item>
+        </#if>
+      </#list>
+    </#if>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button type="text" @click="crud.cancelCU">取消</el-button>
+          <el-button :loading="crud.cu === 2" type="primary" @click="crud.submitCU">确认</el-button>
+        </div>
+      </el-dialog>
+      <!--表格渲染-->
+      <el-table ref="table" v-loading="crud.loading" :data="crud.data" size="small" style="width: 100%;" @selection-change="crud.selectionChangeHandler">
+        <el-table-column type="selection" width="55" />
+        <#if columns??>
+            <#list columns as column>
+            <#if column.columnShow>
+          <#if column.dictName??>
+        <el-table-column v-if="columns.visible('${column.changeColumnName}')" prop="${column.changeColumnName}" label="<#if column.remark != ''>${column.remark}<#else>${column.changeColumnName}</#if>">
+          <template slot-scope="scope">
+            {{ dict.label.${column.dictName}[scope.row.${column.changeColumnName}] }}
+          </template>
+        </el-table-column>
+          <#elseif column.columnType != 'Timestamp'>
+        <el-table-column v-if="columns.visible('${column.changeColumnName}')" prop="${column.changeColumnName}" label="<#if column.remark != ''>${column.remark}<#else>${column.changeColumnName}</#if>" />
+                <#else>
+        <el-table-column v-if="columns.visible('${column.changeColumnName}')" prop="${column.changeColumnName}" label="<#if column.remark != ''>${column.remark}<#else>${column.changeColumnName}</#if>">
+          <template slot-scope="scope">
+            <span>{{ parseTime(scope.row.${column.changeColumnName}) }}</span>
+          </template>
+        </el-table-column>
+                </#if>
+            </#if>
+            </#list>
+        </#if>
+        <el-table-column v-permission="['admin','${changeClassName}:edit','${changeClassName}:del']" label="操作" width="150px" align="center">
+          <template slot-scope="scope">
+            <udOperation
+              :data="scope.row"
+              :permission="permission"
+            />
+          </template>
+        </el-table-column>
+      </el-table>
+      <!--分页组件-->
+      <pagination />
+    </div>
   </div>
 </template>
 
 <script>
-import checkPermission from '@/utils/permission'
-import initData from '@/mixins/initData'
-import { del } from '@/api/${changeClassName}'
-<#if hasTimestamp>
-import { parseTime } from '@/utils/index'
-</#if>
-import eForm from './form'
+import crud${className} from '@/api/${changeClassName}'
+import CRUD, { presenter, header, form, crud } from '@crud/crud'
+import rrOperation from '@crud/RR.operation'
+import crudOperation from '@crud/CRUD.operation'
+import udOperation from '@crud/UD.operation'
+import pagination from '@crud/Pagination'
+
+// crud交由presenter持有
+const defaultCrud = CRUD({ title: '${apiAlias}', url: 'api/${changeClassName}', sort: '${pkChangeColName},desc', crudMethod: { ...crud${className} }})
+const defaultForm = { <#if columns??><#list columns as column>${column.changeColumnName}: null<#if column_has_next>, </#if></#list></#if> }
 export default {
-  components: { eForm },
-  mixins: [initData],
+  name: '${className}',
+  components: { pagination, crudOperation, rrOperation, udOperation },
+  mixins: [presenter(defaultCrud), header(), form(defaultForm), crud()],
+  <#if hasDict>
+  dicts: [<#if hasDict??><#list dicts as dict>'${dict}'<#if dict_has_next>, </#if></#list></#if>],
+  </#if>
   data() {
     return {
-      delLoading: false,
-      <#if hasQuery>
+      permission: {
+        add: ['admin', '${changeClassName}:add'],
+        edit: ['admin', '${changeClassName}:edit'],
+        del: ['admin', '${changeClassName}:del']
+      },
+      rules: {
+        <#if isNotNullColumns??>
+        <#list isNotNullColumns as column>
+        <#if column.istNotNull>
+        ${column.changeColumnName}: [
+          { required: true, message: '<#if column.remark != ''>${column.remark}</#if>不能为空', trigger: 'blur' }
+        ]<#if column_has_next>,</#if>
+        </#if>
+        </#list>
+        </#if>
+      }<#if hasQuery>,
       queryTypeOptions: [
         <#if queryColumns??>
         <#list queryColumns as column>
-        { key: '${column.changeColumnName}', display_name: '<#if column.columnComment != ''>${column.columnComment}<#else>${column.changeColumnName}</#if>' }<#if column_has_next>,</#if>
+        <#if column.queryType != 'BetWeen'>
+        { key: '${column.changeColumnName}', display_name: '<#if column.remark != ''>${column.remark}<#else>${column.changeColumnName}</#if>' }<#if column_has_next>,</#if>
+        </#if>
         </#list>
         </#if>
       ]
       </#if>
     }
   },
-  created() {
-    this.$nextTick(() => {
-      this.init()
-    })
-  },
   methods: {
-  <#if hasTimestamp>
-    parseTime,
-  </#if>
-    checkPermission,
-    beforeInit() {
-      this.url = 'api/${changeClassName}'
-      const sort = '${pkChangeColName},desc'
-      this.params = { page: this.page, size: this.size, sort: sort }
+    // 获取数据前设置好接口地址
+    [CRUD.HOOK.beforeRefresh]() {
       <#if hasQuery>
       const query = this.query
-      const type = query.type
-      const value = query.value
-      if (type && value) { this.params[type] = value }
+      if (query.type && query.value) {
+        this.crud.params[query.type] = query.value
+      }
       </#if>
       return true
-    },
-    subDelete(${pkChangeColName}) {
-      this.delLoading = true
-      del(${pkChangeColName}).then(res => {
-        this.delLoading = false
-        this.$refs[${pkChangeColName}].doClose()
-        this.dleChangePage()
-        this.init()
-        this.$notify({
-          title: '删除成功',
-          type: 'success',
-          duration: 2500
-        })
-      }).catch(err => {
-        this.delLoading = false
-        this.$refs[${pkChangeColName}].doClose()
-        console.log(err.response.data.message)
-      })
-    },
-    add() {
-      this.isAdd = true
-      this.$refs.form.dialog = true
-    },
-    edit(data) {
-      this.isAdd = false
-      const _this = this.$refs.form
-      _this.form = {
-        <#if columns??>
-        <#list columns as column>
-        ${column.changeColumnName}: data.${column.changeColumnName}<#if column_has_next>,</#if>
-        </#list>
-        </#if>
-      }
-      _this.dialog = true
     }
   }
 }

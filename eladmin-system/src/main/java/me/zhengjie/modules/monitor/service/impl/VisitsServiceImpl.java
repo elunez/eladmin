@@ -6,7 +6,6 @@ import me.zhengjie.modules.monitor.repository.VisitsRepository;
 import me.zhengjie.modules.monitor.service.VisitsService;
 import me.zhengjie.repository.LogRepository;
 import me.zhengjie.utils.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,11 +25,14 @@ import java.util.stream.Collectors;
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class VisitsServiceImpl implements VisitsService {
 
-    @Autowired
-    private VisitsRepository visitsRepository;
+    private final VisitsRepository visitsRepository;
 
-    @Autowired
-    private LogRepository logRepository;
+    private final LogRepository logRepository;
+
+    public VisitsServiceImpl(VisitsRepository visitsRepository, LogRepository logRepository) {
+        this.visitsRepository = visitsRepository;
+        this.logRepository = logRepository;
+    }
 
     @Override
     public void save() {
@@ -58,7 +60,7 @@ public class VisitsServiceImpl implements VisitsService {
 
     @Override
     public Object get() {
-        Map map = new HashMap();
+        Map<String,Object> map = new HashMap<>(4);
         LocalDate localDate = LocalDate.now();
         Visits visits = visitsRepository.findByDate(localDate.toString());
         List<Visits> list = visitsRepository.findAllVisits(localDate.minusDays(6).toString(),localDate.plusDays(1).toString());
@@ -77,7 +79,7 @@ public class VisitsServiceImpl implements VisitsService {
 
     @Override
     public Object getChartData() {
-        Map map = new HashMap();
+        Map<String,Object> map = new HashMap<>(3);
         LocalDate localDate = LocalDate.now();
         List<Visits> list = visitsRepository.findAllVisits(localDate.minusDays(6).toString(),localDate.plusDays(1).toString());
         map.put("weekDays",list.stream().map(Visits::getWeekDay).collect(Collectors.toList()));

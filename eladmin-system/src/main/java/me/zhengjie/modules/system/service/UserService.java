@@ -1,83 +1,100 @@
 package me.zhengjie.modules.system.service;
 
 import me.zhengjie.modules.system.domain.User;
-import me.zhengjie.modules.security.security.JwtUser;
-import me.zhengjie.modules.system.service.dto.UserDTO;
+import me.zhengjie.modules.system.service.dto.UserDto;
 import me.zhengjie.modules.system.service.dto.UserQueryCriteria;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author Zheng Jie
  * @date 2018-11-23
  */
-@CacheConfig(cacheNames = "user")
 public interface UserService {
 
     /**
-     * get
-     * @param id
-     * @return
+     * 根据ID查询
+     * @param id ID
+     * @return /
      */
-    @Cacheable(key = "#p0")
-    UserDTO findById(long id);
+    UserDto findById(long id);
 
     /**
-     * create
-     * @param resources
-     * @return
+     * 新增用户
+     * @param resources /
+     * @return /
      */
-    @CacheEvict(allEntries = true)
-    UserDTO create(User resources);
+    UserDto create(User resources);
 
     /**
-     * update
-     * @param resources
+     * 编辑用户
+     * @param resources /
      */
-    @CacheEvict(allEntries = true)
     void update(User resources);
 
     /**
-     * delete
-     * @param id
+     * 删除用户
+     * @param ids /
      */
-    @CacheEvict(allEntries = true)
-    void delete(Long id);
+    void delete(Set<Long> ids);
 
     /**
-     * findByName
-     * @param userName
-     * @return
+     * 根据用户名查询
+     * @param userName /
+     * @return /
      */
-    @Cacheable(key = "'loadUserByUsername:'+#p0")
-    UserDTO findByName(String userName);
+    UserDto findByName(String userName);
 
     /**
      * 修改密码
-     * @param username
-     * @param encryptPassword
+     * @param username 用户名
+     * @param encryptPassword 密码
      */
-    @CacheEvict(allEntries = true)
     void updatePass(String username, String encryptPassword);
 
     /**
      * 修改头像
-     * @param username
-     * @param url
+     * @param file 文件
      */
-    @CacheEvict(allEntries = true)
-    void updateAvatar(String username, String url);
+    void updateAvatar(MultipartFile file);
 
     /**
      * 修改邮箱
-     * @param username
-     * @param email
+     * @param username 用户名
+     * @param email 邮箱
      */
-    @CacheEvict(allEntries = true)
     void updateEmail(String username, String email);
 
-    @Cacheable(keyGenerator = "keyGenerator")
+    /**
+     * 查询全部
+     * @param criteria 条件
+     * @param pageable 分页参数
+     * @return /
+     */
     Object queryAll(UserQueryCriteria criteria, Pageable pageable);
+
+    /**
+     * 查询全部不分页
+     * @param criteria 条件
+     * @return /
+     */
+    List<UserDto> queryAll(UserQueryCriteria criteria);
+
+    /**
+     * 导出数据
+     * @param queryAll 待导出的数据
+     * @param response /
+     * @throws IOException /
+     */
+    void download(List<UserDto> queryAll, HttpServletResponse response) throws IOException;
+
+    /**
+     * 用户自助修改资料
+     * @param resources /
+     */
+    void updateCenter(User resources);
 }

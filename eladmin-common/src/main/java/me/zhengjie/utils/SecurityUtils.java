@@ -3,6 +3,7 @@ package me.zhengjie.utils;
 import cn.hutool.json.JSONObject;
 import me.zhengjie.exception.BadRequestException;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
 /**
@@ -13,9 +14,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class SecurityUtils {
 
     public static UserDetails getUserDetails() {
-        UserDetails userDetails = null;
+        UserDetails userDetails;
         try {
-            userDetails = (UserDetails) org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         } catch (Exception e) {
             throw new BadRequestException(HttpStatus.UNAUTHORIZED, "登录状态过期");
         }
@@ -28,17 +29,6 @@ public class SecurityUtils {
      */
     public static String getUsername(){
         Object obj = getUserDetails();
-        JSONObject json = new JSONObject(obj);
-        return json.get("username", String.class);
-    }
-
-    /**
-     * 获取系统用户id
-     * @return 系统用户id
-     */
-    public static Long getUserId(){
-        Object obj = getUserDetails();
-        JSONObject json = new JSONObject(obj);
-        return json.get("id", Long.class);
+        return new JSONObject(obj).get("username", String.class);
     }
 }

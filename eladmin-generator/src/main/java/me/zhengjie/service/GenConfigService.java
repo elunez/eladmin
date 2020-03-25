@@ -1,30 +1,25 @@
 package me.zhengjie.service;
 
 import me.zhengjie.domain.GenConfig;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
 
 /**
  * @author Zheng Jie
  * @date 2019-01-14
  */
-@CacheConfig(cacheNames = "genConfig")
 public interface GenConfigService {
 
     /**
-     * find
-     * @return
+     * 查询表配置
+     * @param tableName 表名
+     * @return 表配置
      */
-    @Cacheable(key = "'1'")
-    GenConfig find();
+    GenConfig find(String tableName);
 
     /**
-     * update
-     * @param genConfig
-     * @return
+     * 更新表配置
+     * @param tableName 表名
+     * @param genConfig 表配置
+     * @return 表配置
      */
-    @CacheEvict(allEntries = true)
-    GenConfig update(GenConfig genConfig);
+    GenConfig update(String tableName, GenConfig genConfig);
 }
