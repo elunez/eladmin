@@ -58,7 +58,8 @@ public class TokenFilter extends GenericFilterBean {
       SecurityProperties properties = SpringContextHolder.getBean(SecurityProperties.class);
       String bearerToken = request.getHeader(properties.getHeader());
       if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(properties.getTokenStartWith())) {
-         return bearerToken.substring(7);
+         // 去掉令牌前缀
+         return bearerToken.replace(properties.getTokenStartWith(),"");
       }
       return null;
    }
