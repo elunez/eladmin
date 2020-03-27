@@ -51,8 +51,17 @@ public class AuthController {
     private String privateKey;
     @Value("${single.login:false}")
     private Boolean singleLogin;
+    /**
+     * 对于final类型的属性,并且构造函数有包含它们的话,那么就不需要写AutoWired注解,Spring4.3之后会自动注入;
+     * 配合lombok的@RequiredArgsConstructor(对final类型的属性提供包含它们的构造函数),可以大幅简化代码
+     */
     private final SecurityProperties properties;
     private final RedisUtils redisUtils;
+    /**
+     * 该接口被DaoAuthenticationProvider 类使用，用于认证过程中载入用户信息
+     * UserDetailsServiceImpl为其实现类,覆盖了loadUserByUsername方法,其中又调用了两个能缓存查询结果的service
+     * 所以载入用户信息的同时，也能将对应的用户信息写入到Redis缓存里头
+     */
     private final UserDetailsService userDetailsService;
     private final OnlineUserService onlineUserService;
     private final TokenProvider tokenProvider;
