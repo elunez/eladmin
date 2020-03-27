@@ -48,7 +48,7 @@ public class DeployServiceImpl implements DeployService {
 
 	private final DeployHistoryService deployHistoryService;
 
-	// 循环次数
+	/** 循环次数*/
 	private final Integer count = 30;
 
 	public DeployServiceImpl(DeployRepository deployRepository, DeployMapper deployMapper, ServerDeployService serverDeployService, DeployHistoryService deployHistoryService) {
