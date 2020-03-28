@@ -74,8 +74,15 @@ swagger:
 
 # 文件存储路径
 file:
-  path: /home/eladmin/file/
-  avatar: /home/eladmin/avatar/
+  mac:
+    path: ~/file/
+    avatar: ~/avatar/
+  linux:
+    path: /home/eladmin/file/
+    avatar: /home/eladmin/avatar/
+  windows:
+    path: C:\eladmin\file\
+    avatar: C:\eladmin\avatar\
   # 文件大小 /M
   maxSize: 100
   avatarMaxSize: 5

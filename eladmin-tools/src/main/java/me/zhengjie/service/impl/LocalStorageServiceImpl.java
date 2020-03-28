@@ -1,6 +1,7 @@
 package me.zhengjie.service.impl;
 
 import cn.hutool.core.util.ObjectUtil;
+import me.zhengjie.config.FileProperties;
 import me.zhengjie.domain.LocalStorage;
 import me.zhengjie.service.dto.LocalStorageDto;
 import me.zhengjie.service.dto.LocalStorageQueryCriteria;
@@ -9,7 +10,6 @@ import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.utils.*;
 import me.zhengjie.repository.LocalStorageRepository;
 import me.zhengjie.service.LocalStorageService;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -42,15 +42,12 @@ public class LocalStorageServiceImpl implements LocalStorageService {
 
     private final LocalStorageMapper localStorageMapper;
 
-    @Value("${file.path}")
-    private String path;
+    private final FileProperties properties;
 
-    @Value("${file.maxSize}")
-    private long maxSize;
-
-    public LocalStorageServiceImpl(LocalStorageRepository localStorageRepository, LocalStorageMapper localStorageMapper) {
+    public LocalStorageServiceImpl(LocalStorageRepository localStorageRepository, LocalStorageMapper localStorageMapper, FileProperties properties) {
         this.localStorageRepository = localStorageRepository;
         this.localStorageMapper = localStorageMapper;
+        this.properties = properties;
     }
 
     @Override
@@ -78,10 +75,10 @@ public class LocalStorageServiceImpl implements LocalStorageService {
     @CacheEvict(allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     public LocalStorageDto create(String name, MultipartFile multipartFile) {
-        FileUtil.checkSize(maxSize, multipartFile.getSize());
+        FileUtil.checkSize(properties.getMaxSize(), multipartFile.getSize());
         String suffix = FileUtil.getExtensionName(multipartFile.getOriginalFilename());
         String type = FileUtil.getFileType(suffix);
-        File file = FileUtil.upload(multipartFile, path + type +  File.separator);
+        File file = FileUtil.upload(multipartFile, properties.getPath().getPath() + type +  File.separator);
         if(ObjectUtil.isNull(file)){
             throw new BadRequestException("上传失败");
         }

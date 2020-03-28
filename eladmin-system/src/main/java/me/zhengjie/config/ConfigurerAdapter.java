@@ -1,6 +1,5 @@
 package me.zhengjie.config;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
@@ -20,11 +19,12 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @EnableWebMvc
 public class ConfigurerAdapter implements WebMvcConfigurer {
 
-    @Value("${file.path}")
-    private String path;
+    /** 文件配置 */
+    private final FileProperties properties;
 
-    @Value("${file.avatar}")
-    private String avatar;
+    public ConfigurerAdapter(FileProperties properties) {
+        this.properties = properties;
+    }
 
     @Bean
     public CorsFilter corsFilter() {
@@ -40,8 +40,9 @@ public class ConfigurerAdapter implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        String avatarUtl = "file:" + avatar.replace("\\","/");
-        String pathUtl = "file:" + path.replace("\\","/");
+        FileProperties.ElPath path = properties.getPath();
+        String avatarUtl = "file:" + path.getAvatar().replace("\\","/");
+        String pathUtl = "file:" + path.getPath().replace("\\","/");
         registry.addResourceHandler("/avatar/**").addResourceLocations(avatarUtl).setCachePeriod(0);
         registry.addResourceHandler("/file/**").addResourceLocations(pathUtl).setCachePeriod(0);
         registry.addResourceHandler("/**").addResourceLocations("classpath:/META-INF/resources/").setCachePeriod(0);
