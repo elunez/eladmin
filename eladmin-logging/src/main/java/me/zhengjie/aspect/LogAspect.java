@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 import javax.servlet.http.HttpServletRequest;
 
 /**
+ * 切点Pointcut加增强Advice等于切面Aspect
  * @author Zheng Jie
  * @date 2018-11-24
  */
@@ -51,6 +52,11 @@ public class LogAspect {
     public Object logAround(ProceedingJoinPoint joinPoint) throws Throwable {
         Object result;
         currentTime.set(System.currentTimeMillis());
+        /**
+         * AOP执行顺序Around-->Before--->Around--->After
+         * 必须使用joinPoint.proceed()来使切点的方法执行,否则的话Before和After则执行不了
+         * proceed()方法提供了带参数的重载方法，可以使用后者来达到替换切点方法参数的效果
+         */
         result = joinPoint.proceed();
         Log log = new Log("INFO",System.currentTimeMillis() - currentTime.get());
         currentTime.remove();

@@ -91,7 +91,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .and()
                 .authorizeRequests()
-                // 静态资源等等
+                // 静态资源等等（对GET请求的静态资源放行）
                 .antMatchers(
                         HttpMethod.GET,
                         "/*.html",
@@ -112,7 +112,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/druid/**").permitAll()
                 // 放行OPTIONS请求
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                // 自定义匿名访问所有url放行 ： 允许匿名和带权限以及登录用户访问
+                /**
+                 * 1 自定义匿名访问所有url放行 ： 允许匿名和带权限以及登录用户访问
+                 * 2 变长参数是 Java 的一个语法糖，本质上还是基于数组的实现 antMatchers(String... antPatterns)
+                 * 相当于 String[] antPatterns
+                 * 3 T[] toArray(T[] a)最好加上泛型的参数，不然会返回Object[]数组,接收方处理起来麻烦
+                */
                 .antMatchers(anonymousUrls.toArray(new String[0])).permitAll()
                 // 所有请求都需要认证
                 .anyRequest().authenticated()

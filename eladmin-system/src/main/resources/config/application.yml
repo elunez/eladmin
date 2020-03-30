@@ -25,7 +25,7 @@ spring:
     database: 0
     host: 127.0.0.1
     port: 6379
-    password:
+    password: 1234
     #连接超时时间
     timeout: 5000
 
