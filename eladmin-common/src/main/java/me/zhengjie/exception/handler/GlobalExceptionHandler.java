@@ -18,6 +18,7 @@ import static org.springframework.http.HttpStatus.*;
 /**
  * @author Zheng Jie
  * @date 2018-11-23
+ * RestControllerAdvice作用于所有的Controller上
  */
 @Slf4j
 @RestControllerAdvice

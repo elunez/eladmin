@@ -119,7 +119,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                  * 3 T[] toArray(T[] a)最好加上泛型的参数，不然会返回Object[]数组,接收方处理起来麻烦
                 */
                 .antMatchers(anonymousUrls.toArray(new String[0])).permitAll()
-                // 所有请求都需要认证
+                /**
+                 * 所有请求都需要认证
+                 * anyRequest().authenticated()：其他所有的请求都必须经过authenticated(验证)才能访问
+                 * 也就是其他所有的请求都必须用户登录后才能访问,用户一登录就相当于已验证
+                 */
                 .anyRequest().authenticated()
                 .and().apply(securityConfigurerAdapter());
     }

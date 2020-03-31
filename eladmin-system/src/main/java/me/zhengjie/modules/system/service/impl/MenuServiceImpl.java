@@ -53,7 +53,9 @@ public class MenuServiceImpl implements MenuService {
     @Cacheable
     public List<MenuDto> queryAll(MenuQueryCriteria criteria){
 //        Sort sort = new Sort(Sort.Direction.DESC,"id");
-        return menuMapper.toDto(menuRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder)));
+        List<Menu> all = menuRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root, criteria, criteriaBuilder));
+        List<MenuDto> menuDtos = menuMapper.toDto(all);
+        return menuDtos;
     }
 
     @Override

@@ -15,7 +15,13 @@ import java.util.*;
 @Slf4j
 @SuppressWarnings({"unchecked","all"})
 public class QueryHelp {
-
+    /**
+     * <R, Q> Predicate getPredicate(R root, Q query)为泛型方法,
+     * QueryHelp<T>为泛型类
+     * Predicate为数据库的查询条件映射的Java代码的查询条件，CriteriaBuilder可以创建基于Java代码的库表的查询条件
+     * CriteriaQuery指定要查询的表
+     * Q:泛型,表示系统中所有的条件查询的条件,有很多xxxxCriteria,如：MenuQueryCriteria
+     */
     public static <R, Q> Predicate getPredicate(Root<R> root, Q query, CriteriaBuilder cb) {
         List<Predicate> list = new ArrayList<>();
 

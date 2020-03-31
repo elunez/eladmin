@@ -19,6 +19,9 @@ public class TokenConfigurer extends SecurityConfigurerAdapter<DefaultSecurityFi
     @Override
     public void configure(HttpSecurity http) {
         TokenFilter customFilter = new TokenFilter(tokenProvider);
+        /**
+         * 在验证用户名和密码之前，添加一个自定义的filter,用来提供token的验证
+         */
         http.addFilterBefore(customFilter, UsernamePasswordAuthenticationFilter.class);
     }
 }
