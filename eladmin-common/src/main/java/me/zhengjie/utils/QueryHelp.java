@@ -56,14 +56,14 @@ public class QueryHelp {
                         for (String name : joinNames) {
                             switch (q.join()) {
                                 case LEFT:
-                                    if(ObjectUtil.isNotNull(join)){
+                                    if(ObjectUtil.isNotNull(join) && ObjectUtil.isNotNull(val)){
                                         join = join.join(name, JoinType.LEFT);
                                     } else {
                                         join = root.join(name, JoinType.LEFT);
                                     }
                                     break;
                                 case RIGHT:
-                                    if(ObjectUtil.isNotNull(join)){
+                                    if(ObjectUtil.isNotNull(join) && ObjectUtil.isNotNull(val)){
                                         join = join.join(name, JoinType.RIGHT);
                                     } else {
                                         join = root.join(name, JoinType.RIGHT);
