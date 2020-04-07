@@ -45,7 +45,7 @@ public class LogAspect {
 
     /**
      * 配置环绕通知,使用在方法logPointcut()上注册的切入点
-     *
+     * 也可以使用@Around("@annotation(me.zhengjie.aop.log.Log)")
      * @param joinPoint join point for advice
      */
     @Around("logPointcut()")

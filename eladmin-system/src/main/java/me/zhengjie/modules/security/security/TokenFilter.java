@@ -19,6 +19,8 @@ import java.io.IOException;
 
 /**
  * @author /
+ * GenericFilterBean的工作流程是：init-doFilter-destory，其中的init和destory在该类中实现，doFilter在具体实现类中实现
+ * 我认为这里使用GenericFilterBean的原因是它刚好满足作为过滤器的条件,使用它不需要去实现其他不必要的方法
  */
 @Slf4j
 public class TokenFilter extends GenericFilterBean {
@@ -33,17 +35,27 @@ public class TokenFilter extends GenericFilterBean {
    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
       throws IOException, ServletException {
       HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
+      //从request中提取token中的密文
       String token = resolveToken(httpServletRequest);
       String requestRri = httpServletRequest.getRequestURI();
       // 验证 token 是否存在
       OnlineUser onlineUser = null;
       try {
+         /**
+          * TokenFilter不被Spring容器管理(类名上没有对应的组件注解),所以用不了Spring的自动注入
+          * 只能使用反射手动的去加载
+          */
          SecurityProperties properties = SpringContextHolder.getBean(SecurityProperties.class);
          OnlineUserService onlineUserService = SpringContextHolder.getBean(OnlineUserService.class);
+         //从redis中获取在线用户
          onlineUser = onlineUserService.getOne(properties.getOnlineKey() + token);
       } catch (ExpiredJwtException e) {
          log.error(e.getMessage());
       }
+
+      /**
+       *
+       */
       if (onlineUser != null && StringUtils.hasText(token) && tokenProvider.validateToken(token)) {
          Authentication authentication = tokenProvider.getAuthentication(token);
          SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -54,6 +66,7 @@ public class TokenFilter extends GenericFilterBean {
       filterChain.doFilter(servletRequest, servletResponse);
    }
 
+   //提取token,token格式：Bearer空格+一串密文
    private String resolveToken(HttpServletRequest request) {
       SecurityProperties properties = SpringContextHolder.getBean(SecurityProperties.class);
       String bearerToken = request.getHeader(properties.getHeader());

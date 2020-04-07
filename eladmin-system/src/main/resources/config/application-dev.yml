@@ -46,7 +46,7 @@ jwt:
   header: Authorization
   # 令牌前缀
   token-start-with: Bearer
-  # 必须使用最少88位的Base64对该令牌进行编码
+  # 必须使用最少88位的Base64对该令牌进行编码，可以通过这个加密的密文生成服务器存储的秘钥
   base64-secret: ZmQ0ZGI5NjQ0MDQwY2I4MjMxY2Y3ZmI3MjdhN2ZmMjNhODViOTg1ZGE0NTBjMGM4NDA5NzYxMjdjOWMwYWRmZTBlZjlhNGY3ZTg4Y2U3YTE1ODVkZDU5Y2Y3OGYwZWE1NzUzNWQ2YjFjZDc0NGMxZWU2MmQ3MjY1NzJmNTE0MzI=
   # 令牌过期时间 此处单位/毫秒 ，默认4小时，可在此网站生成 https://www.convertworld.com/zh-hans/time/milliseconds.html
   token-validity-in-seconds: 14400000

@@ -94,10 +94,16 @@ public class AuthController {
         if (StringUtils.isBlank(authUser.getCode()) || !authUser.getCode().equalsIgnoreCase(code)) {
             throw new BadRequestException("验证码错误");
         }
+        /**
+         * 这是一个Authentication对象;,principal存储用户名,credentials存储密码,
+         * 然后将authenticationToken对象提交到SpringSecurity去验证authenticate(authenticationToken)
+         * 可通过boolean isAuthenticated()方法来决定该Authentication是否认证成功
+         */
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(authUser.getUsername(), password);
         /**
          * 通过token获得授权对象
+         *
          */
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);

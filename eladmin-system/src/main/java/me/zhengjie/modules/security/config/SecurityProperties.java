@@ -4,11 +4,16 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+
+import javax.persistence.Entity;
 
 /**
  * Jwt参数配置
  * @author Zheng Jie
  * @date 2019年11月28日
+ * ConfigurationProperties可以将外部配置文件（比如applicaition.properties）加载进来，填充对象的对应字段的数据，然后供其他Bean使用
+ * Configuration配置类注解，被自动扫描发现,不然这个类无法被Spring容器管理,会导致ConfigurationProperties失效
  */
 @Data
 @Configuration

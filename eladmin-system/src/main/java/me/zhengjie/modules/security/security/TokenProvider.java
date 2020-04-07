@@ -37,6 +37,12 @@ public class TokenProvider implements InitializingBean {
 
    @Override
    public void afterPropertiesSet() {
+      /**
+       * 解析配置文件里面的base64-secret字段，生成一个字节数组
+       * 使用HMAC-SHA算法对字节数组进行运算得到SecretKey（Key的子类）
+       * 生成签名的时候使用的秘钥secret,这个方法本地封装了的，一般可以从本地配置文件中读取，切记这个秘钥不能外露哦。
+       * 它就是你服务端的私钥，在任何场景都不应该流露出去。一旦客户端得知这个secret, 那就意味着客户端是可以自我签发jwt了。
+       */
       byte[] keyBytes = Decoders.BASE64.decode(properties.getBase64Secret());
       this.key = Keys.hmacShaKeyFor(keyBytes);
    }
@@ -48,7 +54,9 @@ public class TokenProvider implements InitializingBean {
 
       long now = (new Date()).getTime();
       Date validity = new Date(now + properties.getTokenValidityInSeconds());
-
+      /**
+       * 使用HmacSHA512加密
+       */
       return Jwts.builder()
          .setSubject(authentication.getName())
          .claim(AUTHORITIES_KEY, authorities)

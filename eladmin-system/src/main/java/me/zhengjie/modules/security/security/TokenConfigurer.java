@@ -21,6 +21,7 @@ public class TokenConfigurer extends SecurityConfigurerAdapter<DefaultSecurityFi
         TokenFilter customFilter = new TokenFilter(tokenProvider);
         /**
          * 在验证用户名和密码之前，添加一个自定义的filter,用来提供token的验证
+         * 每次访问方法的时候,先验证token是否有效,token有效再放开filter链,判断对应用户是否有权限访问受保护的资源
          */
         http.addFilterBefore(customFilter, UsernamePasswordAuthenticationFilter.class);
     }
