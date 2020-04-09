@@ -1,11 +1,13 @@
 package me.zhengjie.modules.security.service;
 
 import me.zhengjie.exception.BadRequestException;
+import me.zhengjie.exception.EntityNotFoundException;
 import me.zhengjie.modules.security.service.dto.JwtUserDto;
 import me.zhengjie.modules.system.service.RoleService;
 import me.zhengjie.modules.system.service.UserService;
-import me.zhengjie.modules.system.service.dto.*;
+import me.zhengjie.modules.system.service.dto.UserDto;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,10 +30,16 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     @Override
-    public JwtUserDto loadUserByUsername(String username){
-        UserDto user = userService.findByName(username);
+    public JwtUserDto loadUserByUsername(String username) {
+        UserDto user;
+        try {
+            user = userService.findByName(username);
+        } catch (EntityNotFoundException e) {
+            // SpringSecurity会自动转换UsernameNotFoundException为BadCredentialsException
+            throw new UsernameNotFoundException("", e);
+        }
         if (user == null) {
-            throw new BadRequestException("账号不存在");
+            throw new UsernameNotFoundException("");
         } else {
             if (!user.getEnabled()) {
                 throw new BadRequestException("账号未激活");
