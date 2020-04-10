@@ -1,5 +1,6 @@
 package me.zhengjie.modules.security.security;
 
+import cn.hutool.core.util.ObjectUtil;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -16,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.security.Key;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.stream.Collectors;
 
@@ -63,10 +65,13 @@ public class TokenProvider implements InitializingBean {
          .parseClaimsJws(token)
          .getBody();
 
+      // fix bug: 当前用户如果没有任何权限时，在输入用户名后，刷新验证码会抛IllegalArgumentException
+       Object authoritiesStr = claims.get(AUTHORITIES_KEY);
       Collection<? extends GrantedAuthority> authorities =
-         Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
+              ObjectUtil.isNotEmpty(authoritiesStr) ?
+       Arrays.stream(authoritiesStr.toString().split(","))
             .map(SimpleGrantedAuthority::new)
-            .collect(Collectors.toList());
+            .collect(Collectors.toList()) : Collections.emptyList();
 
       User principal = new User(claims.getSubject(), "", authorities);
 
