@@ -13,7 +13,8 @@ import java.sql.Timestamp;
  */
 @Entity
 @Data
-@Table(name = "log")
+@Table(name = "log",
+       indexes = {@Index(name = "log_create_time_index", columnList = "create_time")})
 @NoArgsConstructor
 public class Log  implements Serializable {
 
