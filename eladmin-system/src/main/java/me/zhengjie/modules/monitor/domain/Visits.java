@@ -15,7 +15,8 @@ import java.sql.Timestamp;
  */
 @Entity
 @Data
-@Table(name = "visits")
+@Table(name = "visits",
+       indexes = {@Index(name = "visits_create_time_index", columnList = "create_time")})
 public class Visits  implements Serializable {
 
     @Id
