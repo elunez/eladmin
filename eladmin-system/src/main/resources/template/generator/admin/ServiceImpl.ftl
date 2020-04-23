@@ -130,7 +130,7 @@ public class ${className}ServiceImpl implements ${className}Service {
     @Override
     //@CacheEvict(allEntries = true)
     public void deleteAll(${pkColumnType}[] ids) {
-        for (${pkColumnType} id : ids) {
+        for (${pkColumnType} ${pkChangeColName} : ids) {
             ${changeClassName}Repository.deleteById(${pkChangeColName});
         }
     }
