@@ -14,7 +14,19 @@ import java.util.List;
 */
 public interface CustomerOrderProductRepository extends JpaRepository<CustomerOrderProduct, Long>, JpaSpecificationExecutor {
 
+    /**
+     * 根据客户订单id查看客户订单对应的所有产品
+     * @param customerOrderId
+     * @return
+     */
     List<CustomerOrderProduct> findByCustomerOrderIdAndStatusTrue(Long customerOrderId);
+
+    /**
+     * 根据客户订单编号查询客户订单对应的所有产品信息
+     * @param customerOrderCode
+     * @return
+     */
+    List<CustomerOrderProduct> findByCustomerOrderCodeAndStatusTrue(String customerOrderCode);
 
     /**
      * 根据产品code以及客户订单id删除订单中对应的产品信息

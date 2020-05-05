@@ -1,5 +1,6 @@
 package me.zhengjie.modules.wms.invoice.service.impl;
 
+import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.modules.system.cons.MessageModulePath;
@@ -18,6 +19,8 @@ import me.zhengjie.modules.wms.bd.repository.CustomerInfoRepository;
 import me.zhengjie.modules.wms.bd.repository.ProductInfoRepository;
 import me.zhengjie.modules.wms.customerOrder.domain.CustomerOrder;
 import me.zhengjie.modules.wms.customerOrder.domain.CustomerOrderProduct;
+import me.zhengjie.modules.wms.customerOrder.repository.CustomerOrderProductRepository;
+import me.zhengjie.modules.wms.customerOrder.repository.CustomerOrderRepository;
 import me.zhengjie.modules.wms.customerOrder.request.CustomerOrderProductRequest;
 import me.zhengjie.modules.wms.customerOrder.service.dto.CustomerOrderDTO;
 import me.zhengjie.modules.wms.customerOrder.service.dto.CustomerOrderProductDTO;
@@ -29,8 +32,7 @@ import me.zhengjie.modules.wms.invoice.request.UpdateInvoiceRequest;
 import me.zhengjie.modules.wms.invoice.service.dto.InvoiceDetailDTO;
 import me.zhengjie.modules.wms.invoice.service.dto.InvoiceProductDTO;
 import me.zhengjie.modules.wms.invoice.service.mapper.InvoiceProductMapper;
-import me.zhengjie.utils.SecurityUtils;
-import me.zhengjie.utils.ValidationUtil;
+import me.zhengjie.utils.*;
 import me.zhengjie.modules.wms.invoice.repository.InvoiceRepository;
 import me.zhengjie.modules.wms.invoice.service.InvoiceService;
 import me.zhengjie.modules.wms.invoice.service.dto.InvoiceDTO;
@@ -48,11 +50,10 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.LongStream;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import me.zhengjie.utils.PageUtil;
-import me.zhengjie.utils.QueryHelp;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
@@ -78,6 +79,12 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Autowired
     private CustomerInfoRepository customerInfoRepository;
+
+    @Autowired
+    private CustomerOrderRepository customerOrderRepository;
+
+    @Autowired
+    private CustomerOrderProductRepository customerOrderProductRepository;
 
     @Autowired
     private InvoiceProductMapper invoiceProductMapper;
@@ -166,6 +173,9 @@ public class InvoiceServiceImpl implements InvoiceService {
         List<InvoiceProduct> invoiceProductList = invoiceProductRepository.findByInvoiceIdAndStatusTrue(id);
         if(!CollectionUtils.isEmpty(invoiceProductList)){
             List<InvoiceProductDTO> invoiceProductDTOList = invoiceProductMapper.toDto(invoiceProductList);
+            for(InvoiceProductDTO invoiceProductDTO : invoiceProductDTOList){
+                invoiceProductDTO.setProductNumber(invoiceProductDTO.getCustomerOrderNumber());
+            }
             invoiceDetailDTO.setInvoiceProductDTOList(invoiceProductDTOList);
         }
         return invoiceDetailDTO;
@@ -257,6 +267,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
         BeanUtils.copyProperties(createInvoiceRequest, invoice);
         invoice.setStatus(true);
+        invoice.setPici(PiciUtil.initPici(customerOrderCode));
         invoiceRepository.save(invoice);
         invoice = invoiceRepository.findBySaleInvoiceCode(saleInvoiceCode);
         InvoiceDTO invoiceDTO = invoiceMapper.toDto(invoice);
@@ -272,16 +283,29 @@ public class InvoiceServiceImpl implements InvoiceService {
             if(null == productInfo){
                 throw new BadRequestException("产品编号" + productInfo.getProductCode() + "对应的产品不存在!");
             }
+            invoiceProduct.setCustomerOrderCode(customerOrderCode);
             invoiceProduct.setProductId(productInfo.getId());
             invoiceProductRepository.save(invoiceProduct);
         }
 
         List<InvoiceProduct> invoiceProductList = invoiceProductRepository.findByInvoiceIdAndStatusTrue(invoice.getId());
         List<InvoiceProductDTO> invoiceProductDTOList = invoiceProductMapper.toDto(invoiceProductList);
+        for(InvoiceProductDTO invoiceProductDTO : invoiceProductDTOList){
+            invoiceProductDTO.setProductNumber(invoiceProductDTO.getCustomerOrderNumber());
+        }
 
         InvoiceDetailDTO invoiceDetailDTO = new InvoiceDetailDTO();
         BeanUtils.copyProperties(invoiceDTO, invoiceDetailDTO);
         invoiceDetailDTO.setInvoiceProductDTOList(invoiceProductDTOList);
+
+        /**
+         * 判断客户订单是否完成
+         * 查看客户订单所有的商品以及数量
+         * 查看该订单的所有发货单数量，
+         * 比较是否完成
+         */
+
+
 
         /**
          * 新增消息通知
@@ -308,6 +332,47 @@ public class InvoiceServiceImpl implements InvoiceService {
                     messageList.add(message);
                 }
                 messageRepository.saveAll(messageList);
+            }
+
+            // 查看发货单的数量是否根订单数量一致，如果一致则订单已发货，如果
+            Map<String, Long> existProduct = new HashMap<>();
+            List<InvoiceProduct> existProductList = invoiceProductRepository.findByCustomerOrderCodeAndStatusTrue(customerOrderCode);
+            if(!CollectionUtils.isEmpty(existProductList)){
+                Map<String, List<InvoiceProduct>> existProductMap = existProductList.stream().collect(Collectors.groupingBy(InvoiceProduct::getProductCode));
+                for(Map.Entry<String, List<InvoiceProduct>> entry : existProductMap.entrySet()){
+                    String productCode = entry.getKey();
+                    List<InvoiceProduct> invoiceProductListTemp = entry.getValue();
+                    if(!CollectionUtils.isEmpty(invoiceProductListTemp)){
+                        Long productNumberTotal = invoiceProductListTemp.stream().mapToLong(InvoiceProduct::getActualInvoiceNumber).sum();
+                        existProduct.put(productCode, productNumberTotal);
+                    }
+                }
+            }
+            Map<String, Long> sourceProduct = new HashMap<>();
+            List<CustomerOrderProduct> sourceProductList = customerOrderProductRepository.findByCustomerOrderCodeAndStatusTrue(customerOrderCode);
+            if(!CollectionUtils.isEmpty(sourceProductList)){
+                Map<String, List<CustomerOrderProduct>> sourceProductMap = sourceProductList.stream().collect(Collectors.groupingBy(CustomerOrderProduct::getProductCode));
+                for(Map.Entry<String, List<CustomerOrderProduct>> entry : sourceProductMap.entrySet()){
+                    String productCode = entry.getKey();
+                    List<CustomerOrderProduct> customerOrderProductListTemp = entry.getValue();
+                    if(!CollectionUtils.isEmpty(customerOrderProductListTemp)){
+                        Long productNumberTotal = customerOrderProductListTemp.stream().mapToLong(CustomerOrderProduct::getProductNumber).sum();
+                        sourceProduct.put(productCode, productNumberTotal);
+                    }
+                }
+            }
+
+            if(!CollectionUtils.isEmpty(sourceProduct)){
+                for(Map.Entry<String, Long> entry : sourceProduct.entrySet()){
+                    String productCodeTemp = entry.getKey();
+                    long productNumberTemp = entry.getValue();
+                    long productNumberTempExist = existProduct.get(productCodeTemp);
+                    if(productNumberTemp == productNumberTempExist || productNumberTemp > productNumberTempExist){
+                        customerOrderRepository.updateProcStatus(ProcStatusEnum.COMPLETED.getCode());
+                    }else{
+                        customerOrderRepository.updateProcStatus(ProcStatusEnum.SENDING_GOOD.getCode());
+                    }
+                }
             }
         }catch (Exception e){
             log.error("单据编号:插入消息失败!");
@@ -402,5 +467,65 @@ public class InvoiceServiceImpl implements InvoiceService {
     public void delete(Long id) {
         invoiceRepository.deleteInvoice(id);
         invoiceProductRepository.deleteInvoiceProduct(id);
+    }
+
+    /**
+     * 处理当前客户订单的完成状态
+     * @param customerOrderCode
+     */
+    public void dealCustomerOrderCompleteStatus(String customerOrderCode){
+        if(!StringUtils.isEmpty(customerOrderCode)){
+            List<CustomerOrderProduct> customerOrderProductList = customerOrderProductRepository.findByCustomerOrderCodeAndStatusTrue(customerOrderCode);
+            if(!CollectionUtils.isEmpty(customerOrderProductList)){
+                Map<String, CustomerOrderProduct> customerOrderProductMap = customerOrderProductList.stream().collect(Collectors.toMap(CustomerOrderProduct::getProductCode, a -> a, (k1, k2) -> k1));
+
+                // 查看客户订单对应销售发货单所有产品
+                List<InvoiceProduct> invoiceProductList = invoiceProductRepository.findByCustomerOrderCodeAndStatusTrue(customerOrderCode);
+                if(!CollectionUtils.isEmpty(invoiceProductList)){
+                    // 销售发货单产品集合，key为产品，value为产品集合
+//                    Map<String, List<InvoiceProduct>> invoiceProductMap = invoiceProductList.stream().collect(Collectors.groupingBy(InvoiceProduct::getProductCode));
+                    Map<String,Integer> existProductNumnerMap = new HashMap<>();
+//                    invoiceProductList.forEach(invoiceProduct -> existProductNumnerMap.computeIfPresent(invoiceProduct.getCustomerOrderCode(), invoiceProduct.getCustomerOrderNumber()));
+                }
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        List<InvoiceProduct> invoiceProductList = new ArrayList<>();
+
+        InvoiceProduct invoiceProduct = new InvoiceProduct();
+        invoiceProduct.setProductCode("01001");
+        invoiceProduct.setCustomerOrderNumber(10L);
+        invoiceProductList.add(invoiceProduct);
+
+
+        InvoiceProduct invoiceProduct2 = new InvoiceProduct();
+        invoiceProduct2.setProductCode("01001");
+        invoiceProduct2.setCustomerOrderNumber(10L);
+        invoiceProductList.add(invoiceProduct2);
+
+
+
+        Map<String, Long> targetMap = new HashMap<>();
+
+        invoiceProductList.forEach(item->{
+            System.out.println(item.getProductCode() + ":" + item.getCustomerOrderNumber());
+
+            Long tempNum = targetMap.computeIfAbsent(item.getProductCode(), (k) ->{
+                Long tempNumber = null == targetMap.get(k)?0L:targetMap.get(k);
+                tempNumber += item.getCustomerOrderNumber();
+                return tempNumber;
+
+            });
+
+
+            targetMap.put(item.getProductCode(), tempNum);
+            System.out.println(tempNum);
+        });
+
+
+        System.out.println(new Gson().toJson(targetMap));
+
     }
 }

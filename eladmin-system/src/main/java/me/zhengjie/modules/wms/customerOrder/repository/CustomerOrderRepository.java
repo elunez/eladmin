@@ -1,6 +1,7 @@
 package me.zhengjie.modules.wms.customerOrder.repository;
 
 import me.zhengjie.modules.wms.customerOrder.domain.CustomerOrder;
+import me.zhengjie.modules.wms.customerOrder.domain.CustomerOrderProduct;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
@@ -29,4 +30,15 @@ public interface CustomerOrderRepository extends JpaRepository<CustomerOrder, Lo
      */
     @Query(value = "select * from s_customer_order where customer_order_code = ?1  and status = 1", nativeQuery = true)
     CustomerOrder findByCustomerOrderCodeAndStatusTrue(String customerOrderCode);
+
+
+    /**
+     * 更新客户订单状态
+     * @param procStatus
+     */
+    @Modifying
+    @Query(value = "update s_customer_order set proc_status = 0 where id = ?1", nativeQuery = true)
+    void updateProcStatus(String procStatus);
+
+
 }

@@ -16,6 +16,21 @@ public interface InvoiceProductRepository extends JpaRepository<InvoiceProduct, 
 
     List<InvoiceProduct> findByInvoiceIdAndStatusTrue(Long invoiceId);
 
+    /**
+     * 根据销售发货单编号编号查询所有产品
+     * @param invoicCode
+     * @return
+     */
+    List<InvoiceProduct> findByInvoiceCodeAndStatusTrue(String invoicCode);
+
+    /**
+     * 根据客户订单编号查询所有销售发货单对应的产品
+     * @param customerOrderCode
+     * @return
+     */
+    List<InvoiceProduct> findByCustomerOrderCodeAndStatusTrue(String customerOrderCode);
+
+
     @Modifying
     @Query(value = "update s_invoice_product set status = 0 where invoice_id = ?1", nativeQuery = true)
     void deleteInvoiceProduct(long invoiceId);

@@ -77,6 +77,9 @@ public class Invoice implements Serializable {
     @Column(name = "customer_name")
     private String customerName;
 
+    @Column(name = "pi_ci")
+    private String pici;
+
     public void copy(Invoice source){
         BeanUtil.copyProperties(source,this, CopyOptions.create().setIgnoreNullValue(true));
     }

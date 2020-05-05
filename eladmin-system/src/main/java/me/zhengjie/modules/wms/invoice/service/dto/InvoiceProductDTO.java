@@ -38,6 +38,9 @@ public class InvoiceProductDTO implements Serializable {
     // 订单数量
     private Long customerOrderNumber;
 
+    // 备注：为了前端方便，特意加上这个字段，因为客户订单里面的产品数量用的这个，销售发货单里面改了字段名字叫customerOrderNumber 所以 customerOrderNumber  = productNumber
+    private Long productNumber;
+
     // 实际发货单数量
     private Long actualInvoiceNumber;
 

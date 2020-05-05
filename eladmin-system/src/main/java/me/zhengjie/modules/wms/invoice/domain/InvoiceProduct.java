@@ -76,6 +76,10 @@ public class InvoiceProduct implements Serializable {
     @Column(name = "invoice_id")
     private Long invoiceId;
 
+    // 客户订单编号
+    @Column(name = "customer_order_code")
+    private String customerOrderCode;
+
     public void copy(InvoiceProduct source){
         BeanUtil.copyProperties(source,this, CopyOptions.create().setIgnoreNullValue(true));
     }

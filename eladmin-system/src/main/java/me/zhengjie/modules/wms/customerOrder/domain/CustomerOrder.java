@@ -113,6 +113,10 @@ public class CustomerOrder implements Serializable {
     @Column(name = "complete_status")
     private Boolean completeStatus;
 
+    // 订单进展状态
+    @Column(name = "proc_status")
+    private String procStatus;
+
     public void copy(CustomerOrder source){
         BeanUtil.copyProperties(source,this, CopyOptions.create().setIgnoreNullValue(true));
     }

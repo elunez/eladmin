@@ -226,6 +226,9 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
         }
 
         customerOrder.setTotalMoney(totalMoney);
+        customerOrder.setCompleteStatus(false);
+        // 录入订单的时候是等待发货
+        customerOrder.setProcStatus(ProcStatusEnum.WAIT_SEND_GOOD.getCode());
         customerOrderRepository.save(customerOrder);
         customerOrderProductRepository.saveAll(customerOrderProductList);
 
