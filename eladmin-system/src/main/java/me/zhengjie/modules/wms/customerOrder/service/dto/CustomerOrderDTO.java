@@ -85,6 +85,9 @@ public class CustomerOrderDTO implements Serializable {
     // 订单紧张状态
     private String procStatus;
 
+    // 订单状态名称
+    private String procStatusName;
+
     public void copy(CustomerOrderDTO source){
         BeanUtil.copyProperties(source,this, CopyOptions.create().setIgnoreNullValue(true));
     }

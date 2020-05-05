@@ -73,6 +73,7 @@ public class InvoiceProduct implements Serializable {
     @Column(name = "remark")
     private String remark;
 
+    // 销售发货单id
     @Column(name = "invoice_id")
     private Long invoiceId;
 

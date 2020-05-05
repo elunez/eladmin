@@ -26,8 +26,7 @@ import me.zhengjie.modules.wms.outSourceProductSheet.request.QueryOutSourceProce
 import me.zhengjie.modules.wms.outSourceProductSheet.request.UpdateOutSourceProcessSheetRequest;
 import me.zhengjie.modules.wms.outSourceProductSheet.service.dto.OutSourceProcessSheetProductDTO;
 import me.zhengjie.modules.wms.outSourceProductSheet.service.mapper.OutSourceProcessSheetProductMapper;
-import me.zhengjie.utils.SecurityUtils;
-import me.zhengjie.utils.ValidationUtil;
+import me.zhengjie.utils.*;
 import me.zhengjie.modules.wms.outSourceProductSheet.repository.OutSourceProcessSheetRepository;
 import me.zhengjie.modules.wms.outSourceProductSheet.service.OutSourceProcessSheetService;
 import me.zhengjie.modules.wms.outSourceProductSheet.service.dto.OutSourceProcessSheetDTO;
@@ -52,8 +51,6 @@ import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import me.zhengjie.utils.PageUtil;
-import me.zhengjie.utils.QueryHelp;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
@@ -186,6 +183,7 @@ public class OutSourceProcessSheetServiceImpl implements OutSourceProcessSheetSe
         }
 
         outSourceProcessSheet.setStatus(true);
+        outSourceProcessSheet.setProcStatus(ProcStatusEnum.OUT_SOURCE_ING.getCode());
         // 新增委外加工单
         outSourceProcessSheetRepository.save(outSourceProcessSheet);
 

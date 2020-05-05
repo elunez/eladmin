@@ -216,6 +216,8 @@ public class OutSourceInspectionCertificateServiceImpl implements OutSourceInspe
                 }
                 messageRepository.saveAll(messageList);
             }
+
+            // 修改为外加工单状态
         }catch (Exception e){
             log.error("单据编号:插入消息失败!");
         }

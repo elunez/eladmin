@@ -47,4 +47,9 @@ public class OutSourceProcessSheetDTO implements Serializable {
 
     // 委外加工单产品信息
     private List<OutSourceProcessSheetProductDTO> outSourceProcessSheetProductList;
+
+    // 委外加工单状态
+    private String procStatus;
+
+    private String procStatusName;
 }

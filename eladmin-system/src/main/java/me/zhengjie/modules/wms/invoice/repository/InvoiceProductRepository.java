@@ -21,7 +21,7 @@ public interface InvoiceProductRepository extends JpaRepository<InvoiceProduct, 
      * @param invoicCode
      * @return
      */
-    List<InvoiceProduct> findByInvoiceCodeAndStatusTrue(String invoicCode);
+    List<InvoiceProduct> findByInvoiceIdAndStatusTrue(String invoicCode);
 
     /**
      * 根据客户订单编号查询所有销售发货单对应的产品

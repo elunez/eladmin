@@ -109,6 +109,17 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
                 Predicate statusPredicate = criteriaBuilder.equal(root.get("status"), 1);
                 targetPredicateList.add(statusPredicate);
 
+
+                if(!StringUtils.isEmpty(criteria.getCustomerOrderCode())){
+                    Predicate customerOrderCodePredicate = criteriaBuilder.equal(root.get("customerOrderCode"), criteria.getCustomerOrderCode());
+                    targetPredicateList.add(customerOrderCodePredicate);
+                }
+
+                if(!StringUtils.isEmpty(criteria.getCustomerName())){
+                    Predicate customerNamePredicate = criteriaBuilder.equal(root.get("customerName"), criteria.getCustomerName());
+                    targetPredicateList.add(customerNamePredicate);
+                }
+
                 criteriaQuery.orderBy(criteriaBuilder.desc(root.get("createTime")));
 
                 if(CollectionUtils.isEmpty(targetPredicateList)){
@@ -119,6 +130,7 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
             }
         };
         Page<CustomerOrder> page = customerOrderRepository.findAll(specification, pageable);
+
         Page<CustomerOrderDTO> customerOrderDTOPage = page.map(customerOrderMapper::toDto);
         if(null != customerOrderDTOPage){
             List<CustomerOrderDTO> customerOrderDTOList = customerOrderDTOPage.getContent();
@@ -129,6 +141,12 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
                     Timestamp createTime = customerOrderDTO.getCreateTime();
                     customerOrderDTO.setCreateTimeStr(new SimpleDateFormat("yyyy-MM-dd").format(createTime));
                     customerOrderDTO.setCustomerOrderProductList(customerOrderProductDTOList);
+                    String procStatus = customerOrderDTO.getProcStatus();
+                    ProcStatusEnum procStatusEnum = ProcStatusEnum.getProcStatusEnum(procStatus);
+                    if(null != procStatusEnum){
+                        customerOrderDTO.setProcStatusName(procStatusEnum.getName());
+                    }
+
                 }
             }
         }

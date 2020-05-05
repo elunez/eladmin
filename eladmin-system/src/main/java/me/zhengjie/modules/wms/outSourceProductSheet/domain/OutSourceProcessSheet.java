@@ -62,6 +62,10 @@ OutSourceProcessSheet implements Serializable {
     @Column(name = "out_source_process_sheet_code")
     private String outSourceProcessSheetCode;
 
+    // 委外加工单状态
+    @Column(name = "proc_status")
+    private String procStatus;
+
     public void copy(OutSourceProcessSheet source){
         BeanUtil.copyProperties(source,this, CopyOptions.create().setIgnoreNullValue(true));
     }

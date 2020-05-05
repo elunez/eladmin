@@ -8,6 +8,8 @@ public enum  ProcStatusEnum {
     WAIT_SEND_GOOD("等待发货", "WAIT_SEND_GOOD"),
     SENDING_GOOD("发货中", "SENDING_GOOD"),
     COMPLETED("已完结", "COMPLETED"),
+
+    OUT_SOURCE_ING("委外中", "OUT_SOURCE_ING")
     ;
 
     private String name;
@@ -33,5 +35,15 @@ public enum  ProcStatusEnum {
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    public static ProcStatusEnum getProcStatusEnum(String code) {
+        ProcStatusEnum[] funcEnums = values();
+        for (ProcStatusEnum funcEnum : funcEnums) {
+            if (funcEnum.getCode().equals(code)) {
+                return funcEnum;
+            }
+        }
+        return null;
     }
 }
