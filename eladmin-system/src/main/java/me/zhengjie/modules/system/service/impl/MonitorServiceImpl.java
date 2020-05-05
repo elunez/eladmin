@@ -57,7 +57,7 @@ public class MonitorServiceImpl implements MonitorService {
             // 交换区信息
             resultMap.put("swap", getSwapInfo(hal.getMemory()));
             // 磁盘
-            resultMap.put("disk", getDiskInfo(hal.getDiskStores(), os));
+            resultMap.put("disk", getDiskInfo(os));
             resultMap.put("time", DateUtil.format(new Date(), "HH:mm:ss"));
         } catch (Exception e) {
             e.printStackTrace();
@@ -67,19 +67,10 @@ public class MonitorServiceImpl implements MonitorService {
 
     /**
      * 获取磁盘信息
-     * @param diskStores /
      * @return /
      */
-    private Map<String,Object> getDiskInfo(HWDiskStore[] diskStores, OperatingSystem os) {
+    private Map<String,Object> getDiskInfo(OperatingSystem os) {
         Map<String,Object> diskInfo = new LinkedHashMap<>();
-        long total = 0;
-        for (HWDiskStore disk : diskStores) {
-            boolean readwrite = disk.getReads() > 0 || disk.getWrites() > 0;
-            total = disk.getSize();
-            diskInfo.put("reads", readwrite ? FormatUtil.formatBytes(disk.getReadBytes()) : "?");
-            diskInfo.put("writes", readwrite ? FormatUtil.formatBytes(disk.getWriteBytes()) : "?");
-            break;
-        }
         FileSystem fileSystem = os.getFileSystem();
         OSFileStore[] fsArray = fileSystem.getFileStores();
         for (OSFileStore fs : fsArray){
