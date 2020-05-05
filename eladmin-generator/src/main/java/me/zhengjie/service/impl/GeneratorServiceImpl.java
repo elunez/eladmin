@@ -1,8 +1,24 @@
+/*
+ *  Copyright 2019-2020 Zheng Jie
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
 package me.zhengjie.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ZipUtil;
+import lombok.RequiredArgsConstructor;
 import me.zhengjie.domain.GenConfig;
 import me.zhengjie.domain.ColumnInfo;
 import me.zhengjie.domain.vo.TableInfo;
@@ -33,17 +49,13 @@ import java.util.stream.Collectors;
  * @date 2019-01-02
  */
 @Service
-@SuppressWarnings({"unchecked","all"})
+@RequiredArgsConstructor
 public class GeneratorServiceImpl implements GeneratorService {
 
     @PersistenceContext
     private EntityManager em;
 
     private final ColumnInfoRepository columnInfoRepository;
-
-    public GeneratorServiceImpl(ColumnInfoRepository columnInfoRepository) {
-        this.columnInfoRepository = columnInfoRepository;
-    }
 
     @Override
     public Object getTables() {
@@ -117,7 +129,7 @@ public class GeneratorServiceImpl implements GeneratorService {
         // 第一种情况，数据库类字段改变或者新增字段
         for (ColumnInfo columnInfo : columnInfoList) {
             // 根据字段名称查找
-            List<ColumnInfo> columns = new ArrayList<ColumnInfo>(columnInfos.stream().filter(c-> c.getColumnName().equals(columnInfo.getColumnName())).collect(Collectors.toList()));
+            List<ColumnInfo> columns = columnInfos.stream().filter(c -> c.getColumnName().equals(columnInfo.getColumnName())).collect(Collectors.toList());
             // 如果能找到，就修改部分可能被字段
             if(CollectionUtil.isNotEmpty(columns)){
                 ColumnInfo column = columns.get(0);
@@ -136,7 +148,7 @@ public class GeneratorServiceImpl implements GeneratorService {
         // 第二种情况，数据库字段删除了
         for (ColumnInfo columnInfo : columnInfos) {
             // 根据字段名称查找
-            List<ColumnInfo> columns = new ArrayList<ColumnInfo>(columnInfoList.stream().filter(c-> c.getColumnName().equals(columnInfo.getColumnName())).collect(Collectors.toList()));
+            List<ColumnInfo> columns = columnInfoList.stream().filter(c -> c.getColumnName().equals(columnInfo.getColumnName())).collect(Collectors.toList());
             // 如果找不到，就代表字段被删除了，则需要删除该字段
             if(CollectionUtil.isEmpty(columns)){
                 columnInfoRepository.delete(columnInfo);

@@ -1,8 +1,25 @@
+/*
+ *  Copyright 2019-2020 Zheng Jie
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
 package me.zhengjie.modules.system.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
+import me.zhengjie.base.BaseEntity;
 import org.hibernate.annotations.CreationTimestamp;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -19,61 +36,60 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
-@Table(name = "menu")
-public class Menu implements Serializable {
+@Table(name = "sys_menu")
+public class Menu extends BaseEntity implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "menu_id")
     @NotNull(groups = {Update.class})
+    @ApiModelProperty(value = "ID", hidden = true)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonIgnore
+    @ManyToMany(mappedBy = "menus")
+    @ApiModelProperty(value = "菜单角色")
+    private Set<Role> roles;
+
     @NotBlank
-    private String name;
+    @ApiModelProperty(value = "菜单标题")
+    private String title;
 
-    @Column(unique = true)
-    private Long sort = 999L;
-
-    @Column(name = "path")
-    private String path;
-
-    private String component;
-
-    /** 类型，目录、菜单、按钮 */
-    @Column(name = "type")
-    private Integer type;
-
-    /** 权限 */
-    @Column(name = "permission")
-    private String permission;
-
-    @Column(unique = true,name = "component_name")
+    @Column(name = "name")
+    @ApiModelProperty(value = "菜单组件名称")
     private String componentName;
 
+    @ApiModelProperty(value = "排序")
+    private Integer menuSort = 999;
+
+    @ApiModelProperty(value = "组件路径")
+    private String component;
+
+    @ApiModelProperty(value = "路由地址")
+    private String path;
+
+    @ApiModelProperty(value = "菜单类型，目录、菜单、按钮")
+    private Integer type;
+
+    @ApiModelProperty(value = "权限标识")
+    private String permission;
+
+    @ApiModelProperty(value = "菜单图标")
     private String icon;
 
     @Column(columnDefinition = "bit(1) default 0")
+    @ApiModelProperty(value = "缓存")
     private Boolean cache;
 
     @Column(columnDefinition = "bit(1) default 0")
+    @ApiModelProperty(value = "是否隐藏")
     private Boolean hidden;
 
-    /** 上级菜单ID */
-    @Column(name = "pid",nullable = false)
+    @ApiModelProperty(value = "上级菜单")
     private Long pid;
 
-    /** 是否为外链 true/false */
-    @Column(name = "i_frame")
+    @ApiModelProperty(value = "外链菜单")
     private Boolean iFrame;
-
-    @ManyToMany(mappedBy = "menus")
-    @JsonIgnore
-    private Set<Role> roles;
-
-    @Column(name = "create_time")
-    @CreationTimestamp
-    private Timestamp createTime;
-
-    public @interface Update {}
 
     @Override
     public boolean equals(Object o) {

@@ -1,7 +1,23 @@
+/*
+ *  Copyright 2019-2020 Zheng Jie
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
 package me.zhengjie.modules.mnt.service.impl;
 
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.modules.mnt.domain.App;
@@ -35,28 +51,17 @@ import java.util.*;
  */
 @Slf4j
 @Service
+@RequiredArgsConstructor
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class DeployServiceImpl implements DeployService {
 
 	private final String FILE_SEPARATOR = "/";
-
 	private final DeployRepository deployRepository;
-
 	private final DeployMapper deployMapper;
-
 	private final ServerDeployService serverDeployService;
-
 	private final DeployHistoryService deployHistoryService;
-
 	// 循环次数
 	private final Integer count = 30;
-
-	public DeployServiceImpl(DeployRepository deployRepository, DeployMapper deployMapper, ServerDeployService serverDeployService, DeployHistoryService deployHistoryService) {
-		this.deployRepository = deployRepository;
-		this.deployMapper = deployMapper;
-		this.serverDeployService = serverDeployService;
-		this.deployHistoryService = deployHistoryService;
-	}
 
 
 	@Override

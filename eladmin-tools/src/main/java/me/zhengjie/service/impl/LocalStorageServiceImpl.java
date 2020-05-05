@@ -1,6 +1,22 @@
+/*
+ *  Copyright 2019-2020 Zheng Jie
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
 package me.zhengjie.service.impl;
 
 import cn.hutool.core.util.ObjectUtil;
+import lombok.RequiredArgsConstructor;
 import me.zhengjie.config.FileProperties;
 import me.zhengjie.domain.LocalStorage;
 import me.zhengjie.service.dto.LocalStorageDto;
@@ -22,11 +38,9 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -34,21 +48,15 @@ import javax.servlet.http.HttpServletResponse;
 * @date 2019-09-05
 */
 @Service
+@RequiredArgsConstructor
 @CacheConfig(cacheNames = "localStorage")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class LocalStorageServiceImpl implements LocalStorageService {
 
     private final LocalStorageRepository localStorageRepository;
-
     private final LocalStorageMapper localStorageMapper;
-
     private final FileProperties properties;
 
-    public LocalStorageServiceImpl(LocalStorageRepository localStorageRepository, LocalStorageMapper localStorageMapper, FileProperties properties) {
-        this.localStorageRepository = localStorageRepository;
-        this.localStorageMapper = localStorageMapper;
-        this.properties = properties;
-    }
 
     @Override
     @Cacheable
@@ -90,8 +98,7 @@ public class LocalStorageServiceImpl implements LocalStorageService {
                     suffix,
                     file.getPath(),
                     type,
-                    FileUtil.getSize(multipartFile.getSize()),
-                    SecurityUtils.getCurrentUsername()
+                    FileUtil.getSize(multipartFile.getSize())
             );
             return localStorageMapper.toDto(localStorageRepository.save(localStorage));
         }catch (Exception e){
@@ -130,7 +137,7 @@ public class LocalStorageServiceImpl implements LocalStorageService {
             map.put("备注名", localStorageDTO.getName());
             map.put("文件类型", localStorageDTO.getType());
             map.put("文件大小", localStorageDTO.getSize());
-            map.put("操作人", localStorageDTO.getOperate());
+            map.put("创建者", localStorageDTO.getCreateBy());
             map.put("创建日期", localStorageDTO.getCreateTime());
             list.add(map);
         }

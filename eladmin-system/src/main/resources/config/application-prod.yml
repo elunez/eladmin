@@ -37,12 +37,6 @@ spring:
         url-pattern: /*
         exclusions: "*.js,*.gif,*.jpg,*.bmp,*.png,*.css,*.ico,/druid/*"
 
-  #配置 Jpa
-  jpa:
-    hibernate:
-      # 生产环境设置成 none，避免程序运行时自动更新数据库结构
-      ddl-auto: none
-
 #jwt
 jwt:
   header: Authorization

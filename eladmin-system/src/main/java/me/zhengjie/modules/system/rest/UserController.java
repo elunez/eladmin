@@ -1,12 +1,27 @@
+/*
+ *  Copyright 2019-2020 Zheng Jie
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
 package me.zhengjie.modules.system.rest;
 
 import cn.hutool.crypto.asymmetric.KeyType;
 import cn.hutool.crypto.asymmetric.RSA;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
 import me.zhengjie.aop.log.Log;
 import me.zhengjie.config.DataScope;
-import me.zhengjie.domain.VerificationCode;
 import me.zhengjie.modules.system.domain.User;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.modules.system.domain.vo.UserPassVo;
@@ -15,9 +30,10 @@ import me.zhengjie.modules.system.service.RoleService;
 import me.zhengjie.modules.system.service.dto.RoleSmallDto;
 import me.zhengjie.modules.system.service.dto.UserDto;
 import me.zhengjie.modules.system.service.dto.UserQueryCriteria;
-import me.zhengjie.service.VerificationCodeService;
+import me.zhengjie.modules.system.service.VerifyService;
 import me.zhengjie.utils.*;
 import me.zhengjie.modules.system.service.UserService;
+import me.zhengjie.utils.enums.CodeEnum;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -41,6 +57,7 @@ import java.util.stream.Collectors;
 @Api(tags = "系统：用户管理")
 @RestController
 @RequestMapping("/api/users")
+@RequiredArgsConstructor
 public class UserController {
 
     @Value("${rsa.private_key}")
@@ -50,16 +67,7 @@ public class UserController {
     private final DataScope dataScope;
     private final DeptService deptService;
     private final RoleService roleService;
-    private final VerificationCodeService verificationCodeService;
-
-    public UserController(PasswordEncoder passwordEncoder, UserService userService, DataScope dataScope, DeptService deptService, RoleService roleService, VerificationCodeService verificationCodeService) {
-        this.passwordEncoder = passwordEncoder;
-        this.userService = userService;
-        this.dataScope = dataScope;
-        this.deptService = deptService;
-        this.roleService = roleService;
-        this.verificationCodeService = verificationCodeService;
-    }
+    private final VerifyService verificationCodeService;
 
     @Log("导出用户数据")
     @ApiOperation("导出用户数据")
@@ -187,8 +195,7 @@ public class UserController {
         if(!passwordEncoder.matches(password, userDto.getPassword())){
             throw new BadRequestException("密码错误");
         }
-        VerificationCode verificationCode = new VerificationCode(code, ElAdminConstant.RESET_MAIL,"email",user.getEmail());
-        verificationCodeService.validated(verificationCode);
+        verificationCodeService.validated(CodeEnum.EMAIL_RESET_EMAIL_CODE.getKey() + user.getEmail(), code);
         userService.updateEmail(userDto.getUsername(),user.getEmail());
         return new ResponseEntity<>(HttpStatus.OK);
     }

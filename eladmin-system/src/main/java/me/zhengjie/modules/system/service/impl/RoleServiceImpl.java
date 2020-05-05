@@ -1,5 +1,21 @@
+/*
+ *  Copyright 2019-2020 Zheng Jie
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
 package me.zhengjie.modules.system.service.impl;
 
+import lombok.RequiredArgsConstructor;
 import me.zhengjie.modules.system.domain.Menu;
 import me.zhengjie.modules.system.domain.Role;
 import me.zhengjie.exception.EntityExistException;
@@ -22,7 +38,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
@@ -33,21 +48,14 @@ import java.util.stream.Collectors;
  * @date 2018-12-03
  */
 @Service
+@RequiredArgsConstructor
 @CacheConfig(cacheNames = "role")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class RoleServiceImpl implements RoleService {
 
     private final RoleRepository roleRepository;
-
     private final RoleMapper roleMapper;
-
     private final RoleSmallMapper roleSmallMapper;
-
-    public RoleServiceImpl(RoleRepository roleRepository, RoleMapper roleMapper, RoleSmallMapper roleSmallMapper) {
-        this.roleRepository = roleRepository;
-        this.roleMapper = roleMapper;
-        this.roleSmallMapper = roleSmallMapper;
-    }
 
     @Override
     @Cacheable
@@ -98,16 +106,11 @@ public class RoleServiceImpl implements RoleService {
         if(role1 != null && !role1.getId().equals(role.getId())){
             throw new EntityExistException(Role.class,"username",resources.getName());
         }
-        role1 = roleRepository.findByPermission(resources.getPermission());
-        if(role1 != null && !role1.getId().equals(role.getId())){
-            throw new EntityExistException(Role.class,"permission",resources.getPermission());
-        }
         role.setName(resources.getName());
-        role.setRemark(resources.getRemark());
+        role.setDescription(resources.getDescription());
         role.setDataScope(resources.getDataScope());
         role.setDepts(resources.getDepts());
         role.setLevel(resources.getLevel());
-        role.setPermission(resources.getPermission());
         roleRepository.save(role);
     }
 
@@ -154,13 +157,17 @@ public class RoleServiceImpl implements RoleService {
     @Override
     @Cacheable(key = "'loadPermissionByUser:' + #p0.username")
     public List<GrantedAuthority> mapToGrantedAuthorities(UserDto user) {
+        Set<String> permissions = new HashSet<>();
+        // 如果是管理员直接返回
+        if(user.getIsAdmin()){
+            permissions.add("admin");
+            return permissions.stream().map(SimpleGrantedAuthority::new)
+                    .collect(Collectors.toList());
+        }
         Set<Role> roles = roleRepository.findByUsers_Id(user.getId());
-        Set<String> permissions = roles.stream().filter(role -> StringUtils.isNotBlank(role.getPermission())).map(Role::getPermission).collect(Collectors.toSet());
-        permissions.addAll(
-                roles.stream().flatMap(role -> role.getMenus().stream())
-                        .filter(menu -> StringUtils.isNotBlank(menu.getPermission()))
-                        .map(Menu::getPermission).collect(Collectors.toSet())
-        );
+        permissions = roles.stream().flatMap(role -> role.getMenus().stream())
+                .filter(menu -> StringUtils.isNotBlank(menu.getPermission()))
+                .map(Menu::getPermission).collect(Collectors.toSet());
         return permissions.stream().map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
     }
@@ -171,9 +178,8 @@ public class RoleServiceImpl implements RoleService {
         for (RoleDto role : roles) {
             Map<String,Object> map = new LinkedHashMap<>();
             map.put("角色名称", role.getName());
-            map.put("默认权限", role.getPermission());
             map.put("角色级别", role.getLevel());
-            map.put("描述", role.getRemark());
+            map.put("描述", role.getDescription());
             map.put("创建日期", role.getCreateTime());
             list.add(map);
         }

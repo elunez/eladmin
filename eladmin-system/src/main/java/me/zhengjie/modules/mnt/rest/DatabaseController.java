@@ -1,7 +1,23 @@
+/*
+ *  Copyright 2019-2020 Zheng Jie
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
 package me.zhengjie.modules.mnt.rest;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
 import me.zhengjie.aop.log.Log;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.modules.mnt.domain.Database;
@@ -27,18 +43,14 @@ import java.util.Set;
 * @author zhanghouying
 * @date 2019-08-24
 */
-@Api(tags = "数据库管理")
+@Api(tags = "运维：数据库管理")
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/database")
 public class DatabaseController {
 
-	private String fileSavePath = System.getProperty("java.io.tmpdir");
-
+	private final String fileSavePath = System.getProperty("java.io.tmpdir");
     private final DatabaseService databaseService;
-
-    public DatabaseController(DatabaseService databaseService) {
-        this.databaseService = databaseService;
-    }
 
 	@Log("导出数据库数据")
 	@ApiOperation("导出数据库数据")

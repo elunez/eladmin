@@ -1,7 +1,23 @@
+/*
+ *  Copyright 2019-2020 Zheng Jie
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
 package me.zhengjie.modules.system.service.impl;
 
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import lombok.RequiredArgsConstructor;
 import me.zhengjie.modules.system.domain.Menu;
 import me.zhengjie.modules.system.domain.vo.MenuMetaVo;
 import me.zhengjie.modules.system.domain.vo.MenuVo;
@@ -33,26 +49,18 @@ import java.util.stream.Collectors;
  * @author Zheng Jie
  */
 @Service
+@RequiredArgsConstructor
 @CacheConfig(cacheNames = "menu")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class MenuServiceImpl implements MenuService {
 
     private final MenuRepository menuRepository;
-
     private final MenuMapper menuMapper;
-
     private final RoleService roleService;
-
-    public MenuServiceImpl(MenuRepository menuRepository, MenuMapper menuMapper, RoleService roleService) {
-        this.menuRepository = menuRepository;
-        this.menuMapper = menuMapper;
-        this.roleService = roleService;
-    }
 
     @Override
     @Cacheable
     public List<MenuDto> queryAll(MenuQueryCriteria criteria){
-//        Sort sort = new Sort(Sort.Direction.DESC,"id");
         return menuMapper.toDto(menuRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder)));
     }
 
@@ -67,15 +75,15 @@ public class MenuServiceImpl implements MenuService {
     @Override
     public List<MenuDto> findByRoles(List<RoleSmallDto> roles) {
         Set<Long> roleIds = roles.stream().map(RoleSmallDto::getId).collect(Collectors.toSet());
-        LinkedHashSet<Menu> menus = menuRepository.findByRoles_IdInAndTypeNotOrderBySortAsc(roleIds, 2);
+        LinkedHashSet<Menu> menus = menuRepository.findByRoles_IdInAndTypeNotOrderByMenuSortAsc(roleIds, 2);
         return menus.stream().map(menuMapper::toDto).collect(Collectors.toList());
     }
 
     @Override
     @CacheEvict(allEntries = true)
     public MenuDto create(Menu resources) {
-        if(menuRepository.findByName(resources.getName()) != null){
-            throw new EntityExistException(Menu.class,"name",resources.getName());
+        if(menuRepository.findByTitle(resources.getTitle()) != null){
+            throw new EntityExistException(Menu.class,"title",resources.getTitle());
         }
         if(StringUtils.isNotBlank(resources.getComponentName())){
             if(menuRepository.findByComponentName(resources.getComponentName()) != null){
@@ -106,10 +114,10 @@ public class MenuServiceImpl implements MenuService {
                 throw new BadRequestException("外链必须以http://或者https://开头");
             }
         }
-        Menu menu1 = menuRepository.findByName(resources.getName());
+        Menu menu1 = menuRepository.findByTitle(resources.getTitle());
 
         if(menu1 != null && !menu1.getId().equals(menu.getId())){
-            throw new EntityExistException(Menu.class,"name",resources.getName());
+            throw new EntityExistException(Menu.class,"title",resources.getTitle());
         }
 
         if(StringUtils.isNotBlank(resources.getComponentName())){
@@ -118,13 +126,13 @@ public class MenuServiceImpl implements MenuService {
                 throw new EntityExistException(Menu.class,"componentName",resources.getComponentName());
             }
         }
-        menu.setName(resources.getName());
+        menu.setTitle(resources.getTitle());
         menu.setComponent(resources.getComponent());
         menu.setPath(resources.getPath());
         menu.setIcon(resources.getIcon());
         menu.setIFrame(resources.getIFrame());
         menu.setPid(resources.getPid());
-        menu.setSort(resources.getSort());
+        menu.setMenuSort(resources.getMenuSort());
         menu.setCache(resources.getCache());
         menu.setHidden(resources.getHidden());
         menu.setComponentName(resources.getComponentName());
@@ -165,7 +173,7 @@ public class MenuServiceImpl implements MenuService {
                         List<Menu> menuList = menuRepository.findByPid(menu.getId());
                         Map<String,Object> map = new HashMap<>(16);
                         map.put("id",menu.getId());
-                        map.put("label",menu.getName());
+                        map.put("label",menu.getTitle());
                         if(menuList!=null && menuList.size()!=0){
                             map.put("children",getMenuTree(menuList));
                         }
@@ -216,7 +224,7 @@ public class MenuServiceImpl implements MenuService {
             if (menuDTO!=null){
                 List<MenuDto> menuDtoList = menuDTO.getChildren();
                 MenuVo menuVo = new MenuVo();
-                menuVo.setName(ObjectUtil.isNotEmpty(menuDTO.getComponentName())  ? menuDTO.getComponentName() : menuDTO.getName());
+                menuVo.setName(ObjectUtil.isNotEmpty(menuDTO.getComponentName())  ? menuDTO.getComponentName() : menuDTO.getTitle());
                 // 一级目录需要加斜杠，不然会报警告
                 menuVo.setPath(menuDTO.getPid() == 0 ? "/" + menuDTO.getPath() :menuDTO.getPath());
                 menuVo.setHidden(menuDTO.getHidden());
@@ -228,7 +236,7 @@ public class MenuServiceImpl implements MenuService {
                         menuVo.setComponent(menuDTO.getComponent());
                     }
                 }
-                menuVo.setMeta(new MenuMetaVo(menuDTO.getName(),menuDTO.getIcon(),!menuDTO.getCache()));
+                menuVo.setMeta(new MenuMetaVo(menuDTO.getTitle(),menuDTO.getIcon(),!menuDTO.getCache()));
                 if(menuDtoList !=null && menuDtoList.size()!=0){
                     menuVo.setAlwaysShow(true);
                     menuVo.setRedirect("noredirect");
@@ -271,7 +279,7 @@ public class MenuServiceImpl implements MenuService {
         List<Map<String, Object>> list = new ArrayList<>();
         for (MenuDto menuDTO : menuDtos) {
             Map<String,Object> map = new LinkedHashMap<>();
-            map.put("菜单名称", menuDTO.getName());
+            map.put("菜单标题", menuDTO.getTitle());
             map.put("菜单类型", menuDTO.getType() == 0 ? "目录" : menuDTO.getType() == 1 ? "菜单" : "按钮");
             map.put("权限标识", menuDTO.getPermission());
             map.put("外链菜单", menuDTO.getIFrame() ? "是" : "否");

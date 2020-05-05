@@ -1,12 +1,27 @@
+/*
+ *  Copyright 2019-2020 Zheng Jie
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
 package me.zhengjie.modules.system.domain;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
+import me.zhengjie.base.BaseEntity;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.sql.Timestamp;
 
 /**
 * @author Zheng Jie
@@ -15,34 +30,27 @@ import java.sql.Timestamp;
 @Entity
 @Getter
 @Setter
-@Table(name="dict_detail")
-public class DictDetail implements Serializable {
+@Table(name="sys_dict_detail")
+public class DictDetail extends BaseEntity implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "detail_id")
     @NotNull(groups = Update.class)
+    @ApiModelProperty(value = "ID", hidden = true)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    /** 字典标签 */
-    @Column(name = "label",nullable = false)
-    private String label;
-
-    /** 字典值 */
-    @Column(name = "value",nullable = false)
-    private String value;
-
-    /** 排序 */
-    @Column(name = "sort")
-    private Integer sort = 999;
-
-    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "dict_id")
+    @ManyToOne(fetch=FetchType.LAZY)
+    @ApiModelProperty(value = "字典", hidden = true)
     private Dict dict;
 
-    @Column(name = "create_time")
-    @CreationTimestamp
-    private Timestamp createTime;
+    @ApiModelProperty(value = "字典标签")
+    private String label;
 
-    public @interface Update {}
+    @ApiModelProperty(value = "字典值")
+    private String value;
+
+    @ApiModelProperty(value = "排序")
+    private Integer dictSort = 999;
 }

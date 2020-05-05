@@ -1,23 +1,36 @@
+/*
+ *  Copyright 2019-2020 Zheng Jie
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
 package me.zhengjie.modules.system.rest;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
 import me.zhengjie.aop.log.Log;
 import me.zhengjie.modules.system.domain.Menu;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.modules.system.service.MenuService;
 import me.zhengjie.modules.system.service.RoleService;
-import me.zhengjie.modules.system.service.UserService;
 import me.zhengjie.modules.system.service.dto.MenuDto;
 import me.zhengjie.modules.system.service.dto.MenuQueryCriteria;
-import me.zhengjie.modules.system.service.dto.UserDto;
 import me.zhengjie.utils.SecurityUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashSet;
@@ -28,25 +41,17 @@ import java.util.Set;
  * @author Zheng Jie
  * @date 2018-12-03
  */
-@Api(tags = "系统：菜单管理")
+
 @RestController
+@RequiredArgsConstructor
+@Api(tags = "系统：菜单管理")
 @RequestMapping("/api/menus")
 @SuppressWarnings("unchecked")
 public class MenuController {
 
     private final MenuService menuService;
-
-    private final UserService userService;
-
     private final RoleService roleService;
-
     private static final String ENTITY_NAME = "menu";
-
-    public MenuController(MenuService menuService, UserService userService, RoleService roleService) {
-        this.menuService = menuService;
-        this.userService = userService;
-        this.roleService = roleService;
-    }
 
     @Log("导出菜单数据")
     @ApiOperation("导出菜单数据")

@@ -1,7 +1,23 @@
+/*
+ *  Copyright 2019-2020 Zheng Jie
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
 package me.zhengjie.modules.system.rest;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
 import me.zhengjie.aop.log.Log;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.modules.system.domain.Dict;
@@ -13,7 +29,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Set;
@@ -22,18 +37,14 @@ import java.util.Set;
 * @author Zheng Jie
 * @date 2019-04-10
 */
-@Api(tags = "系统：字典管理")
 @RestController
+@RequiredArgsConstructor
+@Api(tags = "系统：字典管理")
 @RequestMapping("/api/dict")
 public class DictController {
 
     private final DictService dictService;
-
     private static final String ENTITY_NAME = "dict";
-
-    public DictController(DictService dictService) {
-        this.dictService = dictService;
-    }
 
     @Log("导出字典数据")
     @ApiOperation("导出字典数据")
@@ -55,7 +66,7 @@ public class DictController {
     @ApiOperation("查询字典")
     @GetMapping
     @PreAuthorize("@el.check('dict:list')")
-    public ResponseEntity<Object> getDicts(DictQueryCriteria resources, Pageable pageable){
+    public ResponseEntity<Object> getByQuery(DictQueryCriteria resources, Pageable pageable){
         return new ResponseEntity<>(dictService.queryAll(resources,pageable),HttpStatus.OK);
     }
 

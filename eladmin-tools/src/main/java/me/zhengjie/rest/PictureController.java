@@ -1,7 +1,23 @@
+/*
+ *  Copyright 2019-2020 Zheng Jie
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
 package me.zhengjie.rest;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
 import me.zhengjie.aop.log.Log;
 import me.zhengjie.domain.Picture;
 import me.zhengjie.service.PictureService;
@@ -21,15 +37,12 @@ import java.io.IOException;
  * @date 2018/09/20 14:13:32
  */
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/pictures")
 @Api(tags = "工具：免费图床管理")
 public class PictureController {
 
     private final PictureService pictureService;
-
-    public PictureController(PictureService pictureService) {
-        this.pictureService = pictureService;
-    }
 
     @Log("查询图片")
     @PreAuthorize("@el.check('pictures:list')")

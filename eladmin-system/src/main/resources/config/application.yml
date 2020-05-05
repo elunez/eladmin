@@ -17,6 +17,7 @@ spring:
   jpa:
     properties:
       hibernate:
+        ddl-auto: none
         dialect: org.hibernate.dialect.MySQL5InnoDBDialect
     open-in-view: true
 
@@ -45,9 +46,9 @@ qiniu:
   # 文件大小 /M
   max-size: 15
 
-#邮箱验证码有效时间/分钟
+#邮箱验证码有效时间/秒
 code:
-  expiration: 5
+  expiration: 300
 
 #登录图形验证码有效时间/分钟
 loginCode:

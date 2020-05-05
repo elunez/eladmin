@@ -1,3 +1,18 @@
+/*
+ *  Copyright 2019-2020 Zheng Jie
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
 package me.zhengjie.service.impl;
 
 import com.alibaba.fastjson.JSON;
@@ -9,6 +24,7 @@ import com.qiniu.storage.UploadManager;
 import com.qiniu.storage.model.DefaultPutRet;
 import com.qiniu.storage.model.FileInfo;
 import com.qiniu.util.Auth;
+import lombok.RequiredArgsConstructor;
 import me.zhengjie.domain.QiniuConfig;
 import me.zhengjie.domain.QiniuContent;
 import me.zhengjie.repository.QiniuContentRepository;
@@ -40,18 +56,13 @@ import java.util.*;
  * @date 2018-12-31
  */
 @Service
+@RequiredArgsConstructor
 @CacheConfig(cacheNames = "qiNiu")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class QiNiuServiceImpl implements QiNiuService {
 
     private final QiNiuConfigRepository qiNiuConfigRepository;
-
     private final QiniuContentRepository qiniuContentRepository;
-
-    public QiNiuServiceImpl(QiNiuConfigRepository qiNiuConfigRepository, QiniuContentRepository qiniuContentRepository) {
-        this.qiNiuConfigRepository = qiNiuConfigRepository;
-        this.qiniuContentRepository = qiniuContentRepository;
-    }
 
     @Value("${qiniu.max-size}")
     private Long maxSize;
