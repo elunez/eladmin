@@ -15,6 +15,7 @@
  */
 package me.zhengjie.modules.security.security;
 
+import cn.hutool.core.util.StrUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -47,24 +48,22 @@ public class TokenFilter extends GenericFilterBean {
       throws IOException, ServletException {
       HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
       String token = resolveToken(httpServletRequest);
-      String requestRri = httpServletRequest.getRequestURI();
-      // 验证 token 是否存在
-      OnlineUserDto onlineUserDto = null;
-      SecurityProperties properties = SpringContextHolder.getBean(SecurityProperties.class);
-      try {
-         OnlineUserService onlineUserService = SpringContextHolder.getBean(OnlineUserService.class);
-         onlineUserDto = onlineUserService.getOne(properties.getOnlineKey() + token);
-      } catch (ExpiredJwtException e) {
-         log.error(e.getMessage());
-      }
-      if (onlineUserDto != null && StringUtils.hasText(token)) {
-         Authentication authentication = tokenProvider.getAuthentication(token);
-         SecurityContextHolder.getContext().setAuthentication(authentication);
-         // Token 续期
-         tokenProvider.checkRenewal(token);
-         log.debug("set Authentication to security context for '{}', uri: {}", authentication.getName(), requestRri);
-      } else {
-         log.debug("no valid JWT token found, uri: {}", requestRri);
+      // 对于 Token 为空的不需要去查 Redis
+      if(StrUtil.isNotBlank(token)){
+         OnlineUserDto onlineUserDto = null;
+         SecurityProperties properties = SpringContextHolder.getBean(SecurityProperties.class);
+         try {
+            OnlineUserService onlineUserService = SpringContextHolder.getBean(OnlineUserService.class);
+            onlineUserDto = onlineUserService.getOne(properties.getOnlineKey() + token);
+         } catch (ExpiredJwtException e) {
+            log.error(e.getMessage());
+         }
+         if (onlineUserDto != null && StringUtils.hasText(token)) {
+            Authentication authentication = tokenProvider.getAuthentication(token);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            // Token 续期
+            tokenProvider.checkRenewal(token);
+         }
       }
       filterChain.doFilter(servletRequest, servletResponse);
    }
