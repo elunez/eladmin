@@ -44,13 +44,13 @@
             <#elseif column.formType = 'Textarea'>
             <el-input :rows="3" v-model="form.${column.changeColumnName}" type="textarea" style="width: 370px;" />
             <#elseif column.formType = 'Radio'>
-              <#if column.dictName??>
+              <#if (column.dictName)?? && (column.dictName)!="">
             <el-radio v-for="item in dict.${column.dictName}" :key="item.id" v-model="form.${column.changeColumnName}" :label="item.value">{{ item.label }}</el-radio>
               <#else>
                 未设置字典，请手动设置 Radio
               </#if>
             <#elseif column.formType = 'Select'>
-              <#if column.dictName??>
+              <#if (column.dictName)?? && (column.dictName)!="">
             <el-select v-model="form.${column.changeColumnName}" filterable placeholder="请选择">
               <el-option
                 v-for="item in dict.${column.dictName}"
@@ -80,7 +80,7 @@
         <#if columns??>
             <#list columns as column>
             <#if column.columnShow>
-          <#if column.dictName??>
+          <#if (column.dictName)?? && (column.dictName)!="">
         <el-table-column prop="${column.changeColumnName}" label="<#if column.remark != ''>${column.remark}<#else>${column.changeColumnName}</#if>">
           <template slot-scope="scope">
             {{ dict.label.${column.dictName}[scope.row.${column.changeColumnName}] }}
