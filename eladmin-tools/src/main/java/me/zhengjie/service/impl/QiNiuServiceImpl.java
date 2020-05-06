@@ -119,15 +119,19 @@ public class QiNiuServiceImpl implements QiNiuService {
             //解析上传成功的结果
 
             DefaultPutRet putRet = JSON.parseObject(response.bodyString(), DefaultPutRet.class);
-            //存入数据库
-            QiniuContent qiniuContent = new QiniuContent();
-            qiniuContent.setSuffix(FileUtil.getExtensionName(putRet.key));
-            qiniuContent.setBucket(qiniuConfig.getBucket());
-            qiniuContent.setType(qiniuConfig.getType());
-            qiniuContent.setKey(FileUtil.getFileNameNoEx(putRet.key));
-            qiniuContent.setUrl(qiniuConfig.getHost()+"/"+putRet.key);
-            qiniuContent.setSize(FileUtil.getSize(Integer.parseInt(file.getSize()+"")));
-            return qiniuContentRepository.save(qiniuContent);
+            QiniuContent content = qiniuContentRepository.findByKey(FileUtil.getFileNameNoEx(putRet.key));
+            if(content == null){
+                //存入数据库
+                QiniuContent qiniuContent = new QiniuContent();
+                qiniuContent.setSuffix(FileUtil.getExtensionName(putRet.key));
+                qiniuContent.setBucket(qiniuConfig.getBucket());
+                qiniuContent.setType(qiniuConfig.getType());
+                qiniuContent.setKey(FileUtil.getFileNameNoEx(putRet.key));
+                qiniuContent.setUrl(qiniuConfig.getHost()+"/"+putRet.key);
+                qiniuContent.setSize(FileUtil.getSize(Integer.parseInt(file.getSize()+"")));
+                return qiniuContentRepository.save(qiniuContent);
+            }
+            return content;
         } catch (Exception e) {
            throw new BadRequestException(e.getMessage());
         }

@@ -135,7 +135,7 @@ public class PictureServiceImpl implements PictureService {
             if(!pictureRepository.existsByUrl(picture.getUrl())){
                 picture.setSize(FileUtil.getSize(Integer.parseInt(picture.getSize())));
                 picture.setUsername("System Sync");
-                picture.setMd5Code("");
+                picture.setMd5Code(null);
                 pictureRepository.save(picture);
             }
         }
