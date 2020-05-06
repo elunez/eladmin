@@ -48,6 +48,6 @@ public interface RoleRepository extends JpaRepository<Role, Long>, JpaSpecificat
      * @param id 菜单ID
      */
     @Modifying
-    @Query(value = "delete from roles_menus where menu_id = ?1",nativeQuery = true)
+    @Query(value = "delete from sys_roles_menus where menu_id = ?1",nativeQuery = true)
     void untiedMenu(Long id);
 }
