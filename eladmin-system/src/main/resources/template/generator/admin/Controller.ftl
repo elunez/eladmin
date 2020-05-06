@@ -20,6 +20,7 @@ import ${package}.domain.${className};
 import ${package}.service.${className}Service;
 import ${package}.service.dto.${className}QueryCriteria;
 import org.springframework.data.domain.Pageable;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -35,16 +36,13 @@ import javax.servlet.http.HttpServletResponse;
 * @author ${author}
 * @date ${date}
 **/
-@Api(tags = "${apiAlias}管理")
 @RestController
+@RequiredArgsConstructor
+@Api(tags = "${apiAlias}管理")
 @RequestMapping("/api/${changeClassName}")
 public class ${className}Controller {
 
     private final ${className}Service ${changeClassName}Service;
-
-    public ${className}Controller(${className}Service ${changeClassName}Service) {
-        this.${changeClassName}Service = ${changeClassName}Service;
-    }
 
     @Log("导出数据")
     @ApiOperation("导出数据")

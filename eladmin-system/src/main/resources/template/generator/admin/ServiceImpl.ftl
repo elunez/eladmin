@@ -27,6 +27,7 @@ import me.zhengjie.exception.EntityExistException;
 </#if>
 import me.zhengjie.utils.ValidationUtil;
 import me.zhengjie.utils.FileUtil;
+import lombok.RequiredArgsConstructor;
 import ${package}.repository.${className}Repository;
 import ${package}.service.${className}Service;
 import ${package}.service.dto.${className}Dto;
@@ -60,17 +61,12 @@ import java.util.LinkedHashMap;
 * @date ${date}
 **/
 @Service
+@RequiredArgsConstructor
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class ${className}ServiceImpl implements ${className}Service {
 
     private final ${className}Repository ${changeClassName}Repository;
-
     private final ${className}Mapper ${changeClassName}Mapper;
-
-    public ${className}ServiceImpl(${className}Repository ${changeClassName}Repository, ${className}Mapper ${changeClassName}Mapper) {
-        this.${changeClassName}Repository = ${changeClassName}Repository;
-        this.${changeClassName}Mapper = ${changeClassName}Mapper;
-    }
 
     @Override
     public Map<String,Object> queryAll(${className}QueryCriteria criteria, Pageable pageable){
