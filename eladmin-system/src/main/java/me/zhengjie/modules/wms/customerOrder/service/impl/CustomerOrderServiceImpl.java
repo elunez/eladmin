@@ -111,12 +111,12 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
 
 
                 if(!StringUtils.isEmpty(criteria.getCustomerOrderCode())){
-                    Predicate customerOrderCodePredicate = criteriaBuilder.equal(root.get("customerOrderCode"), criteria.getCustomerOrderCode());
+                    Predicate customerOrderCodePredicate = criteriaBuilder.like(root.get("customerOrderCode").as(String.class), "%" + criteria.getCustomerOrderCode() + "%");
                     targetPredicateList.add(customerOrderCodePredicate);
                 }
 
                 if(!StringUtils.isEmpty(criteria.getCustomerName())){
-                    Predicate customerNamePredicate = criteriaBuilder.equal(root.get("customerName"), criteria.getCustomerName());
+                    Predicate customerNamePredicate = criteriaBuilder.like(root.get("customerName").as(String.class), "%" + criteria.getCustomerName() + "%");
                     targetPredicateList.add(customerNamePredicate);
                 }
 

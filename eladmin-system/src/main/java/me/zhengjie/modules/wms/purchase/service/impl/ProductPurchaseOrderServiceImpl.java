@@ -95,6 +95,12 @@ public class ProductPurchaseOrderServiceImpl implements ProductPurchaseOrderServ
                 Predicate statusPredicate = criteriaBuilder.equal(root.get("status"), 1);
                 targetPredicateList.add(statusPredicate);
 
+                if(!me.zhengjie.utils.StringUtils.isEmpty(criteria.getProductPurchaseOrderCode())){
+                    Predicate customerOrderCodePredicate = criteriaBuilder.like(root.get("productPurchaseOrderCode").as(String.class), "%" + criteria.getProductPurchaseOrderCode() + "%");
+                    targetPredicateList.add(customerOrderCodePredicate);
+                }
+
+
                 if(CollectionUtils.isEmpty(targetPredicateList)){
                     return null;
                 }else{

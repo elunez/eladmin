@@ -102,6 +102,11 @@ public class QualityCheckSheetServiceImpl implements QualityCheckSheetService {
                 Predicate statusPredicate = criteriaBuilder.equal(root.get("status"), 1);
                 targetPredicateList.add(statusPredicate);
 
+                if(!me.zhengjie.utils.StringUtils.isEmpty(criteria.getQualityCheekSheetCode())){
+                    Predicate customerOrderCodePredicate = criteriaBuilder.like(root.get("qualityCheekSheetCode").as(String.class), "%" + criteria.getQualityCheekSheetCode() + "%");
+                    targetPredicateList.add(customerOrderCodePredicate);
+                }
+
                 criteriaQuery.orderBy(criteriaBuilder.desc(root.get("createTime")));
 
                 if(CollectionUtils.isEmpty(targetPredicateList)){

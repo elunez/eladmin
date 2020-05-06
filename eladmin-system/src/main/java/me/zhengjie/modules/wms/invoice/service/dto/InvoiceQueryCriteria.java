@@ -10,4 +10,10 @@ import me.zhengjie.annotation.Query;
 */
 @Data
 public class InvoiceQueryCriteria {
+
+    // 客户订单编号
+    private String customerOrderCode;
+
+    // 客户名称
+    private String customerName;
 }

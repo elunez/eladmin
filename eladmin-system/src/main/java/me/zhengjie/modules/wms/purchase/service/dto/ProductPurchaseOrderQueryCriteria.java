@@ -10,4 +10,7 @@ import me.zhengjie.annotation.Query;
 */
 @Data
 public class ProductPurchaseOrderQueryCriteria{
+
+    // 采购单据编号
+    private String productPurchaseOrderCode;
 }

@@ -100,6 +100,21 @@ public class OutSourceProcessSheetServiceImpl implements OutSourceProcessSheetSe
 
                 criteriaQuery.orderBy(criteriaBuilder.desc(root.get("createTime")));
 
+                if(!me.zhengjie.utils.StringUtils.isEmpty(criteria.getOutSourceAdminName())){
+                    Predicate customerOrderCodePredicate = criteriaBuilder.like(root.get("outSourceProcessSheetCode").as(String.class), "%" + criteria.getOutSourceAdminName() + "%");
+                    targetPredicateList.add(customerOrderCodePredicate);
+                }
+
+                if(!me.zhengjie.utils.StringUtils.isEmpty(criteria.getOutSourceCompanyName())){
+                    Predicate customerOrderCodePredicate = criteriaBuilder.like(root.get("outSourceCompanyName").as(String.class), "%" + criteria.getOutSourceCompanyName() + "%");
+                    targetPredicateList.add(customerOrderCodePredicate);
+                }
+
+                if(!me.zhengjie.utils.StringUtils.isEmpty(criteria.getOutSourceProcessSheetCode())){
+                    Predicate customerOrderCodePredicate = criteriaBuilder.like(root.get("outSourceProcessSheetCode").as(String.class), "%" + criteria.getOutSourceProcessSheetCode() + "%");
+                    targetPredicateList.add(customerOrderCodePredicate);
+                }
+
                 if(CollectionUtils.isEmpty(targetPredicateList)){
                     return null;
                 }else{

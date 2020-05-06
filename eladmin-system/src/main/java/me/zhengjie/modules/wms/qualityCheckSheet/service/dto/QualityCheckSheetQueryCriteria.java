@@ -10,4 +10,8 @@ import me.zhengjie.annotation.Query;
 */
 @Data
 public class QualityCheckSheetQueryCriteria{
+
+    // 质量检验单单据编号
+    private String qualityCheekSheetCode;
+
 }

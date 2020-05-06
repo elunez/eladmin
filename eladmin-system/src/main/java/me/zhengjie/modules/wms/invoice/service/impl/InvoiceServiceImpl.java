@@ -112,6 +112,17 @@ public class InvoiceServiceImpl implements InvoiceService {
                 Predicate statusPredicate = criteriaBuilder.equal(root.get("status"), 1);
                 targetPredicateList.add(statusPredicate);
 
+
+                if(!me.zhengjie.utils.StringUtils.isEmpty(criteria.getCustomerOrderCode())){
+                    Predicate customerOrderCodePredicate = criteriaBuilder.like(root.get("customerOrderCode").as(String.class), "%" + criteria.getCustomerOrderCode() + "%");
+                    targetPredicateList.add(customerOrderCodePredicate);
+                }
+
+                if(!me.zhengjie.utils.StringUtils.isEmpty(criteria.getCustomerName())){
+                    Predicate customerNamePredicate = criteriaBuilder.like(root.get("customerName").as(String.class),"%" +  criteria.getCustomerName() + "%");
+                    targetPredicateList.add(customerNamePredicate);
+                }
+
                 criteriaQuery.orderBy(criteriaBuilder.desc(root.get("createTime")));
 
                 if(CollectionUtils.isEmpty(targetPredicateList)){
