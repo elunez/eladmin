@@ -50,16 +50,18 @@ public class TokenFilter extends GenericFilterBean {
       String requestRri = httpServletRequest.getRequestURI();
       // 验证 token 是否存在
       OnlineUserDto onlineUserDto = null;
+      SecurityProperties properties = SpringContextHolder.getBean(SecurityProperties.class);
       try {
-         SecurityProperties properties = SpringContextHolder.getBean(SecurityProperties.class);
          OnlineUserService onlineUserService = SpringContextHolder.getBean(OnlineUserService.class);
          onlineUserDto = onlineUserService.getOne(properties.getOnlineKey() + token);
       } catch (ExpiredJwtException e) {
          log.error(e.getMessage());
       }
-      if (onlineUserDto != null && StringUtils.hasText(token) && tokenProvider.validateToken(token)) {
+      if (onlineUserDto != null && StringUtils.hasText(token)) {
          Authentication authentication = tokenProvider.getAuthentication(token);
          SecurityContextHolder.getContext().setAuthentication(authentication);
+         // Token 续期
+         tokenProvider.checkRenewal(token);
          log.debug("set Authentication to security context for '{}', uri: {}", authentication.getName(), requestRri);
       } else {
          log.debug("no valid JWT token found, uri: {}", requestRri);

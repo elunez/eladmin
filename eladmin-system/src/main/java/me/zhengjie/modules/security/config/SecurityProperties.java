@@ -18,7 +18,6 @@ package me.zhengjie.modules.security.config;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Component;
 
 /**
  * Jwt参数配置
@@ -47,6 +46,12 @@ public class SecurityProperties {
 
     /** 验证码 key */
     private String codeKey;
+
+    /** token 续期检查 */
+    private Long detect;
+
+    /** 续期时间 */
+    private Long renew;
 
     public String getTokenStartWith() {
         return tokenStartWith + " ";
