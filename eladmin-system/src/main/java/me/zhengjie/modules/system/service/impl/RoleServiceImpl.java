@@ -15,10 +15,13 @@
  */
 package me.zhengjie.modules.system.service.impl;
 
+import cn.hutool.core.collection.CollectionUtil;
 import lombok.RequiredArgsConstructor;
+import me.zhengjie.modules.system.domain.Dept;
 import me.zhengjie.modules.system.domain.Menu;
 import me.zhengjie.modules.system.domain.Role;
 import me.zhengjie.exception.EntityExistException;
+import me.zhengjie.modules.system.repository.DeptRepository;
 import me.zhengjie.modules.system.repository.RoleRepository;
 import me.zhengjie.modules.system.service.RoleService;
 import me.zhengjie.modules.system.service.dto.RoleDto;
@@ -28,6 +31,7 @@ import me.zhengjie.modules.system.service.dto.UserDto;
 import me.zhengjie.modules.system.service.mapper.RoleMapper;
 import me.zhengjie.modules.system.service.mapper.RoleSmallMapper;
 import me.zhengjie.utils.*;
+import me.zhengjie.utils.enums.DataScopeEnum;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -56,6 +60,7 @@ public class RoleServiceImpl implements RoleService {
     private final RoleRepository roleRepository;
     private final RoleMapper roleMapper;
     private final RoleSmallMapper roleSmallMapper;
+    private final DeptRepository deptRepository;
 
     @Override
     @Cacheable
@@ -91,6 +96,7 @@ public class RoleServiceImpl implements RoleService {
         if(roleRepository.findByName(resources.getName()) != null){
             throw new EntityExistException(Role.class,"username",resources.getName());
         }
+        checkDataScope(resources);
         return roleMapper.toDto(roleRepository.save(resources));
     }
 
@@ -106,12 +112,26 @@ public class RoleServiceImpl implements RoleService {
         if(role1 != null && !role1.getId().equals(role.getId())){
             throw new EntityExistException(Role.class,"username",resources.getName());
         }
+        checkDataScope(resources);
         role.setName(resources.getName());
         role.setDescription(resources.getDescription());
         role.setDataScope(resources.getDataScope());
         role.setDepts(resources.getDepts());
         role.setLevel(resources.getLevel());
         roleRepository.save(role);
+    }
+
+    private void checkDataScope(Role resources){
+        if(CollectionUtil.isNotEmpty(resources.getDepts()) && resources.getDepts().size() == 1){
+            for (Dept dept : resources.getDepts()) {
+                dept = deptRepository.findById(dept.getId()).orElseGet(Dept::new);
+                if(dept.getPid() == 0 || dept.getPid() == null){
+                    resources.setDepts(null);
+                    resources.setDataScope(DataScopeEnum.ALL.getValue());
+                }
+            }
+        }
+
     }
 
     @Override

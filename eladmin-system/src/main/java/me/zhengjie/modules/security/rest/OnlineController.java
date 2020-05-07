@@ -18,7 +18,7 @@ package me.zhengjie.modules.security.rest;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import me.zhengjie.aop.log.Log;
+import me.zhengjie.annotation.Log;
 import me.zhengjie.modules.security.service.OnlineUserService;
 import me.zhengjie.utils.EncryptUtils;
 import org.springframework.data.domain.Pageable;

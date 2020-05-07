@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.exception.EntityNotFoundException;
 import me.zhengjie.modules.security.service.dto.JwtUserDto;
+import me.zhengjie.modules.system.service.DataService;
 import me.zhengjie.modules.system.service.RoleService;
 import me.zhengjie.modules.system.service.UserService;
 import me.zhengjie.modules.system.service.dto.UserDto;
@@ -39,6 +40,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     private final UserService userService;
     private final RoleService roleService;
+    private final DataService dataService;
 
     @Override
     public JwtUserDto loadUserByUsername(String username) {
@@ -57,6 +59,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             }
             return new JwtUserDto(
                     user,
+                    dataService.getDeptIds(user),
                     roleService.mapToGrantedAuthorities(user)
             );
         }

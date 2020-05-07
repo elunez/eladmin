@@ -33,10 +33,12 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class JwtUserDto implements UserDetails {
 
-    private UserDto user;
+    private final UserDto user;
+
+    private final List<Long> dataScopes;
 
     @JsonIgnore
-    private List<GrantedAuthority> authorities;
+    private final List<GrantedAuthority> authorities;
 
     public Set<String> getRoles() {
         return authorities.stream().map(GrantedAuthority::getAuthority).collect(Collectors.toSet());

@@ -18,7 +18,7 @@ package me.zhengjie.rest;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import me.zhengjie.aop.log.Log;
+import me.zhengjie.annotation.Log;
 import me.zhengjie.service.LogService;
 import me.zhengjie.service.dto.LogQueryCriteria;
 import me.zhengjie.utils.SecurityUtils;

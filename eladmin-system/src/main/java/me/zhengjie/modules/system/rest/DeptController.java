@@ -19,8 +19,7 @@ import cn.hutool.core.collection.CollectionUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import me.zhengjie.aop.log.Log;
-import me.zhengjie.config.DataScope;
+import me.zhengjie.annotation.Log;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.modules.system.domain.Dept;
 import me.zhengjie.modules.system.service.DeptService;
@@ -49,7 +48,6 @@ import java.util.Set;
 public class DeptController {
 
     private final DeptService deptService;
-    private final DataScope dataScope;
     private static final String ENTITY_NAME = "dept";
 
     @Log("导出部门数据")
@@ -65,8 +63,6 @@ public class DeptController {
     @GetMapping
     @PreAuthorize("@el.check('user:list','dept:list')")
     public ResponseEntity<Object> getDepts(DeptQueryCriteria criteria){
-        // 数据权限
-        criteria.setIds(dataScope.getDeptIds());
         List<DeptDto> deptDtos = deptService.queryAll(criteria);
         return new ResponseEntity<>(deptService.buildTree(deptDtos),HttpStatus.OK);
     }

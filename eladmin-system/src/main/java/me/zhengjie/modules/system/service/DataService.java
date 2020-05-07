@@ -13,31 +13,31 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package me.zhengjie.modules.system.service.dto;
+package me.zhengjie.modules.system.service;
 
-import lombok.Data;
-import me.zhengjie.annotation.DataPermission;
-import me.zhengjie.annotation.Query;
-import java.sql.Timestamp;
+import me.zhengjie.modules.system.domain.Dept;
+import me.zhengjie.modules.system.service.dto.UserDto;
+
 import java.util.List;
 
 /**
-* @author Zheng Jie
-* @date 2019-03-25
-*/
-@Data
-@DataPermission(fieldName = "id")
-public class DeptQueryCriteria{
+ * 数据权限服务类
+ * @author Zheng Jie
+ * @date 2020-05-07
+ */
+public interface DataService {
 
-    @Query(type = Query.Type.INNER_LIKE)
-    private String name;
+    /**
+     * 获取数据权限
+     * @param user /
+     * @return /
+     */
+    List<Long> getDeptIds(UserDto user);
 
-    @Query
-    private Boolean enabled;
-
-    @Query
-    private Long pid;
-
-    @Query(type = Query.Type.BETWEEN)
-    private List<Timestamp> createTime;
+    /**
+     * 递归获取子级部门
+     * @param deptList /
+     * @return /
+     */
+    List<Long> getDeptChildren(List<Dept> deptList);
 }

@@ -16,7 +16,7 @@
 package me.zhengjie.rest;
 
 import lombok.RequiredArgsConstructor;
-import me.zhengjie.aop.log.Log;
+import me.zhengjie.annotation.Log;
 import me.zhengjie.domain.LocalStorage;
 import me.zhengjie.service.LocalStorageService;
 import me.zhengjie.service.dto.LocalStorageQueryCriteria;

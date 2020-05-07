@@ -15,13 +15,14 @@
  */
 package me.zhengjie.modules.system.rest;
 
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.crypto.asymmetric.KeyType;
 import cn.hutool.crypto.asymmetric.RSA;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import me.zhengjie.aop.log.Log;
-import me.zhengjie.config.DataScope;
+import me.zhengjie.annotation.Log;
+import me.zhengjie.modules.system.service.DataService;
 import me.zhengjie.modules.system.domain.User;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.modules.system.domain.vo.UserPassVo;
@@ -64,7 +65,7 @@ public class UserController {
     private String privateKey;
     private final PasswordEncoder passwordEncoder;
     private final UserService userService;
-    private final DataScope dataScope;
+    private final DataService dataService;
     private final DeptService deptService;
     private final RoleService roleService;
     private final VerifyService verificationCodeService;
@@ -82,33 +83,25 @@ public class UserController {
     @GetMapping
     @PreAuthorize("@el.check('user:list')")
     public ResponseEntity<Object> getUsers(UserQueryCriteria criteria, Pageable pageable){
-        Set<Long> deptSet = new HashSet<>();
-        Set<Long> result = new HashSet<>();
         if (!ObjectUtils.isEmpty(criteria.getDeptId())) {
-            deptSet.add(criteria.getDeptId());
-            deptSet.addAll(dataScope.getDeptChildren(deptService.findByPid(criteria.getDeptId())));
+            criteria.getDeptIds().add(criteria.getDeptId());
+            criteria.getDeptIds().addAll(dataService.getDeptChildren(deptService.findByPid(criteria.getDeptId())));
         }
         // 数据权限
-        Set<Long> deptIds = dataScope.getDeptIds();
-        // 查询条件不为空并且数据权限不为空则取交集
-        if (!CollectionUtils.isEmpty(deptIds) && !CollectionUtils.isEmpty(deptSet)){
+        List<Long> dataScopes = dataService.getDeptIds(userService.findById(SecurityUtils.getCurrentUserId()));
+        // criteria.getDeptIds() 不为空并且数据权限不为空则取交集
+        if (!CollectionUtils.isEmpty(criteria.getDeptIds()) && !CollectionUtils.isEmpty(dataScopes)){
             // 取交集
-            result.addAll(deptSet);
-            result.retainAll(deptIds);
-            // 若无交集，则代表无数据权限
-            criteria.setDeptIds(result);
-            if(result.size() == 0){
-                return new ResponseEntity<>(PageUtil.toPage(null,0),HttpStatus.OK);
-            } else {
+            criteria.getDeptIds().retainAll(dataScopes);
+            if(!CollectionUtil.isEmpty(criteria.getDeptIds())){
                 return new ResponseEntity<>(userService.queryAll(criteria,pageable),HttpStatus.OK);
             }
-        // 否则取并集
         } else {
-            result.addAll(deptSet);
-            result.addAll(deptIds);
-            criteria.setDeptIds(result);
+            // 否则取并集
+            criteria.getDeptIds().addAll(dataScopes);
             return new ResponseEntity<>(userService.queryAll(criteria,pageable),HttpStatus.OK);
         }
+        return new ResponseEntity<>(PageUtil.toPage(null,0),HttpStatus.OK);
     }
 
     @Log("新增用户")
