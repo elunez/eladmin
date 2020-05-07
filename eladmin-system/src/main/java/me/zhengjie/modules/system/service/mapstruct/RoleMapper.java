@@ -13,19 +13,19 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package me.zhengjie.modules.system.service.mapper;
+package me.zhengjie.modules.system.service.mapstruct;
 
 import me.zhengjie.base.BaseMapper;
-import me.zhengjie.modules.system.domain.DictDetail;
-import me.zhengjie.modules.system.service.dto.DictDetailDto;
+import me.zhengjie.modules.system.domain.Role;
+import me.zhengjie.modules.system.service.dto.RoleDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 
 /**
-* @author Zheng Jie
-* @date 2019-04-10
-*/
-@Mapper(componentModel = "spring", uses = {DictSmallMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)
-public interface DictDetailMapper extends BaseMapper<DictDetailDto, DictDetail> {
+ * @author Zheng Jie
+ * @date 2018-11-23
+ */
+@Mapper(componentModel = "spring", uses = {MenuMapper.class, DeptMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)
+public interface RoleMapper extends BaseMapper<RoleDto, Role> {
 
 }

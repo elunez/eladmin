@@ -22,7 +22,7 @@ import me.zhengjie.modules.mnt.repository.AppRepository;
 import me.zhengjie.modules.mnt.service.AppService;
 import me.zhengjie.modules.mnt.service.dto.AppDto;
 import me.zhengjie.modules.mnt.service.dto.AppQueryCriteria;
-import me.zhengjie.modules.mnt.service.mapper.AppMapper;
+import me.zhengjie.modules.mnt.service.mapstruct.AppMapper;
 import me.zhengjie.utils.FileUtil;
 import me.zhengjie.utils.PageUtil;
 import me.zhengjie.utils.QueryHelp;

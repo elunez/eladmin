@@ -370,7 +370,7 @@ public class GenUtil {
         }
 
         if ("Mapper".equals(templateName)) {
-            return packagePath + "service" + File.separator + "mapper" + File.separator + className + "Mapper.java";
+            return packagePath + "service" + File.separator + "mapstruct" + File.separator + className + "Mapper.java";
         }
 
         if ("Repository".equals(templateName)) {

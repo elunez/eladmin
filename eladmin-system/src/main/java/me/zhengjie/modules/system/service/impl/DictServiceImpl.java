@@ -27,7 +27,7 @@ import me.zhengjie.utils.ValidationUtil;
 import me.zhengjie.modules.system.repository.DictRepository;
 import me.zhengjie.modules.system.service.DictService;
 import me.zhengjie.modules.system.service.dto.DictDto;
-import me.zhengjie.modules.system.service.mapper.DictMapper;
+import me.zhengjie.modules.system.service.mapstruct.DictMapper;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;

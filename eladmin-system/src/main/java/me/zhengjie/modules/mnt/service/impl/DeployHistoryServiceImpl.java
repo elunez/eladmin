@@ -22,7 +22,7 @@ import me.zhengjie.modules.mnt.repository.DeployHistoryRepository;
 import me.zhengjie.modules.mnt.service.DeployHistoryService;
 import me.zhengjie.modules.mnt.service.dto.DeployHistoryDto;
 import me.zhengjie.modules.mnt.service.dto.DeployHistoryQueryCriteria;
-import me.zhengjie.modules.mnt.service.mapper.DeployHistoryMapper;
+import me.zhengjie.modules.mnt.service.mapstruct.DeployHistoryMapper;
 import me.zhengjie.utils.FileUtil;
 import me.zhengjie.utils.PageUtil;
 import me.zhengjie.utils.QueryHelp;

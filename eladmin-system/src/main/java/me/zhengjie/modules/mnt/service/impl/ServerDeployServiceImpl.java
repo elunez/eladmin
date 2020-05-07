@@ -21,7 +21,7 @@ import me.zhengjie.modules.mnt.repository.ServerDeployRepository;
 import me.zhengjie.modules.mnt.service.ServerDeployService;
 import me.zhengjie.modules.mnt.service.dto.ServerDeployDto;
 import me.zhengjie.modules.mnt.service.dto.ServerDeployQueryCriteria;
-import me.zhengjie.modules.mnt.service.mapper.ServerDeployMapper;
+import me.zhengjie.modules.mnt.service.mapstruct.ServerDeployMapper;
 import me.zhengjie.modules.mnt.util.ExecuteShellUtil;
 import me.zhengjie.utils.FileUtil;
 import me.zhengjie.utils.PageUtil;

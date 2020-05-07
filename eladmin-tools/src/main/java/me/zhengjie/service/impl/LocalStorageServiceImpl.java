@@ -21,7 +21,7 @@ import me.zhengjie.config.FileProperties;
 import me.zhengjie.domain.LocalStorage;
 import me.zhengjie.service.dto.LocalStorageDto;
 import me.zhengjie.service.dto.LocalStorageQueryCriteria;
-import me.zhengjie.service.mapper.LocalStorageMapper;
+import me.zhengjie.service.mapstruct.LocalStorageMapper;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.utils.*;
 import me.zhengjie.repository.LocalStorageRepository;

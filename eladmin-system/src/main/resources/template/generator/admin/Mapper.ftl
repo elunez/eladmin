@@ -13,7 +13,7 @@
 *  See the License for the specific language governing permissions and
 *  limitations under the License.
 */
-package ${package}.service.mapper;
+package ${package}.service.mapstruct;
 
 import me.zhengjie.base.BaseMapper;
 import ${package}.domain.${className};

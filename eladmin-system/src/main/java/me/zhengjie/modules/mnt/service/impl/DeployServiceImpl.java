@@ -29,7 +29,7 @@ import me.zhengjie.modules.mnt.service.DeployHistoryService;
 import me.zhengjie.modules.mnt.service.DeployService;
 import me.zhengjie.modules.mnt.service.ServerDeployService;
 import me.zhengjie.modules.mnt.service.dto.*;
-import me.zhengjie.modules.mnt.service.mapper.DeployMapper;
+import me.zhengjie.modules.mnt.service.mapstruct.DeployMapper;
 import me.zhengjie.modules.mnt.util.ExecuteShellUtil;
 import me.zhengjie.modules.mnt.util.ScpClientUtil;
 import me.zhengjie.modules.mnt.websocket.MsgType;

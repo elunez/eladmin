@@ -13,19 +13,19 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package me.zhengjie.modules.system.service.mapper;
+package me.zhengjie.modules.mnt.service.mapstruct;
 
 import me.zhengjie.base.BaseMapper;
-import me.zhengjie.modules.system.domain.Role;
-import me.zhengjie.modules.system.service.dto.RoleDto;
+import me.zhengjie.modules.mnt.domain.DeployHistory;
+import me.zhengjie.modules.mnt.service.dto.DeployHistoryDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 
 /**
- * @author Zheng Jie
- * @date 2018-11-23
- */
-@Mapper(componentModel = "spring", uses = {MenuMapper.class, DeptMapper.class}, unmappedTargetPolicy = ReportingPolicy.IGNORE)
-public interface RoleMapper extends BaseMapper<RoleDto, Role> {
+* @author zhanghouying
+* @date 2019-08-24
+*/
+@Mapper(componentModel = "spring",uses = {},unmappedTargetPolicy = ReportingPolicy.IGNORE)
+public interface DeployHistoryMapper extends BaseMapper<DeployHistoryDto, DeployHistory> {
 
 }

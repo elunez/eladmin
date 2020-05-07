@@ -26,7 +26,7 @@ import me.zhengjie.utils.ValidationUtil;
 import me.zhengjie.modules.system.repository.JobRepository;
 import me.zhengjie.modules.system.service.JobService;
 import me.zhengjie.modules.system.service.dto.JobDto;
-import me.zhengjie.modules.system.service.mapper.JobMapper;
+import me.zhengjie.modules.system.service.mapstruct.JobMapper;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;

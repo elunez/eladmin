@@ -13,19 +13,19 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package me.zhengjie.modules.system.service.mapper;
+package me.zhengjie.service.mapstruct;
 
 import me.zhengjie.base.BaseMapper;
-import me.zhengjie.modules.system.domain.Dict;
-import me.zhengjie.modules.system.service.dto.DictDto;
+import me.zhengjie.service.dto.LocalStorageDto;
+import me.zhengjie.domain.LocalStorage;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 
 /**
 * @author Zheng Jie
-* @date 2019-04-10
+* @date 2019-09-05
 */
 @Mapper(componentModel = "spring",unmappedTargetPolicy = ReportingPolicy.IGNORE)
-public interface DictMapper extends BaseMapper<DictDto, Dict> {
+public interface LocalStorageMapper extends BaseMapper<LocalStorageDto, LocalStorage> {
 
 }

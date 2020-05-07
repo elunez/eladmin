@@ -23,7 +23,7 @@ import me.zhengjie.modules.mnt.repository.DatabaseRepository;
 import me.zhengjie.modules.mnt.service.DatabaseService;
 import me.zhengjie.modules.mnt.service.dto.DatabaseDto;
 import me.zhengjie.modules.mnt.service.dto.DatabaseQueryCriteria;
-import me.zhengjie.modules.mnt.service.mapper.DatabaseMapper;
+import me.zhengjie.modules.mnt.service.mapstruct.DatabaseMapper;
 import me.zhengjie.modules.mnt.util.SqlUtils;
 import me.zhengjie.utils.FileUtil;
 import me.zhengjie.utils.PageUtil;
