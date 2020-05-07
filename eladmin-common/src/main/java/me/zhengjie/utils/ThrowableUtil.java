@@ -46,6 +46,6 @@ public class ThrowableUtil {
             throw new BadRequestException(msg);
         }
         assert false;
-        throw new BadRequestException("删除失败：" + t.getMessage());
+        throw new BadRequestException("删除失败");
     }
 }
