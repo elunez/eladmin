@@ -29,15 +29,20 @@ import java.util.logging.Logger;
  */
 public class ScpClientUtil {
 
-	static synchronized public ScpClientUtil getInstance(String ip, int port, String username, String password) {
-		return new ScpClientUtil(ip, port, username, password);
+	static private ScpClientUtil instance;
+
+	static synchronized public ScpClientUtil getInstance(String ip, int port, String username, String passward) {
+		if (instance == null) {
+			instance = new ScpClientUtil(ip, port, username, passward);
+		}
+		return instance;
 	}
 
-	public ScpClientUtil(String ip, int port, String username, String password) {
+	public ScpClientUtil(String ip, int port, String username, String passward) {
 		this.ip = ip;
 		this.port = port;
 		this.username = username;
-		this.password = password;
+		this.password = passward;
 	}
 
 	public void getFile(String remoteFile, String localTargetDirectory) {
