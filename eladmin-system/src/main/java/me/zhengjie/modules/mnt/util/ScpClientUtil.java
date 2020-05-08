@@ -29,13 +29,8 @@ import java.util.logging.Logger;
  */
 public class ScpClientUtil {
 
-	static private ScpClientUtil instance;
-
 	static synchronized public ScpClientUtil getInstance(String ip, int port, String username, String password) {
-		if (instance == null) {
-			instance = new ScpClientUtil(ip, port, username, password);
-		}
-		return instance;
+		return new ScpClientUtil(ip, port, username, password);
 	}
 
 	public ScpClientUtil(String ip, int port, String username, String password) {
