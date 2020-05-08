@@ -28,7 +28,10 @@ import me.zhengjie.modules.mnt.repository.DeployRepository;
 import me.zhengjie.modules.mnt.service.DeployHistoryService;
 import me.zhengjie.modules.mnt.service.DeployService;
 import me.zhengjie.modules.mnt.service.ServerDeployService;
-import me.zhengjie.modules.mnt.service.dto.*;
+import me.zhengjie.modules.mnt.service.dto.AppDto;
+import me.zhengjie.modules.mnt.service.dto.DeployDto;
+import me.zhengjie.modules.mnt.service.dto.DeployQueryCriteria;
+import me.zhengjie.modules.mnt.service.dto.ServerDeployDto;
 import me.zhengjie.modules.mnt.service.mapstruct.DeployMapper;
 import me.zhengjie.modules.mnt.util.ExecuteShellUtil;
 import me.zhengjie.modules.mnt.util.ScpClientUtil;
@@ -41,6 +44,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
@@ -155,7 +159,7 @@ public class DeployServiceImpl implements DeployService {
 				stopApp(port, executeShellUtil);
 				sendMsg("备份原来应用", MsgType.INFO);
 				//备份应用
-				backupApp(executeShellUtil, ip, app.getDeployPath(), app.getName(), app.getBackupPath(), id);
+				backupApp(executeShellUtil, ip, app.getDeployPath()+FILE_SEPARATOR, app.getName(), app.getBackupPath()+FILE_SEPARATOR, id);
 			}
 			sendMsg("部署应用", MsgType.INFO);
 			//部署文件,并启动应用
@@ -191,16 +195,9 @@ public class DeployServiceImpl implements DeployService {
 	private void backupApp(ExecuteShellUtil executeShellUtil, String ip, String fileSavePath, String appName, String backupPath, Long id) {
 		String deployDate = DateUtil.format(new Date(), DatePattern.PURE_DATETIME_PATTERN);
 		StringBuilder sb = new StringBuilder();
-		String endsWith = "\\";
-		if (!backupPath.endsWith(FILE_SEPARATOR)&&!backupPath.endsWith(endsWith)) {
-			backupPath += FILE_SEPARATOR;
-		}
 		backupPath += appName + FILE_SEPARATOR + deployDate + "\n";
 		sb.append("mkdir -p ").append(backupPath);
 		sb.append("mv -f ").append(fileSavePath);
-		if (!fileSavePath.endsWith(FILE_SEPARATOR)) {
-			sb.append(FILE_SEPARATOR);
-		}
 		sb.append(appName).append(" ").append(backupPath);
 		log.info("备份应用脚本:" + sb.toString());
 		executeShellUtil.execute(sb.toString());
@@ -350,10 +347,7 @@ public class DeployServiceImpl implements DeployService {
 			sendMsg("应用信息不存在：" + resources.getAppName(), MsgType.ERROR);
 			throw new BadRequestException("应用信息不存在：" + resources.getAppName());
 		}
-		String backupPath = app.getBackupPath();
-		if (!backupPath.endsWith(FILE_SEPARATOR)) {
-			backupPath += FILE_SEPARATOR;
-		}
+		String backupPath = app.getBackupPath()+FILE_SEPARATOR;
 		backupPath += resources.getAppName() + FILE_SEPARATOR + deployDate;
 		//这个是服务器部署路径
 		String deployPath = app.getDeployPath();

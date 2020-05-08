@@ -31,18 +31,18 @@ public class ScpClientUtil {
 
 	static private ScpClientUtil instance;
 
-	static synchronized public ScpClientUtil getInstance(String ip, int port, String username, String passward) {
+	static synchronized public ScpClientUtil getInstance(String ip, int port, String username, String password) {
 		if (instance == null) {
-			instance = new ScpClientUtil(ip, port, username, passward);
+			instance = new ScpClientUtil(ip, port, username, password);
 		}
 		return instance;
 	}
 
-	public ScpClientUtil(String ip, int port, String username, String passward) {
+	public ScpClientUtil(String ip, int port, String username, String password) {
 		this.ip = ip;
 		this.port = port;
 		this.username = username;
-		this.password = passward;
+		this.password = password;
 	}
 
 	public void getFile(String remoteFile, String localTargetDirectory) {
