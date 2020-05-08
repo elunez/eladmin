@@ -49,7 +49,7 @@ import java.util.Set;
 @RequestMapping("/api/database")
 public class DatabaseController {
 
-	private final String fileSavePath = System.getProperty("java.io.tmpdir");
+	private final String fileSavePath = FileUtil.getTmpDirPath()+"/";
     private final DatabaseService databaseService;
 
 	@Log("导出数据库数据")

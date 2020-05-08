@@ -50,7 +50,7 @@ import java.util.Set;
 @RequestMapping("/api/deploy")
 public class DeployController {
 
-	private final String fileSavePath = System.getProperty("java.io.tmpdir");
+	private final String fileSavePath = FileUtil.getTmpDirPath()+"/";
     private final DeployService deployService;
 
 
