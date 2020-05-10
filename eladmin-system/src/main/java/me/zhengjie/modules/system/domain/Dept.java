@@ -49,6 +49,9 @@ public class Dept extends BaseEntity implements Serializable {
     @ApiModelProperty(value = "角色")
     private Set<Role> roles;
 
+    @ApiModelProperty(value = "排序")
+    private Integer deptSort;
+
     @NotBlank
     @ApiModelProperty(value = "部门名称")
     private String name;
@@ -57,7 +60,6 @@ public class Dept extends BaseEntity implements Serializable {
     @ApiModelProperty(value = "是否启用")
     private Boolean enabled;
 
-    @NotNull
     @ApiModelProperty(value = "上级部门")
     private Long pid;
 

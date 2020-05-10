@@ -51,7 +51,6 @@ public class Menu extends BaseEntity implements Serializable {
     @ApiModelProperty(value = "菜单角色")
     private Set<Role> roles;
 
-    @NotBlank
     @ApiModelProperty(value = "菜单标题")
     private String title;
 

@@ -42,6 +42,7 @@ public class DataServiceImpl implements DataService {
     private final RoleService roleService;
     private final DeptService deptService;
 
+    @Override
     @Cacheable
     public List<Long> getDeptIds(UserDto user) {
         // 用于存储部门id
@@ -57,6 +58,8 @@ public class DataServiceImpl implements DataService {
                     break;
                 case CUSTOMIZE:
                     deptIds.addAll(getCustomize(deptIds, role));
+                    break;
+                default:
                     break;
             }
         }
@@ -86,6 +89,7 @@ public class DataServiceImpl implements DataService {
      * @param deptList 部门
      * @return 数据权限
      */
+    @Override
     @Cacheable
     public List<Long> getDeptChildren(List<Dept> deptList) {
         List<Long> list = new ArrayList<>();

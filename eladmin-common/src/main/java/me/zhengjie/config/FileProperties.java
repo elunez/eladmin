@@ -16,9 +16,13 @@
 package me.zhengjie.config;
 
 import lombok.Data;
+import me.zhengjie.utils.ElAdminConstant;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * @author Zheng Jie
+ */
 @Data
 @Configuration
 @ConfigurationProperties(prefix = "file")
@@ -38,9 +42,9 @@ public class FileProperties {
 
     public ElPath getPath(){
         String os = System.getProperty("os.name");
-        if(os.toLowerCase().startsWith("win")) {
+        if(os.toLowerCase().startsWith(ElAdminConstant.WIN)) {
             return windows;
-        } else if(os.toLowerCase().startsWith("mac")){
+        } else if(os.toLowerCase().startsWith(ElAdminConstant.MAC)){
             return mac;
         }
         return linux;

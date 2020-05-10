@@ -17,8 +17,12 @@ package me.zhengjie.modules.system.service.mapstruct;
 
 import me.zhengjie.base.BaseMapper;
 import me.zhengjie.modules.system.domain.Dept;
+import me.zhengjie.modules.system.repository.DeptRepository;
 import me.zhengjie.modules.system.service.dto.DeptDto;
+import me.zhengjie.utils.SpringContextHolder;
+import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.ReportingPolicy;
 
 /**
@@ -27,5 +31,20 @@ import org.mapstruct.ReportingPolicy;
 */
 @Mapper(componentModel = "spring",unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface DeptMapper extends BaseMapper<DeptDto, Dept> {
+
+    /**
+     * 转换后的特殊处理
+     * @param deptDto /
+     * @return /
+     */
+    @AfterMapping
+    default DeptDto dealDto(@MappingTarget DeptDto deptDto) {
+        DeptRepository deptRepository = SpringContextHolder.getBean(DeptRepository.class);
+        if(deptRepository.countByPid(deptDto.getId()) > 0){
+            deptDto.setHasChildren(true);
+            deptDto.setLeaf(false);
+        }
+        return deptDto;
+    }
 
 }

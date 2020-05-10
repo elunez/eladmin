@@ -25,6 +25,7 @@ import me.zhengjie.modules.system.domain.Dept;
 import me.zhengjie.modules.system.service.DeptService;
 import me.zhengjie.modules.system.service.dto.DeptDto;
 import me.zhengjie.modules.system.service.dto.DeptQueryCriteria;
+import me.zhengjie.utils.PageUtil;
 import me.zhengjie.utils.ThrowableUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,10 +33,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
 * @author Zheng Jie
@@ -54,17 +52,31 @@ public class DeptController {
     @ApiOperation("导出部门数据")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('dept:list')")
-    public void download(HttpServletResponse response, DeptQueryCriteria criteria) throws IOException {
-        deptService.download(deptService.queryAll(criteria), response);
+    public void download(HttpServletResponse response, DeptQueryCriteria criteria) throws Exception {
+        deptService.download(deptService.queryAll(criteria, false), response);
     }
 
     @Log("查询部门")
     @ApiOperation("查询部门")
     @GetMapping
     @PreAuthorize("@el.check('user:list','dept:list')")
-    public ResponseEntity<Object> getDepts(DeptQueryCriteria criteria){
-        List<DeptDto> deptDtos = deptService.queryAll(criteria);
-        return new ResponseEntity<>(deptService.buildTree(deptDtos),HttpStatus.OK);
+    public ResponseEntity<Object> getDepts(DeptQueryCriteria criteria) throws Exception {
+        List<DeptDto> deptDtos = deptService.queryAll(criteria, true);
+        return new ResponseEntity<>(PageUtil.toPage(deptDtos, deptDtos.size()),HttpStatus.OK);
+    }
+
+    @Log("查询部门")
+    @ApiOperation("查询部门:根据ID获取同级与上级数据")
+    @GetMapping("/superior")
+    @PreAuthorize("@el.check('user:list','dept:list')")
+    public ResponseEntity<Object> getSuperior(@RequestParam List<Long> ids) {
+        Set<DeptDto> deptDtos  = new LinkedHashSet<>();
+        for (Long id : ids) {
+            DeptDto deptDto = deptService.findById(id);
+            List<DeptDto> depts = deptService.getSuperior(deptDto, new ArrayList<>());
+            deptDtos.addAll(depts);
+        }
+        return new ResponseEntity<>(deptService.buildTree(new ArrayList<>(deptDtos)),HttpStatus.OK);
     }
 
     @Log("新增部门")

@@ -56,6 +56,7 @@ public class QueryHelp {
             List<Field> fields = getAllFields(query.getClass(), new ArrayList<>());
             for (Field field : fields) {
                 boolean accessible = field.isAccessible();
+                // 设置对象的访问权限，保证对private的属性的访
                 field.setAccessible(true);
                 Query q = field.getAnnotation(Query.class);
                 if (q != null) {
@@ -143,6 +144,9 @@ public class QueryHelp {
                         case NOT_NULL:
                             list.add(cb.isNotNull(getExpression(attributeName,join,root)));
                             break;
+                        case IS_NULL:
+                            list.add(cb.isNull(getExpression(attributeName,join,root)));
+                            break;
                         case BETWEEN:
                             List<Object> between = new ArrayList<>((List<Object>)val);
                             list.add(cb.between(getExpression(attributeName, join, root).as((Class<? extends Comparable>) between.get(0).getClass()),
@@ -182,7 +186,7 @@ public class QueryHelp {
         return true;
     }
 
-    private static List<Field> getAllFields(Class clazz, List<Field> fields) {
+    public static List<Field> getAllFields(Class clazz, List<Field> fields) {
         if (clazz != null) {
             fields.addAll(Arrays.asList(clazz.getDeclaredFields()));
             getAllFields(clazz.getSuperclass(), fields);

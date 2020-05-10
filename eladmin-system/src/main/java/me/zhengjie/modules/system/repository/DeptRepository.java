@@ -37,6 +37,12 @@ public interface DeptRepository extends JpaRepository<Dept, Long>, JpaSpecificat
     List<Dept> findByPid(Long id);
 
     /**
+     * 获取顶级部门
+     * @return
+     */
+    List<Dept> findByPidIsNull();
+
+    /**
      * 根据ID查询名称
      * @param id ID
      * @return /
@@ -50,4 +56,11 @@ public interface DeptRepository extends JpaRepository<Dept, Long>, JpaSpecificat
      * @return /
      */
     Set<Dept> findByRoles_Id(Long id);
+
+    /**
+     * 判断是否存在子节点
+     * @param pid /
+     * @return
+     */
+    int countByPid(Long pid);
 }

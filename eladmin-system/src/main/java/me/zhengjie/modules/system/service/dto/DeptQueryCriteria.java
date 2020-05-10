@@ -38,6 +38,9 @@ public class DeptQueryCriteria{
     @Query
     private Long pid;
 
+    @Query(type = Query.Type.IS_NULL, propName = "pid")
+    private Boolean pidIsNull;
+
     @Query(type = Query.Type.BETWEEN)
     private List<Timestamp> createTime;
 }

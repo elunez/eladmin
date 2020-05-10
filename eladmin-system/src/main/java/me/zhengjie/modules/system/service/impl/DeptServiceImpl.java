@@ -15,6 +15,8 @@
  */
 package me.zhengjie.modules.system.service.impl;
 
+import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.ObjectUtil;
 import lombok.RequiredArgsConstructor;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.modules.system.domain.Dept;
@@ -29,12 +31,13 @@ import me.zhengjie.modules.system.service.mapstruct.DeptMapper;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -53,8 +56,26 @@ public class DeptServiceImpl implements DeptService {
 
     @Override
     @Cacheable
-    public List<DeptDto> queryAll(DeptQueryCriteria criteria) {
-        return deptMapper.toDto(deptRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder)));
+    public List<DeptDto> queryAll(DeptQueryCriteria criteria, Boolean isQuery) throws Exception {
+        Sort sort = new Sort(Sort.Direction.ASC, "deptSort");
+        if (isQuery) {
+            criteria.setPidIsNull(true);
+            List<Field> fields = QueryHelp.getAllFields(criteria.getClass(), new ArrayList<>());
+            List<String> fieldNames = new ArrayList<String>(){{ add("pidIsNull");add("enabled");}};
+            for (Field field : fields) {
+                //设置对象的访问权限，保证对private的属性的访问
+                field.setAccessible(true);
+                Object val = field.get(criteria);
+                if(fieldNames.contains(field.getName())){
+                    continue;
+                }
+                if (ObjectUtil.isNotNull(val)) {
+                    criteria.setPidIsNull(null);
+                    break;
+                }
+            }
+        }
+        return deptMapper.toDto(deptRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),sort));
     }
 
     @Override
@@ -77,46 +98,6 @@ public class DeptServiceImpl implements DeptService {
     }
 
     @Override
-    @Cacheable
-    public Object buildTree(List<DeptDto> deptDtos) {
-        Set<DeptDto> trees = new LinkedHashSet<>();
-        Set<DeptDto> depts= new LinkedHashSet<>();
-        List<String> deptNames = deptDtos.stream().map(DeptDto::getName).collect(Collectors.toList());
-        boolean isChild;
-        for (DeptDto deptDTO : deptDtos) {
-            isChild = false;
-            if ("0".equals(deptDTO.getPid().toString())) {
-                trees.add(deptDTO);
-            }
-            for (DeptDto it : deptDtos) {
-                if (it.getPid().equals(deptDTO.getId())) {
-                    isChild = true;
-                    if (deptDTO.getChildren() == null) {
-                        deptDTO.setChildren(new ArrayList<>());
-                    }
-                    deptDTO.getChildren().add(it);
-                }
-            }
-            if(isChild) {
-                depts.add(deptDTO);
-            } else if(!deptNames.contains(deptRepository.findNameById(deptDTO.getPid()))) {
-                depts.add(deptDTO);
-            }
-        }
-
-        if (CollectionUtils.isEmpty(trees)) {
-            trees = depts;
-        }
-
-        Integer totalElements = deptDtos.size();
-
-        Map<String,Object> map = new HashMap<>(2);
-        map.put("totalElements",totalElements);
-        map.put("content",CollectionUtils.isEmpty(trees)? deptDtos :trees);
-        return map;
-    }
-
-    @Override
     @CacheEvict(allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     public DeptDto create(Dept resources) {
@@ -127,7 +108,7 @@ public class DeptServiceImpl implements DeptService {
     @CacheEvict(allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     public void update(Dept resources) {
-        if(resources.getId().equals(resources.getPid())) {
+        if(resources.getPid() != null && resources.getId().equals(resources.getPid())) {
             throw new BadRequestException("上级不能为自己");
         }
         Dept dept = deptRepository.findById(resources.getId()).orElseGet(Dept::new);
@@ -168,5 +149,54 @@ public class DeptServiceImpl implements DeptService {
             }
         }
         return deptDtos;
+    }
+
+    @Override
+    public List<DeptDto> getSuperior(DeptDto deptDto, List<Dept> depts) {
+        if(deptDto.getPid() == null){
+            depts.addAll(deptRepository.findByPidIsNull());
+            return deptMapper.toDto(depts);
+        }
+        depts.addAll(deptRepository.findByPid(deptDto.getPid()));
+        return getSuperior(findById(deptDto.getPid()), depts);
+    }
+
+    @Override
+    public Object buildTree(List<DeptDto> deptDtos) {
+        Set<DeptDto> trees = new LinkedHashSet<>();
+        Set<DeptDto> depts= new LinkedHashSet<>();
+        List<String> deptNames = deptDtos.stream().map(DeptDto::getName).collect(Collectors.toList());
+        boolean isChild;
+        for (DeptDto deptDTO : deptDtos) {
+            isChild = false;
+            if (deptDTO.getPid() == null) {
+                trees.add(deptDTO);
+            }
+            for (DeptDto it : deptDtos) {
+                if (it.getPid() != null && it.getPid().equals(deptDTO.getId())) {
+                    isChild = true;
+                    if (deptDTO.getChildren() == null) {
+                        deptDTO.setChildren(new ArrayList<>());
+                    }
+                    deptDTO.getChildren().add(it);
+                }
+            }
+            if(isChild) {
+                depts.add(deptDTO);
+            } else if(!deptNames.contains(deptRepository.findNameById(deptDTO.getPid()))) {
+                depts.add(deptDTO);
+            }
+        }
+
+        if (CollectionUtil.isEmpty(trees)) {
+            trees = depts;
+        }
+
+        Integer totalElements = deptDtos.size();
+
+        Map<String,Object> map = new HashMap<>(2);
+        map.put("totalElements",totalElements);
+        map.put("content",CollectionUtil.isEmpty(trees)? deptDtos :trees);
+        return map;
     }
 }

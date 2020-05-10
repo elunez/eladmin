@@ -17,8 +17,12 @@ package me.zhengjie.modules.system.service.mapstruct;
 
 import me.zhengjie.base.BaseMapper;
 import me.zhengjie.modules.system.domain.Menu;
+import me.zhengjie.modules.system.repository.MenuRepository;
 import me.zhengjie.modules.system.service.dto.MenuDto;
+import me.zhengjie.utils.SpringContextHolder;
+import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.ReportingPolicy;
 
 /**
@@ -28,4 +32,18 @@ import org.mapstruct.ReportingPolicy;
 @Mapper(componentModel = "spring",unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface MenuMapper extends BaseMapper<MenuDto, Menu> {
 
+    /**
+     * 转换
+     * @param menuDto /
+     * @return /
+     */
+    @AfterMapping
+    default MenuDto dealDto(@MappingTarget MenuDto menuDto) {
+        MenuRepository menuRepository = SpringContextHolder.getBean(MenuRepository.class);
+        if(menuRepository.countByPid(menuDto.getId()) > 0){
+            menuDto.setLeaf(false);
+            menuDto.setHasChildren(true);
+        }
+        return menuDto;
+    }
 }

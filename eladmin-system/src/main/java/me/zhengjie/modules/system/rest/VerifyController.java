@@ -68,6 +68,8 @@ public class VerifyController {
             case TWO:
                 verificationCodeService.validated(CodeEnum.EMAIL_RESET_PWD_CODE.getKey() + email ,code);
                 break;
+            default:
+                break;
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }

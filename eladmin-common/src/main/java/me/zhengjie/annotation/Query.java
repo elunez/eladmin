@@ -71,6 +71,8 @@ public @interface Query {
         ,BETWEEN
         // 不为空
         ,NOT_NULL
+        // 为空
+        ,IS_NULL
     }
 
     /**

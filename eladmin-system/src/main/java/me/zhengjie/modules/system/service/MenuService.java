@@ -35,9 +35,11 @@ public interface MenuService {
     /**
      * 查询全部数据
      * @param criteria 条件
+     * @param isQuery /
+     * @throws Exception /
      * @return /
      */
-    List<MenuDto> queryAll(MenuQueryCriteria criteria);
+    List<MenuDto> queryAll(MenuQueryCriteria criteria, Boolean isQuery) throws Exception;
 
     /**
      * 根据ID查询
@@ -66,13 +68,6 @@ public interface MenuService {
      * @return /
      */
     Set<Menu> getDeleteMenus(List<Menu> menuList, Set<Menu> menuSet);
-
-    /**
-     * 获取菜单树
-     * @param menus /
-     * @return /
-     */
-    Object getMenuTree(List<Menu> menus);
 
     /**
      * 根据pid查询
@@ -122,4 +117,19 @@ public interface MenuService {
      * @throws IOException /
      */
     void download(List<MenuDto> queryAll, HttpServletResponse response) throws IOException;
+
+    /**
+     * 懒加载菜单数据
+     * @param pid /
+     * @return /
+     */
+    Object getMenus(Long pid);
+
+    /**
+     * 根据ID获取同级与上级数据
+     * @param menuDto /
+     * @param objects /
+     * @return /
+     */
+    List<MenuDto> getSuperior(MenuDto menuDto, List<Menu> objects);
 }

@@ -27,13 +27,14 @@ import java.nio.charset.StandardCharsets;
  * @author Zheng Jie
  * @date 2018-11-23
  */
+
 public class EncryptUtils {
 
-    private static final String strParam = "Passw0rd";
+    private static final String STR_PARAM = "Passw0rd";
 
     private static Cipher cipher;
 
-    private static IvParameterSpec iv = new IvParameterSpec(strParam.getBytes(StandardCharsets.UTF_8));
+    private static final IvParameterSpec IV = new IvParameterSpec(STR_PARAM.getBytes(StandardCharsets.UTF_8));
 
     private static DESKeySpec getDesKeySpec(String source) throws Exception {
         if (source == null || source.length() == 0){
@@ -51,7 +52,7 @@ public class EncryptUtils {
         DESKeySpec desKeySpec = getDesKeySpec(source);
         SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DES");
         SecretKey secretKey = keyFactory.generateSecret(desKeySpec);
-        cipher.init(Cipher.ENCRYPT_MODE, secretKey, iv);
+        cipher.init(Cipher.ENCRYPT_MODE, secretKey, IV);
         return byte2hex(
                 cipher.doFinal(source.getBytes(StandardCharsets.UTF_8))).toUpperCase();
     }
@@ -64,7 +65,7 @@ public class EncryptUtils {
         DESKeySpec desKeySpec = getDesKeySpec(source);
         SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DES");
         SecretKey secretKey = keyFactory.generateSecret(desKeySpec);
-        cipher.init(Cipher.DECRYPT_MODE, secretKey, iv);
+        cipher.init(Cipher.DECRYPT_MODE, secretKey, IV);
         byte[] retByte = cipher.doFinal(src);
         return new String(retByte);
     }

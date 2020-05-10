@@ -25,7 +25,17 @@ public class ElAdminConstant {
     /**
      * 用于IP定位转换
      */
-    static final String REGION = "内网IP|内网IP";
+    public static final String REGION = "内网IP|内网IP";
+
+    /**
+     * win 系统
+     */
+    public static final String WIN = "win";
+
+    /**
+     * mac 系统
+     */
+    public static final String MAC = "mac";
 
     /**
      * 常用接口

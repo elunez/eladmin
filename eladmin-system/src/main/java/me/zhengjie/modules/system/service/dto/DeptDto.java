@@ -21,6 +21,7 @@ import lombok.Setter;
 import me.zhengjie.base.BaseDTO;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 
 /**
 * @author Zheng Jie
@@ -32,16 +33,40 @@ public class DeptDto extends BaseDTO implements Serializable {
 
     private Long id;
 
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    private List<DeptDto> children;
-
     private String name;
 
     private Boolean enabled;
 
+    private Integer deptSort;
+
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    private List<DeptDto> children;
+
     private Long pid;
+
+    private Boolean hasChildren = false;
+
+    private Boolean leaf = true;
 
     public String getLabel() {
         return name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        DeptDto deptDto = (DeptDto) o;
+        return Objects.equals(id, deptDto.id) &&
+                Objects.equals(name, deptDto.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name);
     }
 }

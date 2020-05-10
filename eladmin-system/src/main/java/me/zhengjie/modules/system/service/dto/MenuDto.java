@@ -20,6 +20,7 @@ import lombok.Setter;
 import me.zhengjie.base.BaseDTO;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Zheng Jie
@@ -56,4 +57,29 @@ public class MenuDto extends BaseDTO implements Serializable {
     private String componentName;
 
     private String icon;
+
+    private Boolean leaf = true;
+
+    private Boolean hasChildren = false;
+
+    public String getLabel() {
+        return title;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        MenuDto menuDto = (MenuDto) o;
+        return Objects.equals(id, menuDto.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

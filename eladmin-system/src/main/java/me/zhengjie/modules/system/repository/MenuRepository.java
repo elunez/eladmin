@@ -51,10 +51,23 @@ public interface MenuRepository extends JpaRepository<Menu, Long>, JpaSpecificat
     List<Menu> findByPid(long pid);
 
     /**
+     * 查询顶级菜单
+     * @return /
+     */
+    List<Menu> findByPidIsNull();
+
+    /**
      * 根据角色ID与菜单类型查询菜单
      * @param roleIds roleIDs
      * @param type 类型
      * @return /
      */
     LinkedHashSet<Menu> findByRoles_IdInAndTypeNotOrderByMenuSortAsc(Set<Long> roleIds, int type);
+
+    /**
+     * 获取节点数量
+     * @param id /
+     * @return
+     */
+    int countByPid(Long id);
 }
