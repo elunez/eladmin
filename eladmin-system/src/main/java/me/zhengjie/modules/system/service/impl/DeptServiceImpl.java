@@ -173,7 +173,7 @@ public class DeptServiceImpl implements DeptService {
                 trees.add(deptDTO);
             }
             for (DeptDto it : deptDtos) {
-                if (it.getPid() != null && it.getPid().equals(deptDTO.getId())) {
+                if (deptDTO.getId().equals(it.getPid())) {
                     isChild = true;
                     if (deptDTO.getChildren() == null) {
                         deptDTO.setChildren(new ArrayList<>());

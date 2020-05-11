@@ -33,11 +33,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Zheng Jie
@@ -48,7 +44,6 @@ import java.util.Set;
 @RequiredArgsConstructor
 @Api(tags = "系统：菜单管理")
 @RequestMapping("/api/menus")
-@SuppressWarnings("unchecked")
 public class MenuController {
 
     private final MenuService menuService;
@@ -67,7 +62,7 @@ public class MenuController {
     @GetMapping(value = "/build")
     public ResponseEntity<Object> buildMenus(){
         List<MenuDto> menuDtoList = menuService.findByRoles(roleService.findByUsersId(SecurityUtils.getCurrentUserId()));
-        List<MenuDto> menuDtos = (List<MenuDto>) menuService.buildTree(menuDtoList).get("content");
+        List<MenuDto> menuDtos = menuService.buildTree(menuDtoList);
         return new ResponseEntity<>(menuService.buildMenus(menuDtos),HttpStatus.OK);
     }
 
@@ -91,10 +86,13 @@ public class MenuController {
     @ApiOperation("查询菜单:根据ID获取同级与上级数据")
     @GetMapping("/superior")
     @PreAuthorize("@el.check('menu:list')")
-    public ResponseEntity<Object> getSuperior(@RequestParam Long id) {
-        MenuDto menuDto = menuService.findById(id);
-        List<MenuDto> menuDtos = menuService.getSuperior(menuDto, new ArrayList<>());
-        return new ResponseEntity<>(menuService.buildTree(menuDtos),HttpStatus.OK);
+    public ResponseEntity<Object> getSuperior(@RequestParam List<Long> ids) {
+        Set<MenuDto> menuDtos = new LinkedHashSet<>();
+        for (Long id : ids) {
+            MenuDto menuDto = menuService.findById(id);
+            menuDtos.addAll(menuService.getSuperior(menuDto, new ArrayList<>()));
+        }
+        return new ResponseEntity<>(menuService.buildTree(new ArrayList<>(menuDtos)),HttpStatus.OK);
     }
 
     @Log("新增菜单")
