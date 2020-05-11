@@ -15,7 +15,6 @@
  */
 package me.zhengjie.utils;
 
-import cn.hutool.core.codec.Base64;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.poi.excel.BigExcelWriter;
@@ -23,7 +22,6 @@ import cn.hutool.poi.excel.ExcelUtil;
 import me.zhengjie.exception.BadRequestException;
 import org.apache.poi.util.IOUtils;
 import org.springframework.web.multipart.MultipartFile;
-import javax.activation.MimetypesFileTypeMap;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -127,26 +125,6 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
     }
 
     /**
-     * inputStream 转 File
-     */
-    static File inputStreamToFile(InputStream ins, String name) throws Exception{
-        File file = new File(System.getProperty("java.io.tmpdir") + File.separator + name);
-        if (file.exists()) {
-            return file;
-        }
-        OutputStream os = new FileOutputStream(file);
-        int bytesRead;
-        int len = 8192;
-        byte[] buffer = new byte[len];
-        while ((bytesRead = ins.read(buffer, 0, len)) != -1) {
-            os.write(buffer, 0, bytesRead);
-        }
-        os.close();
-        ins.close();
-        return file;
-    }
-
-    /**
      * 将文件名解析成文件的上传路径
      */
     public static File upload(MultipartFile file, String filePath) {
@@ -171,16 +149,6 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
             e.printStackTrace();
         }
         return null;
-    }
-
-    public static String fileToBase64(File file) throws Exception {
-        FileInputStream inputFile = new FileInputStream(file);
-        String base64;
-        byte[] buffer = new byte[(int)file.length()];
-        inputFile.read(buffer);
-        inputFile.close();
-        base64=Base64.encode(buffer);
-        return base64.replaceAll("[\\s*\t\n\r]", "");
     }
 
     /**
@@ -220,11 +188,6 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
         } else {
             return "其他";
         }
-    }
-
-    public static String getFileTypeByMimeType(String type) {
-        String mimeType = new MimetypesFileTypeMap().getContentType("." + type);
-        return mimeType.split("/")[0];
     }
 
     public static void checkSize(long maxSize, long size) {

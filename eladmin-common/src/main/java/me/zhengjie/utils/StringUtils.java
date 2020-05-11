@@ -15,16 +15,12 @@
  */
 package me.zhengjie.utils;
 
-import cn.hutool.core.io.resource.ClassPathResource;
+import cn.hutool.http.HttpUtil;
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 import eu.bitwalker.useragentutils.Browser;
 import eu.bitwalker.useragentutils.UserAgent;
-import org.lionsoul.ip2region.DataBlock;
-import org.lionsoul.ip2region.DbConfig;
-import org.lionsoul.ip2region.DbSearcher;
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Calendar;
@@ -159,35 +155,9 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
      * 根据ip获取详细地址
      */
     public static String getCityInfo(String ip) {
-        DbSearcher searcher = null;
-        try {
-            String path = "ip2region/ip2region.db";
-            String name = "ip2region.db";
-            DbConfig config = new DbConfig();
-            File file = FileUtil.inputStreamToFile(new ClassPathResource(path).getStream(), name);
-            searcher = new DbSearcher(config, file.getPath());
-            Method method;
-            method = searcher.getClass().getMethod("btreeSearch", String.class);
-            DataBlock dataBlock;
-            dataBlock = (DataBlock) method.invoke(searcher, ip);
-            String address = dataBlock.getRegion().replace("0|","");
-            char symbol = '|';
-            if(address.charAt(address.length()-1) == symbol){
-                address = address.substring(0,address.length() - 1);
-            }
-            return address.equals(ElAdminConstant.REGION)?"内网IP":address;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }finally {
-            if(searcher!=null){
-                try {
-                    searcher.close();
-                } catch (IOException ignored) {
-                }
-            }
-
-        }
-        return "";
+        String api = String.format(ElAdminConstant.Url.IP_URL,ip);
+        JSONObject object = JSONUtil.parseObj(HttpUtil.get(api));
+        return object.get("addr", String.class);
     }
 
     public static String getBrowser(HttpServletRequest request){

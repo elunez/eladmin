@@ -3,14 +3,13 @@ package me.zhengjie.base;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.sql.Timestamp;
 
 /**
  * @author Zheng Jie
- * @Date 2019年10月24日20:48:53
+ * @date 2019年10月24日20:48:53
  */
 @Getter
 @Setter

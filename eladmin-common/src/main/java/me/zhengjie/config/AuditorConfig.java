@@ -21,10 +21,9 @@ import org.springframework.stereotype.Component;
 import java.util.Optional;
 
 /**
- * @描述 : 设置审计
+ * @description  : 设置审计
  * @author  : Dong ZhaoYang
- * @日期 : 2019/10/28
- * @时间 : 10:29
+ * @date : 2019/10/28
  */
 @Component("auditorAware")
 public class AuditorConfig implements AuditorAware<String> {

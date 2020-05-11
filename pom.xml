@@ -140,12 +140,6 @@
             <optional>true</optional>
         </dependency>
 
-        <!--https://gitee.com/lionsoul/ip2region/tree/v1.4-release/-->
-        <dependency>
-            <groupId>org.lionsoul</groupId>
-            <artifactId>ip2region</artifactId>
-            <version>1.7.2</version>
-        </dependency>
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi</artifactId>
