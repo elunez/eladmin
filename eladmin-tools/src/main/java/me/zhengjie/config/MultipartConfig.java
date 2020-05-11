@@ -37,7 +37,9 @@ public class MultipartConfig {
         String location = System.getProperty("user.home") + "/.eladmin/file/tmp";
         File tmpFile = new File(location);
         if (!tmpFile.exists()) {
-            tmpFile.mkdirs();
+            if (!tmpFile.mkdirs()) {
+                System.out.println("create was not successful.");
+            }
         }
         factory.setLocation(location);
         return factory.createMultipartConfig();

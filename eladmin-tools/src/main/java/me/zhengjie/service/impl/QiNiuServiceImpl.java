@@ -39,7 +39,6 @@ import me.zhengjie.utils.QueryHelp;
 import me.zhengjie.utils.ValidationUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
@@ -86,7 +85,7 @@ public class QiNiuServiceImpl implements QiNiuService {
     }
 
     @Override
-    @CachePut(cacheNames = "qiNiuConfig", key = "'1'")
+    @CachePut(key = "'1'")
     @Transactional(rollbackFor = Exception.class)
     public QiniuConfig update(QiniuConfig qiniuConfig) {
         String http = "http://", https = "https://";
@@ -98,7 +97,6 @@ public class QiNiuServiceImpl implements QiNiuService {
     }
 
     @Override
-    @CacheEvict(allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     public QiniuContent upload(MultipartFile file, QiniuConfig qiniuConfig) {
         FileUtil.checkSize(maxSize, file.getSize());
@@ -138,7 +136,6 @@ public class QiNiuServiceImpl implements QiNiuService {
     }
 
     @Override
-    @Cacheable
     public QiniuContent findByContentId(Long id) {
         QiniuContent qiniuContent = qiniuContentRepository.findById(id).orElseGet(QiniuContent::new);
         ValidationUtil.isNull(qiniuContent.getId(),"QiniuContent", "id",id);
@@ -146,7 +143,6 @@ public class QiNiuServiceImpl implements QiNiuService {
     }
 
     @Override
-    @Cacheable
     public String download(QiniuContent content,QiniuConfig config){
         String finalUrl;
         String type = "公开";
@@ -162,7 +158,6 @@ public class QiNiuServiceImpl implements QiNiuService {
     }
 
     @Override
-    @CacheEvict(allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     public void delete(QiniuContent content, QiniuConfig config) {
         //构造一个带指定Zone对象的配置类
@@ -178,7 +173,6 @@ public class QiNiuServiceImpl implements QiNiuService {
     }
 
     @Override
-    @CacheEvict(allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     public void synchronize(QiniuConfig config) {
         if(config.getId() == null){
@@ -216,7 +210,6 @@ public class QiNiuServiceImpl implements QiNiuService {
     }
 
     @Override
-    @CacheEvict(allEntries = true)
     public void deleteAll(Long[] ids, QiniuConfig config) {
         for (Long id : ids) {
             delete(findByContentId(id), config);
@@ -224,7 +217,6 @@ public class QiNiuServiceImpl implements QiNiuService {
     }
 
     @Override
-    @CacheEvict(allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     public void update(String type) {
         qiNiuConfigRepository.update(type);

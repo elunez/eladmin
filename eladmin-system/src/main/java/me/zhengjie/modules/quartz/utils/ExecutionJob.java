@@ -51,7 +51,6 @@ public class ExecutionJob extends QuartzJobBean {
     private final static ThreadPoolExecutor EXECUTOR = ThreadPoolExecutorUtil.getPoll();
 
     @Override
-    @SuppressWarnings("unchecked")
     public void executeInternal(JobExecutionContext context) {
         QuartzJob quartzJob = (QuartzJob) context.getMergedJobDataMap().get(QuartzJob.JOB_KEY);
         // 获取spring bean

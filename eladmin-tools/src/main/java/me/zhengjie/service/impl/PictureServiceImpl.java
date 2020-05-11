@@ -29,7 +29,6 @@ import me.zhengjie.service.dto.PictureQueryCriteria;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.utils.*;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -47,7 +46,6 @@ import java.util.*;
 @Slf4j
 @RequiredArgsConstructor
 @Service(value = "pictureService")
-@CacheConfig(cacheNames = "picture")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class PictureServiceImpl implements PictureService {
 

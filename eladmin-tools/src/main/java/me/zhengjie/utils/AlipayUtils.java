@@ -61,10 +61,10 @@ public class AlipayUtils {
 
         // 获取支付宝POST过来反馈信息
         Map<String,String> params = new HashMap<>(1);
-        Map requestParams = request.getParameterMap();
+        Map<String, String[]> requestParams = request.getParameterMap();
         for (Object o : requestParams.keySet()) {
             String name = (String) o;
-            String[] values = (String[]) requestParams.get(name);
+            String[] values = requestParams.get(name);
             String valueStr = "";
             for (int i = 0; i < values.length; i++) {
                 valueStr = (i == values.length - 1) ? valueStr + values[i]

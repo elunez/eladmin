@@ -190,6 +190,7 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
+    @Cacheable
     public Object getMenus(Long pid) {
         List<Menu> menus;
         if(pid != null && !pid.equals(0L)){
@@ -201,6 +202,7 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
+    @Cacheable
     public List<MenuDto> getSuperior(MenuDto menuDto, List<Menu> menus) {
         if(menuDto.getPid() == null){
             menus.addAll(menuRepository.findByPidIsNull());
@@ -291,6 +293,7 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
+    @Cacheable
     public Menu findOne(Long id) {
         Menu menu = menuRepository.findById(id).orElseGet(Menu::new);
         ValidationUtil.isNull(menu.getId(),"Menu","id",id);

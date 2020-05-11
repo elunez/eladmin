@@ -23,20 +23,20 @@ package me.zhengjie.utils;
 public enum  AliPayStatusEnum {
 
     /** 交易成功 */
-    FINISHED("交易成功", "TRADE_FINISHED"),
+    FINISHED("TRADE_FINISHED"),
 
     /** 支付成功 */
-    SUCCESS("支付成功", "TRADE_SUCCESS"),
+    SUCCESS("TRADE_SUCCESS"),
 
     /** 交易创建 */
-    BUYER_PAY("交易创建", "WAIT_BUYER_PAY"),
+    BUYER_PAY("WAIT_BUYER_PAY"),
 
     /** 交易关闭 */
-    CLOSED("交易关闭", "TRADE_CLOSED");
+    CLOSED("TRADE_CLOSED");
 
-    private String value;
+    private final String value;
 
-    AliPayStatusEnum(String name, String value) {
+    AliPayStatusEnum(String value) {
         this.value = value;
     }
 

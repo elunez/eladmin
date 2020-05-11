@@ -140,7 +140,9 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
             File dest = new File(path).getCanonicalFile();
             // 检测是否存在目录
             if (!dest.getParentFile().exists()) {
-                dest.getParentFile().mkdirs();
+                if (!dest.getParentFile().mkdirs()) {
+                    System.out.println("was not successful.");
+                }
             }
             // 文件写入
             file.transferTo(dest);
@@ -220,7 +222,7 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
         try {
             InputStream in = new FileInputStream(file);
             try {
-                in.read(b);
+                System.out.println(in.read(b));
             } catch (IOException e) {
                 e.printStackTrace();
             }

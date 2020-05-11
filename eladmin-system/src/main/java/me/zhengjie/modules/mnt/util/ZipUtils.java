@@ -50,9 +50,13 @@ public class ZipUtils {
 				System.out.println("file unzip : " + newFile.getAbsoluteFile());
 				//大部分网络上的源码，这里没有判断子目录
 				if (ze.isDirectory()) {
-					newFile.mkdirs();
+					if (!newFile.mkdirs()) {
+						System.out.println("was not successful.");
+					}
 				} else {
-					new File(newFile.getParent()).mkdirs();
+					if (!new File(newFile.getParent()).mkdirs()) {
+						System.out.println("was not successful.");
+					}
 					FileOutputStream fos = new FileOutputStream(newFile);
 					int len;
 					while ((len = zis.read(buffer)) != -1) {
@@ -80,12 +84,16 @@ public class ZipUtils {
 				File file = new File(out, entry.getName());
 
 				if (entry.isDirectory()) {
-					file.mkdirs();
+					if (!file.mkdirs()) {
+						System.out.println("was not successful.");
+					}
 				} else {
 					File parent = file.getParentFile();
 
 					if (!parent.exists()) {
-						parent.mkdirs();
+						if (!parent.mkdirs()) {
+							System.out.println("was not successful.");
+						}
 					}
 
 					try (BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file))) {
@@ -115,7 +123,9 @@ public class ZipUtils {
 	public static void upZipFile(File zipFile, String folderPath) throws ZipException, IOException {
 		File desDir = new File(folderPath);
 		if (!desDir.exists()) {
-			desDir.mkdirs();
+			if (!desDir.mkdirs()) {
+				System.out.println("was not successful.");
+			}
 		}
 		ZipFile zf = new ZipFile(zipFile);
 		for (Enumeration<?> entries = zf.entries(); entries.hasMoreElements(); ) {
@@ -127,7 +137,9 @@ public class ZipUtils {
 			if (!desFile.exists()) {
 				File fileParentDir = desFile.getParentFile();
 				if (!fileParentDir.exists()) {
-					fileParentDir.mkdirs();
+					if (!fileParentDir.mkdirs()) {
+						System.out.println("was not successful.");
+					}
 				}
 			}
 

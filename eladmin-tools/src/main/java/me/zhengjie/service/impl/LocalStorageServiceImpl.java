@@ -26,9 +26,6 @@ import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.utils.*;
 import me.zhengjie.repository.LocalStorageRepository;
 import me.zhengjie.service.LocalStorageService;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,7 +46,6 @@ import javax.servlet.http.HttpServletResponse;
 */
 @Service
 @RequiredArgsConstructor
-@CacheConfig(cacheNames = "localStorage")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class LocalStorageServiceImpl implements LocalStorageService {
 
@@ -57,22 +53,18 @@ public class LocalStorageServiceImpl implements LocalStorageService {
     private final LocalStorageMapper localStorageMapper;
     private final FileProperties properties;
 
-
     @Override
-    @Cacheable
     public Object queryAll(LocalStorageQueryCriteria criteria, Pageable pageable){
         Page<LocalStorage> page = localStorageRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable);
         return PageUtil.toPage(page.map(localStorageMapper::toDto));
     }
 
     @Override
-    @Cacheable
     public List<LocalStorageDto> queryAll(LocalStorageQueryCriteria criteria){
         return localStorageMapper.toDto(localStorageRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder)));
     }
 
     @Override
-    @Cacheable(key = "#p0")
     public LocalStorageDto findById(Long id){
         LocalStorage localStorage = localStorageRepository.findById(id).orElseGet(LocalStorage::new);
         ValidationUtil.isNull(localStorage.getId(),"LocalStorage","id",id);
@@ -80,7 +72,6 @@ public class LocalStorageServiceImpl implements LocalStorageService {
     }
 
     @Override
-    @CacheEvict(allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     public LocalStorageDto create(String name, MultipartFile multipartFile) {
         FileUtil.checkSize(properties.getMaxSize(), multipartFile.getSize());
@@ -108,7 +99,6 @@ public class LocalStorageServiceImpl implements LocalStorageService {
     }
 
     @Override
-    @CacheEvict(allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     public void update(LocalStorage resources) {
         LocalStorage localStorage = localStorageRepository.findById(resources.getId()).orElseGet(LocalStorage::new);
@@ -118,7 +108,6 @@ public class LocalStorageServiceImpl implements LocalStorageService {
     }
 
     @Override
-    @CacheEvict(allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     public void deleteAll(Long[] ids) {
         for (Long id : ids) {

@@ -29,9 +29,6 @@ import me.zhengjie.utils.PageUtil;
 import me.zhengjie.utils.QueryHelp;
 import me.zhengjie.utils.ValidationUtil;
 import org.quartz.CronExpression;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -46,7 +43,6 @@ import java.util.*;
  */
 @RequiredArgsConstructor
 @Service(value = "quartzJobService")
-@CacheConfig(cacheNames = "quartzJob")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class QuartzJobServiceImpl implements QuartzJobService {
 
@@ -55,7 +51,6 @@ public class QuartzJobServiceImpl implements QuartzJobService {
     private final QuartzManage quartzManage;
 
     @Override
-    @Cacheable
     public Object queryAll(JobQueryCriteria criteria, Pageable pageable){
         return PageUtil.toPage(quartzJobRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable));
     }
@@ -76,7 +71,6 @@ public class QuartzJobServiceImpl implements QuartzJobService {
     }
 
     @Override
-    @Cacheable(key = "#p0")
     public QuartzJob findById(Long id) {
         QuartzJob quartzJob = quartzJobRepository.findById(id).orElseGet(QuartzJob::new);
         ValidationUtil.isNull(quartzJob.getId(),"QuartzJob","id",id);
@@ -84,7 +78,6 @@ public class QuartzJobServiceImpl implements QuartzJobService {
     }
 
     @Override
-    @CacheEvict(allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     public QuartzJob create(QuartzJob resources) {
         if (!CronExpression.isValidExpression(resources.getCronExpression())){
@@ -96,7 +89,6 @@ public class QuartzJobServiceImpl implements QuartzJobService {
     }
 
     @Override
-    @CacheEvict(allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     public void update(QuartzJob resources) {
         if (!CronExpression.isValidExpression(resources.getCronExpression())){
@@ -107,7 +99,6 @@ public class QuartzJobServiceImpl implements QuartzJobService {
     }
 
     @Override
-    @CacheEvict(allEntries = true)
     public void updateIsPause(QuartzJob quartzJob) {
         if (quartzJob.getIsPause()) {
             quartzManage.resumeJob(quartzJob);
@@ -125,7 +116,6 @@ public class QuartzJobServiceImpl implements QuartzJobService {
     }
 
     @Override
-    @CacheEvict(allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     public void delete(Set<Long> ids) {
         for (Long id : ids) {

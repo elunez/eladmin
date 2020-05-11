@@ -16,8 +16,6 @@
 package me.zhengjie.utils;
 
 import com.qiniu.storage.Region;
-import me.zhengjie.utils.FileUtil;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
