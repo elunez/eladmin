@@ -17,6 +17,7 @@ package me.zhengjie.modules.security.security;
 
 import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ObjectUtil;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -66,10 +67,12 @@ public class TokenProvider implements InitializingBean {
          .collect(Collectors.joining(","));
 
       return Jwts.builder()
-         .setSubject(authentication.getName())
-         .claim(AUTHORITIES_KEY, authorities)
-         .signWith(key, SignatureAlgorithm.HS512)
-         .compact();
+              .setSubject(authentication.getName())
+              .claim(AUTHORITIES_KEY, authorities)
+              .signWith(key, SignatureAlgorithm.HS512)
+              // 加入ID确保生成的 Token 都不一致
+              .setId(IdUtil.simpleUUID())
+              .compact();
    }
 
    Authentication getAuthentication(String token) {
