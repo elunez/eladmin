@@ -1,15 +1,31 @@
+/*
+ *  Copyright 2019-2020 Zheng Jie
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
 package me.zhengjie.modules.system.domain;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
+import me.zhengjie.base.BaseEntity;
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import java.io.Serializable;
-import java.sql.Timestamp;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -19,64 +35,91 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
-@Table(name="user")
-public class User implements Serializable {
+@Table(name="sys_user")
+public class User extends BaseEntity implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     @NotNull(groups = Update.class)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @ApiModelProperty(value = "ID", hidden = true)
     private Long id;
 
-    @NotBlank
-    @Column(unique = true)
-    private String username;
-
-    private String avatar;
-
-    @NotBlank
-    @Pattern(regexp = "([a-z0-9A-Z]+[-|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}",message = "格式错误")
-    private String email;
-
-    @NotBlank
-    private String phone;
-
-    @NotNull
-    private Boolean enabled;
-
-    private String password;
-
-    @CreationTimestamp
-    @Column(name = "create_time")
-    private Timestamp createTime;
-
-    @Column(name = "last_password_reset_time")
-    private Date lastPasswordResetTime;
-
     @ManyToMany
-    @JoinTable(name = "users_roles", joinColumns = {@JoinColumn(name = "user_id",referencedColumnName = "id")}, inverseJoinColumns = {@JoinColumn(name = "role_id",referencedColumnName = "id")})
+    @ApiModelProperty(value = "用户角色")
+    @JoinTable(name = "sys_users_roles",
+            joinColumns = {@JoinColumn(name = "user_id",referencedColumnName = "user_id")},
+            inverseJoinColumns = {@JoinColumn(name = "role_id",referencedColumnName = "role_id")})
     private Set<Role> roles;
 
-    @OneToOne
-    @JoinColumn(name = "job_id")
-    private Job job;
+    @ManyToMany
+    @ApiModelProperty(value = "用户岗位")
+    @JoinTable(name = "sys_users_jobs",
+            joinColumns = {@JoinColumn(name = "user_id",referencedColumnName = "user_id")},
+            inverseJoinColumns = {@JoinColumn(name = "job_id",referencedColumnName = "job_id")})
+    private Set<Job> jobs;
 
     @OneToOne
     @JoinColumn(name = "dept_id")
+    @ApiModelProperty(value = "用户部门")
     private Dept dept;
 
+    @NotBlank
+    @Column(unique = true)
+    @ApiModelProperty(value = "用户名称")
+    private String username;
+
+    @NotBlank
+    @ApiModelProperty(value = "用户昵称")
+    private String nickName;
+
+    @Email
+    @NotBlank
+    @ApiModelProperty(value = "邮箱")
+    private String email;
+
+    @NotBlank
+    @ApiModelProperty(value = "电话号码")
+    private String phone;
+
+    @ApiModelProperty(value = "用户性别")
+    private String gender;
+
+    @ApiModelProperty(value = "头像真实名称",hidden = true)
+    private String avatarName;
+
+    @ApiModelProperty(value = "头像存储的路径", hidden = true)
+    private String avatarPath;
+
+    @ApiModelProperty(value = "密码")
+    private String password;
+
+    @NotNull
+    @ApiModelProperty(value = "是否启用")
+    private Boolean enabled;
+
+    @ApiModelProperty(value = "是否为admin账号", hidden = true)
+    private Boolean isAdmin = false;
+
+    @Column(name = "pwd_reset_time")
+    @ApiModelProperty(value = "最后修改密码的时间", hidden = true)
+    private Date pwdResetTime;
+
     @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", avatar='" + avatar + '\'' +
-                ", email='" + email + '\'' +
-                ", enabled=" + enabled +
-                ", password='" + password + '\'' +
-                ", createTime=" + createTime +
-                ", lastPasswordResetTime=" + lastPasswordResetTime +
-                '}';
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        User user = (User) o;
+        return Objects.equals(id, user.id) &&
+                Objects.equals(username, user.username);
     }
 
-    public @interface Update {}
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, username);
+    }
 }

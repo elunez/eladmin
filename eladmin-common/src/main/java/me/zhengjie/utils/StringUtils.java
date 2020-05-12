@@ -1,35 +1,40 @@
+/*
+ *  Copyright 2019-2020 Zheng Jie
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
 package me.zhengjie.utils;
 
+import cn.hutool.http.HttpUtil;
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
+import eu.bitwalker.useragentutils.Browser;
+import eu.bitwalker.useragentutils.UserAgent;
 import javax.servlet.http.HttpServletRequest;
-import java.io.UnsupportedEncodingException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Calendar;
 import java.util.Date;
 
 /**
+ * @author Zheng Jie
  * 字符串工具类, 继承org.apache.commons.lang3.StringUtils类
  */
 public class StringUtils extends org.apache.commons.lang3.StringUtils {
 
     private static final char SEPARATOR = '_';
-    private static final String CHARSET_NAME = "UTF-8";
 
-    /**
-     * 是否包含字符串
-     *
-     * @param str  验证字符串
-     * @param strs 字符串组
-     * @return 包含返回true
-     */
-    public static boolean inString(String str, String... strs) {
-        if (str != null) {
-            for (String s : strs) {
-                if (str.equals(trim(s))) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
+    private static final String UNKNOWN = "unknown";
 
     /**
      * 驼峰命名法工具
@@ -85,7 +90,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
      * toCapitalizeCamelCase("hello_world") == "HelloWorld"
      * toUnderScoreCase("helloWorld") = "hello_world"
      */
-    public static String toUnderScoreCase(String s) {
+    static String toUnderScoreCase(String s) {
         if (s == null) {
             return null;
         }
@@ -118,21 +123,47 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 
     /**
      * 获取ip地址
-     * @param request
-     * @return
      */
-        public static String getIP(HttpServletRequest request) {
+    public static String getIp(HttpServletRequest request) {
         String ip = request.getHeader("x-forwarded-for");
-        if(ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+        if (ip == null || ip.length() == 0 || UNKNOWN.equalsIgnoreCase(ip)) {
             ip = request.getHeader("Proxy-Client-IP");
         }
-        if(ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+        if (ip == null || ip.length() == 0 || UNKNOWN.equalsIgnoreCase(ip)) {
             ip = request.getHeader("WL-Proxy-Client-IP");
         }
-        if(ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+        if (ip == null || ip.length() == 0 || UNKNOWN.equalsIgnoreCase(ip)) {
             ip = request.getRemoteAddr();
         }
-        return "0:0:0:0:0:0:0:1".equals(ip)?"127.0.0.1":ip;
+        String comma = ",";
+        String localhost = "127.0.0.1";
+        if (ip.contains(comma)) {
+            ip = ip.split(",")[0];
+        }
+        if  (localhost.equals(ip))  {
+            // 获取本机真正的ip地址
+            try {
+                ip = InetAddress.getLocalHost().getHostAddress();
+            } catch (UnknownHostException e) {
+                e.printStackTrace();
+            }
+        }
+        return ip;
+    }
+
+    /**
+     * 根据ip获取详细地址
+     */
+    public static String getCityInfo(String ip) {
+        String api = String.format(ElAdminConstant.Url.IP_URL,ip);
+        JSONObject object = JSONUtil.parseObj(HttpUtil.get(api));
+        return object.get("addr", String.class);
+    }
+
+    public static String getBrowser(HttpServletRequest request){
+        UserAgent userAgent = UserAgent.parseUserAgentString(request.getHeader("User-Agent"));
+        Browser browser = userAgent.getBrowser();
+        return browser.getName();
     }
 
     /**
@@ -148,5 +179,27 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
             w = 0;
         }
         return weekDays[w];
+    }
+
+    /**
+     * 获取当前机器的IP
+     * @return /
+     */
+    public static String getLocalIp(){
+        InetAddress addr;
+        try {
+            addr = InetAddress.getLocalHost();
+        } catch (UnknownHostException e) {
+            return "unknown";
+        }
+        byte[] ipAddr = addr.getAddress();
+        StringBuilder ipAddrStr = new StringBuilder();
+        for (int i = 0; i < ipAddr.length; i++) {
+            if (i > 0) {
+                ipAddrStr.append(".");
+            }
+            ipAddrStr.append(ipAddr[i] & 0xFF);
+        }
+        return ipAddrStr.toString();
     }
 }

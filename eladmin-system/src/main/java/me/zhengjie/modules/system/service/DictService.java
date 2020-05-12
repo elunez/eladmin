@@ -1,55 +1,83 @@
+/*
+ *  Copyright 2019-2020 Zheng Jie
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
 package me.zhengjie.modules.system.service;
 
 import me.zhengjie.modules.system.domain.Dict;
-import me.zhengjie.modules.system.service.dto.DictDTO;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
+import me.zhengjie.modules.system.service.dto.DictDto;
+import me.zhengjie.modules.system.service.dto.DictQueryCriteria;
 import org.springframework.data.domain.Pageable;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
 * @author Zheng Jie
 * @date 2019-04-10
 */
-@CacheConfig(cacheNames = "dict")
 public interface DictService {
 
     /**
-     * 查询
-     * @param dict
-     * @param pageable
-     * @return
+     * 分页查询
+     * @param criteria 条件
+     * @param pageable 分页参数
+     * @return /
      */
-    @Cacheable(keyGenerator = "keyGenerator")
-    Object queryAll(DictDTO dict, Pageable pageable);
+    Map<String,Object> queryAll(DictQueryCriteria criteria, Pageable pageable);
 
     /**
-     * findById
-     * @param id
-     * @return
+     * 查询全部数据
+     * @param dict /
+     * @return /
      */
-    @Cacheable(key = "#p0")
-    DictDTO findById(Long id);
+    List<DictDto> queryAll(DictQueryCriteria dict);
 
     /**
-     * create
-     * @param resources
-     * @return
+     * 根据ID查询
+     * @param id /
+     * @return /
      */
-    @CacheEvict(allEntries = true)
-    DictDTO create(Dict resources);
+    DictDto findById(Long id);
 
     /**
-     * update
-     * @param resources
+     * 创建
+     * @param resources /
+     * @return /
      */
-    @CacheEvict(allEntries = true)
+    DictDto create(Dict resources);
+
+    /**
+     * 编辑
+     * @param resources /
+     */
     void update(Dict resources);
 
     /**
-     * delete
-     * @param id
+     * 删除
+     * @param ids /
      */
-    @CacheEvict(allEntries = true)
-    void delete(Long id);
+    void delete(Set<Long> ids);
+
+    /**
+     * 导出数据
+     * @param queryAll 待导出的数据
+     * @param response /
+     * @throws IOException /
+     */
+    void download(List<DictDto> queryAll, HttpServletResponse response) throws IOException;
 }

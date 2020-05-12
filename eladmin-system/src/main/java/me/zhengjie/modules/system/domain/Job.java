@@ -1,61 +1,75 @@
+/*
+ *  Copyright 2019-2020 Zheng Jie
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
 package me.zhengjie.modules.system.domain;
 
-import lombok.Data;
-import org.hibernate.annotations.*;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Getter;
+import lombok.Setter;
+import me.zhengjie.base.BaseEntity;
 import javax.persistence.*;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.sql.Timestamp;
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
 * @author Zheng Jie
 * @date 2019-03-29
 */
 @Entity
-@Data
-@Table(name="job")
-public class Job implements Serializable {
+@Getter
+@Setter
+@Table(name="sys_job")
+public class Job extends BaseEntity implements Serializable {
 
-    /**
-     * ID
-     */
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "job_id")
     @NotNull(groups = Update.class)
+    @ApiModelProperty(value = "ID", hidden = true)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    /**
-     * 名称
-     */
-    @Column(name = "name",nullable = false)
     @NotBlank
+    @ApiModelProperty(value = "岗位名称")
     private String name;
 
-    @Column(unique = true)
     @NotNull
-    private Long sort;
+    @ApiModelProperty(value = "岗位排序")
+    private Long jobSort;
 
-    /**
-     * 状态
-     */
-    @Column(name = "enabled",nullable = false)
     @NotNull
+    @ApiModelProperty(value = "是否启用")
     private Boolean enabled;
 
-    @OneToOne
-    @JoinColumn(name = "dept_id")
-    private Dept dept;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Job job = (Job) o;
+        return Objects.equals(id, job.id);
+    }
 
-    /**
-     * 创建日期
-     */
-    @Column(name = "create_time")
-    @CreationTimestamp
-    private Timestamp createTime;
-
-    public @interface Update {}
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

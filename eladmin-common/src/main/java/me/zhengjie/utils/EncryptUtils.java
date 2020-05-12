@@ -1,49 +1,83 @@
+/*
+ *  Copyright 2019-2020 Zheng Jie
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
 package me.zhengjie.utils;
 
-import org.springframework.util.DigestUtils;
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
 import javax.crypto.spec.IvParameterSpec;
+import java.nio.charset.StandardCharsets;
 
 /**
  * 加密
  * @author Zheng Jie
  * @date 2018-11-23
  */
+
 public class EncryptUtils {
 
-    private static String strKey = "Passw0rd", strParam = "Passw0rd";
+    private static final String STR_PARAM = "Passw0rd";
 
-    /**
-     * 对称加密
-     * @param source
-     * @return
-     * @throws Exception
-     */
-    public static String desEncrypt(String source) throws Exception {
+    private static Cipher cipher;
+
+    private static final IvParameterSpec IV = new IvParameterSpec(STR_PARAM.getBytes(StandardCharsets.UTF_8));
+
+    private static DESKeySpec getDesKeySpec(String source) throws Exception {
         if (source == null || source.length() == 0){
             return null;
         }
-        Cipher cipher = Cipher.getInstance("DES/CBC/PKCS5Padding");
-        DESKeySpec desKeySpec = new DESKeySpec(strKey.getBytes("UTF-8"));
-        SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DES");
-        SecretKey secretKey = keyFactory.generateSecret(desKeySpec);
-        IvParameterSpec iv = new IvParameterSpec(strParam.getBytes("UTF-8"));
-        cipher.init(Cipher.ENCRYPT_MODE, secretKey, iv);
-        return byte2hex(
-                cipher.doFinal(source.getBytes("UTF-8"))).toUpperCase();
+        cipher = Cipher.getInstance("DES/CBC/PKCS5Padding");
+        String strKey = "Passw0rd";
+        return new DESKeySpec(strKey.getBytes(StandardCharsets.UTF_8));
     }
 
-    public static String byte2hex(byte[] inStr) {
+    /**
+     * 对称加密
+     */
+    public static String desEncrypt(String source) throws Exception {
+        DESKeySpec desKeySpec = getDesKeySpec(source);
+        SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DES");
+        SecretKey secretKey = keyFactory.generateSecret(desKeySpec);
+        cipher.init(Cipher.ENCRYPT_MODE, secretKey, IV);
+        return byte2hex(
+                cipher.doFinal(source.getBytes(StandardCharsets.UTF_8))).toUpperCase();
+    }
+
+    /**
+     * 对称解密
+     */
+    public static String desDecrypt(String source) throws Exception {
+        byte[] src = hex2byte(source.getBytes());
+        DESKeySpec desKeySpec = getDesKeySpec(source);
+        SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DES");
+        SecretKey secretKey = keyFactory.generateSecret(desKeySpec);
+        cipher.init(Cipher.DECRYPT_MODE, secretKey, IV);
+        byte[] retByte = cipher.doFinal(src);
+        return new String(retByte);
+    }
+
+    private static String byte2hex(byte[] inStr) {
         String stmp;
-        StringBuffer out = new StringBuffer(inStr.length * 2);
-        for (int n = 0; n < inStr.length; n++) {
-            stmp = Integer.toHexString(inStr[n] & 0xFF);
+        StringBuilder out = new StringBuilder(inStr.length * 2);
+        for (byte b : inStr) {
+            stmp = Integer.toHexString(b & 0xFF);
             if (stmp.length() == 1) {
                 // 如果是0至F的单位字符串，则添加0
-                out.append("0" + stmp);
+                out.append("0").append(stmp);
             } else {
                 out.append(stmp);
             }
@@ -51,46 +85,16 @@ public class EncryptUtils {
         return out.toString();
     }
 
-
-    public static byte[] hex2byte(byte[] b) {
-        if ((b.length % 2) != 0){
+    private static byte[] hex2byte(byte[] b) {
+        int size = 2;
+        if ((b.length % size) != 0){
             throw new IllegalArgumentException("长度不是偶数");
         }
         byte[] b2 = new byte[b.length / 2];
-        for (int n = 0; n < b.length; n += 2) {
+        for (int n = 0; n < b.length; n += size) {
             String item = new String(b, n, 2);
             b2[n / 2] = (byte) Integer.parseInt(item, 16);
         }
         return b2;
-    }
-
-    /**
-     * 对称解密
-     * @param source
-     * @return
-     * @throws Exception
-     */
-    public static String desDecrypt(String source) throws Exception {
-        if (source == null || source.length() == 0){
-            return null;
-        }
-        byte[] src = hex2byte(source.getBytes());
-        Cipher cipher = Cipher.getInstance("DES/CBC/PKCS5Padding");
-        DESKeySpec desKeySpec = new DESKeySpec(strKey.getBytes("UTF-8"));
-        SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DES");
-        SecretKey secretKey = keyFactory.generateSecret(desKeySpec);
-        IvParameterSpec iv = new IvParameterSpec(strParam.getBytes("UTF-8"));
-        cipher.init(Cipher.DECRYPT_MODE, secretKey, iv);
-        byte[] retByte = cipher.doFinal(src);
-        return new String(retByte);
-    }
-
-    /**
-     * 密码加密
-     * @param password
-     * @return
-     */
-    public static String encryptPassword(String password){
-        return  DigestUtils.md5DigestAsHex(password.getBytes());
     }
 }

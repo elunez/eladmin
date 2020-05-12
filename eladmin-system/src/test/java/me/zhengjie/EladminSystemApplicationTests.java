@@ -11,7 +11,10 @@ public class EladminSystemApplicationTests {
 
     @Test
     public void contextLoads() {
+
     }
 
+    public static void main(String[] args) {
+    }
 }
 
