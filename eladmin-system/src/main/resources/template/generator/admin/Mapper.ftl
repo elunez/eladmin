@@ -23,7 +23,6 @@ import org.mapstruct.ReportingPolicy;
 
 /**
 * @website https://docs.auauz.net
-* @description /
 * @author ${author}
 * @date ${date}
 **/

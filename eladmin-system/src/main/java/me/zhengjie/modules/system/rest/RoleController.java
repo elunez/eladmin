@@ -60,7 +60,7 @@ public class RoleController {
     @ApiOperation("获取单个role")
     @GetMapping(value = "/{id}")
     @PreAuthorize("@el.check('roles:list')")
-    public ResponseEntity<Object> getRoles(@PathVariable Long id){
+    public ResponseEntity<Object> query(@PathVariable Long id){
         return new ResponseEntity<>(roleService.findById(id), HttpStatus.OK);
     }
 
@@ -75,7 +75,7 @@ public class RoleController {
     @ApiOperation("返回全部的角色")
     @GetMapping(value = "/all")
     @PreAuthorize("@el.check('roles:list','user:add','user:edit')")
-    public ResponseEntity<Object> getAll(@PageableDefault(value = 2000, sort = {"level"}, direction = Sort.Direction.ASC) Pageable pageable){
+    public ResponseEntity<Object> query(@PageableDefault(value = 2000, sort = {"level"}, direction = Sort.Direction.ASC) Pageable pageable){
         return new ResponseEntity<>(roleService.queryAll(pageable),HttpStatus.OK);
     }
 
@@ -83,7 +83,7 @@ public class RoleController {
     @ApiOperation("查询角色")
     @GetMapping
     @PreAuthorize("@el.check('roles:list')")
-    public ResponseEntity<Object> getRoles(RoleQueryCriteria criteria, Pageable pageable){
+    public ResponseEntity<Object> query(RoleQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity<>(roleService.queryAll(criteria,pageable),HttpStatus.OK);
     }
 

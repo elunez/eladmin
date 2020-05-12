@@ -33,44 +33,51 @@
         <jedis.version>2.9.0</jedis.version>
         <log4jdbc.version>1.16</log4jdbc.version>
         <swagger.version>2.9.2</swagger.version>
-        <fastjson.version>1.2.54</fastjson.version>
-        <druid.version>1.1.10</druid.version>
+        <fastjson.version>1.2.68</fastjson.version>
+        <druid.version>1.1.14</druid.version>
         <commons-pool2.version>2.5.0</commons-pool2.version>
         <mapstruct.version>1.2.0.Final</mapstruct.version>
     </properties>
 
     <dependencies>
-        <!--Spring boot start-->
+        <!--Spring boot 核心-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
+
+        <!--Spring boot Web容器-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+
+        <!--Spring boot 测试-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <!--Spring boot 安全框架-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
-        <!-- spring cache -->
+
+        <!-- spring boot 缓存 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-cache</artifactId>
         </dependency>
-        <!-- redis -->
+
+        <!--Spring boot Redis-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
-        <!--Spring boot end-->
 
-        <!--spring2.0集成redis所需common-pool2-->
+        <!--spring boot 集成redis所需common-pool2-->
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-pool2</artifactId>
@@ -88,7 +95,7 @@
             <version>${log4jdbc.version}</version>
         </dependency>
 
-        <!-- RESTful APIs swagger2 -->
+        <!-- Swagger UI 相关 -->
         <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger2</artifactId>
@@ -126,6 +133,7 @@
             <artifactId>mysql-connector-java</artifactId>
             <scope>runtime</scope>
         </dependency>
+
         <!-- druid数据源驱动 -->
         <dependency>
             <groupId>com.alibaba</groupId>
@@ -140,6 +148,7 @@
             <optional>true</optional>
         </dependency>
 
+        <!-- excel工具 -->
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi</artifactId>
@@ -150,7 +159,6 @@
             <artifactId>poi-ooxml</artifactId>
             <version>3.17</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/xerces/xercesImpl -->
         <dependency>
             <groupId>xerces</groupId>
             <artifactId>xercesImpl</artifactId>
@@ -163,6 +171,7 @@
             <artifactId>fastjson</artifactId>
             <version>${fastjson.version}</version>
         </dependency>
+
         <!--mapStruct依赖-->
         <dependency>
             <groupId>org.mapstruct</groupId>
@@ -180,11 +189,15 @@
             <artifactId>javax.inject</artifactId>
             <version>1</version>
         </dependency>
+
+        <!-- Java图形验证码 -->
         <dependency>
             <groupId>com.github.whvcse</groupId>
             <artifactId>easy-captcha</artifactId>
             <version>1.6.2</version>
         </dependency>
+
+        <!-- 解析客户端操作系统、浏览器信息 -->
         <dependency>
             <groupId>eu.bitwalker</groupId>
             <artifactId>UserAgentUtils</artifactId>

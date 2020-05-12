@@ -34,7 +34,6 @@ import java.util.*;
  * @date 2019-01-02
  */
 @Slf4j
-@SuppressWarnings("all")
 public class GenUtil {
 
     private static final String TIMESTAMP = "Timestamp";
@@ -242,9 +241,9 @@ public class GenUtil {
             // 主键类型
             String colType = ColUtil.cloToJava(column.getColumnType());
             // 小写开头的字段名
-            String changeColumnName = StringUtils.toCamelCase(column.getColumnName().toString());
+            String changeColumnName = StringUtils.toCamelCase(column.getColumnName());
             // 大写开头的字段名
-            String capitalColumnName = StringUtils.toCapitalizeCamelCase(column.getColumnName().toString());
+            String capitalColumnName = StringUtils.toCapitalizeCamelCase(column.getColumnName());
             if(PK.equals(column.getKeyType())){
                 // 存储主键类型
                 genMap.put("pkColumnType",colType);

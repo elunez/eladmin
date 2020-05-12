@@ -42,7 +42,7 @@ public class LimitController {
     @AnonymousAccess
     @ApiOperation("测试")
     @Limit(key = "test", period = 60, count = 10, name = "testLimit", prefix = "limit")
-    public int testLimit() {
+    public int test() {
         return ATOMIC_INTEGER.incrementAndGet();
     }
 }

@@ -64,7 +64,7 @@ public class DatabaseController {
     @ApiOperation(value = "查询数据库")
     @GetMapping
 	@PreAuthorize("@el.check('database:list')")
-    public ResponseEntity<Object> getDatabases(DatabaseQueryCriteria criteria, Pageable pageable){
+    public ResponseEntity<Object> query(DatabaseQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity<>(databaseService.queryAll(criteria,pageable),HttpStatus.OK);
     }
 

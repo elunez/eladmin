@@ -21,7 +21,6 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 /**
 * @website https://docs.auauz.net
-* @description /
 * @author ${author}
 * @date ${date}
 **/

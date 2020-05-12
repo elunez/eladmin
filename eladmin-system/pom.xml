@@ -19,7 +19,7 @@
     </properties>
 
     <dependencies>
-        <!--    代码生成模块    -->
+        <!-- 代码生成模块 -->
         <dependency>
             <groupId>me.zhengjie</groupId>
             <artifactId>eladmin-generator</artifactId>
@@ -32,19 +32,20 @@
             </exclusions>
         </dependency>
 
-        <!--    tools 模块包含了 common 和 logging 模块    -->
+        <!-- tools 模块包含了 common 和 logging 模块 -->
         <dependency>
             <groupId>me.zhengjie</groupId>
             <artifactId>eladmin-tools</artifactId>
             <version>2.4</version>
         </dependency>
 
+        <!-- Spring boot websocket -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-websocket</artifactId>
 		</dependency>
 
-        <!--jwt-->
+        <!-- jwt -->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-api</artifactId>
@@ -67,18 +68,19 @@
             <artifactId>quartz</artifactId>
         </dependency>
 
+        <!-- linux的管理 -->
 		<dependency>
 			<groupId>ch.ethz.ganymed</groupId>
 			<artifactId>ganymed-ssh2</artifactId>
 			<version>build210</version>
 		</dependency>
-
 		<dependency>
 			<groupId>com.jcraft</groupId>
 			<artifactId>jsch</artifactId>
 			<version>0.1.55</version>
 		</dependency>
 
+        <!-- 获取系统信息 -->
         <dependency>
             <groupId>com.github.oshi</groupId>
             <artifactId>oshi-core</artifactId>

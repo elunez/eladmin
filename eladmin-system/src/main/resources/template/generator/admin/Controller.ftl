@@ -32,7 +32,6 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
 * @website https://docs.auauz.net
-* @description /
 * @author ${author}
 * @date ${date}
 **/
@@ -56,7 +55,7 @@ public class ${className}Controller {
     @Log("查询${apiAlias}")
     @ApiOperation("查询${apiAlias}")
     @PreAuthorize("@el.check('${changeClassName}:list')")
-    public ResponseEntity<Object> get${className}s(${className}QueryCriteria criteria, Pageable pageable){
+    public ResponseEntity<Object> query(${className}QueryCriteria criteria, Pageable pageable){
         return new ResponseEntity<>(${changeClassName}Service.queryAll(criteria,pageable),HttpStatus.OK);
     }
 
@@ -81,7 +80,7 @@ public class ${className}Controller {
     @ApiOperation("删除${apiAlias}")
     @PreAuthorize("@el.check('${changeClassName}:del')")
     @DeleteMapping
-    public ResponseEntity<Object> deleteAll(@RequestBody ${pkColumnType}[] ids) {
+    public ResponseEntity<Object> delete(@RequestBody ${pkColumnType}[] ids) {
         ${changeClassName}Service.deleteAll(ids);
         return new ResponseEntity<>(HttpStatus.OK);
     }

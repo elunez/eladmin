@@ -92,6 +92,7 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
+    @Cacheable(key = "#p0")
     public List<MenuDto> findByRoles(List<RoleSmallDto> roles) {
         Set<Long> roleIds = roles.stream().map(RoleSmallDto::getId).collect(Collectors.toSet());
         LinkedHashSet<Menu> menus = menuRepository.findByRoles_IdInAndTypeNotOrderByMenuSortAsc(roleIds, 2);

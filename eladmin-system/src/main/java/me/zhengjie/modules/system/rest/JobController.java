@@ -59,7 +59,7 @@ public class JobController {
     @ApiOperation("查询岗位")
     @GetMapping
     @PreAuthorize("@el.check('job:list','user:list')")
-    public ResponseEntity<Object> getJobs(JobQueryCriteria criteria, Pageable pageable){
+    public ResponseEntity<Object> query(JobQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity<>(jobService.queryAll(criteria, pageable),HttpStatus.OK);
     }
 

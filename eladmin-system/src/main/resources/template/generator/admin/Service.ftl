@@ -26,7 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
 * @website https://docs.auauz.net
-* @description /
+* @description 服务接口
 * @author ${author}
 * @date ${date}
 **/

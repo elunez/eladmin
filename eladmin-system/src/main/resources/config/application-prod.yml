@@ -7,36 +7,44 @@ spring:
       url: jdbc:log4jdbc:mysql://localhost:3306/eladmin?serverTimezone=Asia/Shanghai&characterEncoding=utf8&useSSL=false
       username: root
       password: 123456
-
-      # 初始化配置
-      initial-size: 3
+      # 初始连接数
+      initial-size: 5
       # 最小连接数
-      min-idle: 3
+      min-idle: 10
       # 最大连接数
-      max-active: 15
+      max-active: 20
       # 获取连接超时时间
       max-wait: 5000
       # 连接有效性检测时间
-      time-between-eviction-runs-millis: 90000
-      # 最大空闲时间
-      min-evictable-idle-time-millis: 1800000
+      time-between-eviction-runs-millis: 60000
+      # 连接在池中最小生存的时间
+      min-evictable-idle-time-millis: 300000
+      # 连接在池中最大生存的时间
+      max-evictable-idle-time-millis: 900000
       test-while-idle: true
       test-on-borrow: false
       test-on-return: false
+      # 检测连接是否有效
       validation-query: select 1
-      # 配置监控统计拦截的filters
-      filters: stat
-
+      # 配置监控统计
+      webStatFilter:
+        enabled: true
       stat-view-servlet:
+        enabled: true
         url-pattern: /druid/*
         reset-enable: false
         login-username: admin
         login-password: 123456
-
-      web-stat-filter:
-        url-pattern: /*
-        exclusions: "*.js,*.gif,*.jpg,*.bmp,*.png,*.css,*.ico,/druid/*"
-
+      filter:
+        stat:
+          enabled: true
+          # 记录慢SQL
+          log-slow-sql: true
+          slow-sql-millis: 1000
+          merge-sql: true
+        wall:
+          config:
+            multi-statement-allow: true
 #jwt
 jwt:
   header: Authorization

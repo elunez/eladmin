@@ -49,13 +49,13 @@ public class GeneratorController {
 
     @ApiOperation("查询数据库数据")
     @GetMapping(value = "/tables/all")
-    public ResponseEntity<Object> getTables(){
+    public ResponseEntity<Object> queryTables(){
         return new ResponseEntity<>(generatorService.getTables(), HttpStatus.OK);
     }
 
     @ApiOperation("查询数据库数据")
     @GetMapping(value = "/tables")
-    public ResponseEntity<Object> getTables(@RequestParam(defaultValue = "") String name,
+    public ResponseEntity<Object> queryTables(@RequestParam(defaultValue = "") String name,
                                     @RequestParam(defaultValue = "0")Integer page,
                                     @RequestParam(defaultValue = "10")Integer size){
         int[] startEnd = PageUtil.transToStartEnd(page+1, size);
@@ -64,7 +64,7 @@ public class GeneratorController {
 
     @ApiOperation("查询字段数据")
     @GetMapping(value = "/columns")
-    public ResponseEntity<Object> getTables(@RequestParam String tableName){
+    public ResponseEntity<Object> queryColumns(@RequestParam String tableName){
         List<ColumnInfo> columnInfos = generatorService.getColumns(tableName);
         return new ResponseEntity<>(PageUtil.toPage(columnInfos,columnInfos.size()), HttpStatus.OK);
     }

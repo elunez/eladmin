@@ -58,7 +58,7 @@ public class DictController {
     @ApiOperation("查询字典")
     @GetMapping(value = "/all")
     @PreAuthorize("@el.check('dict:list')")
-    public ResponseEntity<Object> all(){
+    public ResponseEntity<Object> queryAll(){
         return new ResponseEntity<>(dictService.queryAll(new DictQueryCriteria()),HttpStatus.OK);
     }
 
@@ -66,7 +66,7 @@ public class DictController {
     @ApiOperation("查询字典")
     @GetMapping
     @PreAuthorize("@el.check('dict:list')")
-    public ResponseEntity<Object> getByQuery(DictQueryCriteria resources, Pageable pageable){
+    public ResponseEntity<Object> query(DictQueryCriteria resources, Pageable pageable){
         return new ResponseEntity<>(dictService.queryAll(resources,pageable),HttpStatus.OK);
     }
 

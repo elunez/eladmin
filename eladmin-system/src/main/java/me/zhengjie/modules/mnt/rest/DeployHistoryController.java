@@ -54,7 +54,7 @@ public class DeployHistoryController {
     @ApiOperation(value = "查询部署历史")
     @GetMapping
 	@PreAuthorize("@el.check('deployHistory:list')")
-    public ResponseEntity<Object> getDeployHistorys(DeployHistoryQueryCriteria criteria, Pageable pageable){
+    public ResponseEntity<Object> query(DeployHistoryQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity<>(deployhistoryService.queryAll(criteria,pageable),HttpStatus.OK);
     }
 

@@ -69,7 +69,7 @@ public class MenuController {
     @ApiOperation("返回全部的菜单")
     @GetMapping(value = "/lazy")
     @PreAuthorize("@el.check('menu:list','roles:list')")
-    public ResponseEntity<Object> getMenus(@RequestParam Long pid){
+    public ResponseEntity<Object> query(@RequestParam Long pid){
         return new ResponseEntity<>(menuService.getMenus(pid),HttpStatus.OK);
     }
 
@@ -77,7 +77,7 @@ public class MenuController {
     @ApiOperation("查询菜单")
     @GetMapping
     @PreAuthorize("@el.check('menu:list')")
-    public ResponseEntity<Object> getMenus(MenuQueryCriteria criteria) throws Exception {
+    public ResponseEntity<Object> query(MenuQueryCriteria criteria) throws Exception {
         List<MenuDto> menuDtoList = menuService.queryAll(criteria, true);
         return new ResponseEntity<>(PageUtil.toPage(menuDtoList, menuDtoList.size()),HttpStatus.OK);
     }

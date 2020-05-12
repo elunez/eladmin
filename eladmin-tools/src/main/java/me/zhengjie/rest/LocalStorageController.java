@@ -47,7 +47,7 @@ public class LocalStorageController {
     @ApiOperation("查询文件")
     @GetMapping
     @PreAuthorize("@el.check('storage:list')")
-    public ResponseEntity<Object> getLocalStorages(LocalStorageQueryCriteria criteria, Pageable pageable){
+    public ResponseEntity<Object> query(LocalStorageQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity<>(localStorageService.queryAll(criteria,pageable),HttpStatus.OK);
     }
 
@@ -77,7 +77,7 @@ public class LocalStorageController {
     @Log("多选删除")
     @DeleteMapping
     @ApiOperation("多选删除")
-    public ResponseEntity<Object> deleteAll(@RequestBody Long[] ids) {
+    public ResponseEntity<Object> delete(@RequestBody Long[] ids) {
         localStorageService.deleteAll(ids);
         return new ResponseEntity<>(HttpStatus.OK);
     }

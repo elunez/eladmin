@@ -52,7 +52,7 @@ public class QuartzJobController {
     @ApiOperation("查询定时任务")
     @GetMapping
     @PreAuthorize("@el.check('timing:list')")
-    public ResponseEntity<Object> getJobs(JobQueryCriteria criteria, Pageable pageable){
+    public ResponseEntity<Object> query(JobQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity<>(quartzJobService.queryAll(criteria,pageable), HttpStatus.OK);
     }
 
@@ -75,7 +75,7 @@ public class QuartzJobController {
     @ApiOperation("查询任务执行日志")
     @GetMapping(value = "/logs")
     @PreAuthorize("@el.check('timing:list')")
-    public ResponseEntity<Object> getJobLogs(JobQueryCriteria criteria, Pageable pageable){
+    public ResponseEntity<Object> queryJobLog(JobQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity<>(quartzJobService.queryAllLog(criteria,pageable), HttpStatus.OK);
     }
 
@@ -103,7 +103,7 @@ public class QuartzJobController {
     @ApiOperation("更改定时任务状态")
     @PutMapping(value = "/{id}")
     @PreAuthorize("@el.check('timing:edit')")
-    public ResponseEntity<Object> updateIsPause(@PathVariable Long id){
+    public ResponseEntity<Object> update(@PathVariable Long id){
         quartzJobService.updateIsPause(quartzJobService.findById(id));
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

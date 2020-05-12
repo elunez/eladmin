@@ -48,7 +48,7 @@ public class PictureController {
     @PreAuthorize("@el.check('pictures:list')")
     @GetMapping
     @ApiOperation("查询图片")
-    public ResponseEntity<Object> getRoles(PictureQueryCriteria criteria, Pageable pageable){
+    public ResponseEntity<Object> query(PictureQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity<>(pictureService.queryAll(criteria,pageable),HttpStatus.OK);
     }
 
@@ -82,7 +82,7 @@ public class PictureController {
     @ApiOperation("多选删除图片")
     @PreAuthorize("@el.check('pictures:del')")
     @DeleteMapping
-    public ResponseEntity<Object> deleteAll(@RequestBody Long[] ids) {
+    public ResponseEntity<Object> delete(@RequestBody Long[] ids) {
         pictureService.deleteAll(ids);
         return new ResponseEntity<>(HttpStatus.OK);
     }

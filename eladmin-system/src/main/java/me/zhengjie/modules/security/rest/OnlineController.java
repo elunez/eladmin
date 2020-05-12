@@ -45,7 +45,7 @@ public class OnlineController {
     @ApiOperation("查询在线用户")
     @GetMapping
     @PreAuthorize("@el.check()")
-    public ResponseEntity<Object> getAll(String filter, Pageable pageable){
+    public ResponseEntity<Object> query(String filter, Pageable pageable){
         return new ResponseEntity<>(onlineUserService.getAll(filter, pageable),HttpStatus.OK);
     }
 

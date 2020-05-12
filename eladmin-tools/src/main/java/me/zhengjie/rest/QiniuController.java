@@ -50,14 +50,14 @@ public class QiniuController {
     private final QiNiuService qiNiuService;
 
     @GetMapping(value = "/config")
-    public ResponseEntity<Object> get(){
+    public ResponseEntity<Object> queryConfig(){
         return new ResponseEntity<>(qiNiuService.find(), HttpStatus.OK);
     }
 
     @Log("配置七牛云存储")
     @ApiOperation("配置七牛云存储")
     @PutMapping(value = "/config")
-    public ResponseEntity<Object> emailConfig(@Validated @RequestBody QiniuConfig qiniuConfig){
+    public ResponseEntity<Object> updateConfig(@Validated @RequestBody QiniuConfig qiniuConfig){
         qiNiuService.update(qiniuConfig);
         qiNiuService.update(qiniuConfig.getType());
         return new ResponseEntity<>(HttpStatus.OK);
@@ -73,7 +73,7 @@ public class QiniuController {
     @Log("查询文件")
     @ApiOperation("查询文件")
     @GetMapping
-    public ResponseEntity<Object> getRoles(QiniuQueryCriteria criteria, Pageable pageable){
+    public ResponseEntity<Object> query(QiniuQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity<>(qiNiuService.queryAll(criteria,pageable),HttpStatus.OK);
     }
 

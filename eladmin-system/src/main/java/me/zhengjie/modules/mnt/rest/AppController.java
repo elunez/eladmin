@@ -56,7 +56,7 @@ public class AppController {
     @ApiOperation(value = "查询应用")
     @GetMapping
 	@PreAuthorize("@el.check('app:list')")
-    public ResponseEntity<Object> getApps(AppQueryCriteria criteria, Pageable pageable){
+    public ResponseEntity<Object> query(AppQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity<>(appService.queryAll(criteria,pageable),HttpStatus.OK);
     }
 

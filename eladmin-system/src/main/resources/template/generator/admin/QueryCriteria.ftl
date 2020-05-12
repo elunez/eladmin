@@ -31,7 +31,6 @@ import me.zhengjie.annotation.Query;
 
 /**
 * @website https://docs.auauz.net
-* @description /
 * @author ${author}
 * @date ${date}
 **/
