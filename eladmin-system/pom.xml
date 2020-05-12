@@ -13,7 +13,7 @@
     <name>核心模块</name>
 
     <properties>
-        <jjwt.version>0.10.6</jjwt.version>
+        <jjwt.version>0.11.1</jjwt.version>
         <!-- oshi监控需要指定jna版本, 问题详见 https://github.com/oshi/oshi/issues/1040 -->
         <jna.version>5.5.0</jna.version>
     </properties>
@@ -84,7 +84,7 @@
         <dependency>
             <groupId>com.github.oshi</groupId>
             <artifactId>oshi-core</artifactId>
-            <version>4.7.1</version>
+            <version>5.0.1</version>
         </dependency>
 
     </dependencies>

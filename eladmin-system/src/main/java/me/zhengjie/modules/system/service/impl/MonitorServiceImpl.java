@@ -72,7 +72,7 @@ public class MonitorServiceImpl implements MonitorService {
     private Map<String,Object> getDiskInfo(OperatingSystem os) {
         Map<String,Object> diskInfo = new LinkedHashMap<>();
         FileSystem fileSystem = os.getFileSystem();
-        OSFileStore[] fsArray = fileSystem.getFileStores();
+        List<OSFileStore> fsArray = fileSystem.getFileStores();
         for (OSFileStore fs : fsArray){
             diskInfo.put("total", fs.getTotalSpace() > 0 ? FileUtil.getSize(fs.getTotalSpace()) : "?");
             long used = fs.getTotalSpace() - fs.getUsableSpace();

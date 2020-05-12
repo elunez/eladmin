@@ -40,7 +40,6 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @CacheConfig(cacheNames = "alipay")
-@SuppressWarnings("all")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class AliPayServiceImpl implements AliPayService {
 

@@ -30,13 +30,12 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
-        <jedis.version>2.9.0</jedis.version>
         <log4jdbc.version>1.16</log4jdbc.version>
         <swagger.version>2.9.2</swagger.version>
         <fastjson.version>1.2.68</fastjson.version>
-        <druid.version>1.1.14</druid.version>
+        <druid.version>1.1.22</druid.version>
         <commons-pool2.version>2.5.0</commons-pool2.version>
-        <mapstruct.version>1.2.0.Final</mapstruct.version>
+        <mapstruct.version>1.3.1.Final</mapstruct.version>
     </properties>
 
     <dependencies>
@@ -201,7 +200,7 @@
         <dependency>
             <groupId>eu.bitwalker</groupId>
             <artifactId>UserAgentUtils</artifactId>
-            <version>1.20</version>
+            <version>1.21</version>
         </dependency>
     </dependencies>
 

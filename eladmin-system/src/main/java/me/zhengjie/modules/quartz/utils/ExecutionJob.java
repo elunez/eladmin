@@ -43,6 +43,7 @@ import java.util.concurrent.*;
  * @date 2019-01-07
  */
 @Async
+@SuppressWarnings({"unchecked","all"})
 public class ExecutionJob extends QuartzJobBean {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());

@@ -76,8 +76,9 @@ public class TokenProvider implements InitializingBean {
    }
 
    Authentication getAuthentication(String token) {
-      Claims claims = Jwts.parser()
+      Claims claims = Jwts.parserBuilder()
          .setSigningKey(key)
+         .build()
          .parseClaimsJws(token)
          .getBody();
 
