@@ -64,9 +64,8 @@ public interface QuartzJobService {
     /**
      * 创建
      * @param resources /
-     * @return /
      */
-    QuartzJob create(QuartzJob resources);
+    void create(QuartzJob resources);
 
     /**
      * 编辑

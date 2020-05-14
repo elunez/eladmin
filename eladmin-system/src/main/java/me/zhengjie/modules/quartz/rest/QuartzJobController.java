@@ -87,7 +87,8 @@ public class QuartzJobController {
         if (resources.getId() != null) {
             throw new BadRequestException("A new "+ ENTITY_NAME +" cannot already have an ID");
         }
-        return new ResponseEntity<>(quartzJobService.create(resources),HttpStatus.CREATED);
+        quartzJobService.create(resources);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @Log("修改定时任务")

@@ -63,7 +63,8 @@ public class LocalStorageController {
     @PostMapping
     @PreAuthorize("@el.check('storage:add')")
     public ResponseEntity<Object> create(@RequestParam String name, @RequestParam("file") MultipartFile file){
-        return new ResponseEntity<>(localStorageService.create(name, file),HttpStatus.CREATED);
+        localStorageService.create(name, file);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @ApiOperation("修改文件")

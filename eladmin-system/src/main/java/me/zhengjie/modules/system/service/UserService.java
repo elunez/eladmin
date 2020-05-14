@@ -41,9 +41,8 @@ public interface UserService {
     /**
      * 新增用户
      * @param resources /
-     * @return /
      */
-    UserDto create(User resources);
+    void create(User resources);
 
     /**
      * 编辑用户

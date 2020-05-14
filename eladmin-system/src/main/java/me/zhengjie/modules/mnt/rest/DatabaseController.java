@@ -73,7 +73,8 @@ public class DatabaseController {
     @PostMapping
 	@PreAuthorize("@el.check('database:add')")
     public ResponseEntity<Object> create(@Validated @RequestBody Database resources){
-        return new ResponseEntity<>(databaseService.create(resources),HttpStatus.CREATED);
+		databaseService.create(resources);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @Log("修改数据库")

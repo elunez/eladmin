@@ -28,9 +28,6 @@ import me.zhengjie.modules.system.service.dto.UserDto;
 import me.zhengjie.modules.system.service.dto.UserQueryCriteria;
 import me.zhengjie.modules.system.service.mapstruct.UserMapper;
 import me.zhengjie.utils.*;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -49,7 +46,6 @@ import java.util.stream.Collectors;
  */
 @Service
 @RequiredArgsConstructor
-@CacheConfig(cacheNames = "user")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class UserServiceImpl implements UserService {
 
@@ -59,21 +55,18 @@ public class UserServiceImpl implements UserService {
     private final FileProperties properties;
 
     @Override
-    @Cacheable
     public Object queryAll(UserQueryCriteria criteria, Pageable pageable) {
         Page<User> page = userRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable);
         return PageUtil.toPage(page.map(userMapper::toDto));
     }
 
     @Override
-    @Cacheable
     public List<UserDto> queryAll(UserQueryCriteria criteria) {
         List<User> users = userRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder));
         return userMapper.toDto(users);
     }
 
     @Override
-    @Cacheable(key = "#p0")
     public UserDto findById(long id) {
         User user = userRepository.findById(id).orElseGet(User::new);
         ValidationUtil.isNull(user.getId(),"User","id",id);
@@ -81,20 +74,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @CacheEvict(allEntries = true)
     @Transactional(rollbackFor = Exception.class)
-    public UserDto create(User resources) {
+    public void create(User resources) {
         if(userRepository.findByUsername(resources.getUsername())!=null){
             throw new EntityExistException(User.class,"username",resources.getUsername());
         }
         if(userRepository.findByEmail(resources.getEmail())!=null){
             throw new EntityExistException(User.class,"email",resources.getEmail());
         }
-        return userMapper.toDto(userRepository.save(resources));
+        userRepository.save(resources);
     }
 
     @Override
-    @CacheEvict(allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     public void update(User resources) {
         User user = userRepository.findById(resources.getId()).orElseGet(User::new);
@@ -112,9 +103,9 @@ public class UserServiceImpl implements UserService {
 
         // 如果用户的角色改变了，需要手动清理下缓存
         if (!resources.getRoles().equals(user.getRoles())) {
-            String key = "role::loadPermissionByUser:" + user.getUsername();
+            String key = "role::permission:" + user.getUsername();
             redisUtils.del(key);
-            key = "role::findByUsers_Id:" + user.getId();
+            key = "role::user:" + user.getId();
             redisUtils.del(key);
         }
 
@@ -131,7 +122,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @CacheEvict(allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     public void updateCenter(User resources) {
         User user = userRepository.findById(resources.getId()).orElseGet(User::new);
@@ -142,7 +132,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @CacheEvict(allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     public void delete(Set<Long> ids) {
         for (Long id : ids) {
@@ -151,7 +140,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Cacheable(key = "'loadUserByUsername:'+#p0")
     public UserDto findByName(String userName) {
         User user;
         if(ValidationUtil.isEmail(userName)){
@@ -167,14 +155,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @CacheEvict(allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     public void updatePass(String username, String pass) {
         userRepository.updatePass(username,pass,new Date());
     }
 
     @Override
-    @CacheEvict(allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     public void updateAvatar(MultipartFile multipartFile) {
         User user = userRepository.findByUsername(SecurityUtils.getCurrentUsername());
@@ -189,7 +175,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @CacheEvict(allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     public void updateEmail(String username, String email) {
         userRepository.updateEmail(username,email);

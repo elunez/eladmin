@@ -44,9 +44,15 @@ public class DeptDto extends BaseDTO implements Serializable {
 
     private Long pid;
 
-    private Boolean hasChildren = false;
+    private Integer subCount;
 
-    private Boolean leaf = true;
+    public Boolean getHasChildren() {
+        return subCount > 0;
+    }
+
+    public Boolean getLeaf() {
+        return subCount <= 0;
+    }
 
     public String getLabel() {
         return name;

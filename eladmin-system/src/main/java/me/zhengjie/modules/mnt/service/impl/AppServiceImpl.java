@@ -68,9 +68,9 @@ public class AppServiceImpl implements AppService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public AppDto create(App resources) {
+    public void create(App resources) {
         verification(resources);
-        return appMapper.toDto(appRepository.save(resources));
+        appRepository.save(resources);
     }
 
     @Override

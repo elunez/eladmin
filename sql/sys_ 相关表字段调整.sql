@@ -43,11 +43,13 @@ alter table sys_menu CHANGE component_name name VARCHAR(255) COMMENT '组件名�
 alter table sys_menu CHANGE sort menu_sort INT(5) COMMENT '排序';
 /* pid 允许为空 */
 alter table sys_menu modify pid BIGINT(20) null;
+/* 加入子节点数量字段 */
+alter table sys_menu add sub_count INT(5) DEFAULT 0 COMMENT '子菜单数目';
 /* 加入通用字段 */
 alter table sys_menu add update_by VARCHAR(255) COMMENT '更新者';
 alter table sys_menu add create_by VARCHAR(255) COMMENT '创建者';
 alter table sys_menu add update_time datetime COMMENT '更新时间';
--- sys_menu end -- 
+-- sys_menu end --
 
 -- sys_job 表改动 start --
 /* id 改为 menu_id */
@@ -62,13 +64,15 @@ alter table sys_job add update_by VARCHAR(255) COMMENT '更新者';
 alter table sys_job add update_time datetime COMMENT '更新时间';
 -- sys_job end --
 
--- sys_dept 表改动 start-- 
+-- sys_dept 表改动 start--
 /* id 改为 menu_id */
 alter table sys_dept CHANGE id dept_id BIGINT(20) AUTO_INCREMENT COMMENT 'ID';
 /* pid 允许为空 */
 alter table sys_dept modify pid BIGINT(20) null;
 /* 加入排序字段 */
 alter table sys_dept add dept_sort int(5) DEFAULT 999 COMMENT '排序';
+/* 加入子节点数量字段 */
+alter table sys_dept add sub_count INT(5) DEFAULT 0 COMMENT '子部门数目';
 /* 加入通用字段 */
 alter table sys_dept add create_by VARCHAR(255) COMMENT '创建者';
 alter table sys_dept add update_by VARCHAR(255) COMMENT '更新者';

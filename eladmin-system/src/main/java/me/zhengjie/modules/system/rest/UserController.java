@@ -88,7 +88,7 @@ public class UserController {
             criteria.getDeptIds().addAll(dataService.getDeptChildren(deptService.findByPid(criteria.getDeptId())));
         }
         // 数据权限
-        List<Long> dataScopes = dataService.getDeptIds(userService.findById(SecurityUtils.getCurrentUserId()));
+        List<Long> dataScopes = dataService.getDeptIds(userService.findByName(SecurityUtils.getCurrentUsername()));
         // criteria.getDeptIds() 不为空并且数据权限不为空则取交集
         if (!CollectionUtils.isEmpty(criteria.getDeptIds()) && !CollectionUtils.isEmpty(dataScopes)){
             // 取交集
@@ -112,7 +112,8 @@ public class UserController {
         checkLevel(resources);
         // 默认密码 123456
         resources.setPassword(passwordEncoder.encode("123456"));
-        return new ResponseEntity<>(userService.create(resources),HttpStatus.CREATED);
+        userService.create(resources);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @Log("修改用户")

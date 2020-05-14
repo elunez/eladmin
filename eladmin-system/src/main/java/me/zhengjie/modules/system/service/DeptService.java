@@ -48,9 +48,8 @@ public interface DeptService {
     /**
      * 创建
      * @param resources /
-     * @return /
      */
-    DeptDto create(Dept resources);
+    void create(Dept resources);
 
     /**
      * 编辑

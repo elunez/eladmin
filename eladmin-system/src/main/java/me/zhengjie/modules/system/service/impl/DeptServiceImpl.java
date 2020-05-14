@@ -28,9 +28,6 @@ import me.zhengjie.utils.ValidationUtil;
 import me.zhengjie.modules.system.repository.DeptRepository;
 import me.zhengjie.modules.system.service.DeptService;
 import me.zhengjie.modules.system.service.mapstruct.DeptMapper;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -47,7 +44,6 @@ import java.util.stream.Collectors;
 */
 @Service
 @RequiredArgsConstructor
-@CacheConfig(cacheNames = "dept")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class DeptServiceImpl implements DeptService {
 
@@ -55,7 +51,6 @@ public class DeptServiceImpl implements DeptService {
     private final DeptMapper deptMapper;
 
     @Override
-    @Cacheable
     public List<DeptDto> queryAll(DeptQueryCriteria criteria, Boolean isQuery) throws Exception {
         Sort sort = new Sort(Sort.Direction.ASC, "deptSort");
         if (isQuery) {
@@ -79,7 +74,6 @@ public class DeptServiceImpl implements DeptService {
     }
 
     @Override
-    @Cacheable(key = "#p0")
     public DeptDto findById(Long id) {
         Dept dept = deptRepository.findById(id).orElseGet(Dept::new);
         ValidationUtil.isNull(dept.getId(),"Dept","id",id);
@@ -87,7 +81,6 @@ public class DeptServiceImpl implements DeptService {
     }
 
     @Override
-    @Cacheable
     public List<Dept> findByPid(long pid) {
         return deptRepository.findByPid(pid);
     }
@@ -98,16 +91,21 @@ public class DeptServiceImpl implements DeptService {
     }
 
     @Override
-    @CacheEvict(allEntries = true)
     @Transactional(rollbackFor = Exception.class)
-    public DeptDto create(Dept resources) {
-        return deptMapper.toDto(deptRepository.save(resources));
+    public void create(Dept resources) {
+        deptRepository.save(resources);
+        // 计算子节点数目
+        resources.setSubCount(0);
+        if(resources.getPid() != null){
+            updateSubCnt(resources.getPid());
+        }
     }
 
     @Override
-    @CacheEvict(allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     public void update(Dept resources) {
+        // 旧的菜单
+        DeptDto old = findById(resources.getId());
         if(resources.getPid() != null && resources.getId().equals(resources.getPid())) {
             throw new BadRequestException("上级不能为自己");
         }
@@ -115,14 +113,21 @@ public class DeptServiceImpl implements DeptService {
         ValidationUtil.isNull( dept.getId(),"Dept","id",resources.getId());
         resources.setId(dept.getId());
         deptRepository.save(resources);
+        if(resources.getPid() == null){
+            updateSubCnt(old.getPid());
+        } else {
+            updateSubCnt(resources.getPid());
+        }
     }
 
     @Override
-    @CacheEvict(allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     public void delete(Set<DeptDto> deptDtos) {
         for (DeptDto deptDto : deptDtos) {
             deptRepository.deleteById(deptDto.getId());
+            if(deptDto.getPid() != null){
+                updateSubCnt(deptDto.getPid());
+            }
         }
     }
 
@@ -198,5 +203,10 @@ public class DeptServiceImpl implements DeptService {
         map.put("totalElements",totalElements);
         map.put("content",CollectionUtil.isEmpty(trees)? deptDtos :trees);
         return map;
+    }
+
+    private void updateSubCnt(Long deptId){
+        int count = deptRepository.countByPid(deptId);
+        deptRepository.updateSubCntById(count, deptId);
     }
 }

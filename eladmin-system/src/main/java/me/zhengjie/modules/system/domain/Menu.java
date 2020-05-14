@@ -87,6 +87,9 @@ public class Menu extends BaseEntity implements Serializable {
     @ApiModelProperty(value = "上级菜单")
     private Long pid;
 
+    @ApiModelProperty(value = "子节点数目", hidden = true)
+    private Integer subCount = 0;
+
     @ApiModelProperty(value = "外链菜单")
     private Boolean iFrame;
 

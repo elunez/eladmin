@@ -63,6 +63,9 @@ public class Dept extends BaseEntity implements Serializable {
     @ApiModelProperty(value = "上级部门")
     private Long pid;
 
+    @ApiModelProperty(value = "子节点数目", hidden = true)
+    private Integer subCount = 0;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

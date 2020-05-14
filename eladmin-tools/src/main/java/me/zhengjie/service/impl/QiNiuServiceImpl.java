@@ -67,7 +67,6 @@ public class QiNiuServiceImpl implements QiNiuService {
     private Long maxSize;
 
     @Override
-    @Cacheable
     public Object queryAll(QiniuQueryCriteria criteria, Pageable pageable){
         return PageUtil.toPage(qiniuContentRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable));
     }

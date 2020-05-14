@@ -78,7 +78,8 @@ public class DictController {
         if (resources.getId() != null) {
             throw new BadRequestException("A new "+ ENTITY_NAME +" cannot already have an ID");
         }
-        return new ResponseEntity<>(dictService.create(resources),HttpStatus.CREATED);
+        dictService.create(resources);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @Log("修改字典")

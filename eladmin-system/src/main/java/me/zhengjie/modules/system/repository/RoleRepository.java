@@ -26,7 +26,6 @@ import java.util.Set;
  * @author Zheng Jie
  * @date 2018-12-03
  */
-@SuppressWarnings("all")
 public interface RoleRepository extends JpaRepository<Role, Long>, JpaSpecificationExecutor<Role> {
 
     /**
@@ -39,7 +38,7 @@ public interface RoleRepository extends JpaRepository<Role, Long>, JpaSpecificat
     /**
      * 根据用户ID查询
      * @param id 用户ID
-     * @return
+     * @return /
      */
     Set<Role> findByUsers_Id(Long id);
 

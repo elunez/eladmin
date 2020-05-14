@@ -57,9 +57,8 @@ public interface DeployService {
     /**
      * 创建
      * @param resources /
-     * @return /
      */
-    DeployDto create(Deploy resources);
+    void create(Deploy resources);
 
 
     /**

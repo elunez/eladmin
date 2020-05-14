@@ -48,6 +48,8 @@ public class MenuDto extends BaseDTO implements Serializable {
 
     private Long pid;
 
+    private Integer subCount;
+
     private Boolean iFrame;
 
     private Boolean cache;
@@ -58,9 +60,13 @@ public class MenuDto extends BaseDTO implements Serializable {
 
     private String icon;
 
-    private Boolean leaf = true;
+    public Boolean getHasChildren() {
+        return subCount > 0;
+    }
 
-    private Boolean hasChildren = false;
+    public Boolean getLeaf() {
+        return subCount <= 0;
+    }
 
     public String getLabel() {
         return title;

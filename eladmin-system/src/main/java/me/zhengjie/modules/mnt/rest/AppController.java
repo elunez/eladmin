@@ -65,7 +65,8 @@ public class AppController {
     @PostMapping
 	@PreAuthorize("@el.check('app:add')")
     public ResponseEntity<Object> create(@Validated @RequestBody App resources){
-        return new ResponseEntity<>(appService.create(resources),HttpStatus.CREATED);
+        appService.create(resources);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @Log("修改应用")

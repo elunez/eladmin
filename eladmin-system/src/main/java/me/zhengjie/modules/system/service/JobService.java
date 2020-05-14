@@ -44,7 +44,7 @@ public interface JobService {
      * @param resources /
      * @return /
      */
-    JobDto create(Job resources);
+    void create(Job resources);
 
     /**
      * 编辑

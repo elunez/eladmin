@@ -56,9 +56,8 @@ public interface DatabaseService {
     /**
      * 创建
      * @param resources /
-     * @return /
      */
-    DatabaseDto create(Database resources);
+    void create(Database resources);
 
     /**
      * 编辑

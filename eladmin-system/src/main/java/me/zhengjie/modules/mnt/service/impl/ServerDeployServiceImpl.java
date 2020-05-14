@@ -89,9 +89,8 @@ public class ServerDeployServiceImpl implements ServerDeployService {
 
 	@Override
     @Transactional(rollbackFor = Exception.class)
-    public ServerDeployDto create(ServerDeploy resources) {
-
-		return serverDeployMapper.toDto(serverDeployRepository.save(resources));
+    public void create(ServerDeploy resources) {
+		serverDeployRepository.save(resources);
     }
 
     @Override

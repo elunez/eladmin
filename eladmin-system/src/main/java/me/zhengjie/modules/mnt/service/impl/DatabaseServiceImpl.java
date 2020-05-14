@@ -71,9 +71,9 @@ public class DatabaseServiceImpl implements DatabaseService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public DatabaseDto create(Database resources) {
+    public void create(Database resources) {
         resources.setId(IdUtil.simpleUUID());
-        return databaseMapper.toDto(databaseRepository.save(resources));
+        databaseRepository.save(resources);
     }
 
     @Override

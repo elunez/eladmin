@@ -55,9 +55,8 @@ public interface DeployHistoryService {
     /**
      * 创建
      * @param resources /
-     * @return /
      */
-    DeployHistoryDto create(DeployHistory resources);
+    void create(DeployHistory resources);
 
     /**
      * 删除

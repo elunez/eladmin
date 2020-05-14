@@ -37,9 +37,8 @@ public interface DictDetailService {
     /**
      * 创建
      * @param resources /
-     * @return /
      */
-    DictDetailDto create(DictDetail resources);
+    void create(DictDetail resources);
 
     /**
      * 编辑

@@ -103,7 +103,8 @@ public class MenuController {
         if (resources.getId() != null) {
             throw new BadRequestException("A new "+ ENTITY_NAME +" cannot already have an ID");
         }
-        return new ResponseEntity<>(menuService.create(resources),HttpStatus.CREATED);
+        menuService.create(resources);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @Log("修改菜单")

@@ -75,8 +75,8 @@ public class RoleController {
     @ApiOperation("返回全部的角色")
     @GetMapping(value = "/all")
     @PreAuthorize("@el.check('roles:list','user:add','user:edit')")
-    public ResponseEntity<Object> query(@PageableDefault(value = 2000, sort = {"level"}, direction = Sort.Direction.ASC) Pageable pageable){
-        return new ResponseEntity<>(roleService.queryAll(pageable),HttpStatus.OK);
+    public ResponseEntity<Object> query(){
+        return new ResponseEntity<>(roleService.queryAll(),HttpStatus.OK);
     }
 
     @Log("查询角色")
@@ -102,7 +102,8 @@ public class RoleController {
             throw new BadRequestException("A new "+ ENTITY_NAME +" cannot already have an ID");
         }
         getLevels(resources.getLevel());
-        return new ResponseEntity<>(roleService.create(resources),HttpStatus.CREATED);
+        roleService.create(resources);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @Log("修改角色")

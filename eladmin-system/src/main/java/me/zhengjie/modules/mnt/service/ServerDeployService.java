@@ -56,9 +56,8 @@ public interface ServerDeployService {
     /**
      * 创建
      * @param resources /
-     * @return /
      */
-	ServerDeployDto create(ServerDeploy resources);
+    void create(ServerDeploy resources);
 
     /**
      * 编辑

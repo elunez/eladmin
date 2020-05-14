@@ -23,8 +23,6 @@ import me.zhengjie.modules.system.service.RoleService;
 import me.zhengjie.modules.system.service.dto.RoleSmallDto;
 import me.zhengjie.modules.system.service.dto.UserDto;
 import me.zhengjie.utils.enums.DataScopeEnum;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import java.util.*;
 
@@ -36,14 +34,12 @@ import java.util.*;
  **/
 @Service
 @RequiredArgsConstructor
-@CacheConfig(cacheNames = "role")
 public class DataServiceImpl implements DataService {
 
     private final RoleService roleService;
     private final DeptService deptService;
 
     @Override
-    @Cacheable
     public List<Long> getDeptIds(UserDto user) {
         // 用于存储部门id
         Set<Long> deptIds = new HashSet<>();
@@ -90,7 +86,6 @@ public class DataServiceImpl implements DataService {
      * @return 数据权限
      */
     @Override
-    @Cacheable
     public List<Long> getDeptChildren(List<Dept> deptList) {
         List<Long> list = new ArrayList<>();
         deptList.forEach(dept -> {

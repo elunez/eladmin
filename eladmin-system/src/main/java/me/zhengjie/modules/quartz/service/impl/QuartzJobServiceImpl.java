@@ -79,13 +79,12 @@ public class QuartzJobServiceImpl implements QuartzJobService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public QuartzJob create(QuartzJob resources) {
+    public void create(QuartzJob resources) {
         if (!CronExpression.isValidExpression(resources.getCronExpression())){
             throw new BadRequestException("cron表达式格式错误");
         }
         resources = quartzJobRepository.save(resources);
         quartzManage.addJob(resources);
-        return resources;
     }
 
     @Override

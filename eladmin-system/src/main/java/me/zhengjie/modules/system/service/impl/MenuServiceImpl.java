@@ -34,9 +34,6 @@ import me.zhengjie.utils.FileUtil;
 import me.zhengjie.utils.QueryHelp;
 import me.zhengjie.utils.StringUtils;
 import me.zhengjie.utils.ValidationUtil;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -52,7 +49,6 @@ import java.util.stream.Collectors;
  */
 @Service
 @RequiredArgsConstructor
-@CacheConfig(cacheNames = "menu")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class MenuServiceImpl implements MenuService {
 
@@ -61,7 +57,6 @@ public class MenuServiceImpl implements MenuService {
     private final RoleService roleService;
 
     @Override
-    @Cacheable
     public List<MenuDto> queryAll(MenuQueryCriteria criteria, Boolean isQuery) throws Exception {
         Sort sort = new Sort(Sort.Direction.ASC, "menuSort");
         if(isQuery){
@@ -84,7 +79,6 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
-    @Cacheable(key = "#p0")
     public MenuDto findById(long id) {
         Menu menu = menuRepository.findById(id).orElseGet(Menu::new);
         ValidationUtil.isNull(menu.getId(),"Menu","id",id);
@@ -92,7 +86,6 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
-    @Cacheable
     public List<MenuDto> findByRoles(List<RoleSmallDto> roles) {
         Set<Long> roleIds = roles.stream().map(RoleSmallDto::getId).collect(Collectors.toSet());
         LinkedHashSet<Menu> menus = menuRepository.findByRoles_IdInAndTypeNotOrderByMenuSortAsc(roleIds, 2);
@@ -100,8 +93,8 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
-    @CacheEvict(allEntries = true)
-    public MenuDto create(Menu resources) {
+    @Transactional(rollbackFor = Exception.class)
+    public void create(Menu resources) {
         if(menuRepository.findByTitle(resources.getTitle()) != null){
             throw new EntityExistException(Menu.class,"title",resources.getTitle());
         }
@@ -119,16 +112,23 @@ public class MenuServiceImpl implements MenuService {
                 throw new BadRequestException("外链必须以http://或者https://开头");
             }
         }
-        return menuMapper.toDto(menuRepository.save(resources));
+        menuRepository.save(resources);
+        // 计算子节点数目
+        resources.setSubCount(0);
+        if(resources.getPid() != null){
+            updateSubCnt(resources.getPid());
+        }
     }
 
     @Override
-    @CacheEvict(allEntries = true)
+    @Transactional(rollbackFor = Exception.class)
     public void update(Menu resources) {
         if(resources.getId().equals(resources.getPid())) {
             throw new BadRequestException("上级不能为自己");
         }
         Menu menu = menuRepository.findById(resources.getId()).orElseGet(Menu::new);
+        // 记录旧的父节点ID
+        Long oldPid = menu.getPid();
         ValidationUtil.isNull(menu.getId(),"Permission","id",resources.getId());
 
         if(resources.getIFrame()){
@@ -165,6 +165,12 @@ public class MenuServiceImpl implements MenuService {
         menu.setPermission(resources.getPermission());
         menu.setType(resources.getType());
         menuRepository.save(menu);
+        // 计算子节点数目
+        if(resources.getPid() == null){
+            updateSubCnt(oldPid);
+        } else {
+            updateSubCnt(resources.getPid());
+        }
     }
 
     @Override
@@ -181,17 +187,18 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
-    @CacheEvict(allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     public void delete(Set<Menu> menuSet) {
         for (Menu menu : menuSet) {
             roleService.untiedMenu(menu.getId());
             menuRepository.deleteById(menu.getId());
+            if(menu.getPid() != null){
+                updateSubCnt(menu.getPid());
+            }
         }
     }
 
     @Override
-    @Cacheable
     public Object getMenus(Long pid) {
         List<Menu> menus;
         if(pid != null && !pid.equals(0L)){
@@ -203,7 +210,6 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
-    @Cacheable
     public List<MenuDto> getSuperior(MenuDto menuDto, List<Menu> menus) {
         if(menuDto.getPid() == null){
             menus.addAll(menuRepository.findByPidIsNull());
@@ -214,7 +220,6 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
-    @Cacheable(key = "'pid:'+#p0")
     public List<Menu> findByPid(long pid) {
         return menuRepository.findByPid(pid);
     }
@@ -294,7 +299,6 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
-    @Cacheable
     public Menu findOne(Long id) {
         Menu menu = menuRepository.findById(id).orElseGet(Menu::new);
         ValidationUtil.isNull(menu.getId(),"Menu","id",id);
@@ -316,5 +320,10 @@ public class MenuServiceImpl implements MenuService {
             list.add(map);
         }
         FileUtil.downloadExcel(list, response);
+    }
+
+    private void updateSubCnt(Long menuId){
+        int count = menuRepository.countByPid(menuId);
+        menuRepository.updateSubCntById(count, menuId);
     }
 }

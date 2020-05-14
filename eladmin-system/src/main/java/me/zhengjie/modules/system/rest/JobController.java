@@ -71,7 +71,8 @@ public class JobController {
         if (resources.getId() != null) {
             throw new BadRequestException("A new "+ ENTITY_NAME +" cannot already have an ID");
         }
-        return new ResponseEntity<>(jobService.create(resources),HttpStatus.CREATED);
+        jobService.create(resources);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @Log("修改岗位")

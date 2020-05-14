@@ -65,7 +65,8 @@ public class ServerDeployController {
     @PostMapping
 	@PreAuthorize("@el.check('serverDeploy:add')")
     public ResponseEntity<Object> create(@Validated @RequestBody ServerDeploy resources){
-        return new ResponseEntity<>(serverDeployService.create(resources),HttpStatus.CREATED);
+        serverDeployService.create(resources);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @Log("修改服务器")

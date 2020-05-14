@@ -87,7 +87,8 @@ public class DeptController {
         if (resources.getId() != null) {
             throw new BadRequestException("A new "+ ENTITY_NAME +" cannot already have an ID");
         }
-        return new ResponseEntity<>(deptService.create(resources),HttpStatus.CREATED);
+        deptService.create(resources);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @Log("修改部门")

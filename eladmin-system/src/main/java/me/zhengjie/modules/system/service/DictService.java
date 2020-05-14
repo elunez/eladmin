@@ -59,7 +59,7 @@ public interface DictService {
      * @param resources /
      * @return /
      */
-    DictDto create(Dict resources);
+    void create(Dict resources);
 
     /**
      * 编辑

@@ -90,8 +90,8 @@ public class DeployServiceImpl implements DeployService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public DeployDto create(Deploy resources) {
-		return deployMapper.toDto(deployRepository.save(resources));
+	public void create(Deploy resources) {
+		deployRepository.save(resources);
 	}
 
 	@Override

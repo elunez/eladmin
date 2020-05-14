@@ -39,8 +39,6 @@ public class RedisUtils {
         this.redisTemplate = redisTemplate;
     }
 
-    // =============================common============================
-
     /**
      * 指定缓存失效时间
      * @param key  键
@@ -644,5 +642,18 @@ public class RedisUtils {
             e.printStackTrace();
             return 0;
         }
+    }
+
+    /**
+     *
+     * @param dict
+     * @param ids
+     */
+    public void delByKeys(String prefix, Set<Long> ids) {
+        List<String> keys = new ArrayList<>();
+        for (Long id : ids) {
+            keys.add(new StringBuffer(prefix).append(id).toString());
+        }
+        redisTemplate.delete(keys);
     }
 }

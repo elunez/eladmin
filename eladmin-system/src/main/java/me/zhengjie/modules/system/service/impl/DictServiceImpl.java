@@ -20,17 +20,11 @@ import lombok.RequiredArgsConstructor;
 import me.zhengjie.modules.system.domain.Dict;
 import me.zhengjie.modules.system.service.dto.DictDetailDto;
 import me.zhengjie.modules.system.service.dto.DictQueryCriteria;
-import me.zhengjie.utils.FileUtil;
-import me.zhengjie.utils.PageUtil;
-import me.zhengjie.utils.QueryHelp;
-import me.zhengjie.utils.ValidationUtil;
+import me.zhengjie.utils.*;
 import me.zhengjie.modules.system.repository.DictRepository;
 import me.zhengjie.modules.system.service.DictService;
 import me.zhengjie.modules.system.service.dto.DictDto;
 import me.zhengjie.modules.system.service.mapstruct.DictMapper;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -46,15 +40,14 @@ import java.util.*;
 */
 @Service
 @RequiredArgsConstructor
-@CacheConfig(cacheNames = "dict")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class DictServiceImpl implements DictService {
 
     private final DictRepository dictRepository;
     private final DictMapper dictMapper;
+    private final RedisUtils redisUtils;
 
     @Override
-    @Cacheable
     public Map<String, Object> queryAll(DictQueryCriteria dict, Pageable pageable){
         Page<Dict> page = dictRepository.findAll((root, query, cb) -> QueryHelp.getPredicate(root, dict, cb), pageable);
         return PageUtil.toPage(page.map(dictMapper::toDto));
@@ -67,7 +60,6 @@ public class DictServiceImpl implements DictService {
     }
 
     @Override
-    @Cacheable(key = "#p0")
     public DictDto findById(Long id) {
         Dict dict = dictRepository.findById(id).orElseGet(Dict::new);
         ValidationUtil.isNull(dict.getId(),"Dict","id",id);
@@ -75,14 +67,12 @@ public class DictServiceImpl implements DictService {
     }
 
     @Override
-    @CacheEvict(allEntries = true)
     @Transactional(rollbackFor = Exception.class)
-    public DictDto create(Dict resources) {
-        return dictMapper.toDto(dictRepository.save(resources));
+    public void create(Dict resources) {
+        dictRepository.save(resources);
     }
 
     @Override
-    @CacheEvict(allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     public void update(Dict resources) {
         Dict dict = dictRepository.findById(resources.getId()).orElseGet(Dict::new);
@@ -92,12 +82,10 @@ public class DictServiceImpl implements DictService {
     }
 
     @Override
-    @CacheEvict(allEntries = true)
     @Transactional(rollbackFor = Exception.class)
     public void delete(Set<Long> ids) {
-        for (Long id : ids) {
-            dictRepository.deleteById(id);
-        }
+        dictRepository.deleteByIdIn(ids);
+        redisUtils.delByKeys("dict::", ids);
     }
 
     @Override
