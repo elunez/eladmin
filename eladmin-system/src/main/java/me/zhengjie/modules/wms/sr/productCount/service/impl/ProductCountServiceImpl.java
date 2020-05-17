@@ -62,8 +62,8 @@ public class ProductCountServiceImpl implements ProductCountService {
 
                 List<Predicate> targetPredicateList = new ArrayList<>();
 
-                Predicate statusPredicate = criteriaBuilder.equal(root.get("status"), 1);
-                targetPredicateList.add(statusPredicate);
+//                Predicate statusPredicate = criteriaBuilder.equal(root.get("status"), 1);
+//                targetPredicateList.add(statusPredicate);
 
 
                 if(!StringUtils.isEmpty(criteria.getProductName())){
@@ -91,7 +91,7 @@ public class ProductCountServiceImpl implements ProductCountService {
             }
         };
 
-        Page<ProductCount> page = productCountRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable);
+        Page<ProductCount> page = productCountRepository.findAll(specification, pageable);
         return PageUtil.toPage(page.map(productCountMapper::toDto));
     }
 

@@ -143,6 +143,9 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
                     customerOrderDTO.setCustomerOrderProductList(customerOrderProductDTOList);
                     String procStatus = customerOrderDTO.getProcStatus();
                     ProcStatusEnum procStatusEnum = ProcStatusEnum.getProcStatusEnum(procStatus);
+                    if(null == procStatusEnum){
+                        procStatusEnum = ProcStatusEnum.WAIT_SEND_GOOD;
+                    }
                     if(null != procStatusEnum){
                         customerOrderDTO.setProcStatusName(procStatusEnum.getName());
                     }
