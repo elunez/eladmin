@@ -132,6 +132,17 @@ public class ProductCountServiceImpl implements ProductCountService {
         resources.setProductName(productInfo.getName());
         //验证产品库存统计是否存在
 
+        Long productSeriesId = productInfo.getProductSeriesId();
+        String productSeriesName = productInfo.getProductSeriesName();
+        long productCategoryId = productInfo.getProductCategoryId();
+        String productCategoryName = productInfo.getProductCategoryName();
+
+        resources.setProductSeriesId(productSeriesId);
+        resources.setProductSeriesName(productSeriesName);
+
+        resources.setProductCategoryId(productCategoryId);
+        resources.setProductCategoryName(productCategoryName);
+
         ProductCount productCountTemp = productCountRepository.findByProductId(productId);
         if(null != productCountTemp){
             throw new BadRequestException("该产品统计记录已经存在 !");
