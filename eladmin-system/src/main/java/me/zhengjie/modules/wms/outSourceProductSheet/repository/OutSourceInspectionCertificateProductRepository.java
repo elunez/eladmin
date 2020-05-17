@@ -1,5 +1,6 @@
 package me.zhengjie.modules.wms.outSourceProductSheet.repository;
 
+import me.zhengjie.modules.wms.invoice.domain.InvoiceProduct;
 import me.zhengjie.modules.wms.outSourceProductSheet.domain.OutSourceInspectionCertificateProduct;
 import me.zhengjie.modules.wms.outSourceProductSheet.domain.OutSourceProcessSheetProduct;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -26,4 +27,12 @@ public interface OutSourceInspectionCertificateProductRepository extends JpaRepo
     @Modifying
     @Query(value = "delete s_out_source_inspection_certificate_product  where product_code = ?1 and out_source_inspection_certificate_id = ?2", nativeQuery = true)
     void deleteByProductCodeAndOutSourceInspectionCertificateId(String productCode, Long outSourceInspectionCertificateId);
+
+
+    /**
+     * 根据委外加工单，查看委外验收单产品列表
+     * @param outSourceProcessSheetCode
+     * @return
+     */
+    List<OutSourceInspectionCertificateProduct> findByOutSourceProcessSheetCodeAndStatusTrue(String outSourceProcessSheetCode);
 }

@@ -223,6 +223,7 @@ public class OutSourceProcessSheetServiceImpl implements OutSourceProcessSheetSe
             OutSourceProcessSheetProduct outSourceProcessSheetProduct = new OutSourceProcessSheetProduct();
             BeanUtils.copyProperties(outSourceProcessSheetProductRequest, outSourceProcessSheetProduct);
             outSourceProcessSheetProduct.setStatus(true);
+            outSourceProcessSheetProduct.setOutSourceProcessSheetCode(outSourceProcessSheetCode);
             outSourceProcessSheetProduct.setOutSourceProcessSheetId(outSourceProcessSheet.getId());
             outSourceProcessSheetProductRepository.save(outSourceProcessSheetProduct);
         }

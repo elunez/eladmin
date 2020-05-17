@@ -12,16 +12,19 @@ import me.zhengjie.modules.system.repository.UserRepository;
 import me.zhengjie.modules.system.service.UserService;
 import me.zhengjie.modules.system.service.dto.UserDTO;
 import me.zhengjie.modules.system.service.dto.UserQueryCriteria;
+import me.zhengjie.modules.wms.customerOrder.domain.CustomerOrderProduct;
+import me.zhengjie.modules.wms.invoice.domain.InvoiceProduct;
 import me.zhengjie.modules.wms.outSourceProductSheet.domain.OutSourceInspectionCertificate;
 import me.zhengjie.modules.wms.outSourceProductSheet.domain.OutSourceInspectionCertificateProduct;
 import me.zhengjie.modules.wms.outSourceProductSheet.domain.OutSourceProcessSheet;
 import me.zhengjie.modules.wms.outSourceProductSheet.domain.OutSourceProcessSheetProduct;
 import me.zhengjie.modules.wms.outSourceProductSheet.repository.OutSourceInspectionCertificateProductRepository;
+import me.zhengjie.modules.wms.outSourceProductSheet.repository.OutSourceProcessSheetProductRepository;
+import me.zhengjie.modules.wms.outSourceProductSheet.repository.OutSourceProcessSheetRepository;
 import me.zhengjie.modules.wms.outSourceProductSheet.request.*;
 import me.zhengjie.modules.wms.outSourceProductSheet.service.dto.*;
 import me.zhengjie.modules.wms.outSourceProductSheet.service.mapper.OutSourceInspectionCertificateProductMapper;
-import me.zhengjie.utils.SecurityUtils;
-import me.zhengjie.utils.ValidationUtil;
+import me.zhengjie.utils.*;
 import me.zhengjie.modules.wms.outSourceProductSheet.repository.OutSourceInspectionCertificateRepository;
 import me.zhengjie.modules.wms.outSourceProductSheet.service.OutSourceInspectionCertificateService;
 import me.zhengjie.modules.wms.outSourceProductSheet.service.mapper.OutSourceInspectionCertificateMapper;
@@ -32,17 +35,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import me.zhengjie.utils.PageUtil;
-import me.zhengjie.utils.QueryHelp;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
@@ -78,6 +76,12 @@ public class OutSourceInspectionCertificateServiceImpl implements OutSourceInspe
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private OutSourceProcessSheetProductRepository outSourceProcessSheetProductRepository;
+
+    @Autowired
+    private OutSourceProcessSheetRepository outSourceProcessSheetRepository;
 
     @Override
     public Object queryAll(OutSourceInspectionCertificateQueryCriteria criteria, Pageable pageable){
@@ -148,9 +152,12 @@ public class OutSourceInspectionCertificateServiceImpl implements OutSourceInspe
     @Override
     @Transactional(rollbackFor = Exception.class)
     public OutSourceInspectionCertificateDTO create(CreateOutSourceInspectionCertificateRequest createOutSourceInspectionCertificateRequest) {
+        // 委外加工单code
+        String outSourceProcessSheetCode = createOutSourceInspectionCertificateRequest.getOutSourceProcessSheetCode();
         OutSourceInspectionCertificate outSourceInspectionCertificate = new OutSourceInspectionCertificate();
         BeanUtils.copyProperties(createOutSourceInspectionCertificateRequest, outSourceInspectionCertificate);
 
+        // 委外验收单code
         String outSourceInspectionCertificateCode = outSourceInspectionCertificate.getOutSourceInspectionCertificateCode();
         if(!StringUtils.hasLength(outSourceInspectionCertificateCode)){
             throw new BadRequestException("委外验收单单据编号不能为空!");
@@ -172,6 +179,8 @@ public class OutSourceInspectionCertificateServiceImpl implements OutSourceInspe
             OutSourceInspectionCertificateProduct outSourceInspectionCertificateProduct = new OutSourceInspectionCertificateProduct();
             BeanUtils.copyProperties(outSourceInspectionCertificateProductRequest, outSourceInspectionCertificateProduct);
             outSourceInspectionCertificateProduct.setStatus(true);
+            outSourceInspectionCertificateProduct.setOutSourceProcessSheetCode(outSourceProcessSheetCode);
+            outSourceInspectionCertificateProduct.setOutSourceInspectionCertificateCode(outSourceInspectionCertificateCode);
             outSourceInspectionCertificateProduct.setOutSourceInspectionCertificateId(outSourceInspectionCertificate.getId());
             outSourceInspectionCertificateProductRepository.save(outSourceInspectionCertificateProduct);
         }
@@ -217,7 +226,46 @@ public class OutSourceInspectionCertificateServiceImpl implements OutSourceInspe
                 messageRepository.saveAll(messageList);
             }
 
-            // 修改为外加工单状态
+            // 查看指定委外加工单下的委外验收单产品信息
+            Map<String, Long> existProduct = new HashMap<>();
+            List<OutSourceInspectionCertificateProduct> existProductList = outSourceInspectionCertificateProductRepository.findByOutSourceProcessSheetCodeAndStatusTrue(outSourceProcessSheetCode);
+            if(!CollectionUtils.isEmpty(existProductList)){
+                Map<String, List<OutSourceInspectionCertificateProduct>> existProductMap = existProductList.stream().collect(Collectors.groupingBy(OutSourceInspectionCertificateProduct::getProductCode));
+                for(Map.Entry<String, List<OutSourceInspectionCertificateProduct>> entry : existProductMap.entrySet()){
+                    String productCode = entry.getKey();
+                    List<OutSourceInspectionCertificateProduct> invoiceProductListTemp = entry.getValue();
+                    if(!CollectionUtils.isEmpty(invoiceProductListTemp)){
+                        Long productNumberTotal = invoiceProductListTemp.stream().mapToLong(OutSourceInspectionCertificateProduct::getQualifiedNumber).sum();
+                        existProduct.put(productCode, productNumberTotal);
+                    }
+                }
+            }
+            Map<String, Long> sourceProduct = new HashMap<>();
+            List<OutSourceProcessSheetProduct> sourceProductList = outSourceProcessSheetProductRepository.queryByOutSourceProcessSheetCodeAndStatusTrue(outSourceProcessSheetCode);
+            if(!CollectionUtils.isEmpty(sourceProductList)){
+                Map<String, List<OutSourceProcessSheetProduct>> sourceProductMap = sourceProductList.stream().collect(Collectors.groupingBy(OutSourceProcessSheetProduct::getProductCode));
+                for(Map.Entry<String, List<OutSourceProcessSheetProduct>> entry : sourceProductMap.entrySet()){
+                    String productCode = entry.getKey();
+                    List<OutSourceProcessSheetProduct> customerOrderProductListTemp = entry.getValue();
+                    if(!CollectionUtils.isEmpty(customerOrderProductListTemp)){
+                        Long productNumberTotal = customerOrderProductListTemp.stream().mapToLong(OutSourceProcessSheetProduct::getProductNumber).sum();
+                        sourceProduct.put(productCode, productNumberTotal);
+                    }
+                }
+            }
+
+            if(!CollectionUtils.isEmpty(sourceProduct)){
+                for(Map.Entry<String, Long> entry : sourceProduct.entrySet()){
+                    String productCodeTemp = entry.getKey();
+                    long productNumberTemp = entry.getValue();
+                    long productNumberTempExist = existProduct.get(productCodeTemp);
+                    if(productNumberTemp == productNumberTempExist){
+                        outSourceProcessSheetRepository.updateProcStatus(ProcStatusEnum.COMPLETED.getCode(), outSourceProcessSheetCode);
+                    }else{
+                        outSourceProcessSheetRepository.updateProcStatus(ProcStatusEnum.OUT_SOURCE_INSPECTION_ING.getCode(), outSourceProcessSheetCode);
+                    }
+                }
+            }
         }catch (Exception e){
             log.error("单据编号:插入消息失败!");
         }

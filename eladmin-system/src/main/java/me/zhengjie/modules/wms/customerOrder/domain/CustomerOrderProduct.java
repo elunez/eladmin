@@ -29,7 +29,7 @@ public class CustomerOrderProduct implements Serializable {
 
     // 所属客户订单
     @Column(name = "customer_order_code")
-    private Long customerOrderCode;
+    private String customerOrderCode;
 
     // 产品主键
     @Column(name = "product_id")

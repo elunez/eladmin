@@ -27,6 +27,8 @@ public class OutSourceProcessSheetProductDTO implements Serializable {
     // 所属委外加工单
     private Long outSourceProcessSheetId;
 
+    private String  outSourceProcessSheetCode;
+
     // 产品主键
     private Long productId;
 

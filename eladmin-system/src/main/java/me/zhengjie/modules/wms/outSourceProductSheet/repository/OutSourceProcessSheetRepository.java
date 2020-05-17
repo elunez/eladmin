@@ -3,6 +3,7 @@ package me.zhengjie.modules.wms.outSourceProductSheet.repository;
 import me.zhengjie.modules.wms.outSourceProductSheet.domain.OutSourceProcessSheet;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 /**
@@ -18,4 +19,8 @@ public interface OutSourceProcessSheetRepository extends JpaRepository<OutSource
      */
     @Query(value ="select * from s_out_source_process_sheet where out_source_process_sheet_code = ?1 and status = 1", nativeQuery = true)
     OutSourceProcessSheet findByOutSourceProcessSheetCode(String outSourceProcessSheetCode);
+
+    @Modifying
+    @Query(value = "update s_out_source_process_sheet set proc_status = ?1 where out_source_process_sheet_code = ?2", nativeQuery = true)
+    void updateProcStatus(String procStatus, String outSourceProcessSheetCode);
 }

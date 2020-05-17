@@ -83,7 +83,7 @@ public class ProductInfoServiceImpl implements ProductInfoService {
 
                 String productCode = criteria.getProductCode();
                 if(!StringUtils.isEmpty(productCode)){
-                    Predicate productCodePredicate = criteriaBuilder.equal(root.get("productCode"), productCode);
+                    Predicate productCodePredicate = criteriaBuilder.like(root.get("productCode").as(String.class), "%" + criteria.getProductCode() + "%");
                     targetPredicateList.add(productCodePredicate);
                 }
 

@@ -236,6 +236,7 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
             BeanUtils.copyProperties(customerOrderProductRequest, customerOrderProduct);
             customerOrderProduct.setCustomerOrderId(customerOrder.getId());
             customerOrderProduct.setStatus(true);
+            customerOrderProduct.setCustomerOrderCode(customerOrderCode);
             ProductInfo productInfo = productInfoRepository.findByProductCode(customerOrderProductRequest.getProductCode());
             customerOrderProduct.setProductId(productInfo.getId());
             Long productNumber = customerOrderProduct.getProductNumber();

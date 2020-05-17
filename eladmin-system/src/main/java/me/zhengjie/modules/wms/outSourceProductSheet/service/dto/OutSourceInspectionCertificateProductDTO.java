@@ -27,6 +27,8 @@ public class OutSourceInspectionCertificateProductDTO implements Serializable {
     // 所属委外验收单
     private Long outSourceInspectionCertificateId;
 
+    private Long outSourceInspectionCertificateCode;
+
     private String productCode;
 
     private Long productId;
@@ -43,5 +45,8 @@ public class OutSourceInspectionCertificateProductDTO implements Serializable {
 
     // 报废数量
     private Integer scrapNumber;
+
+    // 所属委外加工单
+    private String outSourceProcessSheetCode;
 
 }

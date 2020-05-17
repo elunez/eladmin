@@ -17,7 +17,7 @@ import java.util.List;
 public class CreateOutSourceInspectionCertificateRequest implements Serializable {
 
 
-    // 所属委外加工单
+    // 所属委外加工单code
     private String outSourceProcessSheetCode;
 
     // 制单人

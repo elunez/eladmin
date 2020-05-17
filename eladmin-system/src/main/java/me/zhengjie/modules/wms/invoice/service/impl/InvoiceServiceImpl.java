@@ -215,6 +215,10 @@ public class InvoiceServiceImpl implements InvoiceService {
             throw new BadRequestException("客户订单编号不能为空!");
         }
 
+        CustomerOrder customerOrder = customerOrderRepository.findByCustomerOrderCodeAndStatusTrue(customerOrderCode);
+        customerOrder.setProcStatus(ProcStatusEnum.SENDING_GOOD.getCode());
+        customerOrderRepository.save(customerOrder);
+
         // 客户ID
         Long customerId = createInvoiceRequest.getCustomerId();
         if(null == customerId){
@@ -229,6 +233,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         if(null == customerInfo){
             throw new BadRequestException("客户不存在!");
         }
+
 
         invoice.setCustomerName(customerInfo.getCustomerName());
 
@@ -378,10 +383,10 @@ public class InvoiceServiceImpl implements InvoiceService {
                     String productCodeTemp = entry.getKey();
                     long productNumberTemp = entry.getValue();
                     long productNumberTempExist = existProduct.get(productCodeTemp);
-                    if(productNumberTemp == productNumberTempExist || productNumberTemp > productNumberTempExist){
-                        customerOrderRepository.updateProcStatus(ProcStatusEnum.COMPLETED.getCode());
+                    if(productNumberTemp == productNumberTempExist){
+                        customerOrderRepository.updateProcStatus(ProcStatusEnum.COMPLETED.getCode(), customerOrderCode);
                     }else{
-                        customerOrderRepository.updateProcStatus(ProcStatusEnum.SENDING_GOOD.getCode());
+                        customerOrderRepository.updateProcStatus(ProcStatusEnum.SENDING_GOOD.getCode(), customerOrderCode);
                     }
                 }
             }

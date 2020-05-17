@@ -39,6 +39,10 @@ public class OutSourceInspectionCertificateProduct implements Serializable {
     @Column(name = "out_source_inspection_certificate_id")
     private Long outSourceInspectionCertificateId;
 
+    // 所属委外验收单
+    @Column(name = "out_source_inspection_certificate_code")
+    private String outSourceInspectionCertificateCode;
+
     @Column(name = "product_code")
     private String productCode;
 
@@ -62,6 +66,13 @@ public class OutSourceInspectionCertificateProduct implements Serializable {
     // 报废数量
     @Column(name = "scrap_number")
     private Integer scrapNumber;
+
+
+    // 所属委外加工单
+    @Column(name = "out_source_process_sheet_code")
+    private String outSourceProcessSheetCode;
+
+
 
     public void copy(OutSourceInspectionCertificateProduct source){
         BeanUtil.copyProperties(source,this, CopyOptions.create().setIgnoreNullValue(true));

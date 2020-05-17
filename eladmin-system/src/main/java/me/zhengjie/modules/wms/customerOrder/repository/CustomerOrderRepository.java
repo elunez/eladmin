@@ -37,8 +37,8 @@ public interface CustomerOrderRepository extends JpaRepository<CustomerOrder, Lo
      * @param procStatus
      */
     @Modifying
-    @Query(value = "update s_customer_order set proc_status = 0 where id = ?1", nativeQuery = true)
-    void updateProcStatus(String procStatus);
+    @Query(value = "update s_customer_order set proc_status = ?1 where customer_order_code = ?2", nativeQuery = true)
+    void updateProcStatus(String procStatus, String customerOrderCode);
 
 
 }

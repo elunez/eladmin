@@ -42,6 +42,11 @@ public class OutSourceProcessSheetProduct implements Serializable {
     @Column(name = "out_source_process_sheet_id")
     private Long outSourceProcessSheetId;
 
+
+    @Column(name = "out_source_process_sheet_code")
+    private String outSourceProcessSheetCode;
+
+
     // 产品主键
     @Column(name = "product_id",nullable = false)
     private Long productId;
