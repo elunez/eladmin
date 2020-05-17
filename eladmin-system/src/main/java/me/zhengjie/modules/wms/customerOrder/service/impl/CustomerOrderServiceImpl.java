@@ -120,7 +120,7 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
                     targetPredicateList.add(customerNamePredicate);
                 }
 
-                criteriaQuery.orderBy(criteriaBuilder.desc(root.get("createTime")));
+                criteriaQuery.orderBy(criteriaBuilder.desc(root.get("updateTime")));
 
                 if(CollectionUtils.isEmpty(targetPredicateList)){
                     return null;

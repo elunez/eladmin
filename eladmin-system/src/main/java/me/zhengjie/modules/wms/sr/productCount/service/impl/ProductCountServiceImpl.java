@@ -4,7 +4,9 @@ import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.modules.wms.bd.domain.ProductInfo;
 import me.zhengjie.modules.wms.bd.repository.ProductInfoRepository;
 import me.zhengjie.modules.wms.bd.service.mapper.ProductInfoMapper;
+import me.zhengjie.modules.wms.customerOrder.domain.CustomerOrder;
 import me.zhengjie.modules.wms.sr.productCount.domain.ProductCount;
+import me.zhengjie.utils.StringUtils;
 import me.zhengjie.utils.ValidationUtil;
 import me.zhengjie.modules.wms.sr.productCount.repository.ProductCountRepository;
 import me.zhengjie.modules.wms.sr.productCount.service.ProductCountService;
@@ -12,14 +14,24 @@ import me.zhengjie.modules.wms.sr.productCount.service.dto.ProductCountDTO;
 import me.zhengjie.modules.wms.sr.productCount.service.dto.ProductCountQueryCriteria;
 import me.zhengjie.modules.wms.sr.productCount.service.mapper.ProductCountMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import me.zhengjie.utils.PageUtil;
 import me.zhengjie.utils.QueryHelp;
+import org.springframework.util.CollectionUtils;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 /**
 * @author jie
@@ -43,6 +55,42 @@ public class ProductCountServiceImpl implements ProductCountService {
 
     @Override
     public Object queryAll(ProductCountQueryCriteria criteria, Pageable pageable){
+
+        Specification<ProductCount> specification = new Specification<ProductCount>() {
+            @Override
+            public Predicate toPredicate(Root<ProductCount> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+
+                List<Predicate> targetPredicateList = new ArrayList<>();
+
+                Predicate statusPredicate = criteriaBuilder.equal(root.get("status"), 1);
+                targetPredicateList.add(statusPredicate);
+
+
+                if(!StringUtils.isEmpty(criteria.getProductName())){
+                    Predicate customerOrderCodePredicate = criteriaBuilder.like(root.get("productName").as(String.class), "%" + criteria.getProductName() + "%");
+                    targetPredicateList.add(customerOrderCodePredicate);
+                }
+
+                if(!StringUtils.isEmpty(criteria.getProductCategoryName())){
+                    Predicate customerNamePredicate = criteriaBuilder.like(root.get("productCategoryName").as(String.class), "%" + criteria.getProductCategoryName() + "%");
+                    targetPredicateList.add(customerNamePredicate);
+                }
+
+                if(!StringUtils.isEmpty(criteria.getProductSeriesName())){
+                    Predicate customerNamePredicate = criteriaBuilder.like(root.get("productSeriesName").as(String.class), "%" + criteria.getProductSeriesName() + "%");
+                    targetPredicateList.add(customerNamePredicate);
+                }
+
+                criteriaQuery.orderBy(criteriaBuilder.desc(root.get("gmtUpdate")));
+
+                if(CollectionUtils.isEmpty(targetPredicateList)){
+                    return null;
+                }else{
+                    return criteriaBuilder.and(targetPredicateList.toArray(new Predicate[targetPredicateList.size()]));
+                }
+            }
+        };
+
         Page<ProductCount> page = productCountRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable);
         return PageUtil.toPage(page.map(productCountMapper::toDto));
     }
