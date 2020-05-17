@@ -9,7 +9,9 @@ public enum  ProcStatusEnum {
     SENDING_GOOD("发货中", "SENDING_GOOD"),
     COMPLETED("已完结", "COMPLETED"),
 
-    OUT_SOURCE_ING("委外中", "OUT_SOURCE_ING")
+    OUT_SOURCE_ING("委外中", "OUT_SOURCE_ING"),
+    OUT_SOURCE_INSPECTION_ING("委外验收中", "OUT_SOURCE_INSPECTION_ING"),
+    OUT_SOURCE_INSPECTIONED("委外验收结束", "OUT_SOURCE_INSPECTIONED")
     ;
 
     private String name;

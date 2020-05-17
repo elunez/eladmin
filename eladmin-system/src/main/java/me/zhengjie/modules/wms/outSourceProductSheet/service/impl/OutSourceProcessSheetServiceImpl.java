@@ -138,6 +138,15 @@ public class OutSourceProcessSheetServiceImpl implements OutSourceProcessSheetSe
                         List<OutSourceProcessSheetProductDTO> outSourceProcessSheetProductDTOList = outSourceProcessSheetProductMapper.toDto(outSourceProcessSheetProductList);
                         outSourceProcessSheetDTO.setOutSourceProcessSheetProductList(outSourceProcessSheetProductDTOList);
                     }
+
+                    String procStatus = outSourceProcessSheetDTO.getProcStatus();
+                    ProcStatusEnum procStatusEnum = ProcStatusEnum.getProcStatusEnum(procStatus);
+                    if(null == procStatusEnum){
+                        procStatusEnum = ProcStatusEnum.OUT_SOURCE_ING;
+                    }
+                    if(null != procStatusEnum){
+                        outSourceProcessSheetDTO.setProcStatusName(procStatusEnum.getName());
+                    }
                 }
             }
         }
