@@ -16,20 +16,26 @@
 package me.zhengjie.modules.system.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import me.zhengjie.modules.system.domain.Dict;
 import me.zhengjie.modules.system.domain.DictDetail;
+import me.zhengjie.modules.system.repository.DictRepository;
 import me.zhengjie.modules.system.service.dto.DictDetailQueryCriteria;
 import me.zhengjie.utils.PageUtil;
 import me.zhengjie.utils.QueryHelp;
+import me.zhengjie.utils.RedisUtils;
 import me.zhengjie.utils.ValidationUtil;
 import me.zhengjie.modules.system.repository.DictDetailRepository;
 import me.zhengjie.modules.system.service.DictDetailService;
 import me.zhengjie.modules.system.service.dto.DictDetailDto;
 import me.zhengjie.modules.system.service.mapstruct.DictDetailMapper;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -38,11 +44,14 @@ import java.util.Map;
 */
 @Service
 @RequiredArgsConstructor
+@CacheConfig(cacheNames = "dict")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class DictDetailServiceImpl implements DictDetailService {
 
+    private final DictRepository dictRepository;
     private final DictDetailRepository dictDetailRepository;
     private final DictDetailMapper dictDetailMapper;
+    private final RedisUtils redisUtils;
 
     @Override
     public Map<String,Object> queryAll(DictDetailQueryCriteria criteria, Pageable pageable) {
@@ -51,16 +60,11 @@ public class DictDetailServiceImpl implements DictDetailService {
     }
 
     @Override
-    public DictDetailDto findById(Long id) {
-        DictDetail dictDetail = dictDetailRepository.findById(id).orElseGet(DictDetail::new);
-        ValidationUtil.isNull(dictDetail.getId(),"DictDetail","id",id);
-        return dictDetailMapper.toDto(dictDetail);
-    }
-
-    @Override
     @Transactional(rollbackFor = Exception.class)
     public void create(DictDetail resources) {
         dictDetailRepository.save(resources);
+        // 清理缓存
+        delCaches(resources);
     }
 
     @Override
@@ -70,11 +74,27 @@ public class DictDetailServiceImpl implements DictDetailService {
         ValidationUtil.isNull( dictDetail.getId(),"DictDetail","id",resources.getId());
         resources.setId(dictDetail.getId());
         dictDetailRepository.save(resources);
+        // 清理缓存
+        delCaches(resources);
+    }
+
+    @Override
+    @Cacheable(key = "'name:' + #p0")
+    public List<DictDetailDto> getDictByName(String name) {
+        return dictDetailMapper.toDto(dictDetailRepository.findByDictName(name));
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void delete(Long id) {
+        DictDetail dictDetail = dictDetailRepository.findById(id).orElseGet(DictDetail::new);
+        // 清理缓存
+        delCaches(dictDetail);
         dictDetailRepository.deleteById(id);
+    }
+
+    public void delCaches(DictDetail dictDetail){
+        Dict dict = dictRepository.findById(dictDetail.getDict().getId()).orElseGet(Dict::new);
+        redisUtils.del("dept::name:" + dict.getName());
     }
 }

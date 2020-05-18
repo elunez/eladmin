@@ -43,19 +43,13 @@ public interface DeptRepository extends JpaRepository<Dept, Long>, JpaSpecificat
     List<Dept> findByPidIsNull();
 
     /**
-     * 根据ID查询名称
-     * @param id ID
-     * @return /
-     */
-    @Query(value = "select name from sys_dept where dept_id = ?1",nativeQuery = true)
-    String findNameById(Long id);
-
-    /**
      * 根据角色ID 查询
-     * @param id 角色ID
+     * @param roleId 角色ID
      * @return /
      */
-    Set<Dept> findByRoles_Id(Long id);
+    @Query(value = "select d.* from sys_dept d, sys_roles_depts r where " +
+            "d.dept_id = r.dept_id and r.role_id = ?1", nativeQuery = true)
+    Set<Dept> findByRoleId(Long roleId);
 
     /**
      * 判断是否存在子节点

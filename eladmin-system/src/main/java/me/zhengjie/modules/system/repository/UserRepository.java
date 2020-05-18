@@ -21,6 +21,8 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author Zheng Jie
@@ -60,4 +62,37 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     @Modifying
     @Query(value = "update sys_user set email = ?2 where username = ?1",nativeQuery = true)
     void updateEmail(String username, String email);
+
+    /**
+     * 根据角色查询用户
+     * @param roleId /
+     * @return /
+     */
+    @Query(value = "SELECT u.* FROM sys_user u, sys_users_roles r WHERE" +
+            " u.user_id = r.user_id AND r.role_id = ?1", nativeQuery = true)
+    List<User> findByRoleId(Long roleId);
+
+    /**
+     * 根据角色中的部门查询
+     * @param id /
+     * @return /
+     */
+    @Query(value = "SELECT u.* FROM sys_user u, sys_users_roles r, sys_roles_depts d WHERE " +
+            "u.user_id = r.user_id AND r.role_id = d.role_id AND r.role_id = ?1", nativeQuery = true)
+    List<User> findByDeptRoleId(Long id);
+
+    /**
+     * 根据菜单查询
+     * @param id 菜单ID
+     * @return /
+     */
+    @Query(value = "SELECT u.* FROM sys_user u, sys_users_roles ur, sys_roles_menus rm WHERE\n" +
+            "u.user_id = ur.user_id AND ur.role_id = rm.role_id AND rm.menu_id = ?1", nativeQuery = true)
+    List<User> findByMenuId(Long id);
+
+    /**
+     * 根据Id删除
+     * @param ids /
+     */
+    void deleteAllByIdIn(Set<Long> ids);
 }

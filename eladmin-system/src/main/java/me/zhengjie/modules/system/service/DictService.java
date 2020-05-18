@@ -19,7 +19,6 @@ import me.zhengjie.modules.system.domain.Dict;
 import me.zhengjie.modules.system.service.dto.DictDto;
 import me.zhengjie.modules.system.service.dto.DictQueryCriteria;
 import org.springframework.data.domain.Pageable;
-
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
@@ -46,13 +45,6 @@ public interface DictService {
      * @return /
      */
     List<DictDto> queryAll(DictQueryCriteria dict);
-
-    /**
-     * 根据ID查询
-     * @param id /
-     * @return /
-     */
-    DictDto findById(Long id);
 
     /**
      * 创建

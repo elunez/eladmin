@@ -23,6 +23,8 @@ import me.zhengjie.modules.system.service.RoleService;
 import me.zhengjie.modules.system.service.dto.RoleSmallDto;
 import me.zhengjie.modules.system.service.dto.UserDto;
 import me.zhengjie.utils.enums.DataScopeEnum;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import java.util.*;
 
@@ -34,12 +36,19 @@ import java.util.*;
  **/
 @Service
 @RequiredArgsConstructor
+@CacheConfig(cacheNames = "data")
 public class DataServiceImpl implements DataService {
 
     private final RoleService roleService;
     private final DeptService deptService;
 
+    /**
+     * 用户角色改变时需清理缓存
+     * @param user /
+     * @return /
+     */
     @Override
+    @Cacheable(key = "'user:' + #p0.id")
     public List<Long> getDeptIds(UserDto user) {
         // 用于存储部门id
         Set<Long> deptIds = new HashSet<>();
@@ -69,35 +78,14 @@ public class DataServiceImpl implements DataService {
      * @return 数据权限ID
      */
     public Set<Long> getCustomize(Set<Long> deptIds, RoleSmallDto role){
-        Set<Dept> depts = deptService.findByRoleIds(role.getId());
+        Set<Dept> depts = deptService.findByRoleId(role.getId());
         for (Dept dept : depts) {
             deptIds.add(dept.getId());
             List<Dept> deptChildren = deptService.findByPid(dept.getId());
             if (deptChildren != null && deptChildren.size() != 0) {
-                deptIds.addAll(getDeptChildren(deptChildren));
+                deptIds.addAll(deptService.getDeptChildren(dept.getId(), deptChildren));
             }
         }
         return deptIds;
-    }
-
-    /**
-     * 递归获取子级部门
-     * @param deptList 部门
-     * @return 数据权限
-     */
-    @Override
-    public List<Long> getDeptChildren(List<Dept> deptList) {
-        List<Long> list = new ArrayList<>();
-        deptList.forEach(dept -> {
-                    if (dept!=null && dept.getEnabled()){
-                        List<Dept> depts = deptService.findByPid(dept.getId());
-                        if(deptList.size() != 0){
-                            list.addAll(getDeptChildren(depts));
-                        }
-                        list.add(dept.getId());
-                    }
-                }
-        );
-        return list;
     }
 }

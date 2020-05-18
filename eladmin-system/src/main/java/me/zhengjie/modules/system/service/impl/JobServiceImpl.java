@@ -24,6 +24,9 @@ import me.zhengjie.modules.system.repository.JobRepository;
 import me.zhengjie.modules.system.service.JobService;
 import me.zhengjie.modules.system.service.dto.JobDto;
 import me.zhengjie.modules.system.service.mapstruct.JobMapper;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -39,6 +42,7 @@ import java.util.*;
 */
 @Service
 @RequiredArgsConstructor
+@CacheConfig(cacheNames = "job")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class JobServiceImpl implements JobService {
 
@@ -59,6 +63,7 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
+    @Cacheable(key = "'id:' + #p0")
     public JobDto findById(Long id) {
         Job job = jobRepository.findById(id).orElseGet(Job::new);
         ValidationUtil.isNull(job.getId(),"Job","id",id);
@@ -76,6 +81,7 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
+    @CacheEvict(key = "'id:' + #p0.id")
     @Transactional(rollbackFor = Exception.class)
     public void update(Job resources) {
         Job job = jobRepository.findById(resources.getId()).orElseGet(Job::new);
@@ -91,11 +97,9 @@ public class JobServiceImpl implements JobService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void delete(Set<Long> ids) {
-        for (Long id : ids) {
-            jobRepository.deleteById(id);
-            // 删除缓存
-            redisUtils.del("job::"+id);
-        }
+        jobRepository.deleteAllByIdIn(ids);
+        // 删除缓存
+        redisUtils.delByKeys("job::id:", ids);
     }
 
     @Override

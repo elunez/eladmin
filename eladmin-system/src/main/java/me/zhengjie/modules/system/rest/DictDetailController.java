@@ -22,6 +22,7 @@ import me.zhengjie.annotation.Log;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.modules.system.domain.DictDetail;
 import me.zhengjie.modules.system.service.DictDetailService;
+import me.zhengjie.modules.system.service.dto.DictDetailDto;
 import me.zhengjie.modules.system.service.dto.DictDetailQueryCriteria;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -32,6 +33,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -58,15 +61,13 @@ public class DictDetailController {
     @Log("查询多个字典详情")
     @ApiOperation("查询多个字典详情")
     @GetMapping(value = "/map")
-    public ResponseEntity<Object> getDictDetailMaps(DictDetailQueryCriteria criteria,
-                                         @PageableDefault(sort = {"dictSort"}, direction = Sort.Direction.ASC) Pageable pageable){
-        String[] names = criteria.getDictName().split(",");
-        Map<String,Object> map = new HashMap<>(names.length);
+    public ResponseEntity<Object> getDictDetailMaps(@RequestParam String dictName){
+        String[] names = dictName.split("[,，]");
+        Map<String, List<DictDetailDto>> dictMap = new HashMap<>(16);
         for (String name : names) {
-            criteria.setDictName(name);
-            map.put(name,dictDetailService.queryAll(criteria,pageable).get("content"));
+            dictMap.put(name, dictDetailService.getDictByName(name));
         }
-        return new ResponseEntity<>(map,HttpStatus.OK);
+        return new ResponseEntity<>(dictMap, HttpStatus.OK);
     }
 
     @Log("新增字典详情")

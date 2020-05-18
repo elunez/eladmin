@@ -19,21 +19,22 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import lombok.RequiredArgsConstructor;
 import me.zhengjie.modules.system.domain.Menu;
+import me.zhengjie.modules.system.domain.User;
 import me.zhengjie.modules.system.domain.vo.MenuMetaVo;
 import me.zhengjie.modules.system.domain.vo.MenuVo;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.exception.EntityExistException;
 import me.zhengjie.modules.system.repository.MenuRepository;
+import me.zhengjie.modules.system.repository.UserRepository;
 import me.zhengjie.modules.system.service.MenuService;
 import me.zhengjie.modules.system.service.RoleService;
 import me.zhengjie.modules.system.service.dto.MenuDto;
 import me.zhengjie.modules.system.service.dto.MenuQueryCriteria;
 import me.zhengjie.modules.system.service.dto.RoleSmallDto;
 import me.zhengjie.modules.system.service.mapstruct.MenuMapper;
-import me.zhengjie.utils.FileUtil;
-import me.zhengjie.utils.QueryHelp;
-import me.zhengjie.utils.StringUtils;
-import me.zhengjie.utils.ValidationUtil;
+import me.zhengjie.utils.*;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -49,12 +50,15 @@ import java.util.stream.Collectors;
  */
 @Service
 @RequiredArgsConstructor
+@CacheConfig(cacheNames = "menu")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class MenuServiceImpl implements MenuService {
 
     private final MenuRepository menuRepository;
+    private final UserRepository userRepository;
     private final MenuMapper menuMapper;
     private final RoleService roleService;
+    private final RedisUtils redisUtils;
 
     @Override
     public List<MenuDto> queryAll(MenuQueryCriteria criteria, Boolean isQuery) throws Exception {
@@ -79,16 +83,24 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
+    @Cacheable(key = "'id:' + #p0")
     public MenuDto findById(long id) {
         Menu menu = menuRepository.findById(id).orElseGet(Menu::new);
         ValidationUtil.isNull(menu.getId(),"Menu","id",id);
         return menuMapper.toDto(menu);
     }
 
+    /**
+     * 用户角色改变时需清理缓存
+     * @param currentUserId /
+     * @return /
+     */
     @Override
-    public List<MenuDto> findByRoles(List<RoleSmallDto> roles) {
+    @Cacheable(key = "'user:' + #p0")
+    public List<MenuDto> findByUser(Long currentUserId) {
+        List<RoleSmallDto> roles = roleService.findByUsersId(currentUserId);
         Set<Long> roleIds = roles.stream().map(RoleSmallDto::getId).collect(Collectors.toSet());
-        LinkedHashSet<Menu> menus = menuRepository.findByRoles_IdInAndTypeNotOrderByMenuSortAsc(roleIds, 2);
+        LinkedHashSet<Menu> menus = menuRepository.findByRoleIdsAndTypeNot(roleIds, 2);
         return menus.stream().map(menuMapper::toDto).collect(Collectors.toList());
     }
 
@@ -116,6 +128,8 @@ public class MenuServiceImpl implements MenuService {
         // 计算子节点数目
         resources.setSubCount(0);
         if(resources.getPid() != null){
+            // 清理缓存
+            redisUtils.del("menu::pid:" + resources.getPid());
             updateSubCnt(resources.getPid());
         }
     }
@@ -128,7 +142,7 @@ public class MenuServiceImpl implements MenuService {
         }
         Menu menu = menuRepository.findById(resources.getId()).orElseGet(Menu::new);
         // 记录旧的父节点ID
-        Long oldPid = menu.getPid();
+        Long pid = menu.getPid();
         ValidationUtil.isNull(menu.getId(),"Permission","id",resources.getId());
 
         if(resources.getIFrame()){
@@ -167,10 +181,13 @@ public class MenuServiceImpl implements MenuService {
         menuRepository.save(menu);
         // 计算子节点数目
         if(resources.getPid() == null){
-            updateSubCnt(oldPid);
+            updateSubCnt(pid);
         } else {
+            pid = resources.getPid();
             updateSubCnt(resources.getPid());
         }
+        // 清理缓存
+        delCaches(resources.getId(), pid);
     }
 
     @Override
@@ -192,6 +209,8 @@ public class MenuServiceImpl implements MenuService {
         for (Menu menu : menuSet) {
             roleService.untiedMenu(menu.getId());
             menuRepository.deleteById(menu.getId());
+            // 清理缓存
+            delCaches(menu.getId(), menu.getPid());
             if(menu.getPid() != null){
                 updateSubCnt(menu.getPid());
             }
@@ -199,7 +218,8 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
-    public Object getMenus(Long pid) {
+    @Cacheable(key = "'pid:' + #p0")
+    public List<MenuDto> getMenus(Long pid) {
         List<Menu> menus;
         if(pid != null && !pid.equals(0L)){
             menus = menuRepository.findByPid(pid);
@@ -217,11 +237,6 @@ public class MenuServiceImpl implements MenuService {
         }
         menus.addAll(menuRepository.findByPid(menuDto.getPid()));
         return getSuperior(findById(menuDto.getPid()), menus);
-    }
-
-    @Override
-    public List<Menu> findByPid(long pid) {
-        return menuRepository.findByPid(pid);
     }
 
     @Override
@@ -325,5 +340,19 @@ public class MenuServiceImpl implements MenuService {
     private void updateSubCnt(Long menuId){
         int count = menuRepository.countByPid(menuId);
         menuRepository.updateSubCntById(count, menuId);
+    }
+
+    /**
+     * 清理缓存
+     * @param id 菜单ID
+     * @param pid 菜单父级ID
+     */
+    public void delCaches(Long id, Long pid){
+        List<User> users = userRepository.findByMenuId(id);
+        redisUtils.del("menu::id:" +id);
+        redisUtils.delByKeys("menu::user:",users.stream().map(User::getId).collect(Collectors.toSet()));
+        if(pid != null){
+            redisUtils.del("menu::pid:" + pid);
+        }
     }
 }

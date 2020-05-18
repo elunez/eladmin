@@ -67,25 +67,11 @@ public interface MenuService {
     Set<Menu> getDeleteMenus(List<Menu> menuList, Set<Menu> menuSet);
 
     /**
-     * 根据pid查询
-     * @param pid /
-     * @return /
-     */
-    List<Menu> findByPid(long pid);
-
-    /**
      * 构建菜单树
      * @param menuDtos 原始数据
      * @return /
      */
     List<MenuDto> buildTree(List<MenuDto> menuDtos);
-
-    /**
-     * 根据角色查询
-     * @param roles /
-     * @return /
-     */
-    List<MenuDto> findByRoles(List<RoleSmallDto> roles);
 
     /**
      * 构建菜单树
@@ -120,7 +106,7 @@ public interface MenuService {
      * @param pid /
      * @return /
      */
-    Object getMenus(Long pid);
+    List<MenuDto> getMenus(Long pid);
 
     /**
      * 根据ID获取同级与上级数据
@@ -129,4 +115,11 @@ public interface MenuService {
      * @return /
      */
     List<MenuDto> getSuperior(MenuDto menuDto, List<Menu> objects);
+
+    /**
+     * 根据当前用户获取菜单
+     * @param currentUserId /
+     * @return /
+     */
+    List<MenuDto> findByUser(Long currentUserId);
 }

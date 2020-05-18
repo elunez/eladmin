@@ -34,6 +34,7 @@ import java.util.*;
  * @date 2019-01-02
  */
 @Slf4j
+@SuppressWarnings({"unchecked","all"})
 public class GenUtil {
 
     private static final String TIMESTAMP = "Timestamp";

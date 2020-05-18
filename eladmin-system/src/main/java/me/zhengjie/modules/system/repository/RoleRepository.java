@@ -36,11 +36,19 @@ public interface RoleRepository extends JpaRepository<Role, Long>, JpaSpecificat
     Role findByName(String name);
 
     /**
+     * 删除多个角色
+     * @param ids /
+     */
+    void deleteAllByIdIn(Set<Long> ids);
+
+    /**
      * 根据用户ID查询
      * @param id 用户ID
      * @return /
      */
-    Set<Role> findByUsers_Id(Long id);
+    @Query(value = "SELECT r.* FROM sys_role r, sys_users_roles u WHERE " +
+            "r.role_id = u.role_id AND u.user_id = ?1",nativeQuery = true)
+    Set<Role> findByUserId(Long id);
 
     /**
      * 解绑角色菜单

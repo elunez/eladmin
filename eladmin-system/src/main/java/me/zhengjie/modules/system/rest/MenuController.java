@@ -22,9 +22,9 @@ import me.zhengjie.annotation.Log;
 import me.zhengjie.modules.system.domain.Menu;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.modules.system.service.MenuService;
-import me.zhengjie.modules.system.service.RoleService;
 import me.zhengjie.modules.system.service.dto.MenuDto;
 import me.zhengjie.modules.system.service.dto.MenuQueryCriteria;
+import me.zhengjie.modules.system.service.mapstruct.MenuMapper;
 import me.zhengjie.utils.PageUtil;
 import me.zhengjie.utils.SecurityUtils;
 import org.springframework.http.HttpStatus;
@@ -47,7 +47,7 @@ import java.util.*;
 public class MenuController {
 
     private final MenuService menuService;
-    private final RoleService roleService;
+    private final MenuMapper menuMapper;
     private static final String ENTITY_NAME = "menu";
 
     @Log("导出菜单数据")
@@ -58,10 +58,10 @@ public class MenuController {
         menuService.download(menuService.queryAll(criteria, false), response);
     }
 
-    @ApiOperation("获取前端所需菜单")
     @GetMapping(value = "/build")
+    @ApiOperation("获取前端所需菜单")
     public ResponseEntity<Object> buildMenus(){
-        List<MenuDto> menuDtoList = menuService.findByRoles(roleService.findByUsersId(SecurityUtils.getCurrentUserId()));
+        List<MenuDto> menuDtoList = menuService.findByUser(SecurityUtils.getCurrentUserId());
         List<MenuDto> menuDtos = menuService.buildTree(menuDtoList);
         return new ResponseEntity<>(menuService.buildMenus(menuDtos),HttpStatus.OK);
     }
@@ -123,9 +123,9 @@ public class MenuController {
     public ResponseEntity<Object> delete(@RequestBody Set<Long> ids){
         Set<Menu> menuSet = new HashSet<>();
         for (Long id : ids) {
-            List<Menu> menuList = menuService.findByPid(id);
+            List<MenuDto> menuList = menuService.getMenus(id);
             menuSet.add(menuService.findOne(id));
-            menuSet = menuService.getDeleteMenus(menuList, menuSet);
+            menuSet = menuService.getDeleteMenus(menuMapper.toEntity(menuList), menuSet);
         }
         menuService.delete(menuSet);
         return new ResponseEntity<>(HttpStatus.OK);

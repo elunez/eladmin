@@ -20,14 +20,19 @@ import cn.hutool.core.util.ObjectUtil;
 import lombok.RequiredArgsConstructor;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.modules.system.domain.Dept;
+import me.zhengjie.modules.system.domain.User;
+import me.zhengjie.modules.system.repository.UserRepository;
 import me.zhengjie.modules.system.service.dto.DeptDto;
 import me.zhengjie.modules.system.service.dto.DeptQueryCriteria;
 import me.zhengjie.utils.FileUtil;
 import me.zhengjie.utils.QueryHelp;
+import me.zhengjie.utils.RedisUtils;
 import me.zhengjie.utils.ValidationUtil;
 import me.zhengjie.modules.system.repository.DeptRepository;
 import me.zhengjie.modules.system.service.DeptService;
 import me.zhengjie.modules.system.service.mapstruct.DeptMapper;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -44,11 +49,14 @@ import java.util.stream.Collectors;
 */
 @Service
 @RequiredArgsConstructor
+@CacheConfig(cacheNames = "dept")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class DeptServiceImpl implements DeptService {
 
     private final DeptRepository deptRepository;
     private final DeptMapper deptMapper;
+    private final UserRepository userRepository;
+    private final RedisUtils redisUtils;
 
     @Override
     public List<DeptDto> queryAll(DeptQueryCriteria criteria, Boolean isQuery) throws Exception {
@@ -74,6 +82,7 @@ public class DeptServiceImpl implements DeptService {
     }
 
     @Override
+    @Cacheable(key = "'id:' + #p0")
     public DeptDto findById(Long id) {
         Dept dept = deptRepository.findById(id).orElseGet(Dept::new);
         ValidationUtil.isNull(dept.getId(),"Dept","id",id);
@@ -81,13 +90,14 @@ public class DeptServiceImpl implements DeptService {
     }
 
     @Override
+    @Cacheable(key = "'pid:' + #p0")
     public List<Dept> findByPid(long pid) {
         return deptRepository.findByPid(pid);
     }
 
     @Override
-    public Set<Dept> findByRoleIds(Long id) {
-        return deptRepository.findByRoles_Id(id);
+    public Set<Dept> findByRoleId(Long id) {
+        return deptRepository.findByRoleId(id);
     }
 
     @Override
@@ -97,6 +107,8 @@ public class DeptServiceImpl implements DeptService {
         // 计算子节点数目
         resources.setSubCount(0);
         if(resources.getPid() != null){
+            // 清理缓存
+            redisUtils.del("dept::pid:" + resources.getPid());
             updateSubCnt(resources.getPid());
         }
     }
@@ -104,8 +116,8 @@ public class DeptServiceImpl implements DeptService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void update(Dept resources) {
-        // 旧的菜单
-        DeptDto old = findById(resources.getId());
+        // 旧的部门
+        Long pid = findById(resources.getId()).getPid();
         if(resources.getPid() != null && resources.getId().equals(resources.getPid())) {
             throw new BadRequestException("上级不能为自己");
         }
@@ -114,16 +126,21 @@ public class DeptServiceImpl implements DeptService {
         resources.setId(dept.getId());
         deptRepository.save(resources);
         if(resources.getPid() == null){
-            updateSubCnt(old.getPid());
+            updateSubCnt(pid);
         } else {
+            pid = resources.getPid();
             updateSubCnt(resources.getPid());
         }
+        // 清理缓存
+        delCaches(resources.getId(), pid);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void delete(Set<DeptDto> deptDtos) {
         for (DeptDto deptDto : deptDtos) {
+            // 清理缓存
+            delCaches(deptDto.getId(), deptDto.getPid());
             deptRepository.deleteById(deptDto.getId());
             if(deptDto.getPid() != null){
                 updateSubCnt(deptDto.getPid());
@@ -157,6 +174,22 @@ public class DeptServiceImpl implements DeptService {
     }
 
     @Override
+    public List<Long> getDeptChildren(Long deptId, List<Dept> deptList) {
+        List<Long> list = new ArrayList<>();
+        deptList.forEach(dept -> {
+                    if (dept!=null && dept.getEnabled()){
+                        List<Dept> depts = deptRepository.findByPid(dept.getId());
+                        if(deptList.size() != 0){
+                            list.addAll(getDeptChildren(dept.getId(), depts));
+                        }
+                        list.add(dept.getId());
+                    }
+                }
+        );
+        return list;
+    }
+
+    @Override
     public List<DeptDto> getSuperior(DeptDto deptDto, List<Dept> depts) {
         if(deptDto.getPid() == null){
             depts.addAll(deptRepository.findByPidIsNull());
@@ -178,7 +211,7 @@ public class DeptServiceImpl implements DeptService {
                 trees.add(deptDTO);
             }
             for (DeptDto it : deptDtos) {
-                if (deptDTO.getId().equals(it.getPid())) {
+                if (it.getPid() != null && deptDTO.getId().equals(it.getPid())) {
                     isChild = true;
                     if (deptDTO.getChildren() == null) {
                         deptDTO.setChildren(new ArrayList<>());
@@ -188,7 +221,7 @@ public class DeptServiceImpl implements DeptService {
             }
             if(isChild) {
                 depts.add(deptDTO);
-            } else if(!deptNames.contains(deptRepository.findNameById(deptDTO.getPid()))) {
+            } else if(deptDTO.getPid() != null &&  !deptNames.contains(findById(deptDTO.getPid()).getName())) {
                 depts.add(deptDTO);
             }
         }
@@ -196,11 +229,8 @@ public class DeptServiceImpl implements DeptService {
         if (CollectionUtil.isEmpty(trees)) {
             trees = depts;
         }
-
-        Integer totalElements = deptDtos.size();
-
         Map<String,Object> map = new HashMap<>(2);
-        map.put("totalElements",totalElements);
+        map.put("totalElements",deptDtos.size());
         map.put("content",CollectionUtil.isEmpty(trees)? deptDtos :trees);
         return map;
     }
@@ -208,5 +238,19 @@ public class DeptServiceImpl implements DeptService {
     private void updateSubCnt(Long deptId){
         int count = deptRepository.countByPid(deptId);
         deptRepository.updateSubCntById(count, deptId);
+    }
+
+    /**
+     * 清理缓存
+     * @param id /
+     */
+    public void delCaches(Long id, Long pid){
+        List<User> users = userRepository.findByDeptRoleId(id);
+        // 删除数据权限
+        redisUtils.delByKeys("data::user:",users.stream().map(User::getId).collect(Collectors.toSet()));
+        redisUtils.del("dept::id:" + id);
+        if (pid != null) {
+            redisUtils.del("dept::pid:" + pid);
+        }
     }
 }

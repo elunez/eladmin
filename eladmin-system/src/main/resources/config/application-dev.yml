@@ -53,9 +53,9 @@ jwt:
   # 令牌过期时间 此处单位/毫秒 ，默认4小时，可在此网站生成 https://www.convertworld.com/zh-hans/time/milliseconds.html
   token-validity-in-seconds: 14400000
   # 在线用户key
-  online-key: online-token
+  online-key: online-token-
   # 验证码
-  code-key: code-key
+  code-key: code-key-
   # token 续期检查时间范围（默认30分钟，单位毫秒），在token即将过期的一段时间内用户操作了，则给用户的token续期
   detect: 1800000
   # 续期时间范围，默认1小时，单位毫秒

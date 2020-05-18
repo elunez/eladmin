@@ -15,14 +15,13 @@
  */
 package me.zhengjie.modules.system.service.impl;
 
-import cn.hutool.core.collection.CollectionUtil;
 import lombok.RequiredArgsConstructor;
-import me.zhengjie.modules.system.domain.Dept;
 import me.zhengjie.modules.system.domain.Menu;
 import me.zhengjie.modules.system.domain.Role;
 import me.zhengjie.exception.EntityExistException;
-import me.zhengjie.modules.system.repository.DeptRepository;
+import me.zhengjie.modules.system.domain.User;
 import me.zhengjie.modules.system.repository.RoleRepository;
+import me.zhengjie.modules.system.repository.UserRepository;
 import me.zhengjie.modules.system.service.RoleService;
 import me.zhengjie.modules.system.service.dto.RoleDto;
 import me.zhengjie.modules.system.service.dto.RoleQueryCriteria;
@@ -31,7 +30,8 @@ import me.zhengjie.modules.system.service.dto.UserDto;
 import me.zhengjie.modules.system.service.mapstruct.RoleMapper;
 import me.zhengjie.modules.system.service.mapstruct.RoleSmallMapper;
 import me.zhengjie.utils.*;
-import me.zhengjie.utils.enums.DataScopeEnum;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -51,14 +51,15 @@ import java.util.stream.Collectors;
  */
 @Service
 @RequiredArgsConstructor
+@CacheConfig(cacheNames = "role")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class RoleServiceImpl implements RoleService {
 
     private final RoleRepository roleRepository;
     private final RoleMapper roleMapper;
     private final RoleSmallMapper roleSmallMapper;
-    private final DeptRepository deptRepository;
     private final RedisUtils redisUtils;
+    private final UserRepository userRepository;
 
     @Override
     public List<RoleDto> queryAll() {
@@ -78,6 +79,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    @Cacheable(key = "'id:' + #p0")
     public RoleDto findById(long id) {
         Role role = roleRepository.findById(id).orElseGet(Role::new);
         ValidationUtil.isNull(role.getId(),"Role","id",id);
@@ -90,7 +92,6 @@ public class RoleServiceImpl implements RoleService {
         if(roleRepository.findByName(resources.getName()) != null){
             throw new EntityExistException(Role.class,"username",resources.getName());
         }
-        checkDataScope(resources);
         roleRepository.save(resources);
     }
 
@@ -105,54 +106,52 @@ public class RoleServiceImpl implements RoleService {
         if(role1 != null && !role1.getId().equals(role.getId())){
             throw new EntityExistException(Role.class,"username",resources.getName());
         }
-        checkDataScope(resources);
         role.setName(resources.getName());
         role.setDescription(resources.getDescription());
         role.setDataScope(resources.getDataScope());
         role.setDepts(resources.getDepts());
         role.setLevel(resources.getLevel());
         roleRepository.save(role);
-    }
-
-    private void checkDataScope(Role resources){
-        if(CollectionUtil.isNotEmpty(resources.getDepts()) && resources.getDepts().size() == 1){
-            for (Dept dept : resources.getDepts()) {
-                dept = deptRepository.findById(dept.getId()).orElseGet(Dept::new);
-                if(dept.getPid() == 0 || dept.getPid() == null){
-                    resources.setDepts(null);
-                    resources.setDataScope(DataScopeEnum.ALL.getValue());
-                }
-            }
-        }
-
+        // 更新相关缓存
+        delCaches(role.getId());
     }
 
     @Override
     public void updateMenu(Role resources, RoleDto roleDTO) {
         Role role = roleMapper.toEntity(roleDTO);
+        // 清理缓存
+        List<User> users = userRepository.findByRoleId(role.getId());
+        Set<Long> userIds = users.stream().map(User::getId).collect(Collectors.toSet());
+        redisUtils.delByKeys("menu::user:",userIds);
+        // 更新菜单
         role.setMenus(resources.getMenus());
         roleRepository.save(role);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void untiedMenu(Long id) {
-        roleRepository.untiedMenu(id);
+    public void untiedMenu(Long menuId) {
+        // 清理缓存
+        List<User> users = userRepository.findByMenuId(menuId);
+        Set<Long> userIds = users.stream().map(User::getId).collect(Collectors.toSet());
+        redisUtils.delByKeys("menu::user:",userIds);
+        // 更新菜单
+        roleRepository.untiedMenu(menuId);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void delete(Set<Long> ids) {
         for (Long id : ids) {
-            roleRepository.deleteById(id);
-            // 删除缓存
-            redisUtils.del("role::"+id);
+            // 更新相关缓存
+            delCaches(id);
         }
+        roleRepository.deleteAllByIdIn(ids);
     }
 
     @Override
     public List<RoleSmallDto> findByUsersId(Long id) {
-        return roleSmallMapper.toDto(new ArrayList<>(roleRepository.findByUsers_Id(id)));
+        return roleSmallMapper.toDto(new ArrayList<>(roleRepository.findByUserId(id)));
     }
 
     @Override
@@ -165,6 +164,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    @Cacheable(key = "'auth:' + #p0")
     public List<GrantedAuthority> mapToGrantedAuthorities(UserDto user) {
         Set<String> permissions = new HashSet<>();
         // 如果是管理员直接返回
@@ -173,7 +173,7 @@ public class RoleServiceImpl implements RoleService {
             return permissions.stream().map(SimpleGrantedAuthority::new)
                     .collect(Collectors.toList());
         }
-        Set<Role> roles = roleRepository.findByUsers_Id(user.getId());
+        Set<Role> roles = roleRepository.findByUserId(user.getId());
         permissions = roles.stream().flatMap(role -> role.getMenus().stream())
                 .filter(menu -> StringUtils.isNotBlank(menu.getPermission()))
                 .map(Menu::getPermission).collect(Collectors.toSet());
@@ -193,5 +193,17 @@ public class RoleServiceImpl implements RoleService {
             list.add(map);
         }
         FileUtil.downloadExcel(list, response);
+    }
+
+    /**
+     * 清理缓存
+     * @param id /
+     */
+    public void delCaches(Long id){
+        List<User> users = userRepository.findByRoleId(id);
+        Set<Long> userIds = users.stream().map(User::getId).collect(Collectors.toSet());
+        redisUtils.delByKeys("data::user:",userIds);
+        redisUtils.delByKeys("menu::user:",userIds);
+        redisUtils.delByKeys("role::auth:",userIds);
     }
 }
