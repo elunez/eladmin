@@ -15,6 +15,7 @@
  */
 package me.zhengjie.modules.system.rest;
 
+import cn.hutool.core.collection.CollectionUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -86,13 +87,16 @@ public class MenuController {
     @ApiOperation("查询菜单:根据ID获取同级与上级数据")
     @GetMapping("/superior")
     @PreAuthorize("@el.check('menu:list')")
-    public ResponseEntity<Object> getSuperior(@RequestParam List<Long> ids) {
+    public ResponseEntity<Object> getSuperior(@RequestParam(required = false) List<Long> ids) {
         Set<MenuDto> menuDtos = new LinkedHashSet<>();
-        for (Long id : ids) {
-            MenuDto menuDto = menuService.findById(id);
-            menuDtos.addAll(menuService.getSuperior(menuDto, new ArrayList<>()));
+        if(CollectionUtil.isNotEmpty(ids)){
+            for (Long id : ids) {
+                MenuDto menuDto = menuService.findById(id);
+                menuDtos.addAll(menuService.getSuperior(menuDto, new ArrayList<>()));
+            }
+            return new ResponseEntity<>(menuService.buildTree(new ArrayList<>(menuDtos)),HttpStatus.OK);
         }
-        return new ResponseEntity<>(menuService.buildTree(new ArrayList<>(menuDtos)),HttpStatus.OK);
+        return new ResponseEntity<>(menuService.getMenus(null),HttpStatus.OK);
     }
 
     @Log("新增菜单")
