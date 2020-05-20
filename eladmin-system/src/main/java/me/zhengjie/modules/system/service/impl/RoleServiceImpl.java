@@ -131,10 +131,6 @@ public class RoleServiceImpl implements RoleService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void untiedMenu(Long menuId) {
-        // 清理缓存
-        List<User> users = userRepository.findByMenuId(menuId);
-        Set<Long> userIds = users.stream().map(User::getId).collect(Collectors.toSet());
-        redisUtils.delByKeys("menu::user:",userIds);
         // 更新菜单
         roleRepository.untiedMenu(menuId);
     }

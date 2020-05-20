@@ -129,9 +129,9 @@ public class MenuServiceImpl implements MenuService {
         resources.setSubCount(0);
         if(resources.getPid() != null){
             // 清理缓存
-            redisUtils.del("menu::pid:" + resources.getPid());
             updateSubCnt(resources.getPid());
         }
+        redisUtils.del("menu::pid:" + (resources.getPid() == null ? 0 : resources.getPid()));
     }
 
     @Override
@@ -207,10 +207,10 @@ public class MenuServiceImpl implements MenuService {
     @Transactional(rollbackFor = Exception.class)
     public void delete(Set<Menu> menuSet) {
         for (Menu menu : menuSet) {
-            roleService.untiedMenu(menu.getId());
-            menuRepository.deleteById(menu.getId());
             // 清理缓存
             delCaches(menu.getId(), menu.getPid());
+            roleService.untiedMenu(menu.getId());
+            menuRepository.deleteById(menu.getId());
             if(menu.getPid() != null){
                 updateSubCnt(menu.getPid());
             }
@@ -351,8 +351,6 @@ public class MenuServiceImpl implements MenuService {
         List<User> users = userRepository.findByMenuId(id);
         redisUtils.del("menu::id:" +id);
         redisUtils.delByKeys("menu::user:",users.stream().map(User::getId).collect(Collectors.toSet()));
-        if(pid != null){
-            redisUtils.del("menu::pid:" + pid);
-        }
+        redisUtils.del("menu::pid:" + (pid == null ? 0 : pid));
     }
 }

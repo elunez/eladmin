@@ -78,7 +78,7 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
      * @return /
      */
     @Query(value = "SELECT u.* FROM sys_user u, sys_users_roles r, sys_roles_depts d WHERE " +
-            "u.user_id = r.user_id AND r.role_id = d.role_id AND r.role_id = ?1", nativeQuery = true)
+            "u.user_id = r.user_id AND r.role_id = d.role_id AND r.role_id = ?1 group by u.user_id", nativeQuery = true)
     List<User> findByDeptRoleId(Long id);
 
     /**
@@ -87,7 +87,7 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
      * @return /
      */
     @Query(value = "SELECT u.* FROM sys_user u, sys_users_roles ur, sys_roles_menus rm WHERE\n" +
-            "u.user_id = ur.user_id AND ur.role_id = rm.role_id AND rm.menu_id = ?1", nativeQuery = true)
+            "u.user_id = ur.user_id AND ur.role_id = rm.role_id AND rm.menu_id = ?1 group by u.user_id", nativeQuery = true)
     List<User> findByMenuId(Long id);
 
     /**

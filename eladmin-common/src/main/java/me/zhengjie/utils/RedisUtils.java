@@ -160,12 +160,23 @@ public class RedisUtils {
      * 删除缓存
      * @param key 可以传一个值 或多个
      */
-    public void del(String... key) {
-        if (key != null && key.length > 0) {
-            if (key.length == 1) {
-                redisTemplate.delete(key[0]);
+    public void del(String... keys) {
+        if (keys != null && keys.length > 0) {
+            if (keys.length == 1) {
+                boolean result = redisTemplate.delete(keys[0]);
+                System.out.println("--------------------------------------------");
+                System.out.println(new StringBuilder("删除缓存：").append(keys[0]).append("，结果：").append(result));
+                System.out.println("--------------------------------------------");
             } else {
-                redisTemplate.delete(CollectionUtils.arrayToList(key));
+                Set<Object> keySet = new HashSet<>();
+                for (String key : keys) {
+                    keySet.addAll(redisTemplate.keys(key));
+                }
+                long count = redisTemplate.delete(keySet);
+                System.out.println("--------------------------------------------");
+                System.out.println("成功删除缓存：" + keySet.toString());
+                System.out.println("缓存删除数量：" + count + "个");
+                System.out.println("--------------------------------------------");
             }
         }
     }
