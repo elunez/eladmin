@@ -654,6 +654,11 @@ public class RedisUtils {
         for (Long id : ids) {
             keys.addAll(redisTemplate.keys(new StringBuffer(prefix).append(id).toString()));
         }
-        redisTemplate.delete(keys);
+        long count = redisTemplate.delete(keys);
+        // 此处提示可自行删除
+        System.out.println("--------------------------------------------");
+        System.out.println("成功删除缓存：" + keys.toString());
+        System.out.println("缓存删除数量：" + count + "个");
+        System.out.println("--------------------------------------------");
     }
 }
