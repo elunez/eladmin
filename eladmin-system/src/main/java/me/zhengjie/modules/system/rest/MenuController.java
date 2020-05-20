@@ -85,9 +85,9 @@ public class MenuController {
 
     @Log("查询菜单")
     @ApiOperation("查询菜单:根据ID获取同级与上级数据")
-    @GetMapping("/superior")
+    @PostMapping("/superior")
     @PreAuthorize("@el.check('menu:list')")
-    public ResponseEntity<Object> getSuperior(@RequestParam(required = false) List<Long> ids) {
+    public ResponseEntity<Object> getSuperior(@RequestBody List<Long> ids) {
         Set<MenuDto> menuDtos = new LinkedHashSet<>();
         if(CollectionUtil.isNotEmpty(ids)){
             for (Long id : ids) {

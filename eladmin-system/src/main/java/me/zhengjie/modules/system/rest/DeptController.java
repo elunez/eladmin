@@ -67,9 +67,9 @@ public class DeptController {
 
     @Log("查询部门")
     @ApiOperation("查询部门:根据ID获取同级与上级数据")
-    @GetMapping("/superior")
+    @PostMapping("/superior")
     @PreAuthorize("@el.check('user:list','dept:list')")
-    public ResponseEntity<Object> getSuperior(@RequestParam List<Long> ids) {
+    public ResponseEntity<Object> getSuperior(@RequestBody List<Long> ids) {
         Set<DeptDto> deptDtos  = new LinkedHashSet<>();
         for (Long id : ids) {
             DeptDto deptDto = deptService.findById(id);
