@@ -45,22 +45,19 @@ public class EmailServiceImpl implements EmailService {
     private final EmailRepository emailRepository;
 
     @Override
-    @CachePut(key = "'1'")
+    @CachePut(key = "'id:1'")
     @Transactional(rollbackFor = Exception.class)
-    public EmailConfig update(EmailConfig emailConfig, EmailConfig old) {
-        try {
-            if(!emailConfig.getPass().equals(old.getPass())){
-                // 对称加密
-                emailConfig.setPass(EncryptUtils.desEncrypt(emailConfig.getPass()));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+    public EmailConfig config(EmailConfig emailConfig, EmailConfig old) throws Exception {
+        emailConfig.setId(1L);
+        if(!emailConfig.getPass().equals(old.getPass())){
+            // 对称加密
+            emailConfig.setPass(EncryptUtils.desEncrypt(emailConfig.getPass()));
         }
         return emailRepository.save(emailConfig);
     }
 
     @Override
-    @Cacheable(key = "'1'")
+    @Cacheable(key = "'id:1'")
     public EmailConfig find() {
         Optional<EmailConfig> emailConfig = emailRepository.findById(1L);
         return emailConfig.orElseGet(EmailConfig::new);
@@ -86,6 +83,8 @@ public class EmailServiceImpl implements EmailService {
         account.setFrom(emailConfig.getUser()+"<"+emailConfig.getFromUser()+">");
         // ssl方式发送
         account.setSslEnable(true);
+        // 使用STARTTLS安全连接
+        account.setStarttlsEnable(true);
         String content = emailVo.getContent();
         // 发送
         try {

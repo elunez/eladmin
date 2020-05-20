@@ -32,6 +32,19 @@ import java.util.List;
 public interface QiNiuService {
 
     /**
+     * 查配置
+     * @return QiniuConfig
+     */
+    QiniuConfig find();
+
+    /**
+     * 修改配置
+     * @param qiniuConfig 配置
+     * @return QiniuConfig
+     */
+    QiniuConfig config(QiniuConfig qiniuConfig);
+
+    /**
      * 分页查询
      * @param criteria 条件
      * @param pageable 分页参数
@@ -45,19 +58,6 @@ public interface QiNiuService {
      * @return /
      */
     List<QiniuContent> queryAll(QiniuQueryCriteria criteria);
-
-    /**
-     * 查配置
-     * @return QiniuConfig
-     */
-    QiniuConfig find();
-
-    /**
-     * 修改配置
-     * @param qiniuConfig 配置
-     * @return QiniuConfig
-     */
-    QiniuConfig update(QiniuConfig qiniuConfig);
 
     /**
      * 上传文件

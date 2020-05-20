@@ -58,7 +58,7 @@ public class QiniuController {
     @ApiOperation("配置七牛云存储")
     @PutMapping(value = "/config")
     public ResponseEntity<Object> updateConfig(@Validated @RequestBody QiniuConfig qiniuConfig){
-        qiNiuService.update(qiniuConfig);
+        qiNiuService.config(qiniuConfig);
         qiNiuService.update(qiniuConfig.getType());
         return new ResponseEntity<>(HttpStatus.OK);
     }

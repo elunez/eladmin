@@ -646,13 +646,13 @@ public class RedisUtils {
 
     /**
      *
-     * @param dict
-     * @param ids
+     * @param prefix 前缀
+     * @param ids id
      */
     public void delByKeys(String prefix, Set<Long> ids) {
-        List<String> keys = new ArrayList<>();
+        Set<Object> keys = new HashSet<>();
         for (Long id : ids) {
-            keys.add(new StringBuffer(prefix).append(id).toString());
+            keys.addAll(redisTemplate.keys(new StringBuffer(prefix).append(id).toString()));
         }
         redisTemplate.delete(keys);
     }

@@ -67,6 +67,25 @@ public class QiNiuServiceImpl implements QiNiuService {
     private Long maxSize;
 
     @Override
+    @Cacheable(key = "'id:1'")
+    public QiniuConfig find() {
+        Optional<QiniuConfig> qiniuConfig = qiNiuConfigRepository.findById(1L);
+        return qiniuConfig.orElseGet(QiniuConfig::new);
+    }
+
+    @Override
+    @CachePut(key = "'id:1'")
+    @Transactional(rollbackFor = Exception.class)
+    public QiniuConfig config(QiniuConfig qiniuConfig) {
+        qiniuConfig.setId(1L);
+        String http = "http://", https = "https://";
+        if (!(qiniuConfig.getHost().toLowerCase().startsWith(http)||qiniuConfig.getHost().toLowerCase().startsWith(https))) {
+            throw new BadRequestException("外链域名必须以http://或者https://开头");
+        }
+        return qiNiuConfigRepository.save(qiniuConfig);
+    }
+
+    @Override
     public Object queryAll(QiniuQueryCriteria criteria, Pageable pageable){
         return PageUtil.toPage(qiniuContentRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable));
     }
@@ -74,25 +93,6 @@ public class QiNiuServiceImpl implements QiNiuService {
     @Override
     public List<QiniuContent> queryAll(QiniuQueryCriteria criteria) {
         return qiniuContentRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder));
-    }
-
-    @Override
-    @Cacheable(key = "'1'")
-    public QiniuConfig find() {
-        Optional<QiniuConfig> qiniuConfig = qiNiuConfigRepository.findById(1L);
-        return qiniuConfig.orElseGet(QiniuConfig::new);
-    }
-
-    @Override
-    @CachePut(key = "'1'")
-    @Transactional(rollbackFor = Exception.class)
-    public QiniuConfig update(QiniuConfig qiniuConfig) {
-        String http = "http://", https = "https://";
-        if (!(qiniuConfig.getHost().toLowerCase().startsWith(http)||qiniuConfig.getHost().toLowerCase().startsWith(https))) {
-            throw new BadRequestException("外链域名必须以http://或者https://开头");
-        }
-        qiniuConfig.setId(1L);
-        return qiNiuConfigRepository.save(qiniuConfig);
     }
 
     @Override
