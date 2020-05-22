@@ -24,6 +24,8 @@ import me.zhengjie.modules.wms.outSourceProductSheet.repository.OutSourceProcess
 import me.zhengjie.modules.wms.outSourceProductSheet.request.*;
 import me.zhengjie.modules.wms.outSourceProductSheet.service.dto.*;
 import me.zhengjie.modules.wms.outSourceProductSheet.service.mapper.OutSourceInspectionCertificateProductMapper;
+import me.zhengjie.modules.wms.sr.productCount.domain.ProductCount;
+import me.zhengjie.modules.wms.sr.productCount.repository.ProductCountRepository;
 import me.zhengjie.utils.*;
 import me.zhengjie.modules.wms.outSourceProductSheet.repository.OutSourceInspectionCertificateRepository;
 import me.zhengjie.modules.wms.outSourceProductSheet.service.OutSourceInspectionCertificateService;
@@ -82,6 +84,9 @@ public class OutSourceInspectionCertificateServiceImpl implements OutSourceInspe
 
     @Autowired
     private OutSourceProcessSheetRepository outSourceProcessSheetRepository;
+
+    @Autowired
+    private ProductCountRepository productCountRepository;
 
     @Override
     public Object queryAll(OutSourceInspectionCertificateQueryCriteria criteria, Pageable pageable){
@@ -183,6 +188,20 @@ public class OutSourceInspectionCertificateServiceImpl implements OutSourceInspe
             outSourceInspectionCertificateProduct.setOutSourceInspectionCertificateCode(outSourceInspectionCertificateCode);
             outSourceInspectionCertificateProduct.setOutSourceInspectionCertificateId(outSourceInspectionCertificate.getId());
             outSourceInspectionCertificateProductRepository.save(outSourceInspectionCertificateProduct);
+
+            String productCode = outSourceInspectionCertificateProduct.getProductCode();
+
+            //TODO 发货之后，扣除统计数据
+            ProductCount productCount = productCountRepository.findByProductCode(productCode);
+            if(null != productCount){
+                Long dphNumber = productCount.getDphNumber();
+                // 剩余数量
+                long syNumber = dphNumber - outSourceInspectionCertificateProduct.getQualifiedNumber();
+                if(syNumber<0){
+                    syNumber = 0;
+                }
+                productCountRepository.updateDphNumber(dphNumber, productCode);
+            }
         }
 
 

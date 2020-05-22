@@ -10,9 +10,6 @@ import me.zhengjie.modules.system.domain.Message;
 import me.zhengjie.modules.system.domain.User;
 import me.zhengjie.modules.system.repository.MessageRepository;
 import me.zhengjie.modules.system.repository.UserRepository;
-import me.zhengjie.modules.system.service.UserService;
-import me.zhengjie.modules.system.service.dto.UserDTO;
-import me.zhengjie.modules.system.service.dto.UserQueryCriteria;
 import me.zhengjie.modules.wms.bd.domain.CustomerInfo;
 import me.zhengjie.modules.wms.bd.domain.ProductInfo;
 import me.zhengjie.modules.wms.bd.repository.CustomerInfoRepository;
@@ -21,9 +18,6 @@ import me.zhengjie.modules.wms.customerOrder.domain.CustomerOrder;
 import me.zhengjie.modules.wms.customerOrder.domain.CustomerOrderProduct;
 import me.zhengjie.modules.wms.customerOrder.repository.CustomerOrderProductRepository;
 import me.zhengjie.modules.wms.customerOrder.repository.CustomerOrderRepository;
-import me.zhengjie.modules.wms.customerOrder.request.CustomerOrderProductRequest;
-import me.zhengjie.modules.wms.customerOrder.service.dto.CustomerOrderDTO;
-import me.zhengjie.modules.wms.customerOrder.service.dto.CustomerOrderProductDTO;
 import me.zhengjie.modules.wms.invoice.domain.Invoice;
 import me.zhengjie.modules.wms.invoice.domain.InvoiceProduct;
 import me.zhengjie.modules.wms.invoice.repository.InvoiceProductRepository;
@@ -32,6 +26,8 @@ import me.zhengjie.modules.wms.invoice.request.UpdateInvoiceRequest;
 import me.zhengjie.modules.wms.invoice.service.dto.InvoiceDetailDTO;
 import me.zhengjie.modules.wms.invoice.service.dto.InvoiceProductDTO;
 import me.zhengjie.modules.wms.invoice.service.mapper.InvoiceProductMapper;
+import me.zhengjie.modules.wms.sr.productCount.domain.ProductCount;
+import me.zhengjie.modules.wms.sr.productCount.repository.ProductCountRepository;
 import me.zhengjie.utils.*;
 import me.zhengjie.modules.wms.invoice.repository.InvoiceRepository;
 import me.zhengjie.modules.wms.invoice.service.InvoiceService;
@@ -100,6 +96,9 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private ProductCountRepository productCountRepository;
 
     @Override
     public Object queryAll(InvoiceQueryCriteria criteria, Pageable pageable){
@@ -302,6 +301,18 @@ public class InvoiceServiceImpl implements InvoiceService {
             invoiceProduct.setCustomerOrderCode(customerOrderCode);
             invoiceProduct.setProductId(productInfo.getId());
             invoiceProductRepository.save(invoiceProduct);
+
+            //TODO 发货之后，扣除统计数据
+            ProductCount productCount = productCountRepository.findByProductCode(productCode);
+            if(null != productCount){
+                Long dphNumber = productCount.getDphNumber();
+                // 剩余数量
+                long syNumber = dphNumber - invoiceProduct.getActualInvoiceNumber();
+                if(syNumber<0){
+                    syNumber = 0;
+                }
+                productCountRepository.updateDphNumber(dphNumber, productCode);
+            }
         }
 
         List<InvoiceProduct> invoiceProductList = invoiceProductRepository.findByInvoiceIdAndStatusTrue(invoice.getId());
@@ -320,8 +331,6 @@ public class InvoiceServiceImpl implements InvoiceService {
          * 查看该订单的所有发货单数量，
          * 比较是否完成
          */
-
-
 
         /**
          * 新增消息通知

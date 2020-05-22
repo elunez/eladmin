@@ -29,6 +29,9 @@ public class ProductCount implements Serializable {
     @Column(name = "product_name")
     private String productName;
 
+    @Column(name = "product_code")
+    private String productCode;
+
     @Column(name = "total_number")
     private Long totalNumber;
 

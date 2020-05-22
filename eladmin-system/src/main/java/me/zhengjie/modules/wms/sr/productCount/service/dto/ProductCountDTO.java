@@ -24,6 +24,8 @@ public class ProductCountDTO implements Serializable {
 
     private String productName;
 
+    private String productCode;
+
     private Long totalNumber;
 
     private Timestamp gmtCreate;
