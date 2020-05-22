@@ -27,7 +27,7 @@ public class OutSourceInspectionCertificateProductDTO implements Serializable {
     // 所属委外验收单
     private Long outSourceInspectionCertificateId;
 
-    private Long outSourceInspectionCertificateCode;
+    private String outSourceInspectionCertificateCode;
 
     private String productCode;
 

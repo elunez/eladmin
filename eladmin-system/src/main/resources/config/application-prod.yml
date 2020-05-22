@@ -6,7 +6,7 @@ spring:
       driverClassName: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
       url: jdbc:log4jdbc:mysql://rm-uf6xgp37n61jn71x5ao.mysql.rds.aliyuncs.com:3306/eladmin_prod?serverTimezone=Asia/Shanghai&characterEncoding=utf8&useSSL=false
       username: hecate
-      password: hxx275108  。　　　   　　5Qwe!
+      password: hxx2751085Qwe!
 
       # 初始化配置
       initial-size: 3
