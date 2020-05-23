@@ -6,10 +6,14 @@
     <#if hasQuery>
       <div v-if="crud.props.searchToggle">
         <!-- 搜索 -->
-        <el-input v-model="query.value" clearable placeholder="输入搜索内容" style="width: 200px;" class="filter-item" @keyup.enter.native="crud.toQuery" />
-        <el-select v-model="query.type" clearable placeholder="类型" class="filter-item" style="width: 130px">
-          <el-option v-for="item in queryTypeOptions" :key="item.key" :label="item.display_name" :value="item.key" />
-        </el-select>
+        <#if queryColumns??>
+          <#list queryColumns as column>
+            <#if column.queryType != 'BetWeen'>
+        <label class="el-form-item-label"><#if column.remark != ''>${column.remark}<#else>${column.changeColumnName}</#if></label>
+        <el-input v-model="query.${column.changeColumnName}" clearable placeholder="<#if column.remark != ''>${column.remark}<#else>${column.changeColumnName}</#if>" style="width: 185px;" class="filter-item" @keyup.enter.native="crud.toQuery" />
+            </#if>
+          </#list>
+        </#if>
   <#if betweens??>
     <#list betweens as column>
       <#if column.queryType = 'BetWeen'>
@@ -42,10 +46,10 @@
             <#if column.formType = 'Input'>
             <el-input v-model="form.${column.changeColumnName}" style="width: 370px;" />
             <#elseif column.formType = 'Textarea'>
-            <el-input :rows="3" v-model="form.${column.changeColumnName}" type="textarea" style="width: 370px;" />
+            <el-input v-model="form.${column.changeColumnName}" :rows="3" type="textarea" style="width: 370px;" />
             <#elseif column.formType = 'Radio'>
               <#if (column.dictName)?? && (column.dictName)!="">
-            <el-radio v-for="item in dict.${column.dictName}" :key="item.id" v-model="form.${column.changeColumnName}" :label="item.value">{{ item.label }}</el-radio>
+            <el-radio v-model="form.${column.changeColumnName}" v-for="item in dict.${column.dictName}" :key="item.id" :label="item.value">{{ item.label }}</el-radio>
               <#else>
                 未设置字典，请手动设置 Radio
               </#if>
@@ -163,14 +167,8 @@ export default {
     }
   },
   methods: {
-    // 获取数据前设置好接口地址
+    // 钩子：在获取表格数据之前执行，false 则代表不获取数据
     [CRUD.HOOK.beforeRefresh]() {
-      <#if hasQuery>
-      const query = this.query
-      if (query.type && query.value) {
-        this.crud.params[query.type] = query.value
-      }
-      </#if>
       return true
     }
   }
