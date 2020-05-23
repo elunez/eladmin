@@ -16,6 +16,7 @@
 package me.zhengjie.modules.system.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.modules.system.domain.Menu;
 import me.zhengjie.modules.system.domain.Role;
 import me.zhengjie.exception.EntityExistException;
@@ -201,5 +202,12 @@ public class RoleServiceImpl implements RoleService {
         redisUtils.delByKeys("data::user:",userIds);
         redisUtils.delByKeys("menu::user:",userIds);
         redisUtils.delByKeys("role::auth:",userIds);
+    }
+
+    @Override
+    public void verification(Set<Long> ids) {
+        if(userRepository.countByRoles(ids) > 0){
+            throw new BadRequestException("所选角色存在用户关联，请解除关联再试！");
+        }
     }
 }

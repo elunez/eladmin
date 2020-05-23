@@ -89,11 +89,9 @@ public class JobController {
     @DeleteMapping
     @PreAuthorize("@el.check('job:del')")
     public ResponseEntity<Object> delete(@RequestBody Set<Long> ids){
-        try {
-            jobService.delete(ids);
-        }catch (Throwable e){
-            ThrowableUtil.throwForeignKeyException(e, "所选岗位存在用户关联，请取消关联后再试");
-        }
+        // 验证是否被用户关联
+        jobService.verification(ids);
+        jobService.delete(ids);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

@@ -21,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.modules.system.domain.Dept;
 import me.zhengjie.modules.system.domain.User;
+import me.zhengjie.modules.system.repository.RoleRepository;
 import me.zhengjie.modules.system.repository.UserRepository;
 import me.zhengjie.modules.system.service.dto.DeptDto;
 import me.zhengjie.modules.system.service.dto.DeptQueryCriteria;
@@ -57,6 +58,7 @@ public class DeptServiceImpl implements DeptService {
     private final DeptMapper deptMapper;
     private final UserRepository userRepository;
     private final RedisUtils redisUtils;
+    private final RoleRepository roleRepository;
 
     @Override
     public List<DeptDto> queryAll(DeptQueryCriteria criteria, Boolean isQuery) throws Exception {
@@ -238,6 +240,17 @@ public class DeptServiceImpl implements DeptService {
     private void updateSubCnt(Long deptId){
         int count = deptRepository.countByPid(deptId);
         deptRepository.updateSubCntById(count, deptId);
+    }
+
+    @Override
+    public void verification(Set<DeptDto> deptDtos) {
+        Set<Long> deptIds = deptDtos.stream().map(DeptDto::getId).collect(Collectors.toSet());
+        if(userRepository.countByDepts(deptIds) > 0){
+            throw new BadRequestException("所选部门存在用户关联，请解除后再试！");
+        }
+        if(roleRepository.countByDepts(deptIds) > 0){
+            throw new BadRequestException("所选部门存在角色关联，请解除后再试！");
+        }
     }
 
     /**

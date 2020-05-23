@@ -57,4 +57,13 @@ public interface RoleRepository extends JpaRepository<Role, Long>, JpaSpecificat
     @Modifying
     @Query(value = "delete from sys_roles_menus where menu_id = ?1",nativeQuery = true)
     void untiedMenu(Long id);
+
+    /**
+     * 根据部门查询
+     * @param deptIds /
+     * @return /
+     */
+    @Query(value = "select count(1) from sys_role r, sys_roles_depts d where " +
+            "r.role_id = d.role_id and d.dept_id in ?1",nativeQuery = true)
+    int countByDepts(Set<Long> deptIds);
 }

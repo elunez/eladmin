@@ -16,8 +16,10 @@
 package me.zhengjie.modules.system.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.exception.EntityExistException;
 import me.zhengjie.modules.system.domain.Job;
+import me.zhengjie.modules.system.repository.UserRepository;
 import me.zhengjie.modules.system.service.dto.JobQueryCriteria;
 import me.zhengjie.utils.*;
 import me.zhengjie.modules.system.repository.JobRepository;
@@ -49,6 +51,7 @@ public class JobServiceImpl implements JobService {
     private final JobRepository jobRepository;
     private final JobMapper jobMapper;
     private final RedisUtils redisUtils;
+    private final UserRepository userRepository;
 
     @Override
     public Map<String,Object> queryAll(JobQueryCriteria criteria, Pageable pageable) {
@@ -113,5 +116,12 @@ public class JobServiceImpl implements JobService {
             list.add(map);
         }
         FileUtil.downloadExcel(list, response);
+    }
+
+    @Override
+    public void verification(Set<Long> ids) {
+        if(userRepository.countByJobs(ids) > 0){
+            throw new BadRequestException("所选的岗位中存在用户关联，请解除关联再试！");
+        }
     }
 }

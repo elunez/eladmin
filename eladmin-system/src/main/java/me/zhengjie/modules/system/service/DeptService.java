@@ -116,4 +116,10 @@ public interface DeptService {
      * @return
      */
     List<Long> getDeptChildren(Long deptId, List<Dept> deptList);
+
+    /**
+     * 验证是否被角色或用户关联
+     * @param deptDtos /
+     */
+    void verification(Set<DeptDto> deptDtos);
 }

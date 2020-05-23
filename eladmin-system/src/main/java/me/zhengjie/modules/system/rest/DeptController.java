@@ -113,11 +113,9 @@ public class DeptController {
                 deptDtos = deptService.getDeleteDepts(deptList, deptDtos);
             }
         }
-        try {
-            deptService.delete(deptDtos);
-        }catch (Throwable e){
-            ThrowableUtil.throwForeignKeyException(e, "所选部门中存在岗位或者角色关联，请取消关联后再试");
-        }
+        // 验证是否被角色或用户关联
+        deptService.verification(deptDtos);
+        deptService.delete(deptDtos);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

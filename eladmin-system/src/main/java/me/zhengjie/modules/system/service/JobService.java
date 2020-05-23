@@ -79,4 +79,10 @@ public interface JobService {
      * @throws IOException /
      */
     void download(List<JobDto> queryAll, HttpServletResponse response) throws IOException;
+
+    /**
+     * 验证是否被用户关联
+     * @param ids /
+     */
+    void verification(Set<Long> ids);
 }
