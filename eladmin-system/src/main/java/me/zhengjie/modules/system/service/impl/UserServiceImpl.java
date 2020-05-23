@@ -167,7 +167,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void updateAvatar(MultipartFile multipartFile) {
+    public Map<String, String> updateAvatar(MultipartFile multipartFile) {
         User user = userRepository.findByUsername(SecurityUtils.getCurrentUsername());
         String oldPath = user.getAvatarPath();
         File file = FileUtil.upload(multipartFile, properties.getPath().getAvatar());
@@ -178,6 +178,7 @@ public class UserServiceImpl implements UserService {
             FileUtil.del(oldPath);
         }
         redisUtils.del("user::username:" + user.getUsername());
+        return new HashMap<String,String>(){{put("avatar",file.getName());}};
     }
 
     @Override

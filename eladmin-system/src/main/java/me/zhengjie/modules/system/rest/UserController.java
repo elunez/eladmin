@@ -168,9 +168,8 @@ public class UserController {
 
     @ApiOperation("修改头像")
     @PostMapping(value = "/updateAvatar")
-    public ResponseEntity<Object> updateAvatar(@RequestParam MultipartFile file){
-        userService.updateAvatar(file);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<Object> updateAvatar(@RequestParam MultipartFile avatar){
+        return new ResponseEntity<>(userService.updateAvatar(avatar), HttpStatus.OK);
     }
 
     @Log("修改邮箱")
