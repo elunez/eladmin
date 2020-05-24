@@ -28,7 +28,6 @@ import me.zhengjie.modules.system.service.VerifyService;
 import me.zhengjie.utils.RedisUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Collections;
 
@@ -38,7 +37,6 @@ import java.util.Collections;
  */
 @Service
 @RequiredArgsConstructor
-@Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class VerifyServiceImpl implements VerifyService {
 
     @Value("${code.expiration}")

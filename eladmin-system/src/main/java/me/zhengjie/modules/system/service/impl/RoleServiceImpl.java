@@ -39,7 +39,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -53,7 +52,6 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @CacheConfig(cacheNames = "role")
-@Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class RoleServiceImpl implements RoleService {
 
     private final RoleRepository roleRepository;
@@ -80,6 +78,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    @Transactional
     @Cacheable(key = "'id:' + #p0")
     public RoleDto findById(long id) {
         Role role = roleRepository.findById(id).orElseGet(Role::new);

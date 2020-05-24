@@ -27,7 +27,6 @@ import me.zhengjie.utils.*;
 import me.zhengjie.repository.LocalStorageRepository;
 import me.zhengjie.service.LocalStorageService;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import java.io.File;
 import java.io.IOException;
@@ -46,7 +45,6 @@ import javax.servlet.http.HttpServletResponse;
 */
 @Service
 @RequiredArgsConstructor
-@Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class LocalStorageServiceImpl implements LocalStorageService {
 
     private final LocalStorageRepository localStorageRepository;

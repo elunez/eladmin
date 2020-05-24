@@ -34,7 +34,6 @@ import ${package}.service.dto.${className}Dto;
 import ${package}.service.dto.${className}QueryCriteria;
 import ${package}.service.mapstruct.${className}Mapper;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 <#if !auto && pkColumnType = 'Long'>
 import cn.hutool.core.lang.Snowflake;
@@ -62,7 +61,6 @@ import java.util.LinkedHashMap;
 **/
 @Service
 @RequiredArgsConstructor
-@Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 public class ${className}ServiceImpl implements ${className}Service {
 
     private final ${className}Repository ${changeClassName}Repository;
@@ -80,6 +78,7 @@ public class ${className}ServiceImpl implements ${className}Service {
     }
 
     @Override
+    @Transactional
     public ${className}Dto findById(${pkColumnType} ${pkChangeColName}) {
         ${className} ${changeClassName} = ${changeClassName}Repository.findById(${pkChangeColName}).orElseGet(${className}::new);
         ValidationUtil.isNull(${changeClassName}.get${pkCapitalColName}(),"${className}","${pkChangeColName}",${pkChangeColName});
