@@ -15,6 +15,7 @@
  */
 package me.zhengjie.modules.quartz.service.impl;
 
+import cn.hutool.core.util.IdUtil;
 import lombok.RequiredArgsConstructor;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.modules.quartz.domain.QuartzJob;
@@ -24,12 +25,10 @@ import me.zhengjie.modules.quartz.repository.QuartzLogRepository;
 import me.zhengjie.modules.quartz.service.QuartzJobService;
 import me.zhengjie.modules.quartz.service.dto.JobQueryCriteria;
 import me.zhengjie.modules.quartz.utils.QuartzManage;
-import me.zhengjie.utils.FileUtil;
-import me.zhengjie.utils.PageUtil;
-import me.zhengjie.utils.QueryHelp;
-import me.zhengjie.utils.ValidationUtil;
+import me.zhengjie.utils.*;
 import org.quartz.CronExpression;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import javax.servlet.http.HttpServletResponse;
@@ -47,6 +46,7 @@ public class QuartzJobServiceImpl implements QuartzJobService {
     private final QuartzJobRepository quartzJobRepository;
     private final QuartzLogRepository quartzLogRepository;
     private final QuartzManage quartzManage;
+    private final RedisUtils redisUtils;
 
     @Override
     public Object queryAll(JobQueryCriteria criteria, Pageable pageable){
@@ -91,6 +91,12 @@ public class QuartzJobServiceImpl implements QuartzJobService {
         if (!CronExpression.isValidExpression(resources.getCronExpression())){
             throw new BadRequestException("cron表达式格式错误");
         }
+        if(StringUtils.isNotBlank(resources.getSubTask())){
+            List<String> tasks = Arrays.asList(resources.getSubTask().split("[,，]"));
+            if (tasks.contains(resources.getId().toString())) {
+                throw new BadRequestException("子任务中不能添加当前任务ID");
+            }
+        }
         resources = quartzJobRepository.save(resources);
         quartzManage.updateJobCron(resources);
     }
@@ -119,6 +125,31 @@ public class QuartzJobServiceImpl implements QuartzJobService {
             QuartzJob quartzJob = findById(id);
             quartzManage.deleteJob(quartzJob);
             quartzJobRepository.delete(quartzJob);
+        }
+    }
+
+    @Async
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void executionSubJob(String[] tasks) throws InterruptedException {
+        for (String id : tasks) {
+            QuartzJob quartzJob = findById(Long.parseLong(id));
+            // 执行任务
+            String uuid = IdUtil.simpleUUID();
+            quartzJob.setUuid(uuid);
+            // 执行任务
+            execution(quartzJob);
+            // 获取执行状态，如果执行失败则停止后面的子任务执行
+            Boolean result = (Boolean) redisUtils.get(uuid);
+            while (result == null) {
+                // 休眠5秒，再次获取子任务执行情况
+                Thread.sleep(5000);
+                result = (Boolean) redisUtils.get(uuid);
+            }
+            if(!result){
+                redisUtils.del(uuid);
+                break;
+            }
         }
     }
 

@@ -26,14 +26,12 @@ import me.zhengjie.modules.quartz.domain.QuartzLog;
 import me.zhengjie.modules.quartz.repository.QuartzLogRepository;
 import me.zhengjie.modules.quartz.service.QuartzJobService;
 import me.zhengjie.service.EmailService;
+import me.zhengjie.utils.RedisUtils;
 import me.zhengjie.utils.SpringContextHolder;
 import me.zhengjie.utils.ThrowableUtil;
 import org.quartz.JobExecutionContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.quartz.QuartzJobBean;
-
 import java.util.*;
 import java.util.concurrent.*;
 
@@ -46,8 +44,6 @@ import java.util.concurrent.*;
 @SuppressWarnings({"unchecked","all"})
 public class ExecutionJob extends QuartzJobBean {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
     /** 该处仅供参考 */
     private final static ThreadPoolExecutor EXECUTOR = ThreadPoolExecutorUtil.getPoll();
 
@@ -57,6 +53,7 @@ public class ExecutionJob extends QuartzJobBean {
         // 获取spring bean
         QuartzLogRepository quartzLogRepository = SpringContextHolder.getBean(QuartzLogRepository.class);
         QuartzJobService quartzJobService = SpringContextHolder.getBean(QuartzJobService.class);
+        RedisUtils redisUtils = SpringContextHolder.getBean(RedisUtils.class);
 
         QuartzLog log = new QuartzLog();
         log.setJobName(quartzJob.getJobName());
@@ -67,25 +64,29 @@ public class ExecutionJob extends QuartzJobBean {
         log.setCronExpression(quartzJob.getCronExpression());
         try {
             // 执行任务
-            logger.info("任务准备执行，任务名称：{}", quartzJob.getJobName());
+            System.out.println("--------------------------------------------------------------");
+            System.out.println("任务开始执行，任务名称：" + quartzJob.getJobName());
             QuartzRunnable task = new QuartzRunnable(quartzJob.getBeanName(), quartzJob.getMethodName(),
                     quartzJob.getParams());
             Future<?> future = EXECUTOR.submit(task);
             future.get();
             long times = System.currentTimeMillis() - startTime;
             log.setTime(times);
+            redisUtils.set(quartzJob.getUuid(), true);
             // 任务状态
             log.setIsSuccess(true);
-            logger.info("任务执行完毕，任务名称：{} 总共耗时：{} 毫秒", quartzJob.getJobName(), times);
+            System.out.println("任务执行完毕，任务名称：" + quartzJob.getJobName() + ", 执行时间：" + times + "毫秒");
+            System.out.println("--------------------------------------------------------------");
             // 判断是否存在子任务
             if(quartzJob.getSubTask() != null){
                 String[] tasks = quartzJob.getSubTask().split("[,，]");
-                for (String id : tasks) {
-                    quartzJobService.execution(quartzJobService.findById(Long.parseLong(id)));
-                }
+                // 执行子任务
+                quartzJobService.executionSubJob(tasks);
             }
         } catch (Exception e) {
-            logger.error("任务执行失败，任务名称：{}" + quartzJob.getJobName(), e);
+            redisUtils.set(quartzJob.getUuid(), false);
+            System.out.println("任务执行失败，任务名称：" + quartzJob.getJobName());
+            System.out.println("--------------------------------------------------------------");
             long times = System.currentTimeMillis() - startTime;
             log.setTime(times);
             // 任务状态 0：成功 1：失败
