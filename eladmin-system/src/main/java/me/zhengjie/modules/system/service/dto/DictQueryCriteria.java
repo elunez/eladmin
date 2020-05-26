@@ -25,6 +25,6 @@ import me.zhengjie.annotation.Query;
 @Data
 public class DictQueryCriteria {
 
-    @Query(blurry = "name,remark")
+    @Query(blurry = "name,description")
     private String blurry;
 }
