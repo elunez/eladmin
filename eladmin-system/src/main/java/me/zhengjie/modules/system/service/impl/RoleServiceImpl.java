@@ -123,6 +123,7 @@ public class RoleServiceImpl implements RoleService {
         List<User> users = userRepository.findByRoleId(role.getId());
         Set<Long> userIds = users.stream().map(User::getId).collect(Collectors.toSet());
         redisUtils.delByKeys("menu::user:",userIds);
+        redisUtils.del("role::id:" + resources.getId());
         // 更新菜单
         role.setMenus(resources.getMenus());
         roleRepository.save(role);
