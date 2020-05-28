@@ -37,8 +37,8 @@ import java.util.Set;
 * @date 2019-08-24
 */
 @RestController
-@Api(tags = "运维：应用管理")
 @RequiredArgsConstructor
+@Api(tags = "运维：应用管理")
 @RequestMapping("/api/app")
 public class AppController {
 
