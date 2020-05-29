@@ -11,9 +11,9 @@
 #### 项目简介
 一个基于 Spring Boot 2.1.0 、 Spring Boot Jpa、 JWT、Spring Security、Redis、Vue的前后端分离的后台管理系统
 
-**开发文档：**  [https://docs.auauz.net/](https://docs.auauz.net)
+**开发文档：**  [https://doc.el-admin.xin/](https://doc.el-admin.xin)
 
-**体验地址：**  [https://auauz.net/](https://auauz.net/)
+**体验地址：**  [https://el-admin.xin](https://el-admin.xin)
 
 **账号密码：** `admin/123456` (默认密码都是123456)
 
@@ -90,6 +90,6 @@
 </table>
 
 #### 项目捐赠
-项目的发展离不开你的支持，请作者喝杯咖啡吧☕  [Donate](https://docs.auauz.net/#/jz)
+项目的发展离不开你的支持，请作者喝杯咖啡吧☕  [Donate](https://doc.el-admin.xin/donation/)
 #### 反馈交流
 - QQ交流群：891137268
