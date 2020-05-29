@@ -29,7 +29,7 @@ import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 </#if>
 
 /**
-* @website https://docs.auauz.net
+* @website https://el-admin.vip
 * @description /
 * @author ${author}
 * @date ${date}

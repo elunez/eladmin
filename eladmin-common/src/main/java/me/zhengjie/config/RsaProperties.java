@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * @author Zheng Jie
- * @website https://docs.auauz.net
+ * @website https://el-admin.vip
  * @description
  * @date 2020-05-18
  **/

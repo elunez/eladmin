@@ -54,7 +54,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 /**
-* @website https://docs.auauz.net
+* @website https://el-admin.vip
 * @description 服务实现
 * @author ${author}
 * @date ${date}

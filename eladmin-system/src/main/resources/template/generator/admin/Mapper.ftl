@@ -22,7 +22,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 
 /**
-* @website https://docs.auauz.net
+* @website https://el-admin.vip
 * @author ${author}
 * @date ${date}
 **/

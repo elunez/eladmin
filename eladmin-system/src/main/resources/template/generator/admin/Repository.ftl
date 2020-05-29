@@ -20,7 +20,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 /**
-* @website https://docs.auauz.net
+* @website https://el-admin.vip
 * @author ${author}
 * @date ${date}
 **/
