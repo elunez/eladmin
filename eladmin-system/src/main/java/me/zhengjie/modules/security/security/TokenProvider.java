@@ -56,6 +56,20 @@ public class TokenProvider implements InitializingBean {
       Date validity = new Date(now + properties.getTokenValidityInSeconds());
       /**
        * 使用HmacSHA512加密
+       *
+       * compact()将一个JwtBuilder对象DefaultJwtBuilder序列化为一个字符串
+       * signWith()使用特定的加密算法和秘钥对JWT进行加密
+       * setSubject()可选声明
+       *
+       * 一个JWT由三部分组成：
+       *
+       * header(头部）-----base64编码的Json字符串,可以不使用setHeader()方法,也会自己设置的
+       *
+       * Payload(载荷）---base64编码的Json字符串,claim()设置载荷,具体是JWT中保存重点信息的那一段
+       *
+       * Signature(签名)---使用指定算法，通过Header和Playload加盐计算的字符串
+       *
+       * 各部分以“.”分割
        */
       return Jwts.builder()
          .setSubject(authentication.getName())

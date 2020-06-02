@@ -49,7 +49,7 @@ public class AuthController {
     private Long expiration;
     @Value("${rsa.private_key}")
     private String privateKey;
-    @Value("${single.login:false}")
+    @Value("${single.login:true}")
     private Boolean singleLogin;
     /**
      * 对于final类型的属性,并且构造函数有包含它们的话,那么就不需要写AutoWired注解,Spring4.3之后会自动注入;
@@ -98,12 +98,16 @@ public class AuthController {
          * 这是一个Authentication对象;,principal存储用户名,credentials存储密码,
          * 然后将authenticationToken对象提交到SpringSecurity去验证authenticate(authenticationToken)
          * 可通过boolean isAuthenticated()方法来决定该Authentication是否认证成功
+         *
+         * UsernamePasswordAuthenticationToken继承AbstractAuthenticationToken,
+         * AbstractAuthenticationToken实现Authentication和CredentialsContainer
+         * 其中的CredentialsContainer接口会在擦除Credentials字段的值的时候使用到
          */
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(authUser.getUsername(), password);
         /**
          * 通过token获得授权对象
-         *
+         * 链式执行到ProviderManager的最后,会将已验证的对象的Credentials字段的值进行擦除
          */
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -117,6 +121,7 @@ public class AuthController {
             put("token", properties.getTokenStartWith() + token);
             put("user", jwtUser);
         }};
+        //不同的浏览器中总共只允许此账号登陆一次
         if(singleLogin){
             //踢掉之前已经登录的token
             onlineUserService.checkLoginOnUser(authUser.getUsername(),token);

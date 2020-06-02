@@ -41,6 +41,9 @@ public class OnlineUserService {
         String address = StringUtils.getCityInfo(ip);
         OnlineUser onlineUser = null;
         try {
+            /**
+             * 注意，这里对登录用户的token进行了加密
+             */
             onlineUser = new OnlineUser(jwtUser.getUsername(), jwtUser.getNickName(), job, browser , ip, address, EncryptUtils.desEncrypt(token), new Date());
         } catch (Exception e) {
             e.printStackTrace();
@@ -68,11 +71,22 @@ public class OnlineUserService {
      * @return /
      */
     public List<OnlineUser> getAll(String filter){
+        /**
+         * 根据redis中存在的key得到对应的value在强制转换成OnlineUser
+         */
         List<String> keys = redisUtils.scan(properties.getOnlineKey() + "*");
         Collections.reverse(keys);
         List<OnlineUser> onlineUsers = new ArrayList<>();
         for (String key : keys) {
             OnlineUser onlineUser = (OnlineUser) redisUtils.get(key);
+        /*   这里我觉得应该是为了测试需要，实际项目中只有admin用户才能获取全部用户的在线信息
+            if(StringUtils.isNotBlank(filter)){
+                if(onlineUser.toString().contains("admin")) {
+                    onlineUsers.add(onlineUser);
+                } else if(onlineUser.toString().contains(filter)){
+                    onlineUsers.add(onlineUser);
+                }
+            }*/
             if(StringUtils.isNotBlank(filter)){
                 if(onlineUser.toString().contains(filter)){
                     onlineUsers.add(onlineUser);
@@ -139,6 +153,9 @@ public class OnlineUserService {
      * @param userName 用户名
      */
     public void checkLoginOnUser(String userName, String igoreToken){
+        /**
+         * 查询全部的已登录的用户
+         */
         List<OnlineUser> onlineUsers = getAll(userName);
         if(onlineUsers ==null || onlineUsers.isEmpty()){
             return;

@@ -54,7 +54,7 @@ public class TokenFilter extends GenericFilterBean {
       }
 
       /**
-       *
+       * 如果redis存在这个用户(通过redis.getKey()是否为null来判断),并且request中的token不为空且token能被正确解析
        */
       if (onlineUser != null && StringUtils.hasText(token) && tokenProvider.validateToken(token)) {
          Authentication authentication = tokenProvider.getAuthentication(token);
