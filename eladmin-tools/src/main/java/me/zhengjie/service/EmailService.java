@@ -27,9 +27,10 @@ public interface EmailService {
 
     /**
      * 更新邮件配置
-     * @param emailConfig 邮件配置
-     * @param old 旧的配置
-     * @return EmailConfig
+     * @param emailConfig 邮箱配置
+     * @param old /
+     * @return /
+     * @throws Exception /
      */
     EmailConfig config(EmailConfig emailConfig, EmailConfig old) throws Exception;
 

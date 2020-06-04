@@ -45,6 +45,11 @@ spring:
         wall:
           config:
             multi-statement-allow: true
+
+# 是否限制单用户登录
+single:
+  login: false
+
 #jwt
 jwt:
   header: Authorization

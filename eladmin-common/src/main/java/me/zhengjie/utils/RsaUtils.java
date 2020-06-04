@@ -19,7 +19,7 @@ public class RsaUtils {
 
     public static void main(String[] args) throws Exception {
         System.out.println("\n");
-        RSAKeyPair keyPair = generateKeyPair();
+        RsaKeyPair keyPair = generateKeyPair();
         System.out.println("公钥：" + keyPair.getPublicKey());
         System.out.println("私钥：" + keyPair.getPrivateKey());
         System.out.println("\n");
@@ -32,7 +32,7 @@ public class RsaUtils {
     /**
      * 公钥加密私钥解密
      */
-    private static void test1(RSAKeyPair keyPair) throws Exception {
+    private static void test1(RsaKeyPair keyPair) throws Exception {
         System.out.println("***************** 公钥加密私钥解密开始 *****************");
         String text1 = encryptByPublicKey(keyPair.getPublicKey(), RsaUtils.SRC);
         String text2 = decryptByPrivateKey(keyPair.getPrivateKey(), text1);
@@ -51,7 +51,7 @@ public class RsaUtils {
      * 私钥加密公钥解密
      * @throws Exception /
      */
-    private static void test2(RSAKeyPair keyPair) throws Exception {
+    private static void test2(RsaKeyPair keyPair) throws Exception {
         System.out.println("***************** 私钥加密公钥解密开始 *****************");
         String text1 = encryptByPrivateKey(keyPair.getPrivateKey(), RsaUtils.SRC);
         String text2 = decryptByPublicKey(keyPair.getPublicKey(), text1);
@@ -143,7 +143,7 @@ public class RsaUtils {
      * @return /
      * @throws NoSuchAlgorithmException /
      */
-    public static RSAKeyPair generateKeyPair() throws NoSuchAlgorithmException {
+    public static RsaKeyPair generateKeyPair() throws NoSuchAlgorithmException {
         KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
         keyPairGenerator.initialize(1024);
         KeyPair keyPair = keyPairGenerator.generateKeyPair();
@@ -151,19 +151,19 @@ public class RsaUtils {
         RSAPrivateKey rsaPrivateKey = (RSAPrivateKey) keyPair.getPrivate();
         String publicKeyString = Base64.encodeBase64String(rsaPublicKey.getEncoded());
         String privateKeyString = Base64.encodeBase64String(rsaPrivateKey.getEncoded());
-        return new RSAKeyPair(publicKeyString, privateKeyString);
+        return new RsaKeyPair(publicKeyString, privateKeyString);
     }
 
 
     /**
      * RSA密钥对对象
      */
-    public static class RSAKeyPair {
+    public static class RsaKeyPair {
 
         private final String publicKey;
         private final String privateKey;
 
-        public RSAKeyPair(String publicKey, String privateKey) {
+        public RsaKeyPair(String publicKey, String privateKey) {
             this.publicKey = publicKey;
             this.privateKey = privateKey;
         }

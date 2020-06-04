@@ -62,7 +62,7 @@ public class AuthorizationController {
 
     @Value("${loginCode.expiration}")
     private Long expiration;
-    @Value("${single.login:false}")
+    @Value("${single.login}")
     private Boolean singleLogin;
     private final SecurityProperties properties;
     private final RedisUtils redisUtils;

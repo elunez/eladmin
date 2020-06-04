@@ -78,8 +78,8 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    @Transactional
     @Cacheable(key = "'id:' + #p0")
+    @Transactional(rollbackFor = Exception.class)
     public RoleDto findById(long id) {
         Role role = roleRepository.findById(id).orElseGet(Role::new);
         ValidationUtil.isNull(role.getId(),"Role","id",id);
