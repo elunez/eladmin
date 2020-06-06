@@ -39,7 +39,7 @@ public interface MaterialCategoryRepository extends JpaRepository<MaterialCatego
      * @param id
      */
     @Modifying
-    @Query(value = "update bd_product_category set status = 1 where id = ?1",nativeQuery = true)
+    @Query(value = "update bd_material_category set status = 1 where id = ?1",nativeQuery = true)
     void updateStatusToTrue(long id);
 
     /**
@@ -47,6 +47,6 @@ public interface MaterialCategoryRepository extends JpaRepository<MaterialCatego
      * @param id
      */
     @Modifying
-    @Query(value = "update bd_product_category set status = 0 where id = ?1",nativeQuery = true)
+    @Query(value = "update bd_material_category set status = 0 where id = ?1",nativeQuery = true)
     void deleteMaterialCategory(long id);
 }

@@ -19,6 +19,6 @@ public class MaterialInfoQueryCriteria {
 
     private Long materialCategoryId;
 
-    private Boolean status;
+    private Boolean status=true;
 
 }
