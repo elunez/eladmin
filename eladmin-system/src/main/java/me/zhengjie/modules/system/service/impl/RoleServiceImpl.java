@@ -119,13 +119,13 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public void updateMenu(Role resources, RoleDto roleDTO) {
         Role role = roleMapper.toEntity(roleDTO);
-        // 清理缓存
         List<User> users = userRepository.findByRoleId(role.getId());
         Set<Long> userIds = users.stream().map(User::getId).collect(Collectors.toSet());
-        redisUtils.delByKeys("menu::user:",userIds);
-        redisUtils.del("role::id:" + resources.getId());
         // 更新菜单
         role.setMenus(resources.getMenus());
+        // 清理缓存
+        redisUtils.delByKeys("menu::user:",userIds);
+        redisUtils.del("role::id:" + resources.getId());
         roleRepository.save(role);
     }
 
