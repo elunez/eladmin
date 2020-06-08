@@ -1,5 +1,3 @@
-select * from sys_user
-
 -- sys_user 表变动 start --
 /* id 改为 user_id */
 alter table sys_user CHANGE id user_id BIGINT(20) AUTO_INCREMENT COMMENT 'ID';
