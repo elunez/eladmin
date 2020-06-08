@@ -20,6 +20,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -66,4 +68,13 @@ public interface RoleRepository extends JpaRepository<Role, Long>, JpaSpecificat
     @Query(value = "select count(1) from sys_role r, sys_roles_depts d where " +
             "r.role_id = d.role_id and d.dept_id in ?1",nativeQuery = true)
     int countByDepts(Set<Long> deptIds);
+
+    /**
+     * 根据菜单Id查询
+     * @param menuIds /
+     * @return /
+     */
+    @Query(value = "SELECT r.* FROM sys_role r, sys_roles_menus m WHERE " +
+            "r.role_id = m.role_id AND m.menu_id in ?1",nativeQuery = true)
+    List<Role> findInMenuId(List<Long> menuIds);
 }

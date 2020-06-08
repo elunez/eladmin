@@ -106,18 +106,17 @@ public class DeptServiceImpl implements DeptService {
         deptRepository.save(resources);
         // 计算子节点数目
         resources.setSubCount(0);
-        if(resources.getPid() != null){
-            // 清理缓存
-            redisUtils.del("dept::pid:" + resources.getPid());
-            updateSubCnt(resources.getPid());
-        }
+        // 清理缓存
+        redisUtils.del("dept::pid:" + (resources.getPid() == null ? 0 : resources.getPid()));
+        updateSubCnt(resources.getPid());
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void update(Dept resources) {
         // 旧的部门
-        Long pid = findById(resources.getId()).getPid();
+        Long oldPid = findById(resources.getId()).getPid();
+        Long newPid = resources.getPid();
         if(resources.getPid() != null && resources.getId().equals(resources.getPid())) {
             throw new BadRequestException("上级不能为自己");
         }
@@ -125,14 +124,11 @@ public class DeptServiceImpl implements DeptService {
         ValidationUtil.isNull( dept.getId(),"Dept","id",resources.getId());
         resources.setId(dept.getId());
         deptRepository.save(resources);
-        if(resources.getPid() == null){
-            updateSubCnt(pid);
-        } else {
-            pid = resources.getPid();
-            updateSubCnt(resources.getPid());
-        }
+        // 更新父节点中子节点数目
+        updateSubCnt(oldPid);
+        updateSubCnt(newPid);
         // 清理缓存
-        delCaches(resources.getId(), pid);
+        delCaches(resources.getId(), oldPid, newPid);
     }
 
     @Override
@@ -140,11 +136,9 @@ public class DeptServiceImpl implements DeptService {
     public void delete(Set<DeptDto> deptDtos) {
         for (DeptDto deptDto : deptDtos) {
             // 清理缓存
-            delCaches(deptDto.getId(), deptDto.getPid());
+            delCaches(deptDto.getId(), deptDto.getPid(), null);
             deptRepository.deleteById(deptDto.getId());
-            if(deptDto.getPid() != null){
-                updateSubCnt(deptDto.getPid());
-            }
+            updateSubCnt(deptDto.getPid());
         }
     }
 
@@ -235,11 +229,6 @@ public class DeptServiceImpl implements DeptService {
         return map;
     }
 
-    private void updateSubCnt(Long deptId){
-        int count = deptRepository.countByPid(deptId);
-        deptRepository.updateSubCntById(count, deptId);
-    }
-
     @Override
     public void verification(Set<DeptDto> deptDtos) {
         Set<Long> deptIds = deptDtos.stream().map(DeptDto::getId).collect(Collectors.toSet());
@@ -251,17 +240,25 @@ public class DeptServiceImpl implements DeptService {
         }
     }
 
+    private void updateSubCnt(Long deptId){
+        if(deptId != null){
+            int count = deptRepository.countByPid(deptId);
+            deptRepository.updateSubCntById(count, deptId);
+        }
+    }
+
     /**
      * 清理缓存
      * @param id /
+     * @param oldPid /
+     * @param newPid /
      */
-    public void delCaches(Long id, Long pid){
+    public void delCaches(Long id, Long oldPid, Long newPid){
         List<User> users = userRepository.findByDeptRoleId(id);
         // 删除数据权限
         redisUtils.delByKeys("data::user:",users.stream().map(User::getId).collect(Collectors.toSet()));
         redisUtils.del("dept::id:" + id);
-        if (pid != null) {
-            redisUtils.del("dept::pid:" + pid);
-        }
+        redisUtils.del("dept::pid:" + (oldPid == null ? 0 : oldPid));
+        redisUtils.del("dept::pid:" + (newPid == null ? 0 : newPid));
     }
 }

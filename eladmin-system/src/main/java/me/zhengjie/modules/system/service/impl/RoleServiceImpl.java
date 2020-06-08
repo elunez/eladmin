@@ -210,4 +210,9 @@ public class RoleServiceImpl implements RoleService {
             throw new BadRequestException("所选角色存在用户关联，请解除关联再试！");
         }
     }
+
+    @Override
+    public List<Role> findInMenuId(List<Long> menuIds) {
+        return roleRepository.findInMenuId(menuIds);
+    }
 }

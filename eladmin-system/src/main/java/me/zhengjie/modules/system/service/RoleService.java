@@ -126,4 +126,11 @@ public interface RoleService {
      * @param ids /
      */
     void verification(Set<Long> ids);
+
+    /**
+     * 根据菜单Id查询
+     * @param menuIds /
+     * @return /
+     */
+    List<Role> findInMenuId(List<Long> menuIds);
 }
