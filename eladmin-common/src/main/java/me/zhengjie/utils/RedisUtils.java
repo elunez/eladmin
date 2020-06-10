@@ -15,12 +15,15 @@
  */
 package me.zhengjie.utils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.*;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
+
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -28,9 +31,9 @@ import java.util.concurrent.TimeUnit;
  * @author /
  */
 @Component
-@SuppressWarnings({"unchecked","all"})
+@SuppressWarnings({"unchecked", "all"})
 public class RedisUtils {
-
+    private static final Logger log = LoggerFactory.getLogger(RedisUtils.class);
     private RedisTemplate<Object, Object> redisTemplate;
     @Value("${jwt.online-key}")
     private String onlineKey;
@@ -41,6 +44,7 @@ public class RedisUtils {
 
     /**
      * 指定缓存失效时间
+     *
      * @param key  键
      * @param time 时间(秒)
      */
@@ -50,7 +54,7 @@ public class RedisUtils {
                 redisTemplate.expire(key, time, TimeUnit.SECONDS);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
             return false;
         }
         return true;
@@ -58,8 +62,9 @@ public class RedisUtils {
 
     /**
      * 指定缓存失效时间
-     * @param key  键
-     * @param time 时间(秒)
+     *
+     * @param key      键
+     * @param time     时间(秒)
      * @param timeUnit 单位
      */
     public boolean expire(String key, long time, TimeUnit timeUnit) {
@@ -68,7 +73,7 @@ public class RedisUtils {
                 redisTemplate.expire(key, time, timeUnit);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
             return false;
         }
         return true;
@@ -76,6 +81,7 @@ public class RedisUtils {
 
     /**
      * 根据 key 获取过期时间
+     *
      * @param key 键 不能为null
      * @return 时间(秒) 返回0代表为永久有效
      */
@@ -85,6 +91,7 @@ public class RedisUtils {
 
     /**
      * 查找匹配key
+     *
      * @param pattern key
      * @return /
      */
@@ -100,16 +107,17 @@ public class RedisUtils {
         try {
             RedisConnectionUtils.releaseConnection(rc, factory);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         return result;
     }
 
     /**
      * 分页查询 key
+     *
      * @param patternKey key
-     * @param page 页码
-     * @param size 每页数目
+     * @param page       页码
+     * @param size       每页数目
      * @return /
      */
     public List<String> findKeysForPage(String patternKey, int page, int size) {
@@ -128,7 +136,7 @@ public class RedisUtils {
                 continue;
             }
             // 获取到满足条件的数据后,就可以退出了
-            if(tmpIndex >=toIndex) {
+            if (tmpIndex >= toIndex) {
                 break;
             }
             tmpIndex++;
@@ -137,13 +145,14 @@ public class RedisUtils {
         try {
             RedisConnectionUtils.releaseConnection(rc, factory);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         return result;
     }
 
     /**
      * 判断key是否存在
+     *
      * @param key 键
      * @return true 存在 false不存在
      */
@@ -151,13 +160,14 @@ public class RedisUtils {
         try {
             return redisTemplate.hasKey(key);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
             return false;
         }
     }
 
     /**
      * 删除缓存
+     *
      * @param key 可以传一个值 或多个
      */
     public void del(String... keys) {
@@ -185,6 +195,7 @@ public class RedisUtils {
 
     /**
      * 普通缓存获取
+     *
      * @param key 键
      * @return 值
      */
@@ -194,6 +205,7 @@ public class RedisUtils {
 
     /**
      * 批量获取
+     *
      * @param keys
      * @return
      */
@@ -204,6 +216,7 @@ public class RedisUtils {
 
     /**
      * 普通缓存放入
+     *
      * @param key   键
      * @param value 值
      * @return true成功 false失败
@@ -213,13 +226,14 @@ public class RedisUtils {
             redisTemplate.opsForValue().set(key, value);
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
             return false;
         }
     }
 
     /**
      * 普通缓存放入并设置时间
+     *
      * @param key   键
      * @param value 值
      * @param time  时间(秒) time要大于0 如果time小于等于0 将设置无限期
@@ -234,16 +248,17 @@ public class RedisUtils {
             }
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
             return false;
         }
     }
 
     /**
      * 普通缓存放入并设置时间
-     * @param key   键
-     * @param value 值
-     * @param time  时间
+     *
+     * @param key      键
+     * @param value    值
+     * @param time     时间
      * @param timeUnit 类型
      * @return true成功 false 失败
      */
@@ -256,7 +271,7 @@ public class RedisUtils {
             }
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
             return false;
         }
     }
@@ -265,6 +280,7 @@ public class RedisUtils {
 
     /**
      * HashGet
+     *
      * @param key  键 不能为null
      * @param item 项 不能为null
      * @return 值
@@ -275,6 +291,7 @@ public class RedisUtils {
 
     /**
      * 获取hashKey对应的所有键值
+     *
      * @param key 键
      * @return 对应的多个键值
      */
@@ -285,6 +302,7 @@ public class RedisUtils {
 
     /**
      * HashSet
+     *
      * @param key 键
      * @param map 对应多个键值
      * @return true 成功 false 失败
@@ -294,13 +312,14 @@ public class RedisUtils {
             redisTemplate.opsForHash().putAll(key, map);
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
             return false;
         }
     }
 
     /**
      * HashSet 并设置时间
+     *
      * @param key  键
      * @param map  对应多个键值
      * @param time 时间(秒)
@@ -314,7 +333,7 @@ public class RedisUtils {
             }
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
             return false;
         }
     }
@@ -332,7 +351,7 @@ public class RedisUtils {
             redisTemplate.opsForHash().put(key, item, value);
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
             return false;
         }
     }
@@ -354,7 +373,7 @@ public class RedisUtils {
             }
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
             return false;
         }
     }
@@ -416,7 +435,7 @@ public class RedisUtils {
         try {
             return redisTemplate.opsForSet().members(key);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
             return null;
         }
     }
@@ -432,7 +451,7 @@ public class RedisUtils {
         try {
             return redisTemplate.opsForSet().isMember(key, value);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
             return false;
         }
     }
@@ -448,13 +467,14 @@ public class RedisUtils {
         try {
             return redisTemplate.opsForSet().add(key, values);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
             return 0;
         }
     }
 
     /**
      * 将set数据放入缓存
+     *
      * @param key    键
      * @param time   时间(秒)
      * @param values 值 可以是多个
@@ -468,13 +488,14 @@ public class RedisUtils {
             }
             return count;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
             return 0;
         }
     }
 
     /**
      * 获取set缓存的长度
+     *
      * @param key 键
      * @return
      */
@@ -482,13 +503,14 @@ public class RedisUtils {
         try {
             return redisTemplate.opsForSet().size(key);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
             return 0;
         }
     }
 
     /**
      * 移除值为value的
+     *
      * @param key    键
      * @param values 值 可以是多个
      * @return 移除的个数
@@ -498,7 +520,7 @@ public class RedisUtils {
             Long count = redisTemplate.opsForSet().remove(key, values);
             return count;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
             return 0;
         }
     }
@@ -507,6 +529,7 @@ public class RedisUtils {
 
     /**
      * 获取list缓存的内容
+     *
      * @param key   键
      * @param start 开始
      * @param end   结束 0 到 -1代表所有值
@@ -516,13 +539,14 @@ public class RedisUtils {
         try {
             return redisTemplate.opsForList().range(key, start, end);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
             return null;
         }
     }
 
     /**
      * 获取list缓存的长度
+     *
      * @param key 键
      * @return
      */
@@ -530,13 +554,14 @@ public class RedisUtils {
         try {
             return redisTemplate.opsForList().size(key);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
             return 0;
         }
     }
 
     /**
      * 通过索引 获取list中的值
+     *
      * @param key   键
      * @param index 索引 index>=0时， 0 表头，1 第二个元素，依次类推；index<0时，-1，表尾，-2倒数第二个元素，依次类推
      * @return
@@ -545,13 +570,14 @@ public class RedisUtils {
         try {
             return redisTemplate.opsForList().index(key, index);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
             return null;
         }
     }
 
     /**
      * 将list放入缓存
+     *
      * @param key   键
      * @param value 值
      * @return
@@ -561,13 +587,14 @@ public class RedisUtils {
             redisTemplate.opsForList().rightPush(key, value);
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
             return false;
         }
     }
 
     /**
      * 将list放入缓存
+     *
      * @param key   键
      * @param value 值
      * @param time  时间(秒)
@@ -581,13 +608,14 @@ public class RedisUtils {
             }
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
             return false;
         }
     }
 
     /**
      * 将list放入缓存
+     *
      * @param key   键
      * @param value 值
      * @return
@@ -597,13 +625,14 @@ public class RedisUtils {
             redisTemplate.opsForList().rightPushAll(key, value);
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
             return false;
         }
     }
 
     /**
      * 将list放入缓存
+     *
      * @param key   键
      * @param value 值
      * @param time  时间(秒)
@@ -617,13 +646,14 @@ public class RedisUtils {
             }
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
             return false;
         }
     }
 
     /**
      * 根据索引修改list中的某条数据
+     *
      * @param key   键
      * @param index 索引
      * @param value 值
@@ -634,13 +664,14 @@ public class RedisUtils {
             redisTemplate.opsForList().set(key, index, value);
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
             return false;
         }
     }
 
     /**
      * 移除N个值为value
+     *
      * @param key   键
      * @param count 移除多少个
      * @param value 值
@@ -650,15 +681,14 @@ public class RedisUtils {
         try {
             return redisTemplate.opsForList().remove(key, count, value);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
             return 0;
         }
     }
 
     /**
-     *
      * @param prefix 前缀
-     * @param ids id
+     * @param ids    id
      */
     public void delByKeys(String prefix, Set<Long> ids) {
         Set<Object> keys = new HashSet<>();

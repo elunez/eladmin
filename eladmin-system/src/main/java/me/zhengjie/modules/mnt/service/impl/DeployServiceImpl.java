@@ -187,7 +187,7 @@ public class DeployServiceImpl implements DeployService {
 		try {
 			Thread.sleep(second * 1000);
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 		}
 	}
 
@@ -237,7 +237,7 @@ public class DeployServiceImpl implements DeployService {
 		try {
 			WebSocketServer.sendInfo(new SocketMsg(msg, msgType), "deploy");
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 		}
 	}
 

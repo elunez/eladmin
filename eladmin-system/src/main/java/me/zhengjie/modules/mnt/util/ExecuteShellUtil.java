@@ -45,7 +45,7 @@ public class ExecuteShellUtil {
 			session.setConfig("StrictHostKeyChecking", "no");
 			session.connect(3000);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 		}
 
 	}
@@ -71,7 +71,7 @@ public class ExecuteShellUtil {
 				System.out.println(line);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 			return -1;
 		}finally {
 			IoUtil.close(printWriter);
