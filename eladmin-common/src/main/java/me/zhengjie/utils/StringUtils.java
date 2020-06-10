@@ -22,16 +22,12 @@ import eu.bitwalker.useragentutils.Browser;
 import eu.bitwalker.useragentutils.UserAgent;
 import org.lionsoul.ip2region.DataBlock;
 import org.lionsoul.ip2region.DbConfig;
-import org.lionsoul.ip2region.DbMakerConfigException;
 import org.lionsoul.ip2region.DbSearcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
-
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
-import java.io.FileNotFoundException;
-
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Calendar;
@@ -42,38 +38,33 @@ import java.util.Date;
  * 字符串工具类, 继承org.apache.commons.lang3.StringUtils类
  */
 public class StringUtils extends org.apache.commons.lang3.StringUtils {
+
     private static final Logger log = LoggerFactory.getLogger(StringUtils.class);
     private static boolean ipLocal = false;
     private static DbSearcher searcher = null;
+    private static final char SEPARATOR = '_';
+    private static final String UNKNOWN = "unknown";
 
     static {
         SpringContextHolder.addCallBacks(() -> {
             StringUtils.ipLocal = SpringContextHolder.getProperties("ip.local-parsing", false, Boolean.class);
             if (ipLocal) {
-                /**
+                /*
                  * 此文件为独享 ，不必关闭
                  */
                 String path = "ip2region/ip2region.db";
                 String name = "ip2region.db";
-                DbConfig config = null;
+                DbConfig config;
                 try {
                     config = new DbConfig();
                     File file = FileUtil.inputStreamToFile(new ClassPathResource(path).getInputStream(), name);
                     searcher = new DbSearcher(config, file.getPath());
-                } catch (DbMakerConfigException | FileNotFoundException e) {
-                    log.error(e.getMessage(), e);
-                } catch (NoSuchMethodException e) {
-                    log.error(e.getMessage(), e);
                 } catch (Exception e) {
                     log.error(e.getMessage(), e);
                 }
             }
         });
     }
-
-    private static final char SEPARATOR = '_';
-
-    private static final String UNKNOWN = "unknown";
 
     /**
      * 驼峰命名法工具
