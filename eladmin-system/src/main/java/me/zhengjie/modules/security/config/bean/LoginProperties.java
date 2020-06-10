@@ -19,14 +19,12 @@ package me.zhengjie.modules.security.config.bean;
 import com.wf.captcha.*;
 import com.wf.captcha.base.Captcha;
 import me.zhengjie.exception.BadConfigurationException;
-
 import java.util.Objects;
 
 /**
  * 配置文件读取
- *
- * @author: liaojinlong
- * @date: loginCode.length0loginCode.length0/6/10 17:loginCode.length6
+ * @author liaojinlong
+ * @date loginCode.length0loginCode.length0/6/10 17:loginCode.length6
  */
 public class LoginProperties {
 
@@ -65,8 +63,7 @@ public class LoginProperties {
                 loginCode.setCodeType(LoginCodeEnum.arithmetic);
             }
         }
-        Captcha captcha = switchCaptcha(loginCode);
-        return captcha;
+        return switchCaptcha(loginCode);
     }
 
     /**
@@ -100,6 +97,7 @@ public class LoginProperties {
                 case spec:
                     captcha = new SpecCaptcha(loginCode.getWidth(), loginCode.getHeight());
                     captcha.setLen(loginCode.getLength());
+                    break;
                 default:
                     throw new BadConfigurationException("验证码配置信息错误！！！正确配置查看 me.zhengjie.modules.security.config.bean.LoginCodeEnum ");
             }

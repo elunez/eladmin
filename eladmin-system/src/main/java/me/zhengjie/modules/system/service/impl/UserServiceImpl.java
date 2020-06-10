@@ -109,6 +109,10 @@ public class UserServiceImpl implements UserService {
             redisUtils.del("menu::user:" + resources.getId());
             redisUtils.del("role::auth:" + resources.getId());
         }
+        // 如果用户名称修改
+        if(!resources.getUsername().equals(user.getUsername())){
+            redisUtils.del("user::username:" + user.getUsername());
+        }
         user.setUsername(resources.getUsername());
         user.setEmail(resources.getEmail());
         user.setEnabled(resources.getEnabled());
