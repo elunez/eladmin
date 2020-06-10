@@ -16,7 +16,7 @@
 package me.zhengjie.modules.security.service;
 
 import lombok.extern.slf4j.Slf4j;
-import me.zhengjie.modules.security.config.SecurityProperties;
+import me.zhengjie.modules.security.config.bean.SecurityProperties;
 import me.zhengjie.modules.security.service.dto.JwtUserDto;
 import me.zhengjie.modules.security.service.dto.OnlineUserDto;
 import me.zhengjie.utils.*;
