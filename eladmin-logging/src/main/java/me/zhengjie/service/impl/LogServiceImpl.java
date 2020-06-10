@@ -28,10 +28,13 @@ import me.zhengjie.service.mapstruct.LogSmallMapper;
 import me.zhengjie.utils.*;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -44,14 +47,14 @@ import java.util.*;
 @Service
 @RequiredArgsConstructor
 public class LogServiceImpl implements LogService {
-
+    private static final Logger log = LoggerFactory.getLogger(LogServiceImpl.class);
     private final LogRepository logRepository;
     private final LogErrorMapper logErrorMapper;
     private final LogSmallMapper logSmallMapper;
 
     @Override
-    public Object queryAll(LogQueryCriteria criteria, Pageable pageable){
-        Page<Log> page = logRepository.findAll(((root, criteriaQuery, cb) -> QueryHelp.getPredicate(root, criteria, cb)),pageable);
+    public Object queryAll(LogQueryCriteria criteria, Pageable pageable) {
+        Page<Log> page = logRepository.findAll(((root, criteriaQuery, cb) -> QueryHelp.getPredicate(root, criteria, cb)), pageable);
         String status = "ERROR";
         if (status.equals(criteria.getLogType())) {
             return PageUtil.toPage(page.map(logErrorMapper::toDto));
@@ -66,20 +69,20 @@ public class LogServiceImpl implements LogService {
 
     @Override
     public Object queryAllByUser(LogQueryCriteria criteria, Pageable pageable) {
-        Page<Log> page = logRepository.findAll(((root, criteriaQuery, cb) -> QueryHelp.getPredicate(root, criteria, cb)),pageable);
+        Page<Log> page = logRepository.findAll(((root, criteriaQuery, cb) -> QueryHelp.getPredicate(root, criteria, cb)), pageable);
         return PageUtil.toPage(page.map(logSmallMapper::toDto));
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void save(String username, String browser, String ip, ProceedingJoinPoint joinPoint, Log log){
+    public void save(String username, String browser, String ip, ProceedingJoinPoint joinPoint, Log log) {
 
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
         me.zhengjie.annotation.Log aopLog = method.getAnnotation(me.zhengjie.annotation.Log.class);
 
         // 方法路径
-        String methodName = joinPoint.getTarget().getClass().getName()+"."+signature.getName()+"()";
+        String methodName = joinPoint.getTarget().getClass().getName() + "." + signature.getName() + "()";
 
         StringBuilder params = new StringBuilder("{");
         //参数值
@@ -96,11 +99,11 @@ public class LogServiceImpl implements LogService {
         log.setRequestIp(ip);
 
         String loginPath = "login";
-        if(loginPath.equals(signature.getName())){
+        if (loginPath.equals(signature.getName())) {
             try {
                 username = new JSONObject(argValues.get(0)).get("username").toString();
-            }catch (Exception e){
-                e.printStackTrace();
+            } catch (Exception e) {
+                LogServiceImpl.log.error(e.getMessage(), e);
             }
         }
         log.setAddress(StringUtils.getCityInfo(log.getRequestIp()));
@@ -114,16 +117,16 @@ public class LogServiceImpl implements LogService {
     @Override
     public Object findByErrDetail(Long id) {
         Log log = logRepository.findById(id).orElseGet(Log::new);
-        ValidationUtil.isNull( log.getId(),"Log","id", id);
+        ValidationUtil.isNull(log.getId(), "Log", "id", id);
         byte[] details = log.getExceptionDetail();
-        return Dict.create().set("exception",new String(ObjectUtil.isNotNull(details) ? details : "".getBytes()));
+        return Dict.create().set("exception", new String(ObjectUtil.isNotNull(details) ? details : "".getBytes()));
     }
 
     @Override
     public void download(List<Log> logs, HttpServletResponse response) throws IOException {
         List<Map<String, Object>> list = new ArrayList<>();
         for (Log log : logs) {
-            Map<String,Object> map = new LinkedHashMap<>();
+            Map<String, Object> map = new LinkedHashMap<>();
             map.put("用户名", log.getUsername());
             map.put("IP", log.getRequestIp());
             map.put("IP来源", log.getAddress());

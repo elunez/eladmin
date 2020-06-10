@@ -21,6 +21,8 @@ import cn.hutool.poi.excel.BigExcelWriter;
 import cn.hutool.poi.excel.ExcelUtil;
 import me.zhengjie.exception.BadRequestException;
 import org.apache.poi.util.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletOutputStream;
@@ -41,7 +43,20 @@ import java.util.Map;
  * @date 2018-12-27
  */
 public class FileUtil extends cn.hutool.core.io.FileUtil {
-
+    private static final Logger log = LoggerFactory.getLogger(FileUtil.class);
+    /**
+     * 系统临时目录
+     * <br>
+     * windows 包含路径分割符，但Linux 不包含,
+     * 在windows \\==\ 前提下，
+     * 为安全起见 同意拼装 路径分割符，
+     * <pre>
+     *       java.io.tmpdir
+     *       windows : C:\Users/xxx\AppData\Local\Temp\
+     *       linux: /temp
+     * </pre>
+     */
+    public static final String SYS_TEM_DIR = System.getProperty("java.io.tmpdir") + File.separator;
     /**
      * 定义GB的计算常量
      */
@@ -75,7 +90,7 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
             // MultipartFile to File
             multipartFile.transferTo(file);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         return file;
     }
@@ -130,7 +145,7 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
      * inputStream 转 File
      */
     static File inputStreamToFile(InputStream ins, String name) throws Exception {
-        File file = new File(System.getProperty("java.io.tmpdir") + File.separator + name);
+        File file = new File(SYS_TEM_DIR + name);
         if (file.exists()) {
             return file;
         }
@@ -170,7 +185,7 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
             file.transferTo(dest);
             return dest;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         return null;
     }
@@ -179,7 +194,7 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
      * 导出excel
      */
     public static void downloadExcel(List<Map<String, Object>> list, HttpServletResponse response) throws IOException {
-        String tempPath = System.getProperty("java.io.tmpdir") + IdUtil.fastSimpleUUID() + ".xlsx";
+        String tempPath = SYS_TEM_DIR + IdUtil.fastSimpleUUID() + ".xlsx";
         File file = new File(tempPath);
         BigExcelWriter writer = ExcelUtil.getBigWriter(file);
         // 一次性写出内容，使用默认样式，强制输出标题
@@ -246,10 +261,10 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
             try {
                 System.out.println(in.read(b));
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error(e.getMessage(), e);
             }
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
             return null;
         }
         return b;
@@ -272,7 +287,7 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
             }
             return new String(str);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         return null;
     }
@@ -294,7 +309,7 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
             IOUtils.copy(fis, response.getOutputStream());
             response.flushBuffer();
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         } finally {
             if (fis != null) {
                 try {
@@ -303,7 +318,7 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
                         file.deleteOnExit();
                     }
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    log.error(e.getMessage(), e);
                 }
             }
         }
