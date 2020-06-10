@@ -42,6 +42,8 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
     private static final Logger log = LoggerFactory.getLogger(StringUtils.class);
     private static boolean ipLocal = false;
     private static DbSearcher searcher = null;
+    private static final char SEPARATOR = '_';
+    private static final String UNKNOWN = "unknown";
 
     static {
         SpringContextHolder.addCallBacks(() -> {
@@ -63,10 +65,6 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
             }
         });
     }
-
-    private static final char SEPARATOR = '_';
-
-    private static final String UNKNOWN = "unknown";
 
     /**
      * 驼峰命名法工具

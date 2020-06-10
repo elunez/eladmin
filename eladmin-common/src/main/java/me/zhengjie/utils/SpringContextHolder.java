@@ -21,7 +21,6 @@ import org.springframework.beans.factory.DisposableBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.env.Environment;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +32,7 @@ import java.util.List;
 public class SpringContextHolder implements ApplicationContextAware, DisposableBean {
 
     private static ApplicationContext applicationContext = null;
-    private static List<CallBack> callBacks = new ArrayList<>();
+    private static final List<CallBack> CALL_BACKS = new ArrayList<>();
     private static boolean addCallback = true;
 
     /**
@@ -44,7 +43,7 @@ public class SpringContextHolder implements ApplicationContextAware, DisposableB
      */
     public synchronized static void addCallBacks(CallBack callBack) {
         if (addCallback) {
-            SpringContextHolder.callBacks.add(callBack);
+            SpringContextHolder.CALL_BACKS.add(callBack);
         } else {
             log.warn("CallBack：{} 已无法添加！立即执行", callBack.getCallBackName());
             callBack.executor();
@@ -74,14 +73,13 @@ public class SpringContextHolder implements ApplicationContextAware, DisposableB
      * @param property     属性key
      * @param defaultValue 默认值
      * @param requiredType 返回类型
-     * @return
+     * @return /
      */
     public static <T> T getProperties(String property, T defaultValue, Class<T> requiredType) {
         T result = defaultValue;
         try {
             result = getBean(Environment.class).getProperty(property, requiredType);
-        } catch (Exception e) {
-        }
+        } catch (Exception ignored) {}
         return result;
     }
 
@@ -89,7 +87,7 @@ public class SpringContextHolder implements ApplicationContextAware, DisposableB
      * 获取SpringBoot 配置信息
      *
      * @param property 属性key
-     * @return
+     * @return /
      */
     public static String getProperties(String property) {
         return getProperties(property, null, String.class);
@@ -100,7 +98,7 @@ public class SpringContextHolder implements ApplicationContextAware, DisposableB
      *
      * @param property     属性key
      * @param requiredType 返回类型
-     * @return
+     * @return /
      */
     public static <T> T getProperties(String property, Class<T> requiredType) {
         return getProperties(property, null, requiredType);
@@ -137,10 +135,10 @@ public class SpringContextHolder implements ApplicationContextAware, DisposableB
         }
         SpringContextHolder.applicationContext = applicationContext;
         if (addCallback) {
-            for (CallBack callBack : SpringContextHolder.callBacks) {
+            for (CallBack callBack : SpringContextHolder.CALL_BACKS) {
                 callBack.executor();
             }
-            callBacks.clear();
+            CALL_BACKS.clear();
         }
         SpringContextHolder.addCallback = false;
     }

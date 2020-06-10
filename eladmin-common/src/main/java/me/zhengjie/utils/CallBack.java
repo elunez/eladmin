@@ -16,8 +16,6 @@
 
 package me.zhengjie.utils;
 
-import java.io.IOException;
-
 /**
  * @author: liaojinlong
  * @date: 2020/6/9 17:02
@@ -36,8 +34,7 @@ public interface CallBack {
 
     /**
      * 本回调任务名称
-     *
-     * @return
+     * @return /
      */
     default String getCallBackName() {
         return Thread.currentThread().getId() + ":" + this.getClass().getName();
