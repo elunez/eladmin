@@ -174,19 +174,19 @@ public class RedisUtils {
         if (keys != null && keys.length > 0) {
             if (keys.length == 1) {
                 boolean result = redisTemplate.delete(keys[0]);
-                System.out.println("--------------------------------------------");
-                System.out.println(new StringBuilder("删除缓存：").append(keys[0]).append("，结果：").append(result));
-                System.out.println("--------------------------------------------");
+                log.debug("--------------------------------------------");
+                log.debug(new StringBuilder("删除缓存：").append(keys[0]).append("，结果：").append(result).toString());
+                log.debug("--------------------------------------------");
             } else {
                 Set<Object> keySet = new HashSet<>();
                 for (String key : keys) {
                     keySet.addAll(redisTemplate.keys(key));
                 }
                 long count = redisTemplate.delete(keySet);
-                System.out.println("--------------------------------------------");
-                System.out.println("成功删除缓存：" + keySet.toString());
-                System.out.println("缓存删除数量：" + count + "个");
-                System.out.println("--------------------------------------------");
+                log.debug("--------------------------------------------");
+                log.debug("成功删除缓存：" + keySet.toString());
+                log.debug("缓存删除数量：" + count + "个");
+                log.debug("--------------------------------------------");
             }
         }
     }
@@ -697,9 +697,9 @@ public class RedisUtils {
         }
         long count = redisTemplate.delete(keys);
         // 此处提示可自行删除
-        System.out.println("--------------------------------------------");
-        System.out.println("成功删除缓存：" + keys.toString());
-        System.out.println("缓存删除数量：" + count + "个");
-        System.out.println("--------------------------------------------");
+        log.debug("--------------------------------------------");
+        log.debug("成功删除缓存：" + keys.toString());
+        log.debug("缓存删除数量：" + count + "个");
+        log.debug("--------------------------------------------");
     }
 }
