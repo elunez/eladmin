@@ -125,6 +125,7 @@ public class RoleServiceImpl implements RoleService {
         role.setMenus(resources.getMenus());
         // 清理缓存
         redisUtils.delByKeys("menu::user:",userIds);
+        redisUtils.delByKeys("role::auth:",userIds);
         redisUtils.del("role::id:" + resources.getId());
         roleRepository.save(role);
     }
