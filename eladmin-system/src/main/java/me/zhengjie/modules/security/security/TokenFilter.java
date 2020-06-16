@@ -18,6 +18,7 @@ package me.zhengjie.modules.security.security;
 import cn.hutool.core.util.StrUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import me.zhengjie.modules.security.config.bean.SecurityProperties;
+import me.zhengjie.modules.security.service.UserCacheClean;
 import me.zhengjie.modules.security.service.dto.OnlineUserDto;
 import me.zhengjie.modules.security.service.OnlineUserService;
 import org.slf4j.Logger;
@@ -33,6 +34,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.Objects;
 
 /**
  * @author /
@@ -44,16 +46,19 @@ public class TokenFilter extends GenericFilterBean {
     private final TokenProvider tokenProvider;
     private final SecurityProperties properties;
     private final OnlineUserService onlineUserService;
+    private final UserCacheClean userCacheClean;
 
     /**
      * @param tokenProvider     Token
      * @param properties        JWT
      * @param onlineUserService 用户在线
+     * @param userCacheClean    用户缓存清理工具
      */
-    public TokenFilter(TokenProvider tokenProvider, SecurityProperties properties, OnlineUserService onlineUserService) {
+    public TokenFilter(TokenProvider tokenProvider, SecurityProperties properties, OnlineUserService onlineUserService, UserCacheClean userCacheClean) {
         this.properties = properties;
         this.onlineUserService = onlineUserService;
         this.tokenProvider = tokenProvider;
+        this.userCacheClean = userCacheClean;
     }
 
     @Override
@@ -64,10 +69,16 @@ public class TokenFilter extends GenericFilterBean {
         // 对于 Token 为空的不需要去查 Redis
         if (StrUtil.isNotBlank(token)) {
             OnlineUserDto onlineUserDto = null;
+            boolean cleanUserCache = false;
             try {
                 onlineUserDto = onlineUserService.getOne(properties.getOnlineKey() + token);
             } catch (ExpiredJwtException e) {
                 log.error(e.getMessage());
+                cleanUserCache = true;
+            } finally {
+                if (cleanUserCache || Objects.isNull(onlineUserDto)) {
+                    userCacheClean.cleanUserCache(String.valueOf(tokenProvider.getClaims(token).get(TokenProvider.AUTHORITIES_KEY)));
+                }
             }
             if (onlineUserDto != null && StringUtils.hasText(token)) {
                 Authentication authentication = tokenProvider.getAuthentication(token);

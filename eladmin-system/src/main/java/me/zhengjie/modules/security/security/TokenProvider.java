@@ -51,7 +51,7 @@ public class TokenProvider implements InitializingBean {
 
     private final SecurityProperties properties;
     private final RedisUtils redisUtils;
-    private static final String AUTHORITIES_KEY = "auth";
+    public static final String AUTHORITIES_KEY = "auth";
     private Key key;
     private JwtParser jwtParser;
     private JwtBuilder jwtBuilder;
@@ -102,9 +102,7 @@ public class TokenProvider implements InitializingBean {
      * @return
      */
     Authentication getAuthentication(String token) {
-        Claims claims = jwtParser
-                .parseClaimsJws(token)
-                .getBody();
+        Claims claims = getClaims(token);
 
         // fix bug: 当前用户如果没有任何权限时，在输入用户名后，刷新验证码会抛IllegalArgumentException
         Object authoritiesStr = claims.get(AUTHORITIES_KEY);
@@ -115,6 +113,12 @@ public class TokenProvider implements InitializingBean {
                                 .collect(Collectors.toList()) : Collections.emptyList();
         User principal = new User(claims.getSubject(), "******", authorities);
         return new UsernamePasswordAuthenticationToken(principal, token, authorities);
+    }
+
+    public Claims getClaims(String token) {
+        return jwtParser
+                .parseClaimsJws(token)
+                .getBody();
     }
 
     /**

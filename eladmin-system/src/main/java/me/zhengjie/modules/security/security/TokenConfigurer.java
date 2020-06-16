@@ -18,6 +18,7 @@ package me.zhengjie.modules.security.security;
 import lombok.RequiredArgsConstructor;
 import me.zhengjie.modules.security.config.bean.SecurityProperties;
 import me.zhengjie.modules.security.service.OnlineUserService;
+import me.zhengjie.modules.security.service.UserCacheClean;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.DefaultSecurityFilterChain;
@@ -32,10 +33,11 @@ public class TokenConfigurer extends SecurityConfigurerAdapter<DefaultSecurityFi
     private final TokenProvider tokenProvider;
     private final SecurityProperties properties;
     private final OnlineUserService onlineUserService;
+    private final UserCacheClean userCacheClean;
 
     @Override
     public void configure(HttpSecurity http) {
-        TokenFilter customFilter = new TokenFilter(tokenProvider, properties, onlineUserService);
+        TokenFilter customFilter = new TokenFilter(tokenProvider, properties, onlineUserService, userCacheClean);
         http.addFilterBefore(customFilter, UsernamePasswordAuthenticationFilter.class);
     }
 }
