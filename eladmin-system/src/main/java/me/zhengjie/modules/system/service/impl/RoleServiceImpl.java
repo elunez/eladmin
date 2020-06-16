@@ -239,6 +239,7 @@ public class RoleServiceImpl implements RoleService {
             });
             Set<Long> userIds = users.stream().map(User::getId).collect(Collectors.toSet());
             redisUtils.delByKeys(CacheKey.MENU_USER, userIds);
+            redisUtils.delByKeys(CacheKey.ROLE_AUTH, userIds);
             redisUtils.del(CacheKey.ROLE_ID + resources.getId());
         }
     }
