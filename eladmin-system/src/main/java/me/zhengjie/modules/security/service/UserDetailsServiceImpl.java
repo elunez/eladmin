@@ -18,12 +18,12 @@ package me.zhengjie.modules.security.service;
 import lombok.RequiredArgsConstructor;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.exception.EntityNotFoundException;
+import me.zhengjie.modules.security.config.bean.LoginProperties;
 import me.zhengjie.modules.security.service.dto.JwtUserDto;
 import me.zhengjie.modules.system.service.DataService;
 import me.zhengjie.modules.system.service.RoleService;
 import me.zhengjie.modules.system.service.UserService;
 import me.zhengjie.modules.system.service.dto.UserDto;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -41,11 +41,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private final UserService userService;
     private final RoleService roleService;
     private final DataService dataService;
-    @Value("${login.cache-enable:true}")
-    private boolean enableCache = true;
+    private final LoginProperties loginProperties;
 
     public void setEnableCache(boolean enableCache) {
-        this.enableCache = enableCache;
+        this.loginProperties.setCacheEnable(enableCache);
     }
 
     /**
@@ -59,7 +58,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public JwtUserDto loadUserByUsername(String username) {
         boolean searchDb = true;
         JwtUserDto jwtUserDto = null;
-        if (enableCache && userDtoCache.containsKey(username)) {
+        if (loginProperties.isCacheEnable() && userDtoCache.containsKey(username)) {
             jwtUserDto = userDtoCache.get(username);
             searchDb = false;
         }
