@@ -54,6 +54,8 @@ public class ExecutionJob extends QuartzJobBean {
         QuartzLogRepository quartzLogRepository = SpringContextHolder.getBean(QuartzLogRepository.class);
         QuartzJobService quartzJobService = SpringContextHolder.getBean(QuartzJobService.class);
         RedisUtils redisUtils = SpringContextHolder.getBean(RedisUtils.class);
+        
+        String uuid = quartzJob.getUuid();
 
         QuartzLog log = new QuartzLog();
         log.setJobName(quartzJob.getJobName());
@@ -72,7 +74,9 @@ public class ExecutionJob extends QuartzJobBean {
             future.get();
             long times = System.currentTimeMillis() - startTime;
             log.setTime(times);
-            redisUtils.set(quartzJob.getUuid(), true);
+            if(StringUtils.isNotBlank(uuid)) {
+                redisUtils.set(uuid, true);
+            }
             // 任务状态
             log.setIsSuccess(true);
             System.out.println("任务执行完毕，任务名称：" + quartzJob.getJobName() + ", 执行时间：" + times + "毫秒");
@@ -84,7 +88,9 @@ public class ExecutionJob extends QuartzJobBean {
                 quartzJobService.executionSubJob(tasks);
             }
         } catch (Exception e) {
-            redisUtils.set(quartzJob.getUuid(), false);
+            if(StringUtils.isNotBlank(uuid)) {
+                redisUtils.set(uuid, false);
+            }
             System.out.println("任务执行失败，任务名称：" + quartzJob.getJobName());
             System.out.println("--------------------------------------------------------------");
             long times = System.currentTimeMillis() - startTime;
