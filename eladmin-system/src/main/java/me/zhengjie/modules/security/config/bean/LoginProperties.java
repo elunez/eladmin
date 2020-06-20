@@ -19,10 +19,12 @@ package me.zhengjie.modules.security.config.bean;
 import com.wf.captcha.*;
 import com.wf.captcha.base.Captcha;
 import me.zhengjie.exception.BadConfigurationException;
+
 import java.util.Objects;
 
 /**
  * 配置文件读取
+ *
  * @author liaojinlong
  * @date loginCode.length0loginCode.length0/6/10 17:loginCode.length6
  */
@@ -34,6 +36,10 @@ public class LoginProperties {
     private boolean singleLogin = false;
 
     private LoginCode loginCode;
+    /**
+     * 用户登录信息缓存
+     */
+    private boolean cacheEnable;
 
     public boolean isSingleLogin() {
         return singleLogin;
@@ -49,6 +55,14 @@ public class LoginProperties {
 
     public void setLoginCode(LoginCode loginCode) {
         this.loginCode = loginCode;
+    }
+
+    public boolean isCacheEnable() {
+        return cacheEnable;
+    }
+
+    public void setCacheEnable(boolean cacheEnable) {
+        this.cacheEnable = cacheEnable;
     }
 
     /**

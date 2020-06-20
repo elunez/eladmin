@@ -46,6 +46,8 @@ spring:
 
 # 登录相关配置
 login:
+  # 登录缓存
+  cache-enable: true
   #  是否限制单用户登录
   single: false
   #  验证码

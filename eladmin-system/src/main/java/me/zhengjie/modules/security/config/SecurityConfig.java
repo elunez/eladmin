@@ -17,7 +17,10 @@ package me.zhengjie.modules.security.config;
 
 import lombok.RequiredArgsConstructor;
 import me.zhengjie.annotation.AnonymousAccess;
+import me.zhengjie.modules.security.config.bean.SecurityProperties;
 import me.zhengjie.modules.security.security.*;
+import me.zhengjie.modules.security.service.OnlineUserService;
+import me.zhengjie.modules.security.service.UserCacheClean;
 import me.zhengjie.utils.enums.RequestMethodEnum;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -37,6 +40,7 @@ import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
+
 import java.util.*;
 
 /**
@@ -53,6 +57,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final JwtAuthenticationEntryPoint authenticationErrorHandler;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private final ApplicationContext applicationContext;
+    private final SecurityProperties properties;
+    private final OnlineUserService onlineUserService;
+    private final UserCacheClean userCacheClean;
 
     @Bean
     GrantedAuthorityDefaults grantedAuthorityDefaults() {
@@ -144,7 +151,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             if (null != anonymousAccess) {
                 List<RequestMethod> requestMethods = new ArrayList<>(infoEntry.getKey().getMethodsCondition().getMethods());
                 RequestMethodEnum request = RequestMethodEnum.find(requestMethods.size() == 0 ? RequestMethodEnum.ALL.getType() : requestMethods.get(0).name());
-                switch (Objects.requireNonNull(request)){
+                switch (Objects.requireNonNull(request)) {
                     case GET:
                         get.addAll(infoEntry.getKey().getPatternsCondition().getPatterns());
                         break;
@@ -176,6 +183,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     private TokenConfigurer securityConfigurerAdapter() {
-        return new TokenConfigurer(tokenProvider);
+        return new TokenConfigurer(tokenProvider, properties, onlineUserService, userCacheClean);
     }
 }
