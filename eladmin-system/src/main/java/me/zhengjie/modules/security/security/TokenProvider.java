@@ -52,7 +52,6 @@ public class TokenProvider implements InitializingBean {
     private final SecurityProperties properties;
     private final RedisUtils redisUtils;
     public static final String AUTHORITIES_KEY = "auth";
-    private Key key;
     private JwtParser jwtParser;
     private JwtBuilder jwtBuilder;
 
@@ -64,7 +63,7 @@ public class TokenProvider implements InitializingBean {
     @Override
     public void afterPropertiesSet() {
         byte[] keyBytes = Decoders.BASE64.decode(properties.getBase64Secret());
-        this.key = Keys.hmacShaKeyFor(keyBytes);
+        Key key = Keys.hmacShaKeyFor(keyBytes);
         jwtParser = Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build();
@@ -76,11 +75,11 @@ public class TokenProvider implements InitializingBean {
      * 创建Token 设置永不过期，
      * Token 的时间有效性转到Redis 维护
      *
-     * @param authentication
-     * @return
+     * @param authentication /
+     * @return /
      */
     public String createToken(Authentication authentication) {
-        /**
+        /*
          * 获取权限列表
          */
         String authorities = authentication.getAuthorities().stream()
@@ -98,8 +97,8 @@ public class TokenProvider implements InitializingBean {
     /**
      * 依据Token 获取鉴权信息
      *
-     * @param token
-     * @return
+     * @param token /
+     * @return /
      */
     Authentication getAuthentication(String token) {
         Claims claims = getClaims(token);

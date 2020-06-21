@@ -43,7 +43,7 @@ public class EmailServiceImpl implements EmailService {
     private final EmailRepository emailRepository;
 
     @Override
-    @CachePut(key = "'id:1'")
+    @CachePut(key = "'config'")
     @Transactional(rollbackFor = Exception.class)
     public EmailConfig config(EmailConfig emailConfig, EmailConfig old) throws Exception {
         emailConfig.setId(1L);
@@ -55,7 +55,7 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    @Cacheable(key = "'id:1'")
+    @Cacheable(key = "'config'")
     public EmailConfig find() {
         Optional<EmailConfig> emailConfig = emailRepository.findById(1L);
         return emailConfig.orElseGet(EmailConfig::new);

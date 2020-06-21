@@ -235,7 +235,7 @@ public class UserServiceImpl implements UserService {
     /**
      * 清理 登陆时 用户缓存信息
      *
-     * @param username
+     * @param username /
      */
     private void flushCache(String username) {
         userCacheClean.cleanUserCache(username);

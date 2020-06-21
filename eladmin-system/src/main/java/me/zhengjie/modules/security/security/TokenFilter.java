@@ -93,8 +93,8 @@ public class TokenFilter extends GenericFilterBean {
     /**
      * 初步检测Token
      *
-     * @param request
-     * @return
+     * @param request /
+     * @return /
      */
     private String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader(properties.getHeader());

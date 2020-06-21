@@ -27,7 +27,6 @@ import me.zhengjie.modules.system.service.dto.UserDto;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -42,7 +41,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private final RoleService roleService;
     private final DataService dataService;
     private final LoginProperties loginProperties;
-
     public void setEnableCache(boolean enableCache) {
         this.loginProperties.setCacheEnable(enableCache);
     }

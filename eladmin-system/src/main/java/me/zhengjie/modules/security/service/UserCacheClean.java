@@ -27,12 +27,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserCacheClean {
 
-
     /**
      * 清理特定用户缓存信息<br>
      * 用户信息变更时
      *
-     * @param userName
+     * @param userName /
      */
     public void cleanUserCache(String userName) {
         if (StringUtils.isNotEmpty(userName)) {
