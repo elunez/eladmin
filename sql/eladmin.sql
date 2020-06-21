@@ -381,7 +381,7 @@ INSERT INTO `sys_menu` VALUES (15, 10, 0, 1, '富文本', 'Editor', 'components/
 INSERT INTO `sys_menu` VALUES (16, 36, 2, 1, '图床管理', 'Pictures', 'tools/picture/index', 33, 'image', 'pictures', b'0', b'0', b'0', 'pictures:list', NULL, NULL, '2018-12-28 09:36:53', NULL);
 INSERT INTO `sys_menu` VALUES (18, 36, 3, 1, '存储管理', 'Storage', 'tools/storage/index', 34, 'qiniu', 'storage', b'0', b'0', b'0', 'storage:list', NULL, NULL, '2018-12-31 11:12:15', NULL);
 INSERT INTO `sys_menu` VALUES (19, 36, 0, 1, '支付宝工具', 'AliPay', 'tools/aliPay/index', 37, 'alipay', 'aliPay', b'0', b'0', b'0', NULL, NULL, NULL, '2018-12-31 14:52:38', NULL);
-INSERT INTO `sys_menu` VALUES (21, NULL, 2, 0, '多级菜单', NULL, '', 900, 'menu', 'nested', b'0', b'0', b'1', NULL, NULL, NULL, '2019-01-04 16:22:03', NULL);
+INSERT INTO `sys_menu` VALUES (21, NULL, 2, 0, '多级菜单', NULL, '', 900, 'menu', 'nested', b'0', b'0', b'0', NULL, NULL, NULL, '2019-01-04 16:22:03', NULL);
 INSERT INTO `sys_menu` VALUES (22, 21, 2, 1, '二级菜单1', NULL, 'nested/menu1/index', 999, 'menu', 'menu1', b'0', b'0', b'0', NULL, NULL, NULL, '2019-01-04 16:23:29', NULL);
 INSERT INTO `sys_menu` VALUES (23, 21, 0, 1, '二级菜单2', NULL, 'nested/menu2/index', 999, 'menu', 'menu2', b'0', b'0', b'0', NULL, NULL, NULL, '2019-01-04 16:23:57', NULL);
 INSERT INTO `sys_menu` VALUES (24, 22, 0, 1, '三级菜单1', NULL, 'nested/menu1/menu1-1', 999, 'menu', 'menu1-1', b'0', b'0', b'0', NULL, NULL, NULL, '2019-01-04 16:24:48', NULL);
@@ -584,6 +584,8 @@ INSERT INTO `sys_roles_menus` VALUES (19, 1);
 INSERT INTO `sys_roles_menus` VALUES (21, 1);
 INSERT INTO `sys_roles_menus` VALUES (22, 1);
 INSERT INTO `sys_roles_menus` VALUES (23, 1);
+INSERT INTO `sys_roles_menus` VALUES (24, 1);
+INSERT INTO `sys_roles_menus` VALUES (27, 1);
 INSERT INTO `sys_roles_menus` VALUES (28, 1);
 INSERT INTO `sys_roles_menus` VALUES (30, 1);
 INSERT INTO `sys_roles_menus` VALUES (32, 1);
