@@ -234,7 +234,7 @@ public class RoleServiceImpl implements RoleService {
     private void cleanCache(Role resources, List<User> users) {
         // 清理缓存
         if (CollectionUtil.isNotEmpty(users)) {
-            users.stream().forEach(item -> {
+            users.forEach(item -> {
                 userCacheClean.cleanUserCache(item.getUsername());
             });
             Set<Long> userIds = users.stream().map(User::getId).collect(Collectors.toSet());

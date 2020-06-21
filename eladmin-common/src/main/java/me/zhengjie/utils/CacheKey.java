@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package me.zhengjie.utils;
 
 
@@ -23,6 +22,7 @@ package me.zhengjie.utils;
  * @apiNote: 关于缓存的Key 集合
  */
 public interface CacheKey {
+
     /**
      * 内置 用户、岗位、应用、菜单、角色 相关key
      */
@@ -41,7 +41,6 @@ public interface CacheKey {
     /**
      * s数据
      */
-
     String DATE_USER = "data::user:";
     /**
      * 菜单

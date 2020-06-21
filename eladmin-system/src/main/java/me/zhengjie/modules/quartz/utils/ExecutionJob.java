@@ -28,6 +28,7 @@ import me.zhengjie.modules.quartz.service.QuartzJobService;
 import me.zhengjie.service.EmailService;
 import me.zhengjie.utils.RedisUtils;
 import me.zhengjie.utils.SpringContextHolder;
+import me.zhengjie.utils.StringUtils;
 import me.zhengjie.utils.ThrowableUtil;
 import org.quartz.JobExecutionContext;
 import org.springframework.scheduling.annotation.Async;
