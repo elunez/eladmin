@@ -26,14 +26,15 @@ import java.util.Date;
  * @apiNote: JDK 8  新日期类 格式化与字符串转换 工具类
  */
 public class DateUtil {
-    public static final DateTimeFormatter dfyMdHms = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-    public static final DateTimeFormatter dfyMd = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+    public static final DateTimeFormatter DFY_MD_HMS = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    public static final DateTimeFormatter DFY_MD = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     /**
      * LocalDateTime 转时间戳
      *
-     * @param localDateTime
-     * @return/
+     * @param localDateTime /
+     * @return /
      */
     public static Long getTimeStamp(LocalDateTime localDateTime) {
         return localDateTime.atZone(ZoneId.systemDefault()).toEpochSecond();
@@ -42,8 +43,8 @@ public class DateUtil {
     /**
      * 时间戳转LocalDateTime
      *
-     * @param timeStamp
-     * @return/
+     * @param timeStamp /
+     * @return /
      */
     public static LocalDateTime fromTimeStamp(Long timeStamp) {
         return LocalDateTime.ofEpochSecond(timeStamp, 0, OffsetDateTime.now().getOffset());
@@ -53,8 +54,8 @@ public class DateUtil {
      * LocalDateTime 转 Date
      * Jdk8 后 不推荐使用 {@link Date} Date
      *
-     * @param localDateTime
-     * @return/
+     * @param localDateTime /
+     * @return /
      */
     public static Date toDate(LocalDateTime localDateTime) {
         return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
@@ -64,8 +65,8 @@ public class DateUtil {
      * LocalDate 转 Date
      * Jdk8 后 不推荐使用 {@link Date} Date
      *
-     * @param localDate
-     * @return/
+     * @param localDate /
+     * @return /
      */
     public static Date toDate(LocalDate localDate) {
         return toDate(localDate.atTime(LocalTime.now(ZoneId.systemDefault())));
@@ -76,8 +77,8 @@ public class DateUtil {
      * Date转 LocalDateTime
      * Jdk8 后 不推荐使用 {@link Date} Date
      *
-     * @param date
-     * @return/
+     * @param date /
+     * @return /
      */
     public static LocalDateTime toLocalDateTime(Date date) {
         return LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
@@ -86,9 +87,9 @@ public class DateUtil {
     /**
      * 日期 格式化
      *
-     * @param localDateTime
-     * @param patten
-     * @return/
+     * @param localDateTime /
+     * @param patten /
+     * @return /
      */
     public static String localDateTimeFormat(LocalDateTime localDateTime, String patten) {
         DateTimeFormatter df = DateTimeFormatter.ofPattern(patten);
@@ -98,9 +99,9 @@ public class DateUtil {
     /**
      * 日期 格式化
      *
-     * @param localDateTime
-     * @param df
-     * @return/
+     * @param localDateTime /
+     * @param df /
+     * @return /
      */
     public static String localDateTimeFormat(LocalDateTime localDateTime, DateTimeFormatter df) {
         return df.format(localDateTime);
@@ -109,28 +110,28 @@ public class DateUtil {
     /**
      * 日期格式化 yyyy-MM-dd HH:mm:ss
      *
-     * @param localDateTime
-     * @return/
+     * @param localDateTime /
+     * @return /
      */
     public static String localDateTimeFormatyMdHms(LocalDateTime localDateTime) {
-        return dfyMdHms.format(localDateTime);
+        return DFY_MD_HMS.format(localDateTime);
     }
 
     /**
      * 日期格式化 yyyy-MM-dd
      *
-     * @param localDateTime
-     * @return/
+     * @param localDateTime /
+     * @return /
      */
     public String localDateTimeFormatyMd(LocalDateTime localDateTime) {
-        return dfyMd.format(localDateTime);
+        return DFY_MD.format(localDateTime);
     }
 
     /**
      * 字符串转 LocalDateTime ，字符串格式 yyyy-MM-dd
      *
-     * @param localDateTime
-     * @return/
+     * @param localDateTime /
+     * @return /
      */
     public static LocalDateTime parseLocalDateTimeFormat(String localDateTime, String pattern) {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(pattern);
@@ -140,30 +141,20 @@ public class DateUtil {
     /**
      * 字符串转 LocalDateTime ，字符串格式 yyyy-MM-dd
      *
-     * @param localDateTime
-     * @return/
+     * @param localDateTime /
+     * @return /
      */
     public static LocalDateTime parseLocalDateTimeFormat(String localDateTime, DateTimeFormatter dateTimeFormatter) {
         return LocalDateTime.from(dateTimeFormatter.parse(localDateTime));
     }
 
     /**
-     * 字符串转 LocalDateTime ，字符串格式 yyyy-MM-dd
-     *
-     * @param localDateTime
-     * @return/
-     */
-    public static LocalDateTime parseLocalDateTimeFormatyMd(String localDateTime) {
-        return LocalDateTime.from(dfyMd.parse(localDateTime));
-    }
-
-    /**
      * 字符串转 LocalDateTime ，字符串格式 yyyy-MM-dd HH:mm:ss
      *
-     * @param localDateTime
-     * @return/
+     * @param localDateTime /
+     * @return /
      */
     public static LocalDateTime parseLocalDateTimeFormatyMdHms(String localDateTime) {
-        return LocalDateTime.from(dfyMdHms.parse(localDateTime));
+        return LocalDateTime.from(DFY_MD_HMS.parse(localDateTime));
     }
 }

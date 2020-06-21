@@ -117,7 +117,7 @@ public class RoleServiceImpl implements RoleService {
         role.setLevel(resources.getLevel());
         roleRepository.save(role);
         // 更新相关缓存
-        delCaches(role.getId());
+        delCaches(role.getId(), null);
     }
 
     @Override
@@ -126,10 +126,9 @@ public class RoleServiceImpl implements RoleService {
         List<User> users = userRepository.findByRoleId(role.getId());
         // 更新菜单
         role.setMenus(resources.getMenus());
-        cleanCache(resources, users);
+        delCaches(resources.getId(), users);
         roleRepository.save(role);
     }
-
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -143,7 +142,7 @@ public class RoleServiceImpl implements RoleService {
     public void delete(Set<Long> ids) {
         for (Long id : ids) {
             // 更新相关缓存
-            delCaches(id);
+            delCaches(id, null);
         }
         roleRepository.deleteAllByIdIn(ids);
     }
@@ -208,40 +207,18 @@ public class RoleServiceImpl implements RoleService {
 
     /**
      * 清理缓存
-     *
      * @param id /
      */
-    public void delCaches(Long id) {
-        List<User> users = userRepository.findByRoleId(id);
+    public void delCaches(Long id, List<User> users) {
+        users = CollectionUtil.isEmpty(users) ? userRepository.findByRoleId(id) : users;
         if (CollectionUtil.isNotEmpty(users)) {
-            users.stream().forEach(item -> {
-                userCacheClean.cleanUserCache(item.getUsername());
-            });
+            users.forEach(item -> userCacheClean.cleanUserCache(item.getUsername()));
             Set<Long> userIds = users.stream().map(User::getId).collect(Collectors.toSet());
             redisUtils.delByKeys(CacheKey.DATE_USER, userIds);
             redisUtils.delByKeys(CacheKey.MENU_USER, userIds);
             redisUtils.delByKeys(CacheKey.ROLE_AUTH, userIds);
+            redisUtils.del(CacheKey.ROLE_ID + id);
         }
 
     }
-
-    /**
-     * 清理缓存
-     *
-     * @param resources
-     * @param users
-     */
-    private void cleanCache(Role resources, List<User> users) {
-        // 清理缓存
-        if (CollectionUtil.isNotEmpty(users)) {
-            users.stream().forEach(item -> {
-                userCacheClean.cleanUserCache(item.getUsername());
-            });
-            Set<Long> userIds = users.stream().map(User::getId).collect(Collectors.toSet());
-            redisUtils.delByKeys(CacheKey.MENU_USER, userIds);
-            redisUtils.delByKeys(CacheKey.ROLE_AUTH, userIds);
-            redisUtils.del(CacheKey.ROLE_ID + resources.getId());
-        }
-    }
-
 }

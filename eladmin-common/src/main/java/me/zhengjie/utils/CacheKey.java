@@ -13,16 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package me.zhengjie.utils;
-
 
 /**
  * @author: liaojinlong
  * @date: 2020/6/11 15:49
- * @apiNote: 关于缓存的Key 集合
+ * @apiNote: 关于缓存的Key集合
  */
 public interface CacheKey {
+
     /**
      * 内置 用户、岗位、应用、菜单、角色 相关key
      */
@@ -39,9 +38,8 @@ public interface CacheKey {
     String USER_ID = "user::id:";
     String USER_NAME = "user::username:";
     /**
-     * s数据
+     * 数据
      */
-
     String DATE_USER = "data::user:";
     /**
      * 菜单
@@ -51,6 +49,8 @@ public interface CacheKey {
      * 角色授权
      */
     String ROLE_AUTH = "role::auth:";
-
+    /**
+     * 角色信息
+     */
     String ROLE_ID = "role::id:";
 }
