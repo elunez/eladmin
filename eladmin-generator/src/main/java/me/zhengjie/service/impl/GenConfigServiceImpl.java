@@ -17,7 +17,7 @@ package me.zhengjie.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import me.zhengjie.domain.GenConfig;
-import me.zhengjie.repository.GenConfigRepository;
+import me.zhengjie.repository.jpa.GenConfigRepository;
 import me.zhengjie.service.GenConfigService;
 import me.zhengjie.utils.StringUtils;
 import org.springframework.stereotype.Service;

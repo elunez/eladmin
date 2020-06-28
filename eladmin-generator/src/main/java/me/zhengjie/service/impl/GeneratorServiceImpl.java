@@ -23,7 +23,7 @@ import me.zhengjie.domain.GenConfig;
 import me.zhengjie.domain.ColumnInfo;
 import me.zhengjie.domain.vo.TableInfo;
 import me.zhengjie.exception.BadRequestException;
-import me.zhengjie.repository.ColumnInfoRepository;
+import me.zhengjie.repository.ColumnInfoDao;
 import me.zhengjie.service.GeneratorService;
 import me.zhengjie.utils.FileUtil;
 import me.zhengjie.utils.GenUtil;
@@ -58,7 +58,7 @@ public class GeneratorServiceImpl implements GeneratorService {
     @PersistenceContext
     private EntityManager em;
 
-    private final ColumnInfoRepository columnInfoRepository;
+    private final ColumnInfoDao columnInfoDao;
 
     @Override
     public Object getTables() {
@@ -93,12 +93,12 @@ public class GeneratorServiceImpl implements GeneratorService {
 
     @Override
     public List<ColumnInfo> getColumns(String tableName) {
-        List<ColumnInfo> columnInfos = columnInfoRepository.findByTableNameOrderByIdAsc(tableName);
+        List<ColumnInfo> columnInfos = columnInfoDao.findByTableNameOrderByIdAsc(tableName);
         if (CollectionUtil.isNotEmpty(columnInfos)) {
             return columnInfos;
         } else {
             columnInfos = query(tableName);
-            return columnInfoRepository.saveAll(columnInfos);
+            return columnInfoDao.saveAll(columnInfos);
         }
     }
 
@@ -142,10 +142,10 @@ public class GeneratorServiceImpl implements GeneratorService {
                 if (StringUtils.isBlank(column.getRemark())) {
                     column.setRemark(columnInfo.getRemark());
                 }
-                columnInfoRepository.save(column);
+                columnInfoDao.update(column);
             } else {
                 // 如果找不到，则保存新字段信息
-                columnInfoRepository.save(columnInfo);
+                columnInfoDao.save(columnInfo);
             }
         }
         // 第二种情况，数据库字段删除了
@@ -154,14 +154,14 @@ public class GeneratorServiceImpl implements GeneratorService {
             List<ColumnInfo> columns = columnInfoList.stream().filter(c -> c.getColumnName().equals(columnInfo.getColumnName())).collect(Collectors.toList());
             // 如果找不到，就代表字段被删除了，则需要删除该字段
             if (CollectionUtil.isEmpty(columns)) {
-                columnInfoRepository.delete(columnInfo);
+                columnInfoDao.delete(columnInfo);
             }
         }
     }
 
     @Override
     public void save(List<ColumnInfo> columnInfos) {
-        columnInfoRepository.saveAll(columnInfos);
+        columnInfoDao.saveAll(columnInfos);
     }
 
     @Override

@@ -13,21 +13,22 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package me.zhengjie.repository;
+package me.zhengjie.repository.jpa;
 
-import me.zhengjie.domain.GenConfig;
+import me.zhengjie.domain.ColumnInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.List;
 
 /**
  * @author Zheng Jie
  * @date 2019-01-14
  */
-public interface GenConfigRepository extends JpaRepository<GenConfig,Long> {
+public interface ColumnInfoRepository extends JpaRepository<ColumnInfo,Long> {
 
     /**
-     * 查询表配置
-     * @param tableName 表名
-     * @return /
+     * 查询表信息
+     * @param tableName 表格名
+     * @return 表信息
      */
-    GenConfig findByTableName(String tableName);
+    List<ColumnInfo> findByTableNameOrderByIdAsc(String tableName);
 }
