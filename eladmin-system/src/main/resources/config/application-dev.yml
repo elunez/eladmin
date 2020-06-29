@@ -46,6 +46,8 @@ spring:
 
 # 登录相关配置
 login:
+  # 登录缓存
+  cache-enable: true
   #  是否限制单用户登录
   single: false
   #  验证码
@@ -86,8 +88,8 @@ generator:
 #是否开启 swagger-ui
 swagger:
   enabled: true
-# IP 本地解析
 
+# IP 本地解析
 ip:
   local-parsing: true
 

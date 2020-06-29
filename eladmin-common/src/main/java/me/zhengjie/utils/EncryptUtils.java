@@ -61,7 +61,7 @@ public class EncryptUtils {
      * 对称解密
      */
     public static String desDecrypt(String source) throws Exception {
-        byte[] src = hex2byte(source.getBytes());
+        byte[] src = hex2byte(source.getBytes(StandardCharsets.UTF_8));
         DESKeySpec desKeySpec = getDesKeySpec(source);
         SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DES");
         SecretKey secretKey = keyFactory.generateSecret(desKeySpec);

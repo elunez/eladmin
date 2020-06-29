@@ -80,8 +80,8 @@ public @interface Query {
      * 适用于简单连接查询，复杂的请自定义该注解，或者使用sql查询
      */
     enum Join {
-        /** jie 2019-6-4 13:18:30 左右连接 */
-        LEFT, RIGHT
+        /** jie 2019-6-4 13:18:30 */
+        LEFT, RIGHT, INNER
     }
 
 }

@@ -65,14 +65,14 @@ public class QiNiuServiceImpl implements QiNiuService {
     private Long maxSize;
 
     @Override
-    @Cacheable(key = "'id:1'")
+    @Cacheable(key = "'config'")
     public QiniuConfig find() {
         Optional<QiniuConfig> qiniuConfig = qiNiuConfigRepository.findById(1L);
         return qiniuConfig.orElseGet(QiniuConfig::new);
     }
 
     @Override
-    @CachePut(key = "'id:1'")
+    @CachePut(key = "'config'")
     @Transactional(rollbackFor = Exception.class)
     public QiniuConfig config(QiniuConfig qiniuConfig) {
         qiniuConfig.setId(1L);

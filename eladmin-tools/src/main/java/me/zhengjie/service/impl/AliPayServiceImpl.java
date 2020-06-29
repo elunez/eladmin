@@ -38,20 +38,20 @@ import java.util.Optional;
  */
 @Service
 @RequiredArgsConstructor
-@CacheConfig(cacheNames = "alipay")
+@CacheConfig(cacheNames = "aliPay")
 public class AliPayServiceImpl implements AliPayService {
 
     private final AliPayRepository alipayRepository;
 
     @Override
-    @Cacheable(key = "'id:1'")
+    @Cacheable(key = "'config'")
     public AlipayConfig find() {
         Optional<AlipayConfig> alipayConfig = alipayRepository.findById(1L);
         return alipayConfig.orElseGet(AlipayConfig::new);
     }
 
     @Override
-    @CachePut(key = "'id:1'")
+    @CachePut(key = "'config'")
     @Transactional(rollbackFor = Exception.class)
     public AlipayConfig config(AlipayConfig alipayConfig) {
         alipayConfig.setId(1L);
