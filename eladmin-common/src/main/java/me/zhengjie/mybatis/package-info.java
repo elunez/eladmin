@@ -13,14 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package me.zhengjie.repository.mp;
-
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import me.zhengjie.domain.ColumnInfo;
-
 /**
- * @author liaojinlong
- * @since 2020/6/28 14:57
+ * Spring Boot Stater
  */
-public interface ColumnInfoMapper extends BaseMapper<ColumnInfo> {
-}
+package me.zhengjie.mybatis;

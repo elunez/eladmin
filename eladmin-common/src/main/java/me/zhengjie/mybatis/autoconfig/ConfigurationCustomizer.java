@@ -13,14 +13,26 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package me.zhengjie.repository.mp;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import me.zhengjie.domain.ColumnInfo;
+package me.zhengjie.mybatis.autoconfig;
+
+import com.baomidou.mybatisplus.core.MybatisConfiguration;
+import org.apache.ibatis.session.Configuration;
 
 /**
+ * Callback interface that can be customized a {@link MybatisConfiguration} object generated on auto-configuration.
+ *
+ * @author Kazuki Shimizu
  * @author liaojinlong
- * @since 2020/6/28 14:57
+ * @since 2020/6/29 18:08
  */
-public interface ColumnInfoMapper extends BaseMapper<ColumnInfo> {
+@FunctionalInterface
+public interface ConfigurationCustomizer {
+
+    /**
+     * Customize the given a {@link MybatisConfiguration} object.
+     *
+     * @param configuration the configuration object to customize
+     */
+    void customize(Configuration configuration);
 }

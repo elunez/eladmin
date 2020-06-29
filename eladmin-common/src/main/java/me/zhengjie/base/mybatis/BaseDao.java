@@ -1,4 +1,4 @@
-package me.zhengjie.base;
+package me.zhengjie.base.mybatis;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -20,7 +20,7 @@ import java.util.List;
 public class BaseDao<I extends IService<T>, J extends JpaRepository<T, ID>, T, ID extends Serializable> {
     protected I mpService;
     protected J jpaRepository;
-    @Value("${db.type.switch:true}")
+    @Value("${db.type.switch:false}")
     protected boolean dbSwitch;
 
     public BaseDao(I mpService, J jpaRepository) {

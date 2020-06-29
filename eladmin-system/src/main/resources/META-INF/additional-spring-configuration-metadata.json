@@ -1,0 +1,88 @@
+{
+    "groups": [
+        {
+            "sourceType": "com.baomidou.mybatisplus.autoconfigure.MybatisPlusProperties",
+            "name": "mybatis-plus",
+            "type": "com.baomidou.mybatisplus.autoconfigure.MybatisPlusProperties"
+        },
+        {
+            "sourceType": "com.baomidou.mybatisplus.autoconfigure.MybatisPlusProperties",
+            "name": "mybatis-plus.configuration",
+            "sourceMethod": "getConfiguration()",
+            "type": "com.baomidou.mybatisplus.core.MybatisConfiguration"
+        },
+        {
+            "sourceType": "com.baomidou.mybatisplus.autoconfigure.MybatisPlusProperties",
+            "name": "mybatis-plus.global-config",
+            "sourceMethod": "getGlobalConfig()",
+            "type": "com.baomidou.mybatisplus.core.config.GlobalConfig"
+        },
+        {
+            "sourceType": "com.baomidou.mybatisplus.core.config.GlobalConfig$DbConfig",
+            "name": "mybatis-plus.global-config.db-config",
+            "sourceMethod": "getDbConfig()",
+            "type": "com.baomidou.mybatisplus.core.config.GlobalConfig$DbConfig"
+        }
+    ],
+    "properties": [
+        {
+            "sourceType": "com.baomidou.mybatisplus.core.config.GlobalConfig",
+            "name": "mybatis-plus.global-config.identifier-generator",
+            "deprecation": {
+                "level": "error",
+                "reason": "请使用@Bean的方式注入至Spring容器."
+            }
+        },
+        {
+            "sourceType": "com.baomidou.mybatisplus.core.config.GlobalConfig",
+            "name": "mybatis-plus.global-config.meta-object-handler",
+            "deprecation": {
+                "level": "error",
+                "reason": "3.0开始废除此属性，请使用@Bean的方式注入至Spring容器."
+            }
+        },
+        {
+            "sourceType": "com.baomidou.mybatisplus.core.config.GlobalConfig",
+            "name": "mybatis-plus.global-config.sql-injector",
+            "deprecation": {
+                "level": "error",
+                "reason": "3.0开始废除此属性，请使用@Bean的方式注入至Spring容器."
+            }
+        },
+        {
+            "sourceType": "com.baomidou.mybatisplus.core.config.GlobalConfig$DbConfig",
+            "name": "mybatis-plus.global-config.db-config.key-generator",
+            "deprecation": {
+                "level": "error",
+                "reason": "3.0开始废除此属性，请使用@Bean的方式注入至Spring容器."
+            }
+        },
+        {
+            "sourceType": "com.baomidou.mybatisplus.autoconfigure.MybatisPlusProperties",
+            "name": "mybatis-plus.default-scripting-language-driver",
+            "defaultValue": "com.baomidou.mybatisplus.core.MybatisXMLLanguageDriver",
+            "type": "java.lang.Class<? extends org.apache.ibatis.scripting.LanguageDriver>",
+            "deprecation": {
+                "level": "error",
+                "reason": "如果修改了该值,你会至少失去几乎所有 mp 提供的功能."
+            }
+        },
+        {
+            "sourceType": "com.baomidou.mybatisplus.core.MybatisConfiguration",
+            "name": "mybatis-plus.configuration.default-scripting-language",
+            "defaultValue": "com.baomidou.mybatisplus.core.MybatisXMLLanguageDriver",
+            "type": "java.lang.Class<? extends org.apache.ibatis.scripting.LanguageDriver>",
+            "deprecation": {
+                "level": "error",
+                "reason": "设置无效."
+            }
+        },
+        {
+            "sourceType": "com.baomidou.mybatisplus.core.MybatisConfiguration",
+            "name": "mybatis-plus.configuration.default-enum-type-handler",
+            "defaultValue": "org.apache.ibatis.type.EnumTypeHandler",
+            "description": "A default TypeHandler class for Enum.",
+            "type": "java.lang.Class<? extends org.apache.ibatis.type.TypeHandler>"
+        }
+    ]
+}
