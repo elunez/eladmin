@@ -88,8 +88,8 @@ generator:
 #是否开启 swagger-ui
 swagger:
   enabled: true
-# IP 本地解析
 
+# IP 本地解析
 ip:
   local-parsing: true
 
