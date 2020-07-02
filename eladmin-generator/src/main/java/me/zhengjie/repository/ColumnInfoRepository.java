@@ -16,10 +16,10 @@
 package me.zhengjie.repository;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import me.zhengjie.base.mybatis.BaseDao;
+import me.zhengjie.base.BaseRepository;
 import me.zhengjie.domain.ColumnInfo;
-import me.zhengjie.repository.jpa.ColumnInfoRepository;
-import me.zhengjie.repository.mp.ColumnInfoService;
+import me.zhengjie.repository.jpa.ColumnInfoJpaRepository;
+import me.zhengjie.repository.mp.ColumnInfoMpService;
 import me.zhengjie.utils.enums.DbType;
 import org.springframework.stereotype.Component;
 
@@ -32,9 +32,9 @@ import java.util.List;
  * @since 2020/6/28 14:59
  */
 @Component
-public class ColumnInfoDao extends BaseDao<ColumnInfoService, ColumnInfoRepository, ColumnInfo, Long> {
+public class ColumnInfoRepository extends BaseRepository<ColumnInfoMpService, ColumnInfoJpaRepository, ColumnInfo, Long> {
 
-    public ColumnInfoDao(ColumnInfoService baseService, ColumnInfoRepository jpaRepository) {
+    public ColumnInfoRepository(ColumnInfoMpService baseService, ColumnInfoJpaRepository jpaRepository) {
         super(baseService, jpaRepository);
         setDbType(DbType.MYBATIS);
     }

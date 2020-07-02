@@ -17,8 +17,7 @@ package me.zhengjie.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import me.zhengjie.domain.GenConfig;
-import me.zhengjie.repository.GenConfigDao;
-import me.zhengjie.repository.jpa.GenConfigRepository;
+import me.zhengjie.repository.GenConfigRepository;
 import me.zhengjie.service.GenConfigService;
 import me.zhengjie.utils.StringUtils;
 import org.springframework.stereotype.Service;
@@ -32,7 +31,7 @@ import java.io.File;
 @RequiredArgsConstructor
 public class GenConfigServiceImpl implements GenConfigService {
 
-    private final GenConfigDao genConfigDao;
+    private final GenConfigRepository genConfigDao;
 
     @Override
     public GenConfig find(String tableName) {

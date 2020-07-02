@@ -15,8 +15,8 @@
  */
 package me.zhengjie.repository.mp;
 
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import me.zhengjie.domain.GenConfig;
+ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+ import me.zhengjie.domain.ColumnInfo;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -24,5 +24,5 @@ import org.springframework.stereotype.Repository;
  * @since 2020/6/28 14:57
  */
 @Repository
-public class GenConfigService extends ServiceImpl<GenConfigMapper, GenConfig> {
+public class ColumnInfoMpService extends ServiceImpl<ColumnInfoMpMapper, ColumnInfo> {
 }

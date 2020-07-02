@@ -1,5 +1,5 @@
 /*
- *  Copyright 2019-2020 Zheng Jie
+ *  Copyright 2019-2020
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -13,21 +13,15 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package me.zhengjie.repository.jpa;
+package me.zhengjie.repository.mp;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import me.zhengjie.domain.ColumnInfo;
 import me.zhengjie.domain.GenConfig;
-import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
- * @author Zheng Jie
- * @date 2019-01-14
+ * @author liaojinlong
+ * @since 2020/6/28 14:57
  */
-public interface GenConfigRepository extends JpaRepository<GenConfig,Long> {
-
-    /**
-     * 查询表配置
-     * @param tableName 表名
-     * @return /
-     */
-    GenConfig findByTableName(String tableName);
+public interface GenConfigMpMapper extends BaseMapper<GenConfig> {
 }

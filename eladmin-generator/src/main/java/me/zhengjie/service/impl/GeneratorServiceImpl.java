@@ -23,7 +23,7 @@ import me.zhengjie.domain.GenConfig;
 import me.zhengjie.domain.ColumnInfo;
 import me.zhengjie.domain.vo.TableInfo;
 import me.zhengjie.exception.BadRequestException;
-import me.zhengjie.repository.ColumnInfoDao;
+import me.zhengjie.repository.ColumnInfoRepository;
 import me.zhengjie.service.GeneratorService;
 import me.zhengjie.utils.FileUtil;
 import me.zhengjie.utils.GenUtil;
@@ -58,7 +58,7 @@ public class GeneratorServiceImpl implements GeneratorService {
     @PersistenceContext
     private EntityManager em;
 
-    private final ColumnInfoDao columnInfoDao;
+    private final ColumnInfoRepository columnInfoDao;
 
     @Override
     public Object getTables() {

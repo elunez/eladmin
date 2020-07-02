@@ -1,10 +1,10 @@
 package me.zhengjie.repository;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import me.zhengjie.base.mybatis.BaseDao;
+import me.zhengjie.base.BaseRepository;
 import me.zhengjie.domain.GenConfig;
-import me.zhengjie.repository.jpa.GenConfigRepository;
-import me.zhengjie.repository.mp.GenConfigService;
+import me.zhengjie.repository.jpa.GenConfigJpaRepository;
+import me.zhengjie.repository.mp.GenConfigMpService;
 import org.springframework.stereotype.Repository;
 
 
@@ -15,8 +15,8 @@ import org.springframework.stereotype.Repository;
  * @since 2020/7/1 23:00
  */
 @Repository
-public class GenConfigDao extends BaseDao<GenConfigService, GenConfigRepository, GenConfig, Long> {
-    public GenConfigDao(GenConfigService mpService, GenConfigRepository jpaRepository) {
+public class GenConfigRepository extends BaseRepository<GenConfigMpService, GenConfigJpaRepository, GenConfig, Long> {
+    public GenConfigRepository(GenConfigMpService mpService, GenConfigJpaRepository jpaRepository) {
         super(mpService, jpaRepository);
     }
 

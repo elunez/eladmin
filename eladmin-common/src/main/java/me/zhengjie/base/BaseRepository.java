@@ -1,12 +1,17 @@
-package me.zhengjie.base.mybatis;
+package me.zhengjie.base;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.google.common.collect.Sets;
 import me.zhengjie.utils.WhereFun;
 import me.zhengjie.utils.WrapperUtils;
 import me.zhengjie.utils.enums.DbType;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.lang.Nullable;
 
 import java.io.Serializable;
 import java.util.List;
@@ -17,12 +22,12 @@ import java.util.List;
  * @author liaojinlong
  * @since 2020/6/29 10:22
  */
-public class BaseDao<I extends IService<T>, J extends JpaRepository<T, ID>, T, ID extends Serializable> {
+public class BaseRepository<I extends IService<T>, J extends JpaRepository<T, ID>, T, ID extends Serializable> {
     protected I mpService;
     protected J jpaRepository;
     protected DbType dbType = DbType.JPA;
 
-    public BaseDao(I mpService, J jpaRepository) {
+    public BaseRepository(I mpService, J jpaRepository) {
         this.mpService = mpService;
         this.jpaRepository = jpaRepository;
     }
@@ -139,6 +144,48 @@ public class BaseDao<I extends IService<T>, J extends JpaRepository<T, ID>, T, I
                 throw new IllegalStateException("Unexpected value: " + dbType);
         }
         return t;
+    }
+
+    public List<T> findAll(@Nullable Specification<T> spec) {
+        List<T> t = null;
+        switch (dbType) {
+            case JPA:
+                t = ((JpaSpecificationExecutor) jpaRepository).findAll(spec);
+                break;
+            case MYBATIS:
+                t = mpFindAll(spec, null);
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + dbType);
+        }
+        return t;
+    }
+
+    public Object findAll(@Nullable Specification<T> spec, Pageable pageable) {
+        Object t = null;
+        switch (dbType) {
+            case JPA:
+                t = ((JpaSpecificationExecutor) jpaRepository).findAll(spec, pageable);
+                break;
+            case MYBATIS:
+                t = mpFindAll(spec, pageable);
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + dbType);
+        }
+        return t;
+    }
+
+    /**
+     * Mp 适配
+     *
+     * @param spec
+     * @param pageable
+     * @return
+     */
+    protected List<T> mpFindAll(Specification<T> spec, Pageable pageable) {
+        final QueryWrapper<T> query = Wrappers.<T>query();
+        return mpService.page(null, null);
     }
 
     public I getMpService() {
