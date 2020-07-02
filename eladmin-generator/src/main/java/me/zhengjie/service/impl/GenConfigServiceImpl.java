@@ -17,6 +17,7 @@ package me.zhengjie.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import me.zhengjie.domain.GenConfig;
+import me.zhengjie.repository.GenConfigDao;
 import me.zhengjie.repository.jpa.GenConfigRepository;
 import me.zhengjie.service.GenConfigService;
 import me.zhengjie.utils.StringUtils;
@@ -31,11 +32,11 @@ import java.io.File;
 @RequiredArgsConstructor
 public class GenConfigServiceImpl implements GenConfigService {
 
-    private final GenConfigRepository genConfigRepository;
+    private final GenConfigDao genConfigDao;
 
     @Override
     public GenConfig find(String tableName) {
-        GenConfig genConfig = genConfigRepository.findByTableName(tableName);
+        GenConfig genConfig = genConfigDao.findByTableName(tableName);
         if(genConfig == null){
             return new GenConfig(tableName);
         }
@@ -65,6 +66,6 @@ public class GenConfigServiceImpl implements GenConfigService {
             }
             genConfig.setApiPath(api.toString());
         }
-        return genConfigRepository.save(genConfig);
+        return genConfigDao.save(genConfig);
     }
 }

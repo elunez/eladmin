@@ -15,8 +15,8 @@
  */
 package me.zhengjie.repository.mp;
 
-import me.zhengjie.base.mybatis.ServiceImpl;
-import me.zhengjie.domain.ColumnInfo;
+ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+ import me.zhengjie.domain.ColumnInfo;
 import org.springframework.stereotype.Repository;
 
 /**

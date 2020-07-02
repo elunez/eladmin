@@ -13,7 +13,6 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-
 package com.baomidou.mybatisplus.core.metadata;
 
 import com.baomidou.mybatisplus.annotation.*;
@@ -52,9 +51,9 @@ import static java.util.stream.Collectors.toList;
  * @author liaojinlong
  * @since 2020/6/29 18:07
  */
-public class ElTableInfoHelper {
+public class TableInfoHelper {
 
-    private static final Log logger = LogFactory.getLog(ElTableInfoHelper.class);
+    private static final Log logger = LogFactory.getLog(TableInfoHelper.class);
 
     /**
      * 储存反射类表信息
@@ -137,7 +136,9 @@ public class ElTableInfoHelper {
             // 兼容测试场景
             globalConfig = GlobalConfigUtils.defaults();
         }
-
+        if (globalConfig.isBanner()) {
+            System.out.println("MyBatis Plus (Jpa Patch)");
+        }
         /* 初始化表名相关 */
         final String[] excludeProperty = initTableName(clazz, globalConfig, tableInfo);
 

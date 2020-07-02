@@ -20,6 +20,7 @@ import me.zhengjie.base.mybatis.BaseDao;
 import me.zhengjie.domain.ColumnInfo;
 import me.zhengjie.repository.jpa.ColumnInfoRepository;
 import me.zhengjie.repository.mp.ColumnInfoService;
+import me.zhengjie.utils.enums.DbType;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -35,15 +36,23 @@ public class ColumnInfoDao extends BaseDao<ColumnInfoService, ColumnInfoReposito
 
     public ColumnInfoDao(ColumnInfoService baseService, ColumnInfoRepository jpaRepository) {
         super(baseService, jpaRepository);
+        setDbType(DbType.MYBATIS);
     }
 
     public List<ColumnInfo> findByTableNameOrderByIdAsc(String tableName) {
-        if (dbSwitch) {
-            return jpaRepository.findByTableNameOrderByIdAsc(tableName);
-        } else {
-            return mpService
-                    .list(Wrappers.<ColumnInfo>query().eq(true, "TABLE_NAME", tableName));
+        List<ColumnInfo> result;
+        switch (dbType) {
+            case JPA:
+                result = jpaRepository.findByTableNameOrderByIdAsc(tableName);
+                break;
+            case MYBATIS:
+                result = mpService
+                        .list(Wrappers.<ColumnInfo>query().eq(true, "TABLE_NAME", tableName));
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + dbType);
         }
+        return result;
     }
 
 }
