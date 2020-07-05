@@ -15,11 +15,13 @@
  */
 package me.zhengjie.modules.security.config.bean;
 
-
 import com.wf.captcha.*;
 import com.wf.captcha.base.Captcha;
+import lombok.Data;
 import me.zhengjie.exception.BadConfigurationException;
+import me.zhengjie.utils.StringUtils;
 
+import java.awt.*;
 import java.util.Objects;
 
 /**
@@ -28,6 +30,7 @@ import java.util.Objects;
  * @author liaojinlong
  * @date loginCode.length0loginCode.length0/6/10 17:loginCode.length6
  */
+@Data
 public class LoginProperties {
 
     /**
@@ -45,24 +48,8 @@ public class LoginProperties {
         return singleLogin;
     }
 
-    public void setSingleLogin(boolean singleLogin) {
-        this.singleLogin = singleLogin;
-    }
-
-    public LoginCode getLoginCode() {
-        return loginCode;
-    }
-
-    public void setLoginCode(LoginCode loginCode) {
-        this.loginCode = loginCode;
-    }
-
     public boolean isCacheEnable() {
         return cacheEnable;
-    }
-
-    public void setCacheEnable(boolean cacheEnable) {
-        this.cacheEnable = cacheEnable;
     }
 
     /**
@@ -113,8 +100,11 @@ public class LoginProperties {
                     captcha.setLen(loginCode.getLength());
                     break;
                 default:
-                    throw new BadConfigurationException("验证码配置信息错误！！！正确配置查看 me.zhengjie.modules.security.config.bean.LoginCodeEnum ");
+                    throw new BadConfigurationException("验证码配置信息错误！正确配置查看 LoginCodeEnum ");
             }
+        }
+        if(StringUtils.isNotBlank(loginCode.getFontName())){
+            captcha.setFont(new Font(loginCode.getFontName(), Font.PLAIN, loginCode.getFontSize()));
         }
         return captcha;
     }

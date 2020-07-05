@@ -28,6 +28,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class ConfigBeanConfiguration {
+
     @Bean
     @ConfigurationProperties(prefix = "login", ignoreUnknownFields = true)
     public LoginProperties loginProperties() {
