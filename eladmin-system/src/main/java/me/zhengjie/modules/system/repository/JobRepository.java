@@ -17,7 +17,6 @@ package me.zhengjie.modules.system.repository;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import me.zhengjie.base.BaseRepository;
-import me.zhengjie.domain.ColumnInfo;
 import me.zhengjie.modules.system.domain.Job;
 import me.zhengjie.modules.system.repository.jpa.JobJpaRepository;
 import me.zhengjie.modules.system.repository.mp.JobService;
@@ -39,6 +38,9 @@ public class JobRepository extends BaseRepository<JobService, JobJpaRepository, 
         setDbType(DbType.MYBATIS);
     }
 
+    /**
+     * @param ids
+     */
     public void deleteAllByIdIn(Set<Long> ids) {
         switch (dbType) {
             case JPA:
@@ -52,6 +54,10 @@ public class JobRepository extends BaseRepository<JobService, JobJpaRepository, 
         }
     }
 
+    /**
+     * @param name
+     * @return /
+     */
     public Job findByName(String name) {
         Job result;
         switch (dbType) {

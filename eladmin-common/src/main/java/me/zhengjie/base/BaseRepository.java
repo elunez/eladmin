@@ -1,3 +1,18 @@
+/*
+ *  Copyright 2019-2020
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
 package me.zhengjie.base;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -39,7 +54,13 @@ public class BaseRepository<I extends IService<T>, J extends JpaRepository<T, ID
         this.jpaRepository = jpaRepository;
     }
 
-    public T save(T t) {
+    /**
+     * JPA & MP  仅保存 ，不涉及 保存前判断存在时 转更新
+     *
+     * @param t
+     * @return /
+     */
+    public T onlySave(T t) {
         T t1;
         switch (dbType) {
             case JPA:
@@ -55,7 +76,35 @@ public class BaseRepository<I extends IService<T>, J extends JpaRepository<T, ID
         return t1;
     }
 
+    /**
+     * JPA & MP 保存/ 更新 ,当ID 存在时 进行更新
+     *
+     * @param t
+     * @return /
+     */
+    public T save(T t) {
+        T t1;
+        switch (dbType) {
+            case JPA:
+                t1 = jpaRepository.save(t);
+                break;
+            case MYBATIS:
+                mpService.saveOrUpdate(t);
+                t1 = t;
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + dbType);
+        }
+        return t1;
+    }
 
+
+    /**
+     * 批量更新
+     *
+     * @param entities
+     * @return /
+     */
     public List<T> saveAll(List<T> entities) {
         List<T> result;
         switch (dbType) {
@@ -72,6 +121,11 @@ public class BaseRepository<I extends IService<T>, J extends JpaRepository<T, ID
         return result;
     }
 
+    /**
+     * JPA & MP 删除
+     *
+     * @param entity
+     */
     public void delete(T entity) {
         switch (dbType) {
             case JPA:
@@ -85,6 +139,11 @@ public class BaseRepository<I extends IService<T>, J extends JpaRepository<T, ID
         }
     }
 
+    /**
+     * JPA & MP 更新
+     *
+     * @param id
+     */
     public void deleteById(ID id) {
         switch (dbType) {
             case JPA:
@@ -98,19 +157,29 @@ public class BaseRepository<I extends IService<T>, J extends JpaRepository<T, ID
         }
     }
 
-    public void update(T columnInfo) {
+    /**
+     * 通过 ID 保存
+     *
+     * @param t
+     */
+    public void update(T t) {
         switch (dbType) {
             case JPA:
-                jpaRepository.saveAndFlush(columnInfo);
+                jpaRepository.saveAndFlush(t);
                 break;
             case MYBATIS:
-                mpService.saveOrUpdate(columnInfo);
+                mpService.updateById(t);
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + dbType);
         }
     }
 
+    /**
+     * 批量更新
+     *
+     * @param entities
+     */
     public void batUpdate(List<T> entities) {
         switch (dbType) {
             case JPA:
@@ -124,6 +193,12 @@ public class BaseRepository<I extends IService<T>, J extends JpaRepository<T, ID
         }
     }
 
+    /**
+     * 依据ID 查找
+     *
+     * @param id
+     * @return /
+     */
     public T selectById(ID id) {
         T t;
         switch (dbType) {
@@ -139,10 +214,22 @@ public class BaseRepository<I extends IService<T>, J extends JpaRepository<T, ID
         return t;
     }
 
+    /**
+     * 兼容JPA 依据ID 查询
+     *
+     * @param id
+     * @return /
+     */
     public Optional<T> findById(ID id) {
         return Optional.of(selectById(id));
     }
 
+    /**
+     * 依据ID 批量查询
+     *
+     * @param ids
+     * @return /
+     */
     public List<T> selectAllById(Iterable<ID> ids) {
         List<T> t;
         switch (dbType) {
@@ -158,6 +245,12 @@ public class BaseRepository<I extends IService<T>, J extends JpaRepository<T, ID
         return t;
     }
 
+    /**
+     * 兼容JPA 查询
+     *
+     * @param spec
+     * @return /
+     */
     public List<T> findAll(@Nullable Specification<T> spec) {
         List<T> t = null;
         switch (dbType) {
@@ -226,6 +319,12 @@ public class BaseRepository<I extends IService<T>, J extends JpaRepository<T, ID
                 pageable, page.getTotal());
     }
 
+    /**
+     * MP
+     *
+     * @param spec
+     * @return
+     */
     protected List<T> mpFindAll(Specification<T> spec) {
         ElSpecification<T> specifications = (ElSpecification<T>) spec;
         final QueryWrapper<T> queryWrapper = specifications.getQueryWrapper();

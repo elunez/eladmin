@@ -198,6 +198,14 @@ public class QueryHelp {
         return cb.and(list.toArray(new Predicate[size]));
     }
 
+    /**
+     * Mybatis Plus  查询构建
+     *
+     * @param criteria
+     * @param clazz
+     * @param <K>
+     * @return /
+     */
     public static <K> QueryWrapper<K> getQueryWrapper(Object criteria, Class clazz) {
         QueryWrapper<K> queryWrapper = Wrappers.query();
         final List<Field> allFields = getAllFields(criteria.getClass());
@@ -229,9 +237,15 @@ public class QueryHelp {
         }
         if (Objects.nonNull(query)) {
             String propName = query.propName();
-            String joinName = query.joinName();
             String blurry = query.blurry();
             attributeName = isBlank(propName) ? attributeName : propName;
+            if (StringUtils.isNotBlank(blurry)) {
+                String[] blurrys = blurry.split(",");
+                for (String item : blurrys) {
+                    queryWrapper.like(item, value);
+                }
+            }
+
             List<Object> between = null;
             switch (query.type()) {
                 case EQUAL:
@@ -302,7 +316,14 @@ public class QueryHelp {
         return true;
     }
 
-    private static String getTableColumnFromField(TableInfo tableInfo, Field field) {
+    /**
+     * 依据Mybatis Plus 获取 Database 真实Column 字段
+     *
+     * @param tableInfo
+     * @param field
+     * @return /
+     */
+    public static String getTableColumnFromField(TableInfo tableInfo, Field field) {
         String columnName = null;
         if (FIELD_CACHE.containsKey(field)) {
             final ElField elField = COLUMN_CACHE.get(field);
@@ -348,6 +369,10 @@ public class QueryHelp {
     }
 }
 
+/**
+ * @author liaojinlong
+ * @since 2020/7/6 21:04
+ */
 class ElField {
     private String column;
     private boolean status;

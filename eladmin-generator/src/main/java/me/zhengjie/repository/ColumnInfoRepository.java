@@ -20,7 +20,6 @@ import me.zhengjie.base.BaseRepository;
 import me.zhengjie.domain.ColumnInfo;
 import me.zhengjie.repository.jpa.ColumnInfoJpaRepository;
 import me.zhengjie.repository.mp.ColumnInfoMpService;
-import me.zhengjie.utils.enums.DbType;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -36,7 +35,7 @@ public class ColumnInfoRepository extends BaseRepository<ColumnInfoMpService, Co
 
     public ColumnInfoRepository(ColumnInfoMpService baseService, ColumnInfoJpaRepository jpaRepository) {
         super(baseService, jpaRepository);
-        setDbType(DbType.MYBATIS);
+//        setDbType(DbType.MYBATIS);
     }
 
     public List<ColumnInfo> findByTableNameOrderByIdAsc(String tableName) {

@@ -52,6 +52,9 @@ import static java.util.stream.Collectors.toList;
  * @since 2020/6/29 18:07
  */
 public class TableInfoHelper {
+    static {
+        System.out.println("MyBatis Plus (Jpa Patch)");
+    }
 
     private static final Log logger = LogFactory.getLog(TableInfoHelper.class);
 
@@ -135,9 +138,6 @@ public class TableInfoHelper {
         } else {
             // 兼容测试场景
             globalConfig = GlobalConfigUtils.defaults();
-        }
-        if (globalConfig.isBanner()) {
-            System.out.println("MyBatis Plus (Jpa Patch)");
         }
         /* 初始化表名相关 */
         final String[] excludeProperty = initTableName(clazz, globalConfig, tableInfo);
@@ -320,8 +320,8 @@ public class TableInfoHelper {
                             }
                             GeneratedValue generatedValue = field.getAnnotation(GeneratedValue.class);
                             if (Objects.nonNull(generatedValue)) {
-                                tableIdImp.setType(IdType.ASSIGN_ID);
-                                logger.warn("JPA compatible mode, []com.baomidou.mybatisplus.annotation.IdType.ASSIGN_ID] is the only way to generate primary key");
+                                tableIdImp.setType(IdType.AUTO);
+                                logger.warn("JPA compatible mode, []com.baomidou.mybatisplus.annotation.IdType.AUTO] is the only way to generate primary key");
                             }
                             tableId = tableIdImp;
                             jpaReadPK = true;
