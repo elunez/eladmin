@@ -23,6 +23,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.google.common.collect.Sets;
 import me.zhengjie.db.ElSpecification;
+import me.zhengjie.exception.BadConfigurationException;
 import me.zhengjie.utils.QueryHelp;
 import me.zhengjie.utils.StringUtils;
 import me.zhengjie.utils.WhereFun;
@@ -341,7 +342,12 @@ public class BaseRepository<I extends IService<T>, J extends JpaRepository<T, ID
      * @return
      */
     protected List<T> mpFindAll(Specification<T> spec) {
-        ElSpecification<T> specifications = (ElSpecification<T>) spec;
+        ElSpecification<T> specifications;
+        try {
+            specifications = (ElSpecification<T>) spec;
+        } catch (ClassCastException ex) {
+            throw new BadConfigurationException("使用Mybatis Plus 必须使用 me.zhengjie.db.ElSpecification", ex);
+        }
         final QueryWrapper<T> queryWrapper = specifications.getQueryWrapper();
         return mpService.list(queryWrapper);
     }
