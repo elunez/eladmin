@@ -18,6 +18,11 @@ package me.zhengjie.utils;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.TableFieldInfo;
+import com.baomidou.mybatisplus.core.metadata.TableInfo;
+import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.extern.slf4j.Slf4j;
 import me.zhengjie.annotation.DataPermission;
 import me.zhengjie.annotation.Query;
@@ -25,6 +30,8 @@ import me.zhengjie.annotation.Query;
 import javax.persistence.criteria.*;
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * @author Zheng Jie
@@ -33,6 +40,10 @@ import java.util.*;
 @Slf4j
 @SuppressWarnings({"unchecked", "all"})
 public class QueryHelp {
+    public static ThreadLocal<QueryWrapper> queryWrapperThreadLocal = new ThreadLocal<>();
+    protected static Map<String, List<Field>> FIELD_CACHE = new ConcurrentHashMap<>(16);
+    protected static Map<Field, ElField> COLUMN_CACHE = new ConcurrentHashMap<>(16);
+
     /**
      * JPA 查询参数构建
      *
@@ -45,6 +56,9 @@ public class QueryHelp {
      */
     public static <R, Q> Predicate getPredicate(Root<R> root, Q query, CriteriaBuilder cb) {
         List<Predicate> list = new ArrayList<>();
+        /**
+         * MyvatisPlus 使用
+         */
         if (query == null) {
             return cb.and(list.toArray(new Predicate[0]));
         }
@@ -63,7 +77,7 @@ public class QueryHelp {
             }
         }
         try {
-            List<Field> fields = getAllFields(query.getClass(), new ArrayList<>());
+            List<Field> fields = getAllFields(query.getClass());
             for (Field field : fields) {
                 boolean accessible = field.isAccessible();
                 // 设置对象的访问权限，保证对private的属性的访
@@ -85,7 +99,8 @@ public class QueryHelp {
                         String[] blurrys = blurry.split(",");
                         List<Predicate> orPredicate = new ArrayList<>();
                         for (String s : blurrys) {
-                            orPredicate.add(cb.like(root.get(s)
+                            final Path<Object> column = root.get(s);
+                            orPredicate.add(cb.like(column
                                     .as(String.class), "%" + val.toString() + "%"));
                         }
                         Predicate[] p = new Predicate[orPredicate.size()];
@@ -179,10 +194,91 @@ public class QueryHelp {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
-
         int size = list.size();
         return cb.and(list.toArray(new Predicate[size]));
     }
+
+    public static <K> QueryWrapper<K> getQueryWrapper(Object criteria, Class clazz) {
+        QueryWrapper<K> queryWrapper = Wrappers.query();
+        final List<Field> allFields = getAllFields(criteria.getClass());
+        allFields.forEach(field -> {
+            buildQuery(criteria, field, clazz, queryWrapper);
+        });
+        return queryWrapper;
+    }
+
+    private static <K> void buildQuery(Object criteria, Field field, Class clazz, QueryWrapper<K> queryWrapper) {
+        final Query query = field.getAnnotation(Query.class);
+        Object value = null;
+        final TableInfo tableInfo = TableInfoHelper.getTableInfo(clazz);
+        boolean accessible = field.isAccessible();
+        String attributeName = null;
+        try {
+            // 设置对象的访问权限，保证对private的属性的访
+            field.setAccessible(true);
+            value = field.get(criteria);
+            if (Objects.isNull(value)) {
+                return;
+            }
+            attributeName = getTableColumnFromField(tableInfo, field);
+        } catch (IllegalAccessException e) {
+            log.error(e.getMessage(), e);
+            return;
+        } finally {
+            field.setAccessible(accessible);
+        }
+        if (Objects.nonNull(query)) {
+            String propName = query.propName();
+            String joinName = query.joinName();
+            String blurry = query.blurry();
+            attributeName = isBlank(propName) ? attributeName : propName;
+            List<Object> between = null;
+            switch (query.type()) {
+                case EQUAL:
+                    break;
+                case GREATER_THAN:
+                    queryWrapper.ge(attributeName, value);
+                    break;
+                case LESS_THAN:
+                    queryWrapper.le(attributeName, value);
+                    break;
+                case LESS_THAN_NQ:
+                    queryWrapper.lt(attributeName, value);
+                    break;
+                case INNER_LIKE:
+                    queryWrapper.like(attributeName, value);
+                    break;
+                case LEFT_LIKE:
+                    queryWrapper.likeLeft(attributeName, value);
+                    break;
+                case RIGHT_LIKE:
+                    queryWrapper.likeRight(attributeName, value);
+                    break;
+                case IN:
+                    between = new ArrayList<>((List<Object>) value);
+                    queryWrapper.in(attributeName, between.toArray());
+                    break;
+                case NOT_EQUAL:
+                    queryWrapper.ne(attributeName, value);
+                    break;
+                case NOT_NULL:
+                    queryWrapper.isNotNull(attributeName);
+                    break;
+                case IS_NULL:
+                    queryWrapper.isNull(attributeName);
+                    break;
+                case BETWEEN:
+                    between = new ArrayList<>((List<Object>) value);
+                    queryWrapper.in(attributeName, between.toArray());
+                    break;
+                default:
+                    break;
+            }
+        } else {
+            queryWrapper.eq(field.getName(), value);
+        }
+    }
+
 
     @SuppressWarnings("unchecked")
     private static <T, R> Expression<T> getExpression(String attributeName, Join join, Root<R> root) {
@@ -206,11 +302,74 @@ public class QueryHelp {
         return true;
     }
 
-    public static List<Field> getAllFields(Class clazz, List<Field> fields) {
+    private static String getTableColumnFromField(TableInfo tableInfo, Field field) {
+        String columnName = null;
+        if (FIELD_CACHE.containsKey(field)) {
+            final ElField elField = COLUMN_CACHE.get(field);
+            if (elField.isStatus()) {
+                columnName = elField.getColumn();
+            }
+        } else {
+            AtomicReference<String> tableColumnName = null;
+            final String name = field.getName();
+            for (TableFieldInfo item : tableInfo.getFieldList()) {
+                if (item.getField().getName().equals(name)) {
+                    tableColumnName = new AtomicReference<>();
+                    tableColumnName.set(item.getColumn());
+                    break;
+                }
+            }
+            if (Objects.nonNull(tableColumnName)) {
+                columnName = tableColumnName.get();
+                COLUMN_CACHE.put(field, new ElField(columnName, true));
+            } else {
+                COLUMN_CACHE.put(field, new ElField(columnName, false));
+            }
+        }
+        return columnName;
+    }
+
+    public static List<Field> getAllFields(Class clazz) {
+//        @Todo 过滤无关字段
+        List<Field> fields = null;
         if (clazz != null) {
-            fields.addAll(Arrays.asList(clazz.getDeclaredFields()));
-            getAllFields(clazz.getSuperclass(), fields);
+            if (FIELD_CACHE.containsKey(clazz.getName())) {
+                fields = FIELD_CACHE.get(clazz.getName());
+            } else {
+                fields = new ArrayList<>(Arrays.asList(clazz.getDeclaredFields()));
+                final List<Field> allFields = getAllFields(clazz.getSuperclass());
+                if (CollUtil.isNotEmpty(allFields)) {
+                    fields.addAll(allFields);
+                }
+                FIELD_CACHE.put(clazz.getName(), fields);
+            }
         }
         return fields;
+    }
+}
+
+class ElField {
+    private String column;
+    private boolean status;
+
+    public ElField(String column, boolean status) {
+        this.column = column;
+        this.status = status;
+    }
+
+    public String getColumn() {
+        return column;
+    }
+
+    public void setColumn(String column) {
+        this.column = column;
+    }
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
     }
 }

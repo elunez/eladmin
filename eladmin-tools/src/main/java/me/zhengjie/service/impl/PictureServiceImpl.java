@@ -30,6 +30,7 @@ import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.utils.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -56,7 +57,8 @@ public class PictureServiceImpl implements PictureService {
 
     @Override
     public Object queryAll(PictureQueryCriteria criteria, Pageable pageable){
-        return PageUtil.toPage(pictureRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable));
+        final Specification<Picture> pictureSpecification = (root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root, criteria, criteriaBuilder);
+        return PageUtil.toPage(pictureRepository.findAll(pictureSpecification,pageable));
     }
 
     @Override

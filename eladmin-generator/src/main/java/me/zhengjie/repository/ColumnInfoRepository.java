@@ -21,7 +21,7 @@ import me.zhengjie.domain.ColumnInfo;
 import me.zhengjie.repository.jpa.ColumnInfoJpaRepository;
 import me.zhengjie.repository.mp.ColumnInfoMpService;
 import me.zhengjie.utils.enums.DbType;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -31,7 +31,7 @@ import java.util.List;
  * @author liaojinlong
  * @since 2020/6/28 14:59
  */
-@Component
+@Repository
 public class ColumnInfoRepository extends BaseRepository<ColumnInfoMpService, ColumnInfoJpaRepository, ColumnInfo, Long> {
 
     public ColumnInfoRepository(ColumnInfoMpService baseService, ColumnInfoJpaRepository jpaRepository) {

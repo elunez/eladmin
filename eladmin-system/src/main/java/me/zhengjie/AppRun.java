@@ -40,7 +40,10 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(hidden = true)
 @SpringBootApplication
 @EnableTransactionManagement
-@MapperScan("me.zhengjie.repository.mp")
+@MapperScan({
+        "me.zhengjie.repository.mp",
+        "me.zhengjie.modules.system.repository.mp"
+})
 @EnableJpaAuditing(auditorAwareRef = "auditorAware")
 public class AppRun {
 

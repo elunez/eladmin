@@ -1,20 +1,27 @@
 package me.zhengjie.base;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.google.common.collect.Sets;
+import me.zhengjie.db.ElSpecification;
 import me.zhengjie.utils.WhereFun;
 import me.zhengjie.utils.WrapperUtils;
 import me.zhengjie.utils.enums.DbType;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.lang.Nullable;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * mybatisPlus & JPA 适配
@@ -47,6 +54,7 @@ public class BaseRepository<I extends IService<T>, J extends JpaRepository<T, ID
         }
         return t1;
     }
+
 
     public List<T> saveAll(List<T> entities) {
         List<T> result;
@@ -131,6 +139,10 @@ public class BaseRepository<I extends IService<T>, J extends JpaRepository<T, ID
         return t;
     }
 
+    public Optional<T> findById(ID id) {
+        return Optional.of(selectById(id));
+    }
+
     public List<T> selectAllById(Iterable<ID> ids) {
         List<T> t;
         switch (dbType) {
@@ -153,7 +165,7 @@ public class BaseRepository<I extends IService<T>, J extends JpaRepository<T, ID
                 t = ((JpaSpecificationExecutor) jpaRepository).findAll(spec);
                 break;
             case MYBATIS:
-                t = mpFindAll(spec, null);
+                t = mpFindAll(spec);
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + dbType);
@@ -161,14 +173,15 @@ public class BaseRepository<I extends IService<T>, J extends JpaRepository<T, ID
         return t;
     }
 
-    public Object findAll(@Nullable Specification<T> spec, Pageable pageable) {
-        Object t = null;
+
+    public Page<T> findAll(@Nullable Specification<T> spec, Pageable pageable) {
+        Page<T> t = null;
         switch (dbType) {
             case JPA:
                 t = ((JpaSpecificationExecutor) jpaRepository).findAll(spec, pageable);
                 break;
             case MYBATIS:
-                t = mpFindAll(spec, pageable);
+                t = mpFindAllPage(spec, pageable);
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + dbType);
@@ -183,9 +196,40 @@ public class BaseRepository<I extends IService<T>, J extends JpaRepository<T, ID
      * @param pageable
      * @return
      */
-    protected List<T> mpFindAll(Specification<T> spec, Pageable pageable) {
-        final QueryWrapper<T> query = Wrappers.<T>query();
-        return mpService.page(null, null);
+    protected Page<T> mpFindAllPage(Specification<T> spec, Pageable pageable) {
+        ElSpecification<T> specifications = (ElSpecification<T>) spec;
+        final QueryWrapper<T> queryWrapper = specifications.getQueryWrapper();
+        com.baomidou.mybatisplus.extension.plugins.pagination.Page<T> page = new com.baomidou.mybatisplus.extension.plugins.pagination.Page<>();
+        page.setPages(pageable.getPageNumber());
+        page.setSize(pageable.getPageSize());
+        page.setCurrent(pageable.getOffset());
+        final Sort sort = pageable.getSort();
+        final ArrayList<OrderItem> orders = new ArrayList<>();
+        sort.get().forEach(order -> {
+            final Sort.Direction direction = order.getDirection();
+            final String property = order.getProperty();
+            final OrderItem orderItem;
+            switch (direction) {
+                case DESC:
+                    orderItem = OrderItem.desc(property);
+                    break;
+                case ASC:
+                default:
+                    orderItem = OrderItem.asc(property);
+                    break;
+
+            }
+            orders.add(orderItem);
+        });
+        page.setOrders(orders);
+        return new PageImpl<T>(mpService.page(page, queryWrapper).getRecords(),
+                pageable, page.getTotal());
+    }
+
+    protected List<T> mpFindAll(Specification<T> spec) {
+        ElSpecification<T> specifications = (ElSpecification<T>) spec;
+        final QueryWrapper<T> queryWrapper = specifications.getQueryWrapper();
+        return mpService.list(queryWrapper);
     }
 
     public I getMpService() {
