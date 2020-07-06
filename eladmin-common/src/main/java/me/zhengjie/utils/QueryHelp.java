@@ -42,7 +42,7 @@ import java.util.concurrent.atomic.AtomicReference;
 public class QueryHelp {
     public static ThreadLocal<QueryWrapper> queryWrapperThreadLocal = new ThreadLocal<>();
     protected static Map<String, List<Field>> FIELD_CACHE = new ConcurrentHashMap<>(16);
-    protected static Map<Field, ElField> COLUMN_CACHE = new ConcurrentHashMap<>(16);
+    protected static Map<String, ElField> COLUMN_CACHE = new ConcurrentHashMap<>(16);
 
     /**
      * JPA 查询参数构建
@@ -228,7 +228,7 @@ public class QueryHelp {
             if (Objects.isNull(value)) {
                 return;
             }
-            attributeName = getTableColumnFromField(tableInfo, field);
+            attributeName = getTableColumnFromField(tableInfo, clazz.getName(), field.getName());
         } catch (IllegalAccessException e) {
             log.error(e.getMessage(), e);
             return;
@@ -316,6 +316,7 @@ public class QueryHelp {
         return true;
     }
 
+
     /**
      * 依据Mybatis Plus 获取 Database 真实Column 字段
      *
@@ -323,16 +324,17 @@ public class QueryHelp {
      * @param field
      * @return /
      */
-    public static String getTableColumnFromField(TableInfo tableInfo, Field field) {
+    public static String getTableColumnFromField(TableInfo tableInfo, String className, String field) {
         String columnName = null;
-        if (FIELD_CACHE.containsKey(field)) {
+        final String key = className + "_" + field;
+        if (FIELD_CACHE.containsKey(key)) {
             final ElField elField = COLUMN_CACHE.get(field);
             if (elField.isStatus()) {
                 columnName = elField.getColumn();
             }
         } else {
             AtomicReference<String> tableColumnName = null;
-            final String name = field.getName();
+            final String name = field;
             for (TableFieldInfo item : tableInfo.getFieldList()) {
                 if (item.getField().getName().equals(name)) {
                     tableColumnName = new AtomicReference<>();
@@ -342,9 +344,9 @@ public class QueryHelp {
             }
             if (Objects.nonNull(tableColumnName)) {
                 columnName = tableColumnName.get();
-                COLUMN_CACHE.put(field, new ElField(columnName, true));
+                COLUMN_CACHE.put(key, new ElField(columnName, true));
             } else {
-                COLUMN_CACHE.put(field, new ElField(columnName, false));
+                COLUMN_CACHE.put(key, new ElField(columnName, false));
             }
         }
         return columnName;

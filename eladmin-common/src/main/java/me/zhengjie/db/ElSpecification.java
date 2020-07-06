@@ -43,6 +43,21 @@ public class ElSpecification<K> implements Specification {
         return QueryHelp.getQueryWrapper(criteria, clazz);
     }
 
+    public Object getCriteria() {
+        return criteria;
+    }
+
+    public Class<K> getClazz() {
+        return clazz;
+    }
+
+    public Specification<K> getSpecification() {
+        return specification;
+    }
+
+    public void setSpecification(Specification<K> specification) {
+        this.specification = specification;
+    }
 
     /**
      * Creates a WHERE clause for a query of the referenced entity in form of a {@link Predicate} for the given

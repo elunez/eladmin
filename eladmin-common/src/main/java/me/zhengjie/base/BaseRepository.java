@@ -17,10 +17,14 @@ package me.zhengjie.base;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
+import com.baomidou.mybatisplus.core.metadata.TableInfo;
+import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.google.common.collect.Sets;
 import me.zhengjie.db.ElSpecification;
+import me.zhengjie.utils.QueryHelp;
+import me.zhengjie.utils.StringUtils;
 import me.zhengjie.utils.WhereFun;
 import me.zhengjie.utils.WrapperUtils;
 import me.zhengjie.utils.enums.DbType;
@@ -295,12 +299,21 @@ public class BaseRepository<I extends IService<T>, J extends JpaRepository<T, ID
         com.baomidou.mybatisplus.extension.plugins.pagination.Page<T> page = new com.baomidou.mybatisplus.extension.plugins.pagination.Page<>();
         page.setPages(pageable.getPageNumber());
         page.setSize(pageable.getPageSize());
-        page.setCurrent(pageable.getOffset());
+        page.setCurrent(pageable.getOffset() / page.getSize() + 1);
         final Sort sort = pageable.getSort();
         final ArrayList<OrderItem> orders = new ArrayList<>();
+
+        final Class<T> clazz = specifications.getClazz();
+        final TableInfo tableInfo = TableInfoHelper.getTableInfo(clazz);
+        final String name = clazz.getName();
+
         sort.get().forEach(order -> {
             final Sort.Direction direction = order.getDirection();
-            final String property = order.getProperty();
+            /**
+             * 翻译位 数据库 Column
+             */
+            final String tableColumnFromField = QueryHelp.getTableColumnFromField(tableInfo, name, order.getProperty());
+            final String property = StringUtils.isNotBlank(tableColumnFromField) ? tableColumnFromField : order.getProperty();
             final OrderItem orderItem;
             switch (direction) {
                 case DESC:
@@ -315,7 +328,9 @@ public class BaseRepository<I extends IService<T>, J extends JpaRepository<T, ID
             orders.add(orderItem);
         });
         page.setOrders(orders);
-        return new PageImpl<T>(mpService.page(page, queryWrapper).getRecords(),
+        final List<T> records1 = mpService.getBaseMapper().selectPage(page, queryWrapper).getRecords();
+        final List<T> records = mpService.page(page, queryWrapper).getRecords();
+        return new PageImpl<T>(records,
                 pageable, page.getTotal());
     }
 
