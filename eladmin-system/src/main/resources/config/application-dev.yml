@@ -62,6 +62,10 @@ login:
     heigth: 36
     # 内容长度
     length: 2
+    # 字体名称，为空则使用默认字体
+    font-name:
+    # 字体大小
+    font-size: 25
 
 #jwt
 jwt:
