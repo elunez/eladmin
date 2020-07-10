@@ -55,7 +55,7 @@ login:
   #  验证码
   login-code:
     #  验证码类型配置 查看 LoginProperties 类
-    code-type: chinese_gif
+    code-type: arithmetic
     #  登录图形验证码有效时间/分钟
     expiration: 2
     #  验证码高度
@@ -64,6 +64,10 @@ login:
     heigth: 36
     # 内容长度
     length: 2
+    # 字体名称，为空则使用默认字体，如遇到线上乱码，设置其他字体即可
+    font-name:
+    # 字体大小
+    font-size: 25
 
 #jwt
 jwt:

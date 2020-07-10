@@ -15,13 +15,17 @@
  */
 package me.zhengjie.modules.security.config.bean;
 
+import lombok.Data;
+
 /**
  * 登录验证码配置信息
  *
  * @author: liaojinlong
  * @date: 2020/6/10 18:53
  */
+@Data
 public class LoginCode {
+
     /**
      * 验证码配置
      */
@@ -42,44 +46,16 @@ public class LoginCode {
      * 验证码高度
      */
     private int height = 36;
+    /**
+     * 验证码字体
+     */
+    private String fontName;
+    /**
+     * 字体大小
+     */
+    private int fontSize = 25;
 
     public LoginCodeEnum getCodeType() {
         return codeType;
-    }
-
-    public void setCodeType(LoginCodeEnum codeType) {
-        this.codeType = codeType;
-    }
-
-    public Long getExpiration() {
-        return expiration;
-    }
-
-    public void setExpiration(Long expiration) {
-        this.expiration = expiration;
-    }
-
-    public int getLength() {
-        return length;
-    }
-
-    public void setLength(int length) {
-        this.length = length;
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public void setWidth(int width) {
-        this.width = width;
-    }
-
-    public int getHeight() {
-        return height;
-    }
-
-    public void setHeight(int height) {
-        this.height = height;
     }
 }
