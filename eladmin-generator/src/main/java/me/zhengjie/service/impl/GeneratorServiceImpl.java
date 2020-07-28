@@ -86,8 +86,9 @@ public class GeneratorServiceImpl implements GeneratorService {
             Object[] arr = (Object[]) obj;
             tableInfos.add(new TableInfo(arr[0], arr[1], arr[2], arr[3], ObjectUtil.isNotEmpty(arr[4]) ? arr[4] : "-"));
         }
-        Query query1 = em.createNativeQuery("SELECT COUNT(*) from information_schema.tables where table_schema = (select database())");
-        Object totalElements = query1.getSingleResult();
+        Query totalQuery = em.createNativeQuery("SELECT COUNT(*) from information_schema.tables where table_schema = (select database()) and table_name like ? ");
+        totalQuery.setParameter(1, StringUtils.isNotBlank(name) ? ("%" + name + "%") : "%%");
+        Object totalElements = totalQuery.getSingleResult();
         return PageUtil.toPage(tableInfos, totalElements);
     }
 

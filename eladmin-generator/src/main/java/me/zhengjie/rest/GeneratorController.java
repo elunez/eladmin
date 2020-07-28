@@ -24,6 +24,7 @@ import me.zhengjie.service.GenConfigService;
 import me.zhengjie.service.GeneratorService;
 import me.zhengjie.utils.PageUtil;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -55,10 +56,8 @@ public class GeneratorController {
 
     @ApiOperation("查询数据库数据")
     @GetMapping(value = "/tables")
-    public ResponseEntity<Object> queryTables(@RequestParam(defaultValue = "") String name,
-                                    @RequestParam(defaultValue = "0")Integer page,
-                                    @RequestParam(defaultValue = "10")Integer size){
-        int[] startEnd = PageUtil.transToStartEnd(page, size);
+    public ResponseEntity<Object> queryTables(@RequestParam(defaultValue = "") String name, Pageable pageable) {
+        int[] startEnd = PageUtil.transToStartEnd(pageable.getPageNumber() + 1, pageable.getPageSize());
         return new ResponseEntity<>(generatorService.getTables(name,startEnd), HttpStatus.OK);
     }
 
