@@ -17,6 +17,7 @@ package me.zhengjie.modules.system.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import me.zhengjie.config.FileProperties;
+import me.zhengjie.modules.security.service.OnlineUserService;
 import me.zhengjie.modules.security.service.UserCacheClean;
 import me.zhengjie.modules.system.domain.User;
 import me.zhengjie.exception.EntityExistException;
@@ -58,6 +59,7 @@ public class UserServiceImpl implements UserService {
     private final FileProperties properties;
     private final RedisUtils redisUtils;
     private final UserCacheClean userCacheClean;
+    private final OnlineUserService onlineUserService;
 
     @Override
     public Object queryAll(UserQueryCriteria criteria, Pageable pageable) {
@@ -116,6 +118,10 @@ public class UserServiceImpl implements UserService {
         // 如果用户名称修改
         if(!resources.getUsername().equals(user.getUsername())){
             redisUtils.del("user::username:" + user.getUsername());
+        }
+        // 如果用户被禁用，则清除用户登录信息
+        if(!resources.getEnabled()){
+            onlineUserService.kickOutForUsername(resources.getUsername());
         }
         user.setUsername(resources.getUsername());
         user.setEmail(resources.getEmail());

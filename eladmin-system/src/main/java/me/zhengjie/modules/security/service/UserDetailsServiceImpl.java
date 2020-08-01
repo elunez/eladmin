@@ -24,6 +24,7 @@ import me.zhengjie.modules.system.service.DataService;
 import me.zhengjie.modules.system.service.RoleService;
 import me.zhengjie.modules.system.service.UserService;
 import me.zhengjie.modules.system.service.dto.UserDto;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -72,7 +73,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 throw new UsernameNotFoundException("");
             } else {
                 if (!user.getEnabled()) {
-                    throw new BadRequestException("账号未激活");
+                    throw new BadRequestException("账号未激活！");
                 }
                 jwtUserDto = new JwtUserDto(
                         user,
