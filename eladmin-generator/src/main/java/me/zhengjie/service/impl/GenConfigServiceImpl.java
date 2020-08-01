@@ -31,11 +31,11 @@ import java.io.File;
 @RequiredArgsConstructor
 public class GenConfigServiceImpl implements GenConfigService {
 
-    private final GenConfigRepository genConfigRepository;
+    private final GenConfigRepository genConfigDao;
 
     @Override
     public GenConfig find(String tableName) {
-        GenConfig genConfig = genConfigRepository.findByTableName(tableName);
+        GenConfig genConfig = genConfigDao.findByTableName(tableName);
         if(genConfig == null){
             return new GenConfig(tableName);
         }
@@ -65,6 +65,6 @@ public class GenConfigServiceImpl implements GenConfigService {
             }
             genConfig.setApiPath(api.toString());
         }
-        return genConfigRepository.save(genConfig);
+        return genConfigDao.save(genConfig);
     }
 }

@@ -15,16 +15,20 @@
  */
 package me.zhengjie.domain;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import me.zhengjie.utils.GenUtil;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
 /**
  * 列的数据信息
+ *
  * @author Zheng Jie
  * @date 2019-01-02
  */
@@ -36,6 +40,7 @@ import java.io.Serializable;
 public class ColumnInfo implements Serializable {
 
     @Id
+    @TableId(value = "column_id", type = IdType.AUTO)
     @Column(name = "column_id")
     @ApiModelProperty(value = "ID", hidden = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -87,7 +92,7 @@ public class ColumnInfo implements Serializable {
         this.keyType = keyType;
         this.extra = extra;
         this.notNull = notNull;
-        if(GenUtil.PK.equalsIgnoreCase(keyType) && GenUtil.EXTRA.equalsIgnoreCase(extra)){
+        if (GenUtil.PK.equalsIgnoreCase(keyType) && GenUtil.EXTRA.equalsIgnoreCase(extra)) {
             this.notNull = false;
         }
         this.remark = remark;

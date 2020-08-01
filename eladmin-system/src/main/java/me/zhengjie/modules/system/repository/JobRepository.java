@@ -1,5 +1,5 @@
 /*
- *  Copyright 2019-2020 Zheng Jie
+ *  Copyright 2019-2020
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,28 +15,62 @@
  */
 package me.zhengjie.modules.system.repository;
 
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import me.zhengjie.base.BaseRepository;
 import me.zhengjie.modules.system.domain.Job;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import me.zhengjie.modules.system.repository.jpa.JobJpaRepository;
+import me.zhengjie.modules.system.repository.mp.JobService;
+import me.zhengjie.utils.enums.DbType;
+import org.springframework.stereotype.Repository;
 
 import java.util.Set;
 
 /**
-* @author Zheng Jie
-* @date 2019-03-29
-*/
-public interface JobRepository extends JpaRepository<Job, Long>, JpaSpecificationExecutor<Job> {
+ * @author liaojinlong
+ * @since 2020/7/4 14:29
+ */
+@Repository
+public class JobRepository extends BaseRepository<JobService, JobJpaRepository, Job, Long> {
+
+
+    public JobRepository(JobService mpService, JobJpaRepository jpaRepository) {
+        super(mpService, jpaRepository);
+        setDbType(DbType.MYBATIS);
+    }
 
     /**
-     * 根据名称查询
-     * @param name 名称
+     * @param ids
+     */
+    public void deleteAllByIdIn(Set<Long> ids) {
+        switch (dbType) {
+            case JPA:
+                jpaRepository.deleteAllByIdIn(ids);
+                break;
+            case MYBATIS:
+                mpService.remove(Wrappers.<Job>query().in("job_id", ids.toArray()));
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + dbType);
+        }
+    }
+
+    /**
+     * @param name
      * @return /
      */
-    Job findByName(String name);
-
-    /**
-     * 根据Id删除
-     * @param ids /
-     */
-    void deleteAllByIdIn(Set<Long> ids);
+    public Job findByName(String name) {
+        Job result;
+        switch (dbType) {
+            case JPA:
+                result = jpaRepository.findByName(name);
+                break;
+            case MYBATIS:
+                result = mpService
+                        .getOne(Wrappers.<Job>query().eq(true, "NAME", name));
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + dbType);
+        }
+        return result;
+    }
 }

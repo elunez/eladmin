@@ -1,5 +1,5 @@
 /*
- *  Copyright 2019-2020 Zheng Jie
+ *  Copyright 2019-2020
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,19 +15,39 @@
  */
 package me.zhengjie.repository;
 
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import me.zhengjie.base.BaseRepository;
 import me.zhengjie.domain.GenConfig;
-import org.springframework.data.jpa.repository.JpaRepository;
+import me.zhengjie.repository.jpa.GenConfigJpaRepository;
+import me.zhengjie.repository.mp.GenConfigMpService;
+import org.springframework.stereotype.Repository;
+
 
 /**
- * @author Zheng Jie
- * @date 2019-01-14
+ * JPA 与Mybatis 适配DAO
+ *
+ * @author liaojinlong
+ * @since 2020/7/1 23:00
  */
-public interface GenConfigRepository extends JpaRepository<GenConfig,Long> {
+@Repository
+public class GenConfigRepository extends BaseRepository<GenConfigMpService, GenConfigJpaRepository, GenConfig, Long> {
+    public GenConfigRepository(GenConfigMpService mpService, GenConfigJpaRepository jpaRepository) {
+        super(mpService, jpaRepository);
+    }
 
-    /**
-     * 查询表配置
-     * @param tableName 表名
-     * @return /
-     */
-    GenConfig findByTableName(String tableName);
+    public GenConfig findByTableName(String tableName) {
+        GenConfig result;
+        switch (dbType) {
+            case JPA:
+                result = jpaRepository.findByTableName(tableName);
+                break;
+            case MYBATIS:
+                result = mpService
+                        .getOne(Wrappers.<GenConfig>query().eq(true, "TABLE_NAME", tableName));
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + dbType);
+        }
+        return result;
+    }
 }

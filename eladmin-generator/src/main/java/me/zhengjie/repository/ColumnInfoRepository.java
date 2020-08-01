@@ -1,5 +1,5 @@
 /*
- *  Copyright 2019-2020 Zheng Jie
+ *  Copyright 2019-2020
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,20 +15,43 @@
  */
 package me.zhengjie.repository;
 
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import me.zhengjie.base.BaseRepository;
 import me.zhengjie.domain.ColumnInfo;
-import org.springframework.data.jpa.repository.JpaRepository;
+import me.zhengjie.repository.jpa.ColumnInfoJpaRepository;
+import me.zhengjie.repository.mp.ColumnInfoMpService;
+import org.springframework.stereotype.Repository;
+
 import java.util.List;
 
 /**
- * @author Zheng Jie
- * @date 2019-01-14
+ * JPA 与Mybatis 适配DAO
+ *
+ * @author liaojinlong
+ * @since 2020/6/28 14:59
  */
-public interface ColumnInfoRepository extends JpaRepository<ColumnInfo,Long> {
+@Repository
+public class ColumnInfoRepository extends BaseRepository<ColumnInfoMpService, ColumnInfoJpaRepository, ColumnInfo, Long> {
 
-    /**
-     * 查询表信息
-     * @param tableName 表格名
-     * @return 表信息
-     */
-    List<ColumnInfo> findByTableNameOrderByIdAsc(String tableName);
+    public ColumnInfoRepository(ColumnInfoMpService baseService, ColumnInfoJpaRepository jpaRepository) {
+        super(baseService, jpaRepository);
+//        setDbType(DbType.MYBATIS);
+    }
+
+    public List<ColumnInfo> findByTableNameOrderByIdAsc(String tableName) {
+        List<ColumnInfo> result;
+        switch (dbType) {
+            case JPA:
+                result = jpaRepository.findByTableNameOrderByIdAsc(tableName);
+                break;
+            case MYBATIS:
+                result = mpService
+                        .list(Wrappers.<ColumnInfo>query().eq(true, "TABLE_NAME", tableName));
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + dbType);
+        }
+        return result;
+    }
+
 }

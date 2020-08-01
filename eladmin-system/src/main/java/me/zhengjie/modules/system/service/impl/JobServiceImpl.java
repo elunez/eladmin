@@ -16,13 +16,14 @@
 package me.zhengjie.modules.system.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import me.zhengjie.db.ElSpecification;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.exception.EntityExistException;
 import me.zhengjie.modules.system.domain.Job;
+import me.zhengjie.modules.system.repository.JobRepository;
 import me.zhengjie.modules.system.repository.UserRepository;
 import me.zhengjie.modules.system.service.dto.JobQueryCriteria;
 import me.zhengjie.utils.*;
-import me.zhengjie.modules.system.repository.JobRepository;
 import me.zhengjie.modules.system.service.JobService;
 import me.zhengjie.modules.system.service.dto.JobDto;
 import me.zhengjie.modules.system.service.mapstruct.JobMapper;
@@ -31,16 +32,18 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
 
 /**
-* @author Zheng Jie
-* @date 2019-03-29
-*/
+ * @author Zheng Jie
+ * @date 2019-03-29
+ */
 @Service
 @RequiredArgsConstructor
 @CacheConfig(cacheNames = "job")
@@ -52,14 +55,16 @@ public class JobServiceImpl implements JobService {
     private final UserRepository userRepository;
 
     @Override
-    public Map<String,Object> queryAll(JobQueryCriteria criteria, Pageable pageable) {
-        Page<Job> page = jobRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable);
-        return PageUtil.toPage(page.map(jobMapper::toDto).getContent(),page.getTotalElements());
+    public Map<String, Object> queryAll(JobQueryCriteria criteria, Pageable pageable) {
+        final Specification<Job> jobSpecification = (root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root, criteria, criteriaBuilder);
+        Page<Job> page = jobRepository.findAll(new ElSpecification<Job>(jobSpecification, criteria, Job.class), pageable);
+        return PageUtil.toPage(page.map(jobMapper::toDto).getContent(), page.getTotalElements());
     }
 
     @Override
     public List<JobDto> queryAll(JobQueryCriteria criteria) {
-        List<Job> list = jobRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder));
+        final Specification<Job> jobSpecification = (root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root, criteria, criteriaBuilder);
+        List<Job> list = jobRepository.findAll(new ElSpecification<Job>(jobSpecification, criteria, Job.class));
         return jobMapper.toDto(list);
     }
 
@@ -67,7 +72,7 @@ public class JobServiceImpl implements JobService {
     @Cacheable(key = "'id:' + #p0")
     public JobDto findById(Long id) {
         Job job = jobRepository.findById(id).orElseGet(Job::new);
-        ValidationUtil.isNull(job.getId(),"Job","id",id);
+        ValidationUtil.isNull(job.getId(), "Job", "id", id);
         return jobMapper.toDto(job);
     }
 
@@ -75,8 +80,8 @@ public class JobServiceImpl implements JobService {
     @Transactional(rollbackFor = Exception.class)
     public void create(Job resources) {
         Job job = jobRepository.findByName(resources.getName());
-        if(job != null){
-            throw new EntityExistException(Job.class,"name",resources.getName());
+        if (job != null) {
+            throw new EntityExistException(Job.class, "name", resources.getName());
         }
         jobRepository.save(resources);
     }
@@ -87,10 +92,10 @@ public class JobServiceImpl implements JobService {
     public void update(Job resources) {
         Job job = jobRepository.findById(resources.getId()).orElseGet(Job::new);
         Job old = jobRepository.findByName(resources.getName());
-        if(old != null && !old.getId().equals(resources.getId())){
-            throw new EntityExistException(Job.class,"name",resources.getName());
+        if (old != null && !old.getId().equals(resources.getId())) {
+            throw new EntityExistException(Job.class, "name", resources.getName());
         }
-        ValidationUtil.isNull( job.getId(),"Job","id",resources.getId());
+        ValidationUtil.isNull(job.getId(), "Job", "id", resources.getId());
         resources.setId(job.getId());
         jobRepository.save(resources);
     }
@@ -107,7 +112,7 @@ public class JobServiceImpl implements JobService {
     public void download(List<JobDto> jobDtos, HttpServletResponse response) throws IOException {
         List<Map<String, Object>> list = new ArrayList<>();
         for (JobDto jobDTO : jobDtos) {
-            Map<String,Object> map = new LinkedHashMap<>();
+            Map<String, Object> map = new LinkedHashMap<>();
             map.put("岗位名称", jobDTO.getName());
             map.put("岗位状态", jobDTO.getEnabled() ? "启用" : "停用");
             map.put("创建日期", jobDTO.getCreateTime());
@@ -118,7 +123,7 @@ public class JobServiceImpl implements JobService {
 
     @Override
     public void verification(Set<Long> ids) {
-        if(userRepository.countByJobs(ids) > 0){
+        if (userRepository.countByJobs(ids) > 0) {
             throw new BadRequestException("所选的岗位中存在用户关联，请解除关联再试！");
         }
     }
