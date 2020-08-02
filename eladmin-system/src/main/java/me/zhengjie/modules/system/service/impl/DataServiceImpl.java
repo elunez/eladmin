@@ -65,7 +65,7 @@ public class DataServiceImpl implements DataService {
                     deptIds.addAll(getCustomize(deptIds, role));
                     break;
                 default:
-                    break;
+                    return new ArrayList<>(deptIds);
             }
         }
         return new ArrayList<>(deptIds);
