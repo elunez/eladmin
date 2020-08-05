@@ -21,6 +21,7 @@ import me.zhengjie.modules.security.service.dto.JwtUserDto;
 import me.zhengjie.modules.security.service.dto.OnlineUserDto;
 import me.zhengjie.utils.*;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -173,4 +174,17 @@ public class OnlineUserService {
         }
     }
 
+    /**
+     * 根据用户名强退用户
+     * @param username /
+     */
+    @Async
+    public void kickOutForUsername(String username) {
+        List<OnlineUserDto> onlineUsers = getAll(username);
+        for (OnlineUserDto onlineUser : onlineUsers) {
+            if (onlineUser.getUserName().equals(username)) {
+                kickOut(onlineUser.getKey());
+            }
+        }
+    }
 }
