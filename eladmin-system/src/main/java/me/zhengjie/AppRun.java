@@ -15,7 +15,6 @@
  */
 package me.zhengjie;
 
-import io.swagger.annotations.Api;
 import me.zhengjie.annotation.rest.AnonymousGetMapping;
 import me.zhengjie.utils.SpringContextHolder;
 import org.mybatis.spring.annotation.MapperScan;
@@ -28,6 +27,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * 开启审计功能 -> @EnableJpaAuditing
@@ -35,9 +35,9 @@ import org.springframework.web.bind.annotation.RestController;
  * @author Zheng Jie
  * @date 2018/11/15 9:20:19
  */
+@ApiIgnore
 @EnableAsync
 @RestController
-@Api(hidden = true)
 @SpringBootApplication
 @EnableTransactionManagement
 @EnableJpaAuditing(auditorAwareRef = "auditorAware")
