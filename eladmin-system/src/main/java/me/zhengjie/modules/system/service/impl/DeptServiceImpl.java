@@ -258,7 +258,7 @@ public class DeptServiceImpl implements DeptService {
         for (DeptDto deptDto : list) {
             boolean flag = true;
             for (DeptDto dto : list) {
-                if (deptDto.getPid().equals(dto.getId())) {
+                if (deptDto.getPid()!= null && deptDto.getPid().equals(dto.getId())) {
                     flag = false;
                     break;
                 }
