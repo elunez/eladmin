@@ -109,7 +109,7 @@ public class JobServiceImpl implements JobService {
         for (JobDto jobDTO : jobDtos) {
             Map<String,Object> map = new LinkedHashMap<>();
             map.put("岗位名称", jobDTO.getName());
-            map.put("岗位状态", jobDTO.getEnabled() ? "启用" : "停用");
+            map.put("岗位状态", jobDTO.getEnabled() == 1 ? "启用" : "停用");
             map.put("创建日期", jobDTO.getCreateTime());
             list.add(map);
         }

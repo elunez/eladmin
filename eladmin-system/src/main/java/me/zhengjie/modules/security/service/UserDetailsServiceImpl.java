@@ -72,7 +72,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             if (user == null) {
                 throw new UsernameNotFoundException("");
             } else {
-                if (!user.getEnabled()) {
+                if (!(user.getEnabled() == 1)) {
                     throw new BadRequestException("账号未激活！");
                 }
                 jwtUserDto = new JwtUserDto(

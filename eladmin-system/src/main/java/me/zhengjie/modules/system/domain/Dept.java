@@ -58,7 +58,7 @@ public class Dept extends BaseEntity implements Serializable {
 
     @NotNull
     @ApiModelProperty(value = "是否启用")
-    private Boolean enabled;
+    private Integer enabled;
 
     @ApiModelProperty(value = "上级部门")
     private Long pid;

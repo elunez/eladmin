@@ -33,7 +33,7 @@ public class DeptQueryCriteria{
     private String name;
 
     @Query
-    private Boolean enabled;
+    private Integer enabled;
 
     @Query
     private Long pid;

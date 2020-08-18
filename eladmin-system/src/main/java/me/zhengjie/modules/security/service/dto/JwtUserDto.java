@@ -77,6 +77,6 @@ public class JwtUserDto implements UserDetails {
     @Override
     @JsonIgnore
     public boolean isEnabled() {
-        return user.getEnabled();
+        return user.getEnabled() == 1;
     }
 }

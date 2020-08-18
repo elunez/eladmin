@@ -54,7 +54,7 @@ public class Job extends BaseEntity implements Serializable {
 
     @NotNull
     @ApiModelProperty(value = "是否启用")
-    private Boolean enabled;
+    private Integer enabled;
 
     @Override
     public boolean equals(Object o) {

@@ -38,10 +38,10 @@ public class JobDto extends BaseDTO implements Serializable {
 
     private String name;
 
-    private Boolean enabled;
+    private Integer enabled;
 
     public JobDto(String name, Boolean enabled) {
         this.name = name;
-        this.enabled = enabled;
+        this.enabled = enabled ? 1 : 0;
     }
 }

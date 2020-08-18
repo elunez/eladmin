@@ -35,7 +35,7 @@ public class DeptDto extends BaseDTO implements Serializable {
 
     private String name;
 
-    private Boolean enabled;
+    private Integer enabled;
 
     private Integer deptSort;
 

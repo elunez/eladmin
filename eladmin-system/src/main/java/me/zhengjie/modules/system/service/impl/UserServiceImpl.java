@@ -120,7 +120,7 @@ public class UserServiceImpl implements UserService {
             redisUtils.del("user::username:" + user.getUsername());
         }
         // 如果用户被禁用，则清除用户登录信息
-        if(!resources.getEnabled()){
+        if(!(resources.getEnabled() == 1)){
             onlineUserService.kickOutForUsername(resources.getUsername());
         }
         user.setUsername(resources.getUsername());
@@ -218,7 +218,7 @@ public class UserServiceImpl implements UserService {
             map.put("部门", userDTO.getDept().getName());
             map.put("岗位", userDTO.getJobs().stream().map(JobSmallDto::getName).collect(Collectors.toList()));
             map.put("邮箱", userDTO.getEmail());
-            map.put("状态", userDTO.getEnabled() ? "启用" : "禁用");
+            map.put("状态", userDTO.getEnabled() == 1 ? "启用" : "禁用");
             map.put("手机号码", userDTO.getPhone());
             map.put("修改密码的时间", userDTO.getPwdResetTime());
             map.put("创建日期", userDTO.getCreateTime());

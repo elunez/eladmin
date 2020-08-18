@@ -49,7 +49,7 @@ public class DictDetail extends BaseEntity implements Serializable {
     private String label;
 
     @ApiModelProperty(value = "字典值")
-    private String value;
+    private Integer value;
 
     @ApiModelProperty(value = "排序")
     private Integer dictSort = 999;

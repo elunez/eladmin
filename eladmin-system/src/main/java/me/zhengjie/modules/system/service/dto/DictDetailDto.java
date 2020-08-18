@@ -35,7 +35,7 @@ public class DictDetailDto extends BaseDTO implements Serializable {
 
     private String label;
 
-    private String value;
+    private Integer value;
 
     private Integer dictSort;
 }

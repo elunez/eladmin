@@ -58,7 +58,7 @@ public class UserDto extends BaseDTO implements Serializable {
     @JsonIgnore
     private String password;
 
-    private Boolean enabled;
+    private Integer enabled;
 
     @JsonIgnore
     private Boolean isAdmin = false;
