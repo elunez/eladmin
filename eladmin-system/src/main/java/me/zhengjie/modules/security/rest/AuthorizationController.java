@@ -120,10 +120,10 @@ public class AuthorizationController {
         // 获取运算的结果
         Captcha captcha = loginProperties.getCaptcha();
         String uuid = properties.getCodeKey() + IdUtil.simpleUUID();
-        //当验证码类型为 arithmetic时，运算结果为0时，captcha.text()的结果为0.0
+        //当验证码类型为 arithmetic时且长度 >= 2 时，captcha.text()的结果有几率为浮点型
         String captchaValue = captcha.text();
-        if (captcha.getCharType() - 1 == LoginCodeEnum.arithmetic.ordinal() & captchaValue.equalsIgnoreCase("0.0")) {
-            captchaValue = "0";
+        if (captcha.getCharType() - 1 == LoginCodeEnum.arithmetic.ordinal() & captchaValue.contains(".")) {
+            captchaValue = captchaValue.split("\\.")[0];
         }
         // 保存
         redisUtils.set(uuid, captchaValue, loginProperties.getLoginCode().getExpiration(), TimeUnit.MINUTES);
