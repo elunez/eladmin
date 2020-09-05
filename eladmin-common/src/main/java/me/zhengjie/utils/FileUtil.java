@@ -43,7 +43,9 @@ import java.util.Map;
  * @date 2018-12-27
  */
 public class FileUtil extends cn.hutool.core.io.FileUtil {
+
     private static final Logger log = LoggerFactory.getLogger(FileUtil.class);
+
     /**
      * 系统临时目录
      * <br>
@@ -74,6 +76,13 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
      * 格式化小数
      */
     private static final DecimalFormat DF = new DecimalFormat("0.00");
+
+    public static final String IMAGE = "图片";
+    public static final String TXT = "文档";
+    public static final String MUSIC = "音乐";
+    public static final String VIDEO = "视频";
+    public static final String OTHER = "其他";
+
 
     /**
      * MultipartFile转File
@@ -217,15 +226,15 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
         String video = "avi mpg mpe mpeg asf wmv mov qt rm mp4 flv m4v webm ogv ogg";
         String image = "bmp dib pcp dif wmf gif jpg tif eps psd cdr iff tga pcd mpt png jpeg";
         if (image.contains(type)) {
-            return "图片";
+            return IMAGE;
         } else if (documents.contains(type)) {
-            return "文档";
+            return TXT;
         } else if (music.contains(type)) {
-            return "音乐";
+            return MUSIC;
         } else if (video.contains(type)) {
-            return "视频";
+            return VIDEO;
         } else {
-            return "其他";
+            return OTHER;
         }
     }
 

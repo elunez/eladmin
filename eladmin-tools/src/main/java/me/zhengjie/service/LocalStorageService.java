@@ -56,8 +56,9 @@ public interface LocalStorageService {
      * 上传
      * @param name 文件名称
      * @param file 文件
+     * @return
      */
-    void create(String name, MultipartFile file);
+    LocalStorage create(String name, MultipartFile file);
 
     /**
      * 编辑
