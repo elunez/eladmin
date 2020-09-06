@@ -96,7 +96,6 @@ public class DeptServiceImpl implements DeptService {
     }
 
     @Override
-    @Cacheable(key = "'pid:' + #p0")
     public List<Dept> findByPid(long pid) {
         return deptRepository.findByPid(pid);
     }
@@ -113,7 +112,6 @@ public class DeptServiceImpl implements DeptService {
         // 计算子节点数目
         resources.setSubCount(0);
         // 清理缓存
-        redisUtils.del("dept::pid:" + (resources.getPid() == null ? 0 : resources.getPid()));
         updateSubCnt(resources.getPid());
     }
 
@@ -134,7 +132,7 @@ public class DeptServiceImpl implements DeptService {
         updateSubCnt(oldPid);
         updateSubCnt(newPid);
         // 清理缓存
-        delCaches(resources.getId(), oldPid, newPid);
+        delCaches(resources.getId());
     }
 
     @Override
@@ -142,7 +140,7 @@ public class DeptServiceImpl implements DeptService {
     public void delete(Set<DeptDto> deptDtos) {
         for (DeptDto deptDto : deptDtos) {
             // 清理缓存
-            delCaches(deptDto.getId(), deptDto.getPid(), null);
+            delCaches(deptDto.getId());
             deptRepository.deleteById(deptDto.getId());
             updateSubCnt(deptDto.getPid());
         }
@@ -273,15 +271,11 @@ public class DeptServiceImpl implements DeptService {
     /**
      * 清理缓存
      * @param id /
-     * @param oldPid /
-     * @param newPid /
      */
-    public void delCaches(Long id, Long oldPid, Long newPid){
+    public void delCaches(Long id){
         List<User> users = userRepository.findByDeptRoleId(id);
         // 删除数据权限
         redisUtils.delByKeys("data::user:",users.stream().map(User::getId).collect(Collectors.toSet()));
         redisUtils.del("dept::id:" + id);
-        redisUtils.del("dept::pid:" + (oldPid == null ? 0 : oldPid));
-        redisUtils.del("dept::pid:" + (newPid == null ? 0 : newPid));
     }
 }
