@@ -84,6 +84,7 @@ public class GenUtil {
         List<Map<String, Object>> genList = new ArrayList<>();
         // 获取后端模版
         List<String> templates = getAdminTemplateNames();
+        templates.add("SQL");
         TemplateEngine engine = TemplateUtil.createEngine(new TemplateConfig("template", TemplateConfig.ResourceMode.CLASSPATH));
         for (String templateName : templates) {
             Map<String, Object> map = new HashMap<>(1);
