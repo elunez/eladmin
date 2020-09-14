@@ -3,3 +3,4 @@
 *.iml
 */target/*
 */*.iml
+/.gradle/
