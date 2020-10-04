@@ -49,7 +49,7 @@ login:
   # 登录缓存
   cache-enable: true
   #  是否限制单用户登录
-  single: false
+  single-login: false
   #  验证码
   login-code:
     #  验证码类型配置 查看 LoginProperties 类
