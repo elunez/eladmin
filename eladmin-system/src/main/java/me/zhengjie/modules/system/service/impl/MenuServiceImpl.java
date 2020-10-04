@@ -128,7 +128,6 @@ public class MenuServiceImpl implements MenuService {
         resources.setSubCount(0);
         // 更新父节点菜单数目
         updateSubCnt(resources.getPid());
-        redisUtils.del("menu::pid:" + (resources.getPid() == null ? 0 : resources.getPid()));
     }
 
     @Override
@@ -183,7 +182,7 @@ public class MenuServiceImpl implements MenuService {
         updateSubCnt(oldPid);
         updateSubCnt(newPid);
         // 清理缓存
-        delCaches(resources.getId(), oldPid, newPid);
+        delCaches(resources.getId());
     }
 
     @Override
@@ -204,7 +203,7 @@ public class MenuServiceImpl implements MenuService {
     public void delete(Set<Menu> menuSet) {
         for (Menu menu : menuSet) {
             // 清理缓存
-            delCaches(menu.getId(), menu.getPid(), null);
+            delCaches(menu.getId());
             roleService.untiedMenu(menu.getId());
             menuRepository.deleteById(menu.getId());
             updateSubCnt(menu.getPid());
@@ -212,7 +211,6 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
-    @Cacheable(key = "'pid:' + #p0")
     public List<MenuDto> getMenus(Long pid) {
         List<Menu> menus;
         if(pid != null && !pid.equals(0L)){
@@ -341,19 +339,14 @@ public class MenuServiceImpl implements MenuService {
     /**
      * 清理缓存
      * @param id 菜单ID
-     * @param oldPid 旧的菜单父级ID
-     * @param newPid 新的菜单父级ID
      */
-    public void delCaches(Long id, Long oldPid, Long newPid){
+    public void delCaches(Long id){
         List<User> users = userRepository.findByMenuId(id);
         redisUtils.del("menu::id:" +id);
         redisUtils.delByKeys("menu::user:",users.stream().map(User::getId).collect(Collectors.toSet()));
-        redisUtils.del("menu::pid:" + (oldPid == null ? 0 : oldPid));
-        redisUtils.del("menu::pid:" + (newPid == null ? 0 : newPid));
         // 清除 Role 缓存
         List<Role> roles = roleService.findInMenuId(new ArrayList<Long>(){{
             add(id);
-            add(newPid == null ? 0 : newPid);
         }});
         redisUtils.delByKeys("role::id:",roles.stream().map(Role::getId).collect(Collectors.toSet()));
     }

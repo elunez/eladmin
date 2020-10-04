@@ -13,6 +13,8 @@
 
 **开发文档：**  [https://el-admin.vip](https://el-admin.vip)
 
+**备用文档：**  [https://doc.el-admin.xin](https://doc.el-admin.xin)
+
 **体验地址：**  [https://el-admin.xin](https://el-admin.xin)
 
 **账号密码：** `admin / 123456`
@@ -48,7 +50,6 @@
 - 定时任务：整合Quartz做定时任务，加入任务日志，任务运行情况一目了然
 - 代码生成：高灵活度生成前后端代码，减少大量重复的工作任务
 - 邮件工具：配合富文本，发送html格式的邮件
-- 免费图床：使用sm.ms图床，用作公共图片上传使用，该图床不怎么稳定，不太建议使用
 - 七牛云存储：可同步七牛云存储的数据到系统，无需登录七牛云直接操作云数据
 - 支付宝支付：整合了支付宝支付并且提供了测试账号，可自行测试
 - 服务监控：监控服务器的负载情况
@@ -89,20 +90,20 @@
 #### 系统预览
 <table>
     <tr>
-        <td><img src="https://img.el-admin.xin/20200605172248.png"/></td>
-        <td><img src="https://img.el-admin.xin/20200605172339.png"/></td>
+        <td><img src="https://img.el-admin.vip/images/2020/09/05/image.png" alt="image.png" border="0" /></td>
+        <td><img src="https://img.el-admin.vip/images/2020/09/05/image1fdb6befae2368c8.png" alt="image1fdb6befae2368c8.png" border="0" /></td>
     </tr>
     <tr>
-        <td><img src="https://img.el-admin.xin/20200605172432.png"/></td>
-        <td><img src="https://img.el-admin.xin/20200605172455.png"/></td>
+        <td><img src="https://img.el-admin.vip/images/2020/09/05/image80b090dc27faea86.png" alt="image80b090dc27faea86.png" border="0" /></td>
+        <td><img src="https://img.el-admin.vip/images/2020/09/05/imagec7e0a6b8701cd890.png" alt="imagec7e0a6b8701cd890.png" border="0" /></td>
     </tr>
     <tr>
-        <td><img src="https://img.el-admin.xin/20200605172536.png"/></td>
-        <td><img src="https://img.el-admin.xin/20200605172558.png"/></td>
+        <td><img src="https://img.el-admin.vip/images/2020/09/05/imageff0d9e4ab8d3674c.png" alt="imageff0d9e4ab8d3674c.png" border="0" /></td>
+        <td><img src="https://img.el-admin.vip/images/2020/09/05/image923ef574ace41404.png" alt="image923ef574ace41404.png" border="0" /></td>
     </tr>
     <tr>
-        <td><img src="https://img.el-admin.xin/20200605172645.png"/></td>
-        <td><img src="https://img.el-admin.xin/20200605172715.png"/></td>
+        <td><img src="https://img.el-admin.vip/images/2020/09/05/imagef37b559927af1a10.png" alt="imagef37b559927af1a10.png" border="0" /></td>
+        <td><img src="https://img.el-admin.vip/images/2020/09/05/imageabafc6a7f0522967.png" alt="imageabafc6a7f0522967.png" border="0" /></td>
     </tr>
 </table>
 

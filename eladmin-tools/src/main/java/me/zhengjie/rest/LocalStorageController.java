@@ -18,8 +18,11 @@ package me.zhengjie.rest;
 import lombok.RequiredArgsConstructor;
 import me.zhengjie.annotation.Log;
 import me.zhengjie.domain.LocalStorage;
+import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.service.LocalStorageService;
 import me.zhengjie.service.dto.LocalStorageQueryCriteria;
+import me.zhengjie.utils.FileUtil;
+import me.zhengjie.utils.SecurityUtils;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -65,6 +68,19 @@ public class LocalStorageController {
     public ResponseEntity<Object> create(@RequestParam String name, @RequestParam("file") MultipartFile file){
         localStorageService.create(name, file);
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @Log("上传图片")
+    @PostMapping("/pictures")
+    @ApiOperation("上传图片")
+    public ResponseEntity<Object> upload(@RequestParam MultipartFile file){
+        // 判断文件是否为图片
+        String suffix = FileUtil.getExtensionName(file.getOriginalFilename());
+        if(!FileUtil.IMAGE.equals(FileUtil.getFileType(suffix))){
+            throw new BadRequestException("只能上传图片");
+        }
+        LocalStorage localStorage = localStorageService.create(null, file);
+        return new ResponseEntity<>(localStorage, HttpStatus.OK);
     }
 
     @ApiOperation("修改文件")

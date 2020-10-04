@@ -7,7 +7,7 @@
     <groupId>me.zhengjie</groupId>
     <artifactId>eladmin</artifactId>
     <packaging>pom</packaging>
-    <version>2.5</version>
+    <version>2.6</version>
 
     <modules>
         <module>eladmin-common</module>
