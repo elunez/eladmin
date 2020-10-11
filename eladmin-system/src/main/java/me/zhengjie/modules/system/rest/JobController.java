@@ -47,7 +47,6 @@ public class JobController {
     private final JobService jobService;
     private static final String ENTITY_NAME = "job";
 
-    @Log("导出岗位数据")
     @ApiOperation("导出岗位数据")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('job:list')")
@@ -55,7 +54,6 @@ public class JobController {
         jobService.download(jobService.queryAll(criteria), response);
     }
 
-    @Log("查询岗位")
     @ApiOperation("查询岗位")
     @GetMapping
     @PreAuthorize("@el.check('job:list','user:list')")

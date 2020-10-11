@@ -42,7 +42,6 @@ public class DeployHistoryController {
 
     private final DeployHistoryService deployhistoryService;
 
-    @Log("导出部署历史数据")
     @ApiOperation("导出部署历史数据")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('deployHistory:list')")
@@ -50,7 +49,6 @@ public class DeployHistoryController {
         deployhistoryService.download(deployhistoryService.queryAll(criteria), response);
     }
 
-    @Log("查询部署历史")
     @ApiOperation(value = "查询部署历史")
     @GetMapping
 	@PreAuthorize("@el.check('deployHistory:list')")

@@ -52,7 +52,6 @@ public class DatabaseController {
 	private final String fileSavePath = FileUtil.getTmpDirPath()+"/";
     private final DatabaseService databaseService;
 
-	@Log("导出数据库数据")
 	@ApiOperation("导出数据库数据")
 	@GetMapping(value = "/download")
 	@PreAuthorize("@el.check('database:list')")
@@ -60,7 +59,6 @@ public class DatabaseController {
 		databaseService.download(databaseService.queryAll(criteria), response);
 	}
 
-    @Log("查询数据库")
     @ApiOperation(value = "查询数据库")
     @GetMapping
 	@PreAuthorize("@el.check('database:list')")

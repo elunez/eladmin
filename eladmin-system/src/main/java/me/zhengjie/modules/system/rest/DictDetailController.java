@@ -50,7 +50,6 @@ public class DictDetailController {
     private final DictDetailService dictDetailService;
     private static final String ENTITY_NAME = "dictDetail";
 
-    @Log("查询字典详情")
     @ApiOperation("查询字典详情")
     @GetMapping
     public ResponseEntity<Object> query(DictDetailQueryCriteria criteria,
@@ -58,7 +57,6 @@ public class DictDetailController {
         return new ResponseEntity<>(dictDetailService.queryAll(criteria,pageable),HttpStatus.OK);
     }
 
-    @Log("查询多个字典详情")
     @ApiOperation("查询多个字典详情")
     @GetMapping(value = "/map")
     public ResponseEntity<Object> getDictDetailMaps(@RequestParam String dictName){

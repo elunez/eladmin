@@ -71,7 +71,6 @@ public class AuthorizationController {
     @Resource
     private LoginProperties loginProperties;
 
-    @Log("用户登录")
     @ApiOperation("登录授权")
     @AnonymousPostMapping(value = "/login")
     public ResponseEntity<Object> login(@Validated @RequestBody AuthUserDto authUser, HttpServletRequest request) throws Exception {

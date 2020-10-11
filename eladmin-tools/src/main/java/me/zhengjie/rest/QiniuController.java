@@ -63,14 +63,12 @@ public class QiniuController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @Log("导出数据")
     @ApiOperation("导出数据")
     @GetMapping(value = "/download")
     public void download(HttpServletResponse response, QiniuQueryCriteria criteria) throws IOException {
         qiNiuService.downloadList(qiNiuService.queryAll(criteria), response);
     }
 
-    @Log("查询文件")
     @ApiOperation("查询文件")
     @GetMapping
     public ResponseEntity<Object> query(QiniuQueryCriteria criteria, Pageable pageable){

@@ -17,7 +17,6 @@ package me.zhengjie.modules.security.service.dto;
 
 import lombok.Getter;
 import lombok.Setter;
-
 import javax.validation.constraints.NotBlank;
 
 /**
@@ -37,9 +36,4 @@ public class AuthUserDto {
     private String code;
 
     private String uuid = "";
-
-    @Override
-    public String toString() {
-        return "{username=" + username  + ", password= ******}";
-    }
 }

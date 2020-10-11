@@ -46,7 +46,6 @@ public class DictController {
     private final DictService dictService;
     private static final String ENTITY_NAME = "dict";
 
-    @Log("导出字典数据")
     @ApiOperation("导出字典数据")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('dict:list')")
@@ -54,7 +53,6 @@ public class DictController {
         dictService.download(dictService.queryAll(criteria), response);
     }
 
-    @Log("查询字典")
     @ApiOperation("查询字典")
     @GetMapping(value = "/all")
     @PreAuthorize("@el.check('dict:list')")
@@ -62,7 +60,6 @@ public class DictController {
         return new ResponseEntity<>(dictService.queryAll(new DictQueryCriteria()),HttpStatus.OK);
     }
 
-    @Log("查询字典")
     @ApiOperation("查询字典")
     @GetMapping
     @PreAuthorize("@el.check('dict:list')")

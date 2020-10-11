@@ -18,6 +18,7 @@ package me.zhengjie.service.impl;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 import lombok.RequiredArgsConstructor;
 import me.zhengjie.domain.Log;
 import me.zhengjie.repository.LogRepository;
@@ -34,10 +35,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.util.*;
 
 /**
@@ -84,13 +88,6 @@ public class LogServiceImpl implements LogService {
         // 方法路径
         String methodName = joinPoint.getTarget().getClass().getName() + "." + signature.getName() + "()";
 
-        StringBuilder params = new StringBuilder("{");
-        //参数值
-        List<Object> argValues = new ArrayList<>(Arrays.asList(joinPoint.getArgs()));
-        //参数名称
-        for (Object argValue : argValues) {
-            params.append(argValue).append(" ");
-        }
         // 描述
         if (log != null) {
             log.setDescription(aopLog.value());
@@ -98,20 +95,42 @@ public class LogServiceImpl implements LogService {
         assert log != null;
         log.setRequestIp(ip);
 
-        String loginPath = "login";
-        if (loginPath.equals(signature.getName())) {
-            try {
-                username = new JSONObject(argValues.get(0)).get("username").toString();
-            } catch (Exception e) {
-                LogServiceImpl.log.error(e.getMessage(), e);
-            }
-        }
         log.setAddress(StringUtils.getCityInfo(log.getRequestIp()));
         log.setMethod(methodName);
         log.setUsername(username);
-        log.setParams(params.toString() + " }");
+        log.setParams(getParameter(method, joinPoint.getArgs()));
         log.setBrowser(browser);
         logRepository.save(log);
+    }
+
+    /**
+     * 根据方法和传入的参数获取请求参数
+     */
+    private String getParameter(Method method, Object[] args) {
+        List<Object> argList = new ArrayList<>();
+        Parameter[] parameters = method.getParameters();
+        for (int i = 0; i < parameters.length; i++) {
+            //将RequestBody注解修饰的参数作为请求参数
+            RequestBody requestBody = parameters[i].getAnnotation(RequestBody.class);
+            if (requestBody != null) {
+                argList.add(args[i]);
+            }
+            //将RequestParam注解修饰的参数作为请求参数
+            RequestParam requestParam = parameters[i].getAnnotation(RequestParam.class);
+            if (requestParam != null) {
+                Map<String, Object> map = new HashMap<>();
+                String key = parameters[i].getName();
+                if (!StringUtils.isEmpty(requestParam.value())) {
+                    key = requestParam.value();
+                }
+                map.put(key, args[i]);
+                argList.add(map);
+            }
+        }
+        if (argList.size() == 0) {
+            return "";
+        }
+        return argList.size() == 1 ? JSONUtil.toJsonStr(argList.get(0)) : JSONUtil.toJsonStr(argList);
     }
 
     @Override

@@ -44,7 +44,6 @@ public class AppController {
 
     private final AppService appService;
 
-    @Log("导出应用数据")
     @ApiOperation("导出应用数据")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('app:list')")
@@ -52,7 +51,6 @@ public class AppController {
         appService.download(appService.queryAll(criteria), response);
     }
 
-    @Log("查询应用")
     @ApiOperation(value = "查询应用")
     @GetMapping
 	@PreAuthorize("@el.check('app:list')")

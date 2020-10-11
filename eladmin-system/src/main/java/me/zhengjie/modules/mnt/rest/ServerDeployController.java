@@ -44,7 +44,6 @@ public class ServerDeployController {
 
     private final ServerDeployService serverDeployService;
 
-    @Log("导出服务器数据")
     @ApiOperation("导出服务器数据")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('serverDeploy:list')")
@@ -52,7 +51,6 @@ public class ServerDeployController {
         serverDeployService.download(serverDeployService.queryAll(criteria), response);
     }
 
-    @Log("查询服务器")
     @ApiOperation(value = "查询服务器")
     @GetMapping
 	@PreAuthorize("@el.check('serverDeploy:list')")
