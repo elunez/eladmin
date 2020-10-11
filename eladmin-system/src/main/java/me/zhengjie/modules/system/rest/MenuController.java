@@ -35,6 +35,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author Zheng Jie
@@ -71,6 +72,18 @@ public class MenuController {
     @PreAuthorize("@el.check('menu:list','roles:list')")
     public ResponseEntity<Object> query(@RequestParam Long pid){
         return new ResponseEntity<>(menuService.getMenus(pid),HttpStatus.OK);
+    }
+
+    @ApiOperation("根据菜单ID返回所有子节点ID，包含自身ID")
+    @GetMapping(value = "/child")
+    @PreAuthorize("@el.check('menu:list','roles:list')")
+    public ResponseEntity<Object> child(@RequestParam Long id){
+        Set<Menu> menuSet = new HashSet<>();
+        List<MenuDto> menuList = menuService.getMenus(id);
+        menuSet.add(menuService.findOne(id));
+        menuSet = menuService.getChildMenus(menuMapper.toEntity(menuList), menuSet);
+        Set<Long> ids = menuSet.stream().map(Menu::getId).collect(Collectors.toSet());
+        return new ResponseEntity<>(ids,HttpStatus.OK);
     }
 
     @GetMapping
@@ -126,7 +139,7 @@ public class MenuController {
         for (Long id : ids) {
             List<MenuDto> menuList = menuService.getMenus(id);
             menuSet.add(menuService.findOne(id));
-            menuSet = menuService.getDeleteMenus(menuMapper.toEntity(menuList), menuSet);
+            menuSet = menuService.getChildMenus(menuMapper.toEntity(menuList), menuSet);
         }
         menuService.delete(menuSet);
         return new ResponseEntity<>(HttpStatus.OK);
