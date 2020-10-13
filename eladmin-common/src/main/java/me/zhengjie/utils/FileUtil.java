@@ -21,6 +21,7 @@ import cn.hutool.poi.excel.BigExcelWriter;
 import cn.hutool.poi.excel.ExcelUtil;
 import me.zhengjie.exception.BadRequestException;
 import org.apache.poi.util.IOUtils;
+import org.apache.poi.xssf.streaming.SXSSFSheet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
@@ -208,6 +209,11 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
         BigExcelWriter writer = ExcelUtil.getBigWriter(file);
         // 一次性写出内容，使用默认样式，强制输出标题
         writer.write(list, true);
+        SXSSFSheet sheet = (SXSSFSheet)writer.getSheet();
+        //上面需要强转SXSSFSheet  不然没有trackAllColumnsForAutoSizing方法
+        sheet.trackAllColumnsForAutoSizing();
+        //列宽自适应
+        writer.autoSizeColumnAll();
         //response为HttpServletResponse对象
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8");
         //test.xls是弹出下载对话框的文件名，不能为中文，中文请自行编码
