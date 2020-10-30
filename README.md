@@ -111,6 +111,8 @@
 
 - 感谢 [JetBrains](https://www.jetbrains.com/) 提供的非商业开源软件开发授权
 
+- 感谢 [七牛云](https://www.qiniu.com/) 提供云存储支持
+
 - 感谢 [PanJiaChen](https://github.com/PanJiaChen/vue-element-admin) 大佬提供的前端模板
 
 - 感谢 [Moxun](https://github.com/moxun1639) 大佬提供的前端 Curd 通用组件
