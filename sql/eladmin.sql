@@ -509,7 +509,7 @@ CREATE TABLE `sys_role` (
 -- Records of sys_role
 -- ----------------------------
 BEGIN;
-INSERT INTO `sys_role` VALUES (1, '超级管理员', 1, '-', '自定义', NULL, 'admin', '2018-11-23 11:04:37', '2020-08-06 16:10:24');
+INSERT INTO `sys_role` VALUES (1, '超级管理员', 1, '-', '全部', NULL, 'admin', '2018-11-23 11:04:37', '2020-08-06 16:10:24');
 INSERT INTO `sys_role` VALUES (2, '普通用户', 2, '-', '自定义', NULL, 'admin', '2018-11-23 13:09:06', '2020-09-05 10:45:12');
 COMMIT;
 
@@ -528,8 +528,6 @@ CREATE TABLE `sys_roles_depts` (
 -- Records of sys_roles_depts
 -- ----------------------------
 BEGIN;
-INSERT INTO `sys_roles_depts` VALUES (1, 7);
-INSERT INTO `sys_roles_depts` VALUES (1, 8);
 INSERT INTO `sys_roles_depts` VALUES (2, 6);
 COMMIT;
 
