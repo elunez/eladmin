@@ -154,6 +154,9 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public Integer findByRoles(Set<Role> roles) {
+        if (roles.size() == 0) {
+            return Integer.MAX_VALUE;
+        }
         Set<RoleDto> roleDtos = new HashSet<>();
         for (Role role : roles) {
             roleDtos.add(findById(role.getId()));
