@@ -91,6 +91,9 @@ public class UserServiceImpl implements UserService {
         if (userRepository.findByEmail(resources.getEmail()) != null) {
             throw new EntityExistException(User.class, "email", resources.getEmail());
         }
+        if (userRepository.findByPhone(resources.getPhone()) != null) {
+            throw new EntityExistException(User.class, "phone", resources.getPhone());
+        }
         userRepository.save(resources);
     }
 
@@ -101,13 +104,15 @@ public class UserServiceImpl implements UserService {
         ValidationUtil.isNull(user.getId(), "User", "id", resources.getId());
         User user1 = userRepository.findByUsername(resources.getUsername());
         User user2 = userRepository.findByEmail(resources.getEmail());
-
+        User user3 = userRepository.findByPhone(resources.getPhone());
         if (user1 != null && !user.getId().equals(user1.getId())) {
             throw new EntityExistException(User.class, "username", resources.getUsername());
         }
-
         if (user2 != null && !user.getId().equals(user2.getId())) {
             throw new EntityExistException(User.class, "email", resources.getEmail());
+        }
+        if (user3 != null && !user.getId().equals(user3.getId())) {
+            throw new EntityExistException(User.class, "phone", resources.getPhone());
         }
         // 如果用户的角色改变
         if (!resources.getRoles().equals(user.getRoles())) {
@@ -141,6 +146,10 @@ public class UserServiceImpl implements UserService {
     @Transactional(rollbackFor = Exception.class)
     public void updateCenter(User resources) {
         User user = userRepository.findById(resources.getId()).orElseGet(User::new);
+        User user1 = userRepository.findByPhone(resources.getPhone());
+        if (user1 != null && !user.getId().equals(user1.getId())) {
+            throw new EntityExistException(User.class, "phone", resources.getPhone());
+        }
         user.setNickName(resources.getNickName());
         user.setPhone(resources.getPhone());
         user.setGender(resources.getGender());
