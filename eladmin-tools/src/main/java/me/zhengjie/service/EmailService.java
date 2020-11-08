@@ -17,7 +17,6 @@ package me.zhengjie.service;
 
 import me.zhengjie.domain.vo.EmailVo;
 import me.zhengjie.domain.EmailConfig;
-import org.springframework.scheduling.annotation.Async;
 
 /**
  * @author Zheng Jie

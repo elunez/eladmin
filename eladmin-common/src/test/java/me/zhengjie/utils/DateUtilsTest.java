@@ -10,7 +10,7 @@ public class DateUtilsTest {
     public void test1() {
         long l = System.currentTimeMillis() / 1000;
         LocalDateTime localDateTime = DateUtil.fromTimeStamp(l);
-        System.out.printf(DateUtil.localDateTimeFormatyMdHms(localDateTime));
+        System.out.print(DateUtil.localDateTimeFormatyMdHms(localDateTime));
     }
 
     @Test
