@@ -11,7 +11,7 @@
 #### 项目简介
 一个基于 Spring Boot 2.1.0 、 Spring Boot Jpa、 JWT、Spring Security、Redis、Vue的前后端分离的后台管理系统
 
-**开发文档：**  [https://doc.el-admin.xin](https://doc.el-admin.xin)
+**开发文档：**  [https://el-admin.vip](https://el-admin.vip)
 
 **体验地址：**  [https://el-admin.xin](https://el-admin.xin)
 
@@ -125,4 +125,4 @@
 项目的发展离不开你的支持，请作者喝杯咖啡吧☕  [Donate](https://el-admin.vip/donation/)
 
 #### 反馈交流
-- QQ交流群：一群：<strike>891137268</strike> 已满、二群：947578238 无需验证，直接加入
+- QQ交流群：一群：<strike>891137268</strike> 已满、二群：947578238
