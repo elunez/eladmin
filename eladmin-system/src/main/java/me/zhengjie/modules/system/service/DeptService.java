@@ -111,11 +111,10 @@ public interface DeptService {
 
     /**
      * 获取
-     * @param deptId
      * @param deptList
      * @return
      */
-    List<Long> getDeptChildren(Long deptId, List<Dept> deptList);
+    List<Long> getDeptChildren(List<Dept> deptList);
 
     /**
      * 验证是否被角色或用户关联
