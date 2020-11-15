@@ -79,8 +79,7 @@ public class UserController {
     public ResponseEntity<Object> query(UserQueryCriteria criteria, Pageable pageable){
         if (!ObjectUtils.isEmpty(criteria.getDeptId())) {
             criteria.getDeptIds().add(criteria.getDeptId());
-            criteria.getDeptIds().addAll(deptService.getDeptChildren(criteria.getDeptId(),
-                    deptService.findByPid(criteria.getDeptId())));
+            criteria.getDeptIds().addAll(deptService.getDeptChildren(deptService.findByPid(criteria.getDeptId())));
         }
         // 数据权限
         List<Long> dataScopes = dataService.getDeptIds(userService.findByName(SecurityUtils.getCurrentUsername()));

@@ -172,13 +172,13 @@ public class DeptServiceImpl implements DeptService {
     }
 
     @Override
-    public List<Long> getDeptChildren(Long deptId, List<Dept> deptList) {
+    public List<Long> getDeptChildren(List<Dept> deptList) {
         List<Long> list = new ArrayList<>();
         deptList.forEach(dept -> {
-                    if (dept!=null && dept.getEnabled()){
+                    if (dept!=null && dept.getEnabled()) {
                         List<Dept> depts = deptRepository.findByPid(dept.getId());
-                        if(deptList.size() != 0){
-                            list.addAll(getDeptChildren(dept.getId(), depts));
+                        if (deptList.size() != 0) {
+                            list.addAll(getDeptChildren(depts));
                         }
                         list.add(dept.getId());
                     }
