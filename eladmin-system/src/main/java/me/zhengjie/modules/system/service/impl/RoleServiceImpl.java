@@ -220,7 +220,7 @@ public class RoleServiceImpl implements RoleService {
             redisUtils.delByKeys(CacheKey.DATE_USER, userIds);
             redisUtils.delByKeys(CacheKey.MENU_USER, userIds);
             redisUtils.delByKeys(CacheKey.ROLE_AUTH, userIds);
-            redisUtils.del(CacheKey.ROLE_ID + id);
         }
+        redisUtils.del(CacheKey.ROLE_ID + id);
     }
 }
