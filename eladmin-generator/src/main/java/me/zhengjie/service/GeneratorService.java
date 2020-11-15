@@ -49,7 +49,6 @@ public interface GeneratorService {
      * @param columnInfos /
      * @param columnInfoList /
      */
-    @Async
     void sync(List<ColumnInfo> columnInfos, List<ColumnInfo> columnInfoList);
 
     /**
