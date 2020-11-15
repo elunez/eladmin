@@ -50,6 +50,7 @@ public class MonitorServiceImpl implements MonitorService {
             HardwareAbstractionLayer hal = si.getHardware();
             // 系统信息
             resultMap.put("sys", getSystemInfo(os));
+
             // cpu 信息
             resultMap.put("cpu", getCpuInfo(hal.getProcessor()));
             // 内存信息

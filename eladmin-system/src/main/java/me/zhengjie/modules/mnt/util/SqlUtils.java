@@ -15,7 +15,6 @@
  */
 package me.zhengjie.modules.mnt.util;
 
-import cn.hutool.crypto.SecureUtil;
 import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.util.StringUtils;
 import com.google.common.collect.Lists;

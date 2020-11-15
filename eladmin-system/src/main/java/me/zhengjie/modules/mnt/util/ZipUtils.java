@@ -131,8 +131,7 @@ public class ZipUtils {
 		for (Enumeration<?> entries = zf.entries(); entries.hasMoreElements(); ) {
 			ZipEntry entry = ((ZipEntry) entries.nextElement());
 			InputStream in = zf.getInputStream(entry);
-			String str = folderPath;
-			File desFile = new File(str, java.net.URLEncoder.encode(entry.getName(), "UTF-8"));
+			File desFile = new File(folderPath, java.net.URLEncoder.encode(entry.getName(), "UTF-8"));
 
 			if (!desFile.exists()) {
 				File fileParentDir = desFile.getParentFile();

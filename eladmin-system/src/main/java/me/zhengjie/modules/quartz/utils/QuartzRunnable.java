@@ -27,7 +27,7 @@ import java.util.concurrent.Callable;
  * @author /
  */
 @Slf4j
-public class QuartzRunnable implements Callable {
+public class QuartzRunnable implements Callable<Object> {
 
 	private final Object target;
 	private final Method method;

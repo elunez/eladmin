@@ -23,7 +23,6 @@ import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.modules.system.domain.Job;
 import me.zhengjie.modules.system.service.JobService;
 import me.zhengjie.modules.system.service.dto.JobQueryCriteria;
-import me.zhengjie.utils.ThrowableUtil;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

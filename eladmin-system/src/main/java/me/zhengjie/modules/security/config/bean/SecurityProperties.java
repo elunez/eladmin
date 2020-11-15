@@ -16,8 +16,6 @@
 package me.zhengjie.modules.security.config.bean;
 
 import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
 
 /**
  * Jwt参数配置
