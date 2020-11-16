@@ -50,7 +50,6 @@ public class MonitorServiceImpl implements MonitorService {
             HardwareAbstractionLayer hal = si.getHardware();
             // 系统信息
             resultMap.put("sys", getSystemInfo(os));
-
             // cpu 信息
             resultMap.put("cpu", getCpuInfo(hal.getProcessor()));
             // 内存信息
@@ -75,9 +74,11 @@ public class MonitorServiceImpl implements MonitorService {
         FileSystem fileSystem = os.getFileSystem();
         List<OSFileStore> fsArray = fileSystem.getFileStores();
         for (OSFileStore fs : fsArray){
-            diskInfo.put("total", fs.getTotalSpace() > 0 ? FileUtil.getSize(fs.getTotalSpace()) : "?");
-            long used = fs.getTotalSpace() - fs.getUsableSpace();
-            diskInfo.put("available", FileUtil.getSize(fs.getUsableSpace()));
+            long available = fs.getUsableSpace();
+            long total = fs.getTotalSpace();
+            long used = total - available;
+            diskInfo.put("total", total > 0 ? FileUtil.getSize(total) : "?");
+            diskInfo.put("available", FileUtil.getSize(available));
             diskInfo.put("used", FileUtil.getSize(used));
             diskInfo.put("usageRate", df.format(used/(double)fs.getTotalSpace() * 100));
         }
@@ -91,10 +92,17 @@ public class MonitorServiceImpl implements MonitorService {
      */
     private Map<String,Object> getSwapInfo(GlobalMemory memory) {
         Map<String,Object> swapInfo = new LinkedHashMap<>();
-        swapInfo.put("total", FormatUtil.formatBytes(memory.getVirtualMemory().getSwapTotal()));
-        swapInfo.put("used", FormatUtil.formatBytes(memory.getVirtualMemory().getSwapUsed()));
-        swapInfo.put("available", FormatUtil.formatBytes(memory.getVirtualMemory().getSwapTotal() - memory.getVirtualMemory().getSwapUsed()));
-        swapInfo.put("usageRate", df.format(memory.getVirtualMemory().getSwapUsed()/(double)memory.getVirtualMemory().getSwapTotal() * 100));
+        VirtualMemory virtualMemory = memory.getVirtualMemory();
+        long total = virtualMemory.getSwapTotal();
+        long used = virtualMemory.getSwapUsed();
+        swapInfo.put("total", FormatUtil.formatBytes(total));
+        swapInfo.put("used", FormatUtil.formatBytes(used));
+        swapInfo.put("available", FormatUtil.formatBytes(total - used));
+        if(used == 0){
+            swapInfo.put("usageRate", 0);
+        } else {
+            swapInfo.put("usageRate", df.format(used/(double)total * 100));
+        }
         return swapInfo;
     }
 
