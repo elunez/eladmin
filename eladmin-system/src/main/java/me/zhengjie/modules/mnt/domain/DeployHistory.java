@@ -1,10 +1,26 @@
+/*
+ *  Copyright 2019-2020 Zheng Jie
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
 package me.zhengjie.modules.mnt.domain;
 
-import lombok.Data;
+import io.swagger.annotations.ApiModelProperty;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -14,46 +30,30 @@ import java.sql.Timestamp;
 * @date 2019-08-24
 */
 @Entity
-@Data
+@Getter
+@Setter
 @Table(name="mnt_deploy_history")
 public class DeployHistory implements Serializable {
 
-	/**
-	 * 编号
-	 */
     @Id
-    @Column(name = "id")
+    @Column(name = "history_id")
+	@ApiModelProperty(value = "ID", hidden = true)
     private String id;
 
-	/**
-	 * 应用名称
-	 */
-    @Column(name = "app_name",nullable = false)
+    @ApiModelProperty(value = "应用名称")
     private String appName;
 
-	/**
-	 * 部署IP
-	 */
-    @Column(name = "ip",nullable = false)
+	@ApiModelProperty(value = "IP")
     private String ip;
 
-	/**
-	 * 部署时间
-	 */
-    @Column(name = "deploy_date")
 	@CreationTimestamp
+	@ApiModelProperty(value = "部署时间")
     private Timestamp deployDate;
 
-	/**
-	 * 部署人员
-	 */
-    @Column(name = "deploy_user",nullable = false)
+	@ApiModelProperty(value = "部署者")
     private String deployUser;
 
-	/**
-	 * 部署编号
-	 */
-	@Column(name = "deploy_id",nullable = false)
+	@ApiModelProperty(value = "部署ID")
 	private Long deployId;
 
     public void copy(DeployHistory source){

@@ -1,9 +1,26 @@
+/*
+ *  Copyright 2019-2020 Zheng Jie
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
 package me.zhengjie.modules.mnt.util;
 
 import ch.ethz.ssh2.Connection;
 import ch.ethz.ssh2.SCPClient;
+import com.google.common.collect.Maps;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -14,20 +31,20 @@ import java.util.logging.Logger;
  */
 public class ScpClientUtil {
 
-	static private ScpClientUtil instance;
+	static private Map<String,ScpClientUtil> instance = Maps.newHashMap();
 
-	static synchronized public ScpClientUtil getInstance(String ip, int port, String username, String passward) {
-		if (instance == null) {
-			instance = new ScpClientUtil(ip, port, username, passward);
+	static synchronized public ScpClientUtil getInstance(String ip, int port, String username, String password) {
+		if (instance.get(ip) == null) {
+			instance.put(ip, new ScpClientUtil(ip, port, username, password));
 		}
-		return instance;
+		return instance.get(ip);
 	}
 
-	public ScpClientUtil(String ip, int port, String username, String passward) {
+	public ScpClientUtil(String ip, int port, String username, String password) {
 		this.ip = ip;
 		this.port = port;
 		this.username = username;
-		this.password = passward;
+		this.password = password;
 	}
 
 	public void getFile(String remoteFile, String localTargetDirectory) {

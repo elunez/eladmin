@@ -1,7 +1,23 @@
+/*
+ *  Copyright 2019-2020 Zheng Jie
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
 package me.zhengjie.rest;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
 import me.zhengjie.domain.ColumnInfo;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.service.GenConfigService;
@@ -20,40 +36,35 @@ import java.util.List;
  * @date 2019-01-02
  */
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/generator")
 @Api(tags = "系统：代码生成管理")
 public class GeneratorController {
 
     private final GeneratorService generatorService;
-
     private final GenConfigService genConfigService;
 
     @Value("${generator.enabled}")
     private Boolean generatorEnabled;
 
-    public GeneratorController(GeneratorService generatorService, GenConfigService genConfigService) {
-        this.generatorService = generatorService;
-        this.genConfigService = genConfigService;
-    }
-
     @ApiOperation("查询数据库数据")
     @GetMapping(value = "/tables/all")
-    public ResponseEntity<Object> getTables(){
+    public ResponseEntity<Object> queryTables(){
         return new ResponseEntity<>(generatorService.getTables(), HttpStatus.OK);
     }
 
     @ApiOperation("查询数据库数据")
     @GetMapping(value = "/tables")
-    public ResponseEntity<Object> getTables(@RequestParam(defaultValue = "") String name,
+    public ResponseEntity<Object> queryTables(@RequestParam(defaultValue = "") String name,
                                     @RequestParam(defaultValue = "0")Integer page,
                                     @RequestParam(defaultValue = "10")Integer size){
-        int[] startEnd = PageUtil.transToStartEnd(page+1, size);
+        int[] startEnd = PageUtil.transToStartEnd(page, size);
         return new ResponseEntity<>(generatorService.getTables(name,startEnd), HttpStatus.OK);
     }
 
     @ApiOperation("查询字段数据")
     @GetMapping(value = "/columns")
-    public ResponseEntity<Object> getTables(@RequestParam String tableName){
+    public ResponseEntity<Object> queryColumns(@RequestParam String tableName){
         List<ColumnInfo> columnInfos = generatorService.getColumns(tableName);
         return new ResponseEntity<>(PageUtil.toPage(columnInfos,columnInfos.size()), HttpStatus.OK);
     }

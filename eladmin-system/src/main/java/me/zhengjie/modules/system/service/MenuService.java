@@ -1,14 +1,27 @@
+/*
+ *  Copyright 2019-2020 Zheng Jie
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
 package me.zhengjie.modules.system.service;
 
 import me.zhengjie.modules.system.domain.Menu;
 import me.zhengjie.modules.system.service.dto.MenuDto;
 import me.zhengjie.modules.system.service.dto.MenuQueryCriteria;
-import me.zhengjie.modules.system.service.dto.RoleSmallDto;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -20,9 +33,11 @@ public interface MenuService {
     /**
      * 查询全部数据
      * @param criteria 条件
+     * @param isQuery /
+     * @throws Exception /
      * @return /
      */
-    List<MenuDto> queryAll(MenuQueryCriteria criteria);
+    List<MenuDto> queryAll(MenuQueryCriteria criteria, Boolean isQuery) throws Exception;
 
     /**
      * 根据ID查询
@@ -34,9 +49,8 @@ public interface MenuService {
     /**
      * 创建
      * @param resources /
-     * @return /
      */
-    MenuDto create(Menu resources);
+    void create(Menu resources);
 
     /**
      * 编辑
@@ -45,40 +59,19 @@ public interface MenuService {
     void update(Menu resources);
 
     /**
-     * 获取待删除的菜单
+     * 获取所有子节点，包含自身ID
      * @param menuList /
      * @param menuSet /
      * @return /
      */
-    Set<Menu> getDeleteMenus(List<Menu> menuList, Set<Menu> menuSet);
-
-    /**
-     * 获取菜单树
-     * @param menus /
-     * @return /
-     */
-    Object getMenuTree(List<Menu> menus);
-
-    /**
-     * 根据pid查询
-     * @param pid /
-     * @return /
-     */
-    List<Menu> findByPid(long pid);
+    Set<Menu> getChildMenus(List<Menu> menuList, Set<Menu> menuSet);
 
     /**
      * 构建菜单树
      * @param menuDtos 原始数据
      * @return /
      */
-    Map<String,Object> buildTree(List<MenuDto> menuDtos);
-
-    /**
-     * 根据角色查询
-     * @param roles /
-     * @return /
-     */
-    List<MenuDto> findByRoles(List<RoleSmallDto> roles);
+    List<MenuDto> buildTree(List<MenuDto> menuDtos);
 
     /**
      * 构建菜单树
@@ -107,4 +100,26 @@ public interface MenuService {
      * @throws IOException /
      */
     void download(List<MenuDto> queryAll, HttpServletResponse response) throws IOException;
+
+    /**
+     * 懒加载菜单数据
+     * @param pid /
+     * @return /
+     */
+    List<MenuDto> getMenus(Long pid);
+
+    /**
+     * 根据ID获取同级与上级数据
+     * @param menuDto /
+     * @param objects /
+     * @return /
+     */
+    List<MenuDto> getSuperior(MenuDto menuDto, List<Menu> objects);
+
+    /**
+     * 根据当前用户获取菜单
+     * @param currentUserId /
+     * @return /
+     */
+    List<MenuDto> findByUser(Long currentUserId);
 }

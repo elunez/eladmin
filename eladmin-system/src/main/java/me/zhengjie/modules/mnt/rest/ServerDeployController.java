@@ -1,8 +1,24 @@
+/*
+ *  Copyright 2019-2020 Zheng Jie
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
 package me.zhengjie.modules.mnt.rest;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import me.zhengjie.aop.log.Log;
+import lombok.RequiredArgsConstructor;
+import me.zhengjie.annotation.Log;
 import me.zhengjie.modules.mnt.domain.ServerDeploy;
 import me.zhengjie.modules.mnt.service.ServerDeployService;
 import me.zhengjie.modules.mnt.service.dto.ServerDeployQueryCriteria;
@@ -20,18 +36,14 @@ import java.util.Set;
 * @author zhanghouying
 * @date 2019-08-24
 */
-@Api(tags = "服务器管理")
 @RestController
+@Api(tags = "运维：服务器管理")
+@RequiredArgsConstructor
 @RequestMapping("/api/serverDeploy")
 public class ServerDeployController {
 
     private final ServerDeployService serverDeployService;
 
-    public ServerDeployController(ServerDeployService serverDeployService) {
-        this.serverDeployService = serverDeployService;
-    }
-
-    @Log("导出服务器数据")
     @ApiOperation("导出服务器数据")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('serverDeploy:list')")
@@ -39,11 +51,10 @@ public class ServerDeployController {
         serverDeployService.download(serverDeployService.queryAll(criteria), response);
     }
 
-    @Log("查询服务器")
     @ApiOperation(value = "查询服务器")
     @GetMapping
 	@PreAuthorize("@el.check('serverDeploy:list')")
-    public ResponseEntity<Object> getServers(ServerDeployQueryCriteria criteria, Pageable pageable){
+    public ResponseEntity<Object> query(ServerDeployQueryCriteria criteria, Pageable pageable){
     	return new ResponseEntity<>(serverDeployService.queryAll(criteria,pageable),HttpStatus.OK);
     }
 
@@ -52,7 +63,8 @@ public class ServerDeployController {
     @PostMapping
 	@PreAuthorize("@el.check('serverDeploy:add')")
     public ResponseEntity<Object> create(@Validated @RequestBody ServerDeploy resources){
-        return new ResponseEntity<>(serverDeployService.create(resources),HttpStatus.CREATED);
+        serverDeployService.create(resources);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @Log("修改服务器")

@@ -1,3 +1,18 @@
+/*
+ *  Copyright 2019-2020 Zheng Jie
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
 package me.zhengjie.modules.mnt.util;
 
 import java.io.*;
@@ -35,9 +50,13 @@ public class ZipUtils {
 				System.out.println("file unzip : " + newFile.getAbsoluteFile());
 				//大部分网络上的源码，这里没有判断子目录
 				if (ze.isDirectory()) {
-					newFile.mkdirs();
+					if (!newFile.mkdirs()) {
+						System.out.println("was not successful.");
+					}
 				} else {
-					new File(newFile.getParent()).mkdirs();
+					if (!new File(newFile.getParent()).mkdirs()) {
+						System.out.println("was not successful.");
+					}
 					FileOutputStream fos = new FileOutputStream(newFile);
 					int len;
 					while ((len = zis.read(buffer)) != -1) {
@@ -65,12 +84,16 @@ public class ZipUtils {
 				File file = new File(out, entry.getName());
 
 				if (entry.isDirectory()) {
-					file.mkdirs();
+					if (!file.mkdirs()) {
+						System.out.println("was not successful.");
+					}
 				} else {
 					File parent = file.getParentFile();
 
 					if (!parent.exists()) {
-						parent.mkdirs();
+						if (!parent.mkdirs()) {
+							System.out.println("was not successful.");
+						}
 					}
 
 					try (BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file))) {
@@ -100,19 +123,22 @@ public class ZipUtils {
 	public static void upZipFile(File zipFile, String folderPath) throws ZipException, IOException {
 		File desDir = new File(folderPath);
 		if (!desDir.exists()) {
-			desDir.mkdirs();
+			if (!desDir.mkdirs()) {
+				System.out.println("was not successful.");
+			}
 		}
 		ZipFile zf = new ZipFile(zipFile);
 		for (Enumeration<?> entries = zf.entries(); entries.hasMoreElements(); ) {
 			ZipEntry entry = ((ZipEntry) entries.nextElement());
 			InputStream in = zf.getInputStream(entry);
-			String str = folderPath;
-			File desFile = new File(str, java.net.URLEncoder.encode(entry.getName(), "UTF-8"));
+			File desFile = new File(folderPath, java.net.URLEncoder.encode(entry.getName(), "UTF-8"));
 
 			if (!desFile.exists()) {
 				File fileParentDir = desFile.getParentFile();
 				if (!fileParentDir.exists()) {
-					fileParentDir.mkdirs();
+					if (!fileParentDir.mkdirs()) {
+						System.out.println("was not successful.");
+					}
 				}
 			}
 

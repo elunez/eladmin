@@ -1,8 +1,24 @@
+/*
+ *  Copyright 2019-2020 Zheng Jie
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
 package me.zhengjie.modules.mnt.rest;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import me.zhengjie.aop.log.Log;
+import lombok.RequiredArgsConstructor;
+import me.zhengjie.annotation.Log;
 import me.zhengjie.modules.mnt.domain.Deploy;
 import me.zhengjie.modules.mnt.domain.DeployHistory;
 import me.zhengjie.modules.mnt.service.DeployService;
@@ -28,20 +44,16 @@ import java.util.Set;
 * @author zhanghouying
 * @date 2019-08-24
 */
-@Api(tags = "部署管理")
 @RestController
+@Api(tags = "运维：部署管理")
+@RequiredArgsConstructor
 @RequestMapping("/api/deploy")
 public class DeployController {
 
-	private String fileSavePath = System.getProperty("java.io.tmpdir");
-
+	private final String fileSavePath = FileUtil.getTmpDirPath()+"/";
     private final DeployService deployService;
 
-	public DeployController(DeployService deployService) {
-		this.deployService = deployService;
-	}
 
-	@Log("导出部署数据")
 	@ApiOperation("导出部署数据")
 	@GetMapping(value = "/download")
 	@PreAuthorize("@el.check('database:list')")
@@ -49,11 +61,10 @@ public class DeployController {
 		deployService.download(deployService.queryAll(criteria), response);
 	}
 
-	@Log("查询部署")
     @ApiOperation(value = "查询部署")
     @GetMapping
 	@PreAuthorize("@el.check('deploy:list')")
-    public ResponseEntity<Object> getDeploys(DeployQueryCriteria criteria, Pageable pageable){
+    public ResponseEntity<Object> query(DeployQueryCriteria criteria, Pageable pageable){
     	return new ResponseEntity<>(deployService.queryAll(criteria,pageable),HttpStatus.OK);
     }
 
@@ -62,7 +73,8 @@ public class DeployController {
     @PostMapping
 	@PreAuthorize("@el.check('deploy:add')")
     public ResponseEntity<Object> create(@Validated @RequestBody Deploy resources){
-        return new ResponseEntity<>(deployService.create(resources),HttpStatus.CREATED);
+		deployService.create(resources);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @Log("修改部署")

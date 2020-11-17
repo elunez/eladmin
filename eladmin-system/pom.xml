@@ -5,7 +5,7 @@
     <parent>
         <artifactId>eladmin</artifactId>
         <groupId>me.zhengjie</groupId>
-        <version>2.4</version>
+        <version>2.6</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -13,15 +13,17 @@
     <name>核心模块</name>
 
     <properties>
-        <jjwt.version>0.10.6</jjwt.version>
+        <jjwt.version>0.11.1</jjwt.version>
+        <!-- oshi监控需要指定jna版本, 问题详见 https://github.com/oshi/oshi/issues/1040 -->
+        <jna.version>5.6.0</jna.version>
     </properties>
 
     <dependencies>
-        <!--    代码生成模块    -->
+        <!-- 代码生成模块 -->
         <dependency>
             <groupId>me.zhengjie</groupId>
             <artifactId>eladmin-generator</artifactId>
-            <version>2.4</version>
+            <version>2.6</version>
             <exclusions>
                 <exclusion>
                     <groupId>me.zhengjie</groupId>
@@ -30,19 +32,20 @@
             </exclusions>
         </dependency>
 
-        <!--    tools 模块包含了 common 和 logging 模块    -->
+        <!-- tools 模块包含了 common 和 logging 模块 -->
         <dependency>
             <groupId>me.zhengjie</groupId>
             <artifactId>eladmin-tools</artifactId>
-            <version>2.4</version>
+            <version>2.6</version>
         </dependency>
 
+        <!-- Spring boot websocket -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-websocket</artifactId>
 		</dependency>
 
-        <!--jwt-->
+        <!-- jwt -->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-api</artifactId>
@@ -65,20 +68,27 @@
             <artifactId>quartz</artifactId>
         </dependency>
 
+        <!-- linux的管理 -->
 		<dependency>
 			<groupId>ch.ethz.ganymed</groupId>
 			<artifactId>ganymed-ssh2</artifactId>
 			<version>build210</version>
 		</dependency>
-
 		<dependency>
 			<groupId>com.jcraft</groupId>
 			<artifactId>jsch</artifactId>
 			<version>0.1.55</version>
 		</dependency>
 
+        <!-- 获取系统信息 -->
+        <dependency>
+            <groupId>com.github.oshi</groupId>
+            <artifactId>oshi-core</artifactId>
+            <version>5.3.6</version>
+        </dependency>
     </dependencies>
 
+    <!-- 打包 -->
     <build>
         <plugins>
             <plugin>

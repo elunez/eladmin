@@ -1,3 +1,18 @@
+/*
+ *  Copyright 2019-2020 Zheng Jie
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
 package me.zhengjie.annotation;
 
 import java.lang.annotation.ElementType;
@@ -56,6 +71,8 @@ public @interface Query {
         ,BETWEEN
         // 不为空
         ,NOT_NULL
+        // 为空
+        ,IS_NULL
     }
 
     /**
@@ -63,8 +80,8 @@ public @interface Query {
      * 适用于简单连接查询，复杂的请自定义该注解，或者使用sql查询
      */
     enum Join {
-        /** jie 2019-6-4 13:18:30 左右连接 */
-        LEFT, RIGHT
+        /** jie 2019-6-4 13:18:30 */
+        LEFT, RIGHT, INNER
     }
 
 }

@@ -1,11 +1,27 @@
+/*
+ *  Copyright 2019-2020 Zheng Jie
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
 package me.zhengjie.modules.mnt.service.impl;
 
+import lombok.RequiredArgsConstructor;
 import me.zhengjie.modules.mnt.domain.ServerDeploy;
 import me.zhengjie.modules.mnt.repository.ServerDeployRepository;
 import me.zhengjie.modules.mnt.service.ServerDeployService;
 import me.zhengjie.modules.mnt.service.dto.ServerDeployDto;
 import me.zhengjie.modules.mnt.service.dto.ServerDeployQueryCriteria;
-import me.zhengjie.modules.mnt.service.mapper.ServerDeployMapper;
+import me.zhengjie.modules.mnt.service.mapstruct.ServerDeployMapper;
 import me.zhengjie.modules.mnt.util.ExecuteShellUtil;
 import me.zhengjie.utils.FileUtil;
 import me.zhengjie.utils.PageUtil;
@@ -14,7 +30,6 @@ import me.zhengjie.utils.ValidationUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -25,17 +40,11 @@ import java.util.*;
 * @date 2019-08-24
 */
 @Service
-@Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
+@RequiredArgsConstructor
 public class ServerDeployServiceImpl implements ServerDeployService {
 
-    private ServerDeployRepository serverDeployRepository;
-
-    private ServerDeployMapper serverDeployMapper;
-
-    public ServerDeployServiceImpl(ServerDeployRepository serverDeployRepository,ServerDeployMapper serverDeployMapper){
-    	this.serverDeployRepository = serverDeployRepository;
-    	this.serverDeployMapper = serverDeployMapper;
-	}
+    private final ServerDeployRepository serverDeployRepository;
+    private final ServerDeployMapper serverDeployMapper;
 
     @Override
     public Object queryAll(ServerDeployQueryCriteria criteria, Pageable pageable){
@@ -78,8 +87,8 @@ public class ServerDeployServiceImpl implements ServerDeployService {
 
 	@Override
     @Transactional(rollbackFor = Exception.class)
-    public ServerDeployDto create(ServerDeploy resources) {
-		return serverDeployMapper.toDto(serverDeployRepository.save(resources));
+    public void create(ServerDeploy resources) {
+		serverDeployRepository.save(resources);
     }
 
     @Override
