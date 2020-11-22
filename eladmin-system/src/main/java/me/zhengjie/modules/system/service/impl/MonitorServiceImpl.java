@@ -18,6 +18,7 @@ package me.zhengjie.modules.system.service.impl;
 import cn.hutool.core.date.BetweenFormater;
 import cn.hutool.core.date.DateUtil;
 import me.zhengjie.modules.system.service.MonitorService;
+import me.zhengjie.utils.ElAdminConstant;
 import me.zhengjie.utils.FileUtil;
 import me.zhengjie.utils.StringUtils;
 import org.springframework.stereotype.Service;
@@ -73,15 +74,24 @@ public class MonitorServiceImpl implements MonitorService {
         Map<String,Object> diskInfo = new LinkedHashMap<>();
         FileSystem fileSystem = os.getFileSystem();
         List<OSFileStore> fsArray = fileSystem.getFileStores();
+        String osName = System.getProperty("os.name");
+        long available = 0, total = 0;
         for (OSFileStore fs : fsArray){
-            long available = fs.getUsableSpace();
-            long total = fs.getTotalSpace();
-            long used = total - available;
-            diskInfo.put("total", total > 0 ? FileUtil.getSize(total) : "?");
-            diskInfo.put("available", FileUtil.getSize(available));
-            diskInfo.put("used", FileUtil.getSize(used));
-            diskInfo.put("usageRate", df.format(used/(double)fs.getTotalSpace() * 100));
+            // windows 需要将所有磁盘分区累加
+            if(osName.toLowerCase().startsWith(ElAdminConstant.WIN)) {
+                available += fs.getUsableSpace();
+                total += fs.getTotalSpace();
+            } else {
+                available = fs.getUsableSpace();
+                total = fs.getTotalSpace();
+                break;
+            }
         }
+        long used = total - available;
+        diskInfo.put("total", total > 0 ? FileUtil.getSize(total) : "?");
+        diskInfo.put("available", FileUtil.getSize(available));
+        diskInfo.put("used", FileUtil.getSize(used));
+        diskInfo.put("usageRate", df.format(used/(double)total * 100));
         return diskInfo;
     }
 
