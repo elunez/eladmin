@@ -73,15 +73,18 @@ public class MonitorServiceImpl implements MonitorService {
         Map<String,Object> diskInfo = new LinkedHashMap<>();
         FileSystem fileSystem = os.getFileSystem();
         List<OSFileStore> fsArray = fileSystem.getFileStores();
-        for (OSFileStore fs : fsArray){
-            long available = fs.getUsableSpace();
-            long total = fs.getTotalSpace();
-            long used = total - available;
-            diskInfo.put("total", total > 0 ? FileUtil.getSize(total) : "?");
-            diskInfo.put("available", FileUtil.getSize(available));
-            diskInfo.put("used", FileUtil.getSize(used));
-            diskInfo.put("usageRate", df.format(used/(double)fs.getTotalSpace() * 100));
+        long available = 0L;
+        long total = 0L;
+        long used = 0L;
+        for (OSFileStore fs : fsArray) {
+            available += fs.getUsableSpace();
+            total += fs.getTotalSpace();
         }
+        used += total - available;
+        diskInfo.put("total", total > 0 ? FileUtil.getSize(total) : "?");
+        diskInfo.put("available", FileUtil.getSize(available));
+        diskInfo.put("used", FileUtil.getSize(used));
+        diskInfo.put("usageRate", df.format(used/(double)total * 100));
         return diskInfo;
     }
 
