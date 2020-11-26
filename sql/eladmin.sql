@@ -510,7 +510,7 @@ CREATE TABLE `sys_role` (
 -- ----------------------------
 BEGIN;
 INSERT INTO `sys_role` VALUES (1, '超级管理员', 1, '-', '全部', NULL, 'admin', '2018-11-23 11:04:37', '2020-08-06 16:10:24');
-INSERT INTO `sys_role` VALUES (2, '普通用户', 2, '-', '自定义', NULL, 'admin', '2018-11-23 13:09:06', '2020-09-05 10:45:12');
+INSERT INTO `sys_role` VALUES (2, '普通用户', 2, '-', '本级', NULL, 'admin', '2018-11-23 13:09:06', '2020-09-05 10:45:12');
 COMMIT;
 
 -- ----------------------------
@@ -523,13 +523,6 @@ CREATE TABLE `sys_roles_depts` (
   PRIMARY KEY (`role_id`,`dept_id`) USING BTREE,
   KEY `FK7qg6itn5ajdoa9h9o78v9ksur` (`dept_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='角色部门关联';
-
--- ----------------------------
--- Records of sys_roles_depts
--- ----------------------------
-BEGIN;
-INSERT INTO `sys_roles_depts` VALUES (2, 6);
-COMMIT;
 
 -- ----------------------------
 -- Table structure for sys_roles_menus
