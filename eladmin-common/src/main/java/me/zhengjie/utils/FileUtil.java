@@ -248,7 +248,8 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
                     SXSSFCell currentCell = currentRow.getCell(columnNum);
                     if (currentCell.getCellTypeEnum() == CellType.STRING) {
                         int length = currentCell.getStringCellValue().getBytes().length;
-                        if (columnWidth < length) {
+                        // 如果长度大于最大值 65280，那就取 length
+                        if (columnWidth < length || (columnWidth * 256 > 65280)) {
                             columnWidth = length;
                         }
                     }
