@@ -97,7 +97,7 @@
             </#if>
             </#list>
         </#if>
-        <el-table-column v-permission="['admin','${changeClassName}:edit','${changeClassName}:del']" label="操作" width="150px" align="center">
+        <el-table-column v-if="checkPer['admin','${changeClassName}:edit','${changeClassName}:del']" label="操作" width="150px" align="center">
           <template slot-scope="scope">
             <udOperation
               :data="scope.row"
