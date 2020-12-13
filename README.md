@@ -84,26 +84,6 @@
 - eladmin-tools 系统第三方工具模块
 - eladmin-generator 系统代码生成模块
 ```
-    
-#### 系统预览
-<table>
-    <tr>
-        <td><img src="https://img.el-admin.vip/images/2020/09/05/image.png" alt="image.png" border="0" /></td>
-        <td><img src="https://img.el-admin.vip/images/2020/09/05/image1fdb6befae2368c8.png" alt="image1fdb6befae2368c8.png" border="0" /></td>
-    </tr>
-    <tr>
-        <td><img src="https://img.el-admin.vip/images/2020/09/05/image80b090dc27faea86.png" alt="image80b090dc27faea86.png" border="0" /></td>
-        <td><img src="https://img.el-admin.vip/images/2020/09/05/imagec7e0a6b8701cd890.png" alt="imagec7e0a6b8701cd890.png" border="0" /></td>
-    </tr>
-    <tr>
-        <td><img src="https://img.el-admin.vip/images/2020/09/05/imageff0d9e4ab8d3674c.png" alt="imageff0d9e4ab8d3674c.png" border="0" /></td>
-        <td><img src="https://img.el-admin.vip/images/2020/09/05/image923ef574ace41404.png" alt="image923ef574ace41404.png" border="0" /></td>
-    </tr>
-    <tr>
-        <td><img src="https://img.el-admin.vip/images/2020/09/05/imagef37b559927af1a10.png" alt="imagef37b559927af1a10.png" border="0" /></td>
-        <td><img src="https://img.el-admin.vip/images/2020/09/05/imageabafc6a7f0522967.png" alt="imageabafc6a7f0522967.png" border="0" /></td>
-    </tr>
-</table>
 
 #### 特别鸣谢
 
