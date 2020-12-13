@@ -81,15 +81,7 @@ public class ConfigurerAdapter implements WebMvcConfigurer {
         config.setSerializerFeatures(
                 SerializerFeature.DisableCircularReferenceDetect,
                 //保留空的字段
-                SerializerFeature.WriteMapNullValue,
-                //String null -> ""
-                SerializerFeature.WriteNullStringAsEmpty,
-                //Number null -> 0
-                SerializerFeature.WriteNullNumberAsZero,
-                //List null-> []
-                SerializerFeature.WriteNullListAsEmpty,
-                //Boolean null -> false
-                SerializerFeature.WriteNullBooleanAsFalse);
+                SerializerFeature.WriteMapNullValue);
         converter.setFastJsonConfig(config);
         converter.setSupportedMediaTypes(supportMediaTypeList);
         converter.setDefaultCharset(StandardCharsets.UTF_8);
