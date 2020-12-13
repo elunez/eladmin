@@ -43,7 +43,7 @@ public class TokenProvider implements InitializingBean {
 
     private final SecurityProperties properties;
     private final RedisUtils redisUtils;
-    public static final String AUTHORITIES_KEY = "auth";
+    public static final String AUTHORITIES_KEY = "user";
     private JwtParser jwtParser;
     private JwtBuilder jwtBuilder;
 
@@ -74,6 +74,7 @@ public class TokenProvider implements InitializingBean {
         return jwtBuilder
                 // 加入ID确保生成的 Token 都不一致
                 .setId(IdUtil.simpleUUID())
+                .claim(AUTHORITIES_KEY, authentication.getName())
                 .setSubject(authentication.getName())
                 .compact();
     }
