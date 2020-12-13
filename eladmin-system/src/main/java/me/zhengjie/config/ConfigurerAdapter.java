@@ -78,10 +78,7 @@ public class ConfigurerAdapter implements WebMvcConfigurer {
         supportMediaTypeList.add(MediaType.APPLICATION_JSON_UTF8);
         FastJsonConfig config = new FastJsonConfig();
         config.setDateFormat("yyyy-MM-dd HH:mm:ss");
-        config.setSerializerFeatures(
-                SerializerFeature.DisableCircularReferenceDetect,
-                //保留空的字段
-                SerializerFeature.WriteMapNullValue);
+        config.setSerializerFeatures(SerializerFeature.DisableCircularReferenceDetect);
         converter.setFastJsonConfig(config);
         converter.setSupportedMediaTypes(supportMediaTypeList);
         converter.setDefaultCharset(StandardCharsets.UTF_8);
