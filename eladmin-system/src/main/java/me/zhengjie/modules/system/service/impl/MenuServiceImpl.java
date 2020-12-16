@@ -269,6 +269,8 @@ public class MenuServiceImpl implements MenuService {
                         if(!menuDTO.getIFrame()){
                             if(menuDTO.getPid() == null){
                                 menuVo.setComponent(StrUtil.isEmpty(menuDTO.getComponent())?"Layout":menuDTO.getComponent());
+                            }else if(menuDTO.getPid() != null && menuDTO.getType() == 0){
+                                menuVo.setComponent(StrUtil.isEmpty(menuDTO.getComponent())?"ParentView":menuDTO.getComponent());
                             }else if(!StrUtil.isEmpty(menuDTO.getComponent())){
                                 menuVo.setComponent(menuDTO.getComponent());
                             }
