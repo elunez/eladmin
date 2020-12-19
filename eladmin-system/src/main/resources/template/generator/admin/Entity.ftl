@@ -63,7 +63,7 @@ public class ${className} implements Serializable {
     @NotNull
         </#if>
     </#if>
-    <#if (column.dateAnnotation)??>
+    <#if (column.dateAnnotation)?? && column.dateAnnotation != ''>
     <#if column.dateAnnotation = 'CreationTimestamp'>
     @CreationTimestamp
     <#else>
