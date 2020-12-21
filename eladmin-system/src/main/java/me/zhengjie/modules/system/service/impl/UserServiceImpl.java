@@ -37,7 +37,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotBlank;
 import java.io.File;
@@ -120,10 +119,6 @@ public class UserServiceImpl implements UserService {
             redisUtils.del(CacheKey.MENU_USER + resources.getId());
             redisUtils.del(CacheKey.ROLE_AUTH + resources.getId());
         }
-        // 如果用户名称修改
-        if(!resources.getUsername().equals(user.getUsername())){
-            redisUtils.del("user::username:" + user.getUsername());
-        }
         // 如果用户被禁用，则清除用户登录信息
         if(!resources.getEnabled()){
             onlineUserService.kickOutForUsername(resources.getUsername());
@@ -170,7 +165,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Cacheable(key = "'username:' + #p0")
     public UserDto findByName(String userName) {
         User user = userRepository.findByUsername(userName);
         if (user == null) {
@@ -184,7 +178,6 @@ public class UserServiceImpl implements UserService {
     @Transactional(rollbackFor = Exception.class)
     public void updatePass(String username, String pass) {
         userRepository.updatePass(username, pass, new Date());
-        redisUtils.del("user::username:" + username);
         flushCache(username);
     }
 
@@ -201,7 +194,6 @@ public class UserServiceImpl implements UserService {
             FileUtil.del(oldPath);
         }
         @NotBlank String username = user.getUsername();
-        redisUtils.del(CacheKey.USER_NAME + username);
         flushCache(username);
         return new HashMap<String, String>(1) {{
             put("avatar", file.getName());
@@ -212,7 +204,6 @@ public class UserServiceImpl implements UserService {
     @Transactional(rollbackFor = Exception.class)
     public void updateEmail(String username, String email) {
         userRepository.updateEmail(username, email);
-        redisUtils.del(CacheKey.USER_NAME + username);
         flushCache(username);
     }
 
@@ -243,7 +234,6 @@ public class UserServiceImpl implements UserService {
      */
     public void delCaches(Long id, String username) {
         redisUtils.del(CacheKey.USER_ID + id);
-        redisUtils.del(CacheKey.USER_NAME + username);
         flushCache(username);
     }
 
