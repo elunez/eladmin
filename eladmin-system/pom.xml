@@ -19,6 +19,13 @@
     </properties>
 
     <dependencies>
+        <!--测试模块-->
+        <dependency>
+            <groupId>me.zhengjie</groupId>
+            <artifactId>eladmin-test</artifactId>
+            <version>2.6</version>
+        </dependency>
+
         <!-- 代码生成模块 -->
         <dependency>
             <groupId>me.zhengjie</groupId>
@@ -42,6 +49,7 @@
         <!-- Spring boot websocket -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
+<!--			<artifactId>spring-boot-starter-websocket</artifactId>-->
 			<artifactId>spring-boot-starter-websocket</artifactId>
 		</dependency>
 
@@ -85,6 +93,17 @@
             <groupId>com.github.oshi</groupId>
             <artifactId>oshi-core</artifactId>
             <version>5.3.6</version>
+        </dependency>
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-annotations</artifactId>
+            <version>1.5.22</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-annotations</artifactId>
+            <version>1.5.22</version>
         </dependency>
     </dependencies>
 

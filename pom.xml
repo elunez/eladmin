@@ -15,6 +15,7 @@
         <module>eladmin-system</module>
         <module>eladmin-tools</module>
         <module>eladmin-generator</module>
+        <module>eladmin-test</module>
     </modules>
 
     <name>EL-ADMIN 后台管理</name>
