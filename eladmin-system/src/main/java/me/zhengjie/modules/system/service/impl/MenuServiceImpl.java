@@ -15,8 +15,8 @@
  */
 package me.zhengjie.modules.system.service.impl;
 
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.StrUtil;
 import lombok.RequiredArgsConstructor;
 import me.zhengjie.modules.system.domain.Menu;
 import me.zhengjie.modules.system.domain.Role;
@@ -268,13 +268,16 @@ public class MenuServiceImpl implements MenuService {
                         // 如果不是外链
                         if(!menuDTO.getIFrame()){
                             if(menuDTO.getPid() == null){
-                                menuVo.setComponent(StrUtil.isEmpty(menuDTO.getComponent())?"Layout":menuDTO.getComponent());
-                            }else if(!StrUtil.isEmpty(menuDTO.getComponent())){
+                                menuVo.setComponent(StringUtils.isEmpty(menuDTO.getComponent())?"Layout":menuDTO.getComponent());
+                                // 如果不是一级菜单，并且菜单类型为目录，则代表是多级菜单
+                            }else if(menuDTO.getType() == 0){
+                                menuVo.setComponent(StringUtils.isEmpty(menuDTO.getComponent())?"ParentView":menuDTO.getComponent());
+                            }else if(StringUtils.isNoneBlank(menuDTO.getComponent())){
                                 menuVo.setComponent(menuDTO.getComponent());
                             }
                         }
                         menuVo.setMeta(new MenuMetaVo(menuDTO.getTitle(),menuDTO.getIcon(),!menuDTO.getCache()));
-                        if(menuDtoList !=null && menuDtoList.size()!=0){
+                        if(CollectionUtil.isNotEmpty(menuDtoList)){
                             menuVo.setAlwaysShow(true);
                             menuVo.setRedirect("noredirect");
                             menuVo.setChildren(buildMenus(menuDtoList));

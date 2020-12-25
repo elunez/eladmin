@@ -15,7 +15,7 @@
  */
 package me.zhengjie.modules.system.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.alibaba.fastjson.annotation.JSONField;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
@@ -44,7 +44,7 @@ public class Dept extends BaseEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JsonIgnore
+    @JSONField(serialize = false)
     @ManyToMany(mappedBy = "depts")
     @ApiModelProperty(value = "角色")
     private Set<Role> roles;

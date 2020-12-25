@@ -179,11 +179,12 @@ public class OnlineUserService {
      * @param username /
      */
     @Async
-    public void kickOutForUsername(String username) {
+    public void kickOutForUsername(String username) throws Exception {
         List<OnlineUserDto> onlineUsers = getAll(username);
         for (OnlineUserDto onlineUser : onlineUsers) {
             if (onlineUser.getUserName().equals(username)) {
-                kickOut(onlineUser.getKey());
+                String token =EncryptUtils.desDecrypt(onlineUser.getKey());
+                kickOut(token);
             }
         }
     }
