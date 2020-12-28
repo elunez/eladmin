@@ -20,7 +20,7 @@
 #### 活动福利
 
 - 七牛云 2021 ECUG Con 全球技术大会内部票：给大家一共搞来五张小一千块钱的内部票。想要的加群【947578238】联系群主
-- 七牛云 2021 ECUG Con 全球技术大会早鸟特惠票：[http://www.huodongxing.com/event/1573487912300?coupon=EL666](点我抢购)
+- 七牛云 2021 ECUG Con 全球技术大会早鸟特惠票：[点我抢购](http://www.huodongxing.com/event/1573487912300?coupon=EL666)
 
 #### 项目源码
 
