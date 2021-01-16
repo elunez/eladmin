@@ -115,6 +115,6 @@ public class DictServiceImpl implements DictService {
     }
 
     public void delCaches(Dict dict){
-        redisUtils.del("dict::name:" + dict.getName());
+        redisUtils.del(CacheKey.DICT_NAME + dict.getName());
     }
 }
