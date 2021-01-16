@@ -100,7 +100,7 @@ public class JobServiceImpl implements JobService {
     public void delete(Set<Long> ids) {
         jobRepository.deleteAllByIdIn(ids);
         // 删除缓存
-        redisUtils.delByKeys("job::id:", ids);
+        redisUtils.delByKeys(CacheKey.JOB_ID, ids);
     }
 
     @Override
