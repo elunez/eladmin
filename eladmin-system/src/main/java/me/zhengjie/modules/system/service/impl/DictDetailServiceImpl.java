@@ -20,10 +20,7 @@ import me.zhengjie.modules.system.domain.Dict;
 import me.zhengjie.modules.system.domain.DictDetail;
 import me.zhengjie.modules.system.repository.DictRepository;
 import me.zhengjie.modules.system.service.dto.DictDetailQueryCriteria;
-import me.zhengjie.utils.PageUtil;
-import me.zhengjie.utils.QueryHelp;
-import me.zhengjie.utils.RedisUtils;
-import me.zhengjie.utils.ValidationUtil;
+import me.zhengjie.utils.*;
 import me.zhengjie.modules.system.repository.DictDetailRepository;
 import me.zhengjie.modules.system.service.DictDetailService;
 import me.zhengjie.modules.system.service.dto.DictDetailDto;
@@ -93,6 +90,6 @@ public class DictDetailServiceImpl implements DictDetailService {
 
     public void delCaches(DictDetail dictDetail){
         Dict dict = dictRepository.findById(dictDetail.getDict().getId()).orElseGet(Dict::new);
-        redisUtils.del("dict::name:" + dict.getName());
+        redisUtils.del(CacheKey.DICT_NAME + dict.getName());
     }
 }
