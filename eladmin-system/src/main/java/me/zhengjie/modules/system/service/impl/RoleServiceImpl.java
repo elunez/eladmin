@@ -217,7 +217,7 @@ public class RoleServiceImpl implements RoleService {
         if (CollectionUtil.isNotEmpty(users)) {
             users.forEach(item -> userCacheClean.cleanUserCache(item.getUsername()));
             Set<Long> userIds = users.stream().map(User::getId).collect(Collectors.toSet());
-            redisUtils.delByKeys(CacheKey.DATE_USER, userIds);
+            redisUtils.delByKeys(CacheKey.DATA_USER, userIds);
             redisUtils.delByKeys(CacheKey.MENU_USER, userIds);
             redisUtils.delByKeys(CacheKey.ROLE_AUTH, userIds);
         }
