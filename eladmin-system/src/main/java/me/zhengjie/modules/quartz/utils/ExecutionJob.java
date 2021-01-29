@@ -42,7 +42,6 @@ import java.util.concurrent.*;
  * @date 2019-01-07
  */
 @Async
-@SuppressWarnings({"unchecked","all"})
 public class ExecutionJob extends QuartzJobBean {
 
     /** 该处仅供参考 */
@@ -108,8 +107,10 @@ public class ExecutionJob extends QuartzJobBean {
             if(quartzJob.getEmail() != null){
                 EmailService emailService = SpringContextHolder.getBean(EmailService.class);
                 // 邮箱报警
-                EmailVo emailVo = taskAlarm(quartzJob, ThrowableUtil.getStackTrace(e));
-                emailService.send(emailVo, emailService.find());
+                if(StringUtils.isNoneBlank(quartzJob.getEmail())){
+                    EmailVo emailVo = taskAlarm(quartzJob, ThrowableUtil.getStackTrace(e));
+                    emailService.send(emailVo, emailService.find());
+                }
             }
         } finally {
             quartzLogRepository.save(log);
