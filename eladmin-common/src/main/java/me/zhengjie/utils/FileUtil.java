@@ -95,7 +95,7 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
         File file = null;
         try {
             // 用uuid作为文件名，防止生成的临时文件重复
-            file = File.createTempFile(IdUtil.simpleUUID(), prefix);
+            file = new File(SYS_TEM_DIR + IdUtil.simpleUUID() + prefix);
             // MultipartFile to File
             multipartFile.transferTo(file);
         } catch (IOException e) {
