@@ -10,19 +10,26 @@ spring:
       # 初始连接数
       initial-size: 5
       # 最小连接数
-      min-idle: 10
+      min-idle: 15
       # 最大连接数
-      max-active: 20
+      max-active: 30
+      # 是否自动回收超时连接
+      remove-abandoned: true
+      # 超时时间(以秒数为单位)
+      remove-abandoned-timeout: 180
       # 获取连接超时时间
-      max-wait: 5000
+      max-wait: 3000
       # 连接有效性检测时间
       time-between-eviction-runs-millis: 60000
       # 连接在池中最小生存的时间
       min-evictable-idle-time-millis: 300000
       # 连接在池中最大生存的时间
       max-evictable-idle-time-millis: 900000
+      # 指明连接是否被空闲连接回收器(如果有)进行检验.如果检测失败,则连接将被从池中去除
       test-while-idle: true
-      test-on-borrow: false
+      # 指明是否在从池中取出连接前进行检验,如果检验失败, 则从池中去除连接并尝试取出另一个
+      test-on-borrow: true
+      # 是否在归还到池中前进行检验
       test-on-return: false
       # 检测连接是否有效
       validation-query: select 1
