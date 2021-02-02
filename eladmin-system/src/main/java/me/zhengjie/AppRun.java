@@ -20,10 +20,14 @@ import me.zhengjie.annotation.rest.AnonymousGetMapping;
 import me.zhengjie.utils.SpringContextHolder;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.ComponentScans;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,9 +41,12 @@ import org.springframework.web.bind.annotation.RestController;
 @EnableAsync
 @RestController
 @Api(hidden = true)
-@SpringBootApplication
+//@ComponentScan({"me.zhengjie", "com.uueo"})
+@SpringBootApplication(scanBasePackages = {"me.zhengjie", "com.uueo.itam"})
 @EnableTransactionManagement
 @EnableJpaAuditing(auditorAwareRef = "auditorAware")
+@EnableJpaRepositories(basePackages = {"me.zhengjie.**.repository","com.uueo.itam.**.repository"})
+@EntityScan(basePackages = {"me.zhengjie","com.uueo.itam"})
 public class AppRun {
 
     public static void main(String[] args) {

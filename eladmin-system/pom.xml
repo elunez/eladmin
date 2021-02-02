@@ -39,6 +39,20 @@
             <version>2.6</version>
         </dependency>
 
+        <!-- 单位管理 -->
+        <dependency>
+            <groupId>com.uueo.itam.company</groupId>
+            <artifactId>itam-company</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
+        <!-- 工单管理 -->
+        <dependency>
+            <groupId>com.uueo.itam</groupId>
+            <artifactId>itam-ticket</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
         <!-- Spring boot websocket -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

@@ -15,6 +15,9 @@
         <module>eladmin-system</module>
         <module>eladmin-tools</module>
         <module>eladmin-generator</module>
+        <module>itam-company</module>
+        <module>itam-task</module>
+        <module>itam-ticket</module>
     </modules>
 
     <name>EL-ADMIN 后台管理</name>
