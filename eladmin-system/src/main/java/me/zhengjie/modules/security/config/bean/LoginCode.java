@@ -20,8 +20,8 @@ import lombok.Data;
 /**
  * 登录验证码配置信息
  *
- * @author: liaojinlong
- * @date: 2020/6/10 18:53
+ * @author liaojinlong
+ * @date 2020/6/10 18:53
  */
 @Data
 public class LoginCode {
