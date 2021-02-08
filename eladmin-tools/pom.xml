@@ -13,7 +13,7 @@
     <name>工具模块</name>
 
     <properties>
-        <mail.version>1.5.0-b01</mail.version>
+        <mail.version>1.4.7</mail.version>
         <qiniu.version>[7.2.0, 7.2.99]</qiniu.version>
         <alipay.version>4.9.153.ALL</alipay.version>
     </properties>
