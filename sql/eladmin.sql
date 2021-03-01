@@ -660,7 +660,7 @@ CREATE TABLE `sys_user` (
   `is_admin` bit(1) DEFAULT b'0' COMMENT '是否为admin账号',
   `enabled` bigint(20) DEFAULT NULL COMMENT '状态：1启用、0禁用',
   `create_by` varchar(255) DEFAULT NULL COMMENT '创建者',
-  `update_by` varchar(255) DEFAULT NULL COMMENT '更新着',
+  `update_by` varchar(255) DEFAULT NULL COMMENT '更新者',
   `pwd_reset_time` datetime DEFAULT NULL COMMENT '修改密码的时间',
   `create_time` datetime DEFAULT NULL COMMENT '创建日期',
   `update_time` datetime DEFAULT NULL COMMENT '更新时间',
