@@ -16,7 +16,6 @@
 package me.zhengjie.config;
 
 import com.fasterxml.classmate.TypeResolver;
-import com.google.common.base.Predicates;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -26,18 +25,18 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.data.domain.Pageable;
 import springfox.documentation.builders.ApiInfoBuilder;
-import springfox.documentation.builders.ParameterBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.schema.AlternateTypeRule;
 import springfox.documentation.schema.AlternateTypeRuleConvention;
-import springfox.documentation.schema.ModelRef;
-import springfox.documentation.service.ApiInfo;
-import springfox.documentation.service.Parameter;
+import springfox.documentation.service.*;
 import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import static com.google.common.collect.Lists.newArrayList;
 import static springfox.documentation.schema.AlternateTypeRules.newRule;
 
@@ -62,22 +61,26 @@ public class SwaggerConfig {
     @Bean
     @SuppressWarnings("all")
     public Docket createRestApi() {
-        ParameterBuilder ticketPar = new ParameterBuilder();
-        List<Parameter> pars = new ArrayList<>();
-        ticketPar.name(tokenHeader).description("token")
-                .modelRef(new ModelRef("string"))
-                .parameterType("header")
-                .defaultValue(tokenStartWith + " ")
-                .required(true)
-                .build();
-        pars.add(ticketPar.build());
+//        ParameterBuilder ticketPar = new ParameterBuilder();
+////        List<Parameter> pars = new ArrayList<>();
+////        ticketPar.name(tokenHeader).description("token")
+////                .modelRef(new ModelRef("string"))
+////                .parameterType("header")
+////                .defaultValue(tokenStartWith + " ")
+////                .required(true)
+////                .build();
+//        pars.add(ticketPar.build());
         return new Docket(DocumentationType.SWAGGER_2)
                 .enable(enabled)
                 .apiInfo(apiInfo())
                 .select()
-                .paths(Predicates.not(PathSelectors.regex("/error.*")))
+//                .paths(Predicates.not(PathSelectors.regex("/error.*")))
+                .paths(PathSelectors.any())
                 .build()
-                .globalOperationParameters(pars);
+//                .globalOperationParameters(pars)
+                //添加登陆认证
+                .securitySchemes(securitySchemes())
+                .securityContexts(securityContexts());
     }
 
     private ApiInfo apiInfo() {
@@ -88,6 +91,38 @@ public class SwaggerConfig {
                 .build();
     }
 
+    private List<SecurityScheme> securitySchemes() {
+        //设置请求头信息
+        List<SecurityScheme> securitySchemes = new ArrayList<>();
+        ApiKey apiKey = new ApiKey(tokenHeader, tokenHeader, "header");
+        securitySchemes.add(apiKey);
+        return securitySchemes;
+    }
+
+    private List<SecurityContext> securityContexts() {
+        //设置需要登录认证的路径
+        List<SecurityContext> securityContexts = new ArrayList<>();
+        // ^(?!auth).*$ 表示所有包含auth的接口不需要使用securitySchemes即不需要带token
+        // ^标识开始  ()里是一子表达式  ?!/auth表示匹配不是/auth的位置，匹配上则添加请求头，注意路径已/开头  .表示任意字符  *表示前面的字符匹配多次 $标识结束
+        securityContexts.add(getContextByPath("^(?!/auth).*$"));
+        return securityContexts;
+    }
+
+    private SecurityContext getContextByPath(String pathRegex) {
+        return SecurityContext.builder()
+                .securityReferences(defaultAuth())
+                .forPaths(PathSelectors.regex(pathRegex))
+                .build();
+    }
+
+    private List<SecurityReference> defaultAuth() {
+        List<SecurityReference> securityReferences = new ArrayList<>();
+        AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything");
+        AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
+        authorizationScopes[0] = authorizationScope;
+        securityReferences.add(new SecurityReference(tokenHeader, authorizationScopes));
+        return securityReferences;
+    }
 }
 
 /**
