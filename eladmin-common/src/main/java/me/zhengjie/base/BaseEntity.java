@@ -50,7 +50,7 @@ public class BaseEntity implements Serializable {
     @LastModifiedBy
     @Column(name = "update_by")
     @ApiModelProperty(value = "更新人", hidden = true)
-    private String updatedBy;
+    private String updateBy;
 
     @CreationTimestamp
     @Column(name = "create_time", updatable = false)
