@@ -69,7 +69,9 @@ public class EmailServiceImpl implements EmailService {
         }
         // 封装
         MailAccount account = new MailAccount();
-        account.setUser(emailConfig.getUser());
+        // 设置用户
+        String user = emailConfig.getFromUser().split("@")[0];
+        account.setUser(user);
         account.setHost(emailConfig.getHost());
         account.setPort(Integer.parseInt(emailConfig.getPort()));
         account.setAuth(true);

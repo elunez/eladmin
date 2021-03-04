@@ -2,7 +2,7 @@
 <configuration scan="true" scanPeriod="30 seconds" debug="false">
     <contextName>elAdmin</contextName>
     <property name="log.charset" value="utf-8" />
-    <property name="log.pattern" value="%black(%contextName-) %red(%d{yyyy-MM-dd HH:mm:ss}) %green([%thread]) %highlight(%-5level) %boldMagenta(%logger{36}) - %gray(%msg%n)" />
+    <property name="log.pattern" value="%contextName- %red(%d{yyyy-MM-dd HH:mm:ss}) %green([%thread]) %highlight(%-5level) %boldMagenta(%logger{36}) - %msg%n" />
 
     <!--输出到控制台-->
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">

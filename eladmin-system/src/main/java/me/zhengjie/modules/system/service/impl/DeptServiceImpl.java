@@ -58,7 +58,7 @@ public class DeptServiceImpl implements DeptService {
 
     @Override
     public List<DeptDto> queryAll(DeptQueryCriteria criteria, Boolean isQuery) throws Exception {
-        Sort sort = new Sort(Sort.Direction.ASC, "deptSort");
+        Sort sort = Sort.by(Sort.Direction.ASC, "deptSort");
         String dataScopeType = SecurityUtils.getDataScopeType();
         if (isQuery) {
             if(dataScopeType.equals(DataScopeEnum.ALL.getValue())){
@@ -273,7 +273,7 @@ public class DeptServiceImpl implements DeptService {
      * @param id /
      */
     public void delCaches(Long id){
-        List<User> users = userRepository.findByDeptRoleId(id);
+        List<User> users = userRepository.findByRoleDeptId(id);
         // 删除数据权限
         redisUtils.delByKeys(CacheKey.DATA_USER, users.stream().map(User::getId).collect(Collectors.toSet()));
         redisUtils.del(CacheKey.DEPT_ID + id);

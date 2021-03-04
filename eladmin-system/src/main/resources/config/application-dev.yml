@@ -12,6 +12,7 @@ redis:
   port: 6379
   password: Chushang831
 
+
 # 登录相关配置
 login:
   # 登录缓存
@@ -27,7 +28,7 @@ login:
     #  验证码高度
     width: 111
     #  验证码宽度
-    heigth: 36
+    height: 36
     # 内容长度
     length: 2
     # 字体名称，为空则使用默认字体

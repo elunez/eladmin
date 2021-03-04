@@ -2,6 +2,7 @@ package me.zhengjie.utils;
 
 import org.apache.commons.codec.binary.Base64;
 import javax.crypto.Cipher;
+import java.io.ByteArrayOutputStream;
 import java.security.*;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
@@ -80,7 +81,7 @@ public class RsaUtils {
         PublicKey publicKey = keyFactory.generatePublic(x509EncodedKeySpec);
         Cipher cipher = Cipher.getInstance("RSA");
         cipher.init(Cipher.DECRYPT_MODE, publicKey);
-        byte[] result = cipher.doFinal(Base64.decodeBase64(text));
+        byte[] result = doLongerCipherFinal(cipher, Base64.decodeBase64(text));
         return new String(result);
     }
 
@@ -98,7 +99,7 @@ public class RsaUtils {
         PrivateKey privateKey = keyFactory.generatePrivate(pkcs8EncodedKeySpec);
         Cipher cipher = Cipher.getInstance("RSA");
         cipher.init(Cipher.ENCRYPT_MODE, privateKey);
-        byte[] result = cipher.doFinal(text.getBytes());
+        byte[] result = doLongerCipherFinal(cipher, text.getBytes());
         return Base64.encodeBase64String(result);
     }
 
@@ -116,7 +117,7 @@ public class RsaUtils {
         PrivateKey privateKey = keyFactory.generatePrivate(pkcs8EncodedKeySpec5);
         Cipher cipher = Cipher.getInstance("RSA");
         cipher.init(Cipher.DECRYPT_MODE, privateKey);
-        byte[] result = cipher.doFinal(Base64.decodeBase64(text));
+        byte[] result = doLongerCipherFinal(cipher, Base64.decodeBase64(text));
         return new String(result);
     }
 
@@ -133,8 +134,21 @@ public class RsaUtils {
         PublicKey publicKey = keyFactory.generatePublic(x509EncodedKeySpec2);
         Cipher cipher = Cipher.getInstance("RSA");
         cipher.init(Cipher.ENCRYPT_MODE, publicKey);
-        byte[] result = cipher.doFinal(text.getBytes());
+        byte[] result = doLongerCipherFinal(cipher, text.getBytes());
         return Base64.encodeBase64String(result);
+    }
+
+    private static byte[] doLongerCipherFinal(Cipher cipher, byte[] source) throws Exception {
+        int offset = 0;
+        int totalSize = source.length;
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        while (totalSize - offset > 0) {
+            int size = Math.min(1024 / 8 - 11, totalSize - offset);
+            out.write(cipher.doFinal(source, offset, size));
+            offset += size;
+        }
+        out.close();
+        return out.toByteArray();
     }
 
     /**
