@@ -13,8 +13,6 @@ spring:
       min-idle: 15
       # 最大连接数
       max-active: 30
-      # 是否自动回收超时连接
-      remove-abandoned: true
       # 超时时间(以秒数为单位)
       remove-abandoned-timeout: 180
       # 获取连接超时时间
