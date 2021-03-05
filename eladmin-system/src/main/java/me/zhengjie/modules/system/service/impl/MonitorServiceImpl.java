@@ -17,6 +17,7 @@ package me.zhengjie.modules.system.service.impl;
 
 import cn.hutool.core.date.BetweenFormater;
 import cn.hutool.core.date.DateUtil;
+import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.modules.system.service.MonitorService;
 import me.zhengjie.utils.ElAdminConstant;
 import me.zhengjie.utils.FileUtil;
@@ -91,7 +92,11 @@ public class MonitorServiceImpl implements MonitorService {
         diskInfo.put("total", total > 0 ? FileUtil.getSize(total) : "?");
         diskInfo.put("available", FileUtil.getSize(available));
         diskInfo.put("used", FileUtil.getSize(used));
-        diskInfo.put("usageRate", df.format(used/(double)total * 100));
+        if(total != 0){
+            diskInfo.put("usageRate", df.format(used/(double)total * 100));
+        } else {
+            diskInfo.put("usageRate", 0);
+        }
         return diskInfo;
     }
 

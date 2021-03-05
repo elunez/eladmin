@@ -19,7 +19,7 @@ import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.util.StringUtils;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
-
+import me.zhengjie.utils.CloseUtil;
 import javax.sql.DataSource;
 import java.io.BufferedReader;
 import java.io.File;
@@ -34,9 +34,6 @@ import java.util.List;
  */
 @Slf4j
 public class SqlUtils {
-
-	public static final String COLON = ":";
-
 
 	/**
 	 * 获取数据源
@@ -102,6 +99,8 @@ public class SqlUtils {
 		} catch (Exception e) {
 			log.error("create connection error, jdbcUrl: {}", jdbcUrl);
 			throw new RuntimeException("create connection error, jdbcUrl: " + jdbcUrl);
+		} finally {
+			CloseUtil.close(connection);
 		}
 		return connection;
 	}
@@ -113,17 +112,6 @@ public class SqlUtils {
 			} catch (Exception e) {
 				log.error(e.getMessage(),e);
 				log.error("connection close error：" + e.getMessage());
-			}
-		}
-	}
-
-
-	public static void closeResult(ResultSet rs) {
-		if (rs != null) {
-			try {
-				rs.close();
-			} catch (Exception e) {
-				log.error(e.getMessage(),e);
 			}
 		}
 	}
@@ -162,15 +150,22 @@ public class SqlUtils {
 	 * @param connection /
 	 * @param sqlList /
 	 */
-	public static void batchExecute(Connection connection, List<String> sqlList) throws SQLException {
-		Statement st = connection.createStatement();
-		for (String sql : sqlList) {
-			if (sql.endsWith(";")) {
-				sql = sql.substring(0, sql.length() - 1);
+	public static void batchExecute(Connection connection, List<String> sqlList) {
+		Statement st = null;
+		try {
+			st = connection.createStatement();
+			for (String sql : sqlList) {
+				if (sql.endsWith(";")) {
+					sql = sql.substring(0, sql.length() - 1);
+				}
+				st.addBatch(sql);
 			}
-			st.addBatch(sql);
+			st.executeBatch();
+		} catch (SQLException throwables) {
+			throwables.printStackTrace();
+		} finally {
+			CloseUtil.close(st);
 		}
-		st.executeBatch();
 	}
 
 	/**
