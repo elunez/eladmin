@@ -113,6 +113,8 @@ public class DeptServiceImpl implements DeptService {
         resources.setSubCount(0);
         // 清理缓存
         updateSubCnt(resources.getPid());
+        // 清理自定义角色权限的datascope缓存
+        delCaches(resources.getPid());
     }
 
     @Override
