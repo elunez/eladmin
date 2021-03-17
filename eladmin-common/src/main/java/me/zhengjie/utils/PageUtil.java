@@ -42,14 +42,25 @@ public class PageUtil extends cn.hutool.core.util.PageUtil {
 
     /**
      * Page 数据处理，预防redis反序列化报错
+     *
+     * 使用${@link PageUtil#toPageResult(Page)}代替
+     *
      */
+    @Deprecated
     public static Map<String,Object> toPage(Page page) {
         Map<String,Object> map = new LinkedHashMap<>(2);
         map.put("content",page.getContent());
         map.put("totalElements",page.getTotalElements());
         return map;
     }
-
+    
+    /**
+     * Page 数据处理，预防redis反序列化报错
+     */
+    public static <T> PageResult<T> toPageResult(Page<T> page) {
+        return new PageResult<T>(page.getContent(), page.getTotalElements());
+    }
+    
     /**
      * 自定义分页
      */

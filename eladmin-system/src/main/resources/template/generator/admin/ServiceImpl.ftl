@@ -45,6 +45,7 @@ import cn.hutool.core.util.IdUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import me.zhengjie.utils.PageUtil;
+import me.zhengjie.utils.PageResult;
 import me.zhengjie.utils.QueryHelp;
 import java.util.List;
 import java.util.Map;
@@ -67,9 +68,9 @@ public class ${className}ServiceImpl implements ${className}Service {
     private final ${className}Mapper ${changeClassName}Mapper;
 
     @Override
-    public Map<String,Object> queryAll(${className}QueryCriteria criteria, Pageable pageable){
+    public PageResult<${className}Dto> queryAll(${className}QueryCriteria criteria, Pageable pageable){
         Page<${className}> page = ${changeClassName}Repository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable);
-        return PageUtil.toPage(page.map(${changeClassName}Mapper::toDto));
+        return PageUtil.toPageResult(page.map(${changeClassName}Mapper::toDto));
     }
 
     @Override
