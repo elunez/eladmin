@@ -67,6 +67,12 @@ public class ${className}ServiceImpl implements ${className}Service {
     private final ${className}Repository ${changeClassName}Repository;
     private final ${className}Mapper ${changeClassName}Mapper;
 
+
+    @Override
+    public ${className}Repository dao() {
+        return ${changeClassName}Repository;
+    }
+
     @Override
     public PageResult<${className}Dto> queryAll(${className}QueryCriteria criteria, Pageable pageable){
         Page<${className}> page = ${changeClassName}Repository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable);
