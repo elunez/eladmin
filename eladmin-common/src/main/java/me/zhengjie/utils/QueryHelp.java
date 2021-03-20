@@ -141,8 +141,13 @@ public class QueryHelp {
                                     .as(String.class), val.toString() + "%"));
                             break;
                         case IN:
-                            if (CollUtil.isNotEmpty((Collection<Long>)val)) {
-                                list.add(getExpression(attributeName,join,root).in((Collection<Long>) val));
+                            if (CollUtil.isNotEmpty((Collection<Object>)val)) {
+                                list.add(getExpression(attributeName,join,root).in((Collection<Object>) val));
+                            }
+                            break;
+                        case NOT_IN:
+                            if (CollUtil.isNotEmpty((Collection<Object>)val)) {
+                                list.add(getExpression(attributeName,join,root).in((Collection<Object>) val).not());
                             }
                             break;
                         case NOT_EQUAL:
