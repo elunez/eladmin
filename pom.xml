@@ -203,9 +203,9 @@
 
         <!-- 解析客户端操作系统、浏览器信息 -->
         <dependency>
-            <groupId>eu.bitwalker</groupId>
-            <artifactId>UserAgentUtils</artifactId>
-            <version>1.21</version>
+            <groupId>nl.basjes.parse.useragent</groupId>
+            <artifactId>yauaa</artifactId>
+            <version>5.23</version>
         </dependency>
     </dependencies>
 
