@@ -15,7 +15,7 @@
     <properties>
         <jjwt.version>0.11.1</jjwt.version>
         <!-- oshi监控需要指定jna版本, 问题详见 https://github.com/oshi/oshi/issues/1040 -->
-        <jna.version>5.6.0</jna.version>
+        <jna.version>5.8.0</jna.version>
     </properties>
 
     <dependencies>
@@ -84,7 +84,7 @@
         <dependency>
             <groupId>com.github.oshi</groupId>
             <artifactId>oshi-core</artifactId>
-            <version>5.3.6</version>
+            <version>5.7.1</version>
         </dependency>
     </dependencies>
 
