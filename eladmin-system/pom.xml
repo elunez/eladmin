@@ -5,7 +5,7 @@
     <parent>
         <artifactId>eladmin</artifactId>
         <groupId>me.zhengjie</groupId>
-        <version>2.6</version>
+        <version>2.7</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -23,7 +23,7 @@
         <dependency>
             <groupId>me.zhengjie</groupId>
             <artifactId>eladmin-generator</artifactId>
-            <version>2.6</version>
+            <version>2.7</version>
             <exclusions>
                 <exclusion>
                     <groupId>me.zhengjie</groupId>
@@ -36,7 +36,7 @@
         <dependency>
             <groupId>me.zhengjie</groupId>
             <artifactId>eladmin-tools</artifactId>
-            <version>2.6</version>
+            <version>2.7</version>
         </dependency>
 
         <!-- Spring boot websocket -->
@@ -94,14 +94,6 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-            <!-- 跳过单元测试 -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <skipTests>true</skipTests>
-                </configuration>
             </plugin>
         </plugins>
     </build>
