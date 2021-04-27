@@ -81,7 +81,7 @@ public class RsaUtils {
         PublicKey publicKey = keyFactory.generatePublic(x509EncodedKeySpec);
         Cipher cipher = Cipher.getInstance("RSA");
         cipher.init(Cipher.DECRYPT_MODE, publicKey);
-        byte[] result = doLongerCipherFinal(cipher, Base64.decodeBase64(text));
+        byte[] result = doLongerCipherFinal(Cipher.DECRYPT_MODE, cipher, Base64.decodeBase64(text));
         return new String(result);
     }
 
@@ -99,7 +99,7 @@ public class RsaUtils {
         PrivateKey privateKey = keyFactory.generatePrivate(pkcs8EncodedKeySpec);
         Cipher cipher = Cipher.getInstance("RSA");
         cipher.init(Cipher.ENCRYPT_MODE, privateKey);
-        byte[] result = doLongerCipherFinal(cipher, text.getBytes());
+        byte[] result = doLongerCipherFinal(Cipher.ENCRYPT_MODE, cipher, text.getBytes());
         return Base64.encodeBase64String(result);
     }
 
@@ -117,7 +117,7 @@ public class RsaUtils {
         PrivateKey privateKey = keyFactory.generatePrivate(pkcs8EncodedKeySpec5);
         Cipher cipher = Cipher.getInstance("RSA");
         cipher.init(Cipher.DECRYPT_MODE, privateKey);
-        byte[] result = doLongerCipherFinal(cipher, Base64.decodeBase64(text));
+        byte[] result = doLongerCipherFinal(Cipher.DECRYPT_MODE, cipher, Base64.decodeBase64(text));
         return new String(result);
     }
 
@@ -134,18 +134,22 @@ public class RsaUtils {
         PublicKey publicKey = keyFactory.generatePublic(x509EncodedKeySpec2);
         Cipher cipher = Cipher.getInstance("RSA");
         cipher.init(Cipher.ENCRYPT_MODE, publicKey);
-        byte[] result = doLongerCipherFinal(cipher, text.getBytes());
+        byte[] result = doLongerCipherFinal(Cipher.ENCRYPT_MODE, cipher, text.getBytes());
         return Base64.encodeBase64String(result);
     }
 
-    private static byte[] doLongerCipherFinal(Cipher cipher, byte[] source) throws Exception {
-        int offset = 0;
-        int totalSize = source.length;
+    private static byte[] doLongerCipherFinal(int opMode,Cipher cipher, byte[] source) throws Exception {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        while (totalSize - offset > 0) {
-            int size = Math.min(1024 / 8 - 11, totalSize - offset);
-            out.write(cipher.doFinal(source, offset, size));
-            offset += size;
+        if (opMode == Cipher.DECRYPT_MODE) {
+            out.write(cipher.doFinal(source));
+        } else {
+            int offset = 0;
+            int totalSize = source.length;
+            while (totalSize - offset > 0) {
+                int size = Math.min(cipher.getOutputSize(0) - 11, totalSize - offset);
+                out.write(cipher.doFinal(source, offset, size));
+                offset += size;
+            }
         }
         out.close();
         return out.toByteArray();
