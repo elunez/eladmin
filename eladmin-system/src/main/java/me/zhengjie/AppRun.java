@@ -20,8 +20,6 @@ import me.zhengjie.annotation.rest.AnonymousGetMapping;
 import me.zhengjie.utils.SpringContextHolder;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
-import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.scheduling.annotation.EnableAsync;
@@ -51,12 +49,13 @@ public class AppRun {
         return new SpringContextHolder();
     }
 
-    @Bean
-    public ServletWebServerFactory webServerFactory() {
-        TomcatServletWebServerFactory fa = new TomcatServletWebServerFactory();
-        fa.addConnectorCustomizers(connector -> connector.setProperty("relaxedQueryChars", "[]{}"));
-        return fa;
-    }
+    // 最新的tomcat不允许查询参数中包含[]{}字符，如果不用 tomcat 注释掉该行就行。
+//    @Bean
+//    public ServletWebServerFactory webServerFactory() {
+//        TomcatServletWebServerFactory fa = new TomcatServletWebServerFactory();
+//        fa.addConnectorCustomizers(connector -> connector.setProperty("relaxedQueryChars", "[]{}"));
+//        return fa;
+//    }
 
     /**
      * 访问首页提示

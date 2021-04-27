@@ -16,7 +16,6 @@
 package me.zhengjie.config;
 
 import com.fasterxml.classmate.TypeResolver;
-import com.google.common.base.Predicates;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -27,15 +26,22 @@ import org.springframework.core.Ordered;
 import org.springframework.data.domain.Pageable;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
+import springfox.documentation.oas.annotations.EnableOpenApi;
 import springfox.documentation.schema.AlternateTypeRule;
 import springfox.documentation.schema.AlternateTypeRuleConvention;
-import springfox.documentation.service.*;
+import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.ApiKey;
+import springfox.documentation.service.AuthorizationScope;
+import springfox.documentation.service.SecurityReference;
+import springfox.documentation.service.SecurityScheme;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
+
 import static com.google.common.collect.Lists.newArrayList;
 import static springfox.documentation.schema.AlternateTypeRules.newRule;
 
@@ -45,7 +51,7 @@ import static springfox.documentation.schema.AlternateTypeRules.newRule;
  * @date 2018-11-23
  */
 @Configuration
-@EnableSwagger2
+@EnableOpenApi
 public class SwaggerConfig {
 
     @Value("${jwt.header}")
@@ -57,12 +63,12 @@ public class SwaggerConfig {
     @Bean
     @SuppressWarnings("all")
     public Docket createRestApi() {
-        return new Docket(DocumentationType.SWAGGER_2)
+        return new Docket(DocumentationType.OAS_30)
                 .enable(enabled)
                 .pathMapping("/")
                 .apiInfo(apiInfo())
                 .select()
-                .paths(Predicates.not(PathSelectors.regex("/error.*")))
+                .paths(Predicate.not(PathSelectors.regex("/error.*")))
                 .paths(PathSelectors.any())
                 .build()
                 //添加登陆认证
@@ -74,7 +80,7 @@ public class SwaggerConfig {
         return new ApiInfoBuilder()
                 .description("一个简单且易上手的 Spring boot 后台管理框架")
                 .title("EL-ADMIN 接口文档")
-                .version("2.6")
+                .version("2.7")
                 .build();
     }
 

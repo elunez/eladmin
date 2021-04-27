@@ -1,8 +1,10 @@
 package me.zhengjie.utils;
 
-import org.junit.Test;
-import static org.junit.Assert.*;
-import static me.zhengjie.utils.EncryptUtils.*;
+import org.junit.jupiter.api.Test;
+
+import static me.zhengjie.utils.EncryptUtils.desDecrypt;
+import static me.zhengjie.utils.EncryptUtils.desEncrypt;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class EncryptUtilsTest {
 
