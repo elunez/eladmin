@@ -3,7 +3,7 @@
 - 升级 JDK 11。
 - 升级 Spring boot 2.4.4 。
 - 升级 Swagger 3.0.0 。
-- 升级 commons-pool2 2.9.0 。
+- 升级 commons-pool2 2.9.0。
 - 升级 mapstruct 1.4.2.Final 。
 - 升级 druid 1.2.6 。
 - 升级 fastjson 1.2.76 。
