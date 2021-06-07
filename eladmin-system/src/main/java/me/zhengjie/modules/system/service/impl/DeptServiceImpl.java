@@ -179,7 +179,7 @@ public class DeptServiceImpl implements DeptService {
         deptList.forEach(dept -> {
                     if (dept!=null && dept.getEnabled()) {
                         List<Dept> depts = deptRepository.findByPid(dept.getId());
-                        if (deptList.size() != 0) {
+                        if (depts.size() != 0) {
                             list.addAll(getDeptChildren(depts));
                         }
                         list.add(dept.getId());
