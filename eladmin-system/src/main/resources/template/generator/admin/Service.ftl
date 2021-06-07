@@ -18,6 +18,8 @@ package ${package}.service;
 import ${package}.domain.${className};
 import ${package}.service.dto.${className}Dto;
 import ${package}.service.dto.${className}QueryCriteria;
+import ${package}.repository.${className}Repository;
+import me.zhengjie.utils.PageResult;
 import org.springframework.data.domain.Pageable;
 import java.util.Map;
 import java.util.List;
@@ -33,12 +35,18 @@ import javax.servlet.http.HttpServletResponse;
 public interface ${className}Service {
 
     /**
+     * 提供入口直接调用Repository方法
+     * @return ${className}Repository
+     */
+    ${className}Repository dao();
+
+    /**
     * 查询数据分页
     * @param criteria 条件
     * @param pageable 分页参数
     * @return Map<String,Object>
     */
-    Map<String,Object> queryAll(${className}QueryCriteria criteria, Pageable pageable);
+    PageResult<${className}Dto> queryAll(${className}QueryCriteria criteria, Pageable pageable);
 
     /**
     * 查询所有数据不分页
