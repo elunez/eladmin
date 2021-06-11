@@ -15,11 +15,12 @@ spring:
 
   #配置 Jpa
   jpa:
+    hibernate:
+      ddl-auto: none
+    open-in-view: true
     properties:
       hibernate:
-        ddl-auto: none
         dialect: org.hibernate.dialect.MySQL5InnoDBDialect
-    open-in-view: true
 
   redis:
     #数据库索引
