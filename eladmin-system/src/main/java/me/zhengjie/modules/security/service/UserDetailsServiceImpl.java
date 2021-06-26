@@ -30,7 +30,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author Zheng Jie
@@ -53,42 +54,109 @@ public class UserDetailsServiceImpl implements UserDetailsService {
      *
      * @see {@link UserCacheClean}
      */
-    static Map<String, JwtUserDto> userDtoCache = new ConcurrentHashMap<>();
 
+    final static Map<String, Future<JwtUserDto>> userDtoCache = new ConcurrentHashMap<>();
+    public static ExecutorService executor = newThreadPool();
     @Override
     public JwtUserDto loadUserByUsername(String username) {
-        boolean searchDb = true;
         JwtUserDto jwtUserDto = null;
-        if (loginProperties.isCacheEnable() && userDtoCache.containsKey(username)) {
-            jwtUserDto = userDtoCache.get(username);
+        Future<JwtUserDto> future=userDtoCache.get(username);
+    if(!loginProperties.isCacheEnable()){
+        UserDto user;
+        try {
+            user = userService.findByName(username);
+        } catch (EntityNotFoundException e) {
+            // SpringSecurity会自动转换UsernameNotFoundException为BadCredentialsException
+            throw new UsernameNotFoundException("", e);
+        }
+        if (user == null) {
+            throw new UsernameNotFoundException("");
+        } else {
+            if (!user.getEnabled()) {
+                throw new BadRequestException("账号未激活！");
+            }
+            jwtUserDto = new JwtUserDto(
+                    user,
+                    dataService.getDeptIds(user),
+                    roleService.mapToGrantedAuthorities(user)
+            );
+        }
+        return jwtUserDto;
+    }
+
+        if (future!=null) {
+            try {
+                jwtUserDto=future.get();
+            }catch (InterruptedException | ExecutionException e) {
+                throw new RuntimeException(e.getMessage());
+            }
             // 检查dataScope是否修改
             List<Long> dataScopes = jwtUserDto.getDataScopes();
             dataScopes.clear();
             dataScopes.addAll(dataService.getDeptIds(jwtUserDto.getUser()));
-            searchDb = false;
-        }
-        if (searchDb) {
-            UserDto user;
-            try {
-                user = userService.findByName(username);
-            } catch (EntityNotFoundException e) {
-                // SpringSecurity会自动转换UsernameNotFoundException为BadCredentialsException
-                throw new UsernameNotFoundException("", e);
+        }else{
+            Callable<JwtUserDto> call=()->getJwtBySearchDB(username);
+            FutureTask<JwtUserDto> ft=new FutureTask<>(call);
+            future=userDtoCache.putIfAbsent(username,ft);
+            if(future==null){
+                future=ft;
+                executor.submit(ft);
             }
-            if (user == null) {
-                throw new UsernameNotFoundException("");
-            } else {
-                if (!user.getEnabled()) {
-                    throw new BadRequestException("账号未激活！");
-                }
-                jwtUserDto = new JwtUserDto(
-                        user,
-                        dataService.getDeptIds(user),
-                        roleService.mapToGrantedAuthorities(user)
-                );
-                userDtoCache.put(username, jwtUserDto);
+            try{
+                return future.get();
+            }catch(CancellationException e){
+                userDtoCache.remove(username);
+            }catch (InterruptedException | ExecutionException e) {
+                throw new RuntimeException(e.getMessage());
             }
         }
         return jwtUserDto;
+    }
+
+    private JwtUserDto getJwtBySearchDB(String username) {
+        UserDto user;
+        try {
+            user = userService.findByName(username);
+        } catch (EntityNotFoundException e) {
+            // SpringSecurity会自动转换UsernameNotFoundException为BadCredentialsException
+            throw new UsernameNotFoundException("", e);
+        }
+        if (user == null) {
+            throw new UsernameNotFoundException("");
+        } else {
+            if (!user.getEnabled()) {
+                throw new BadRequestException("账号未激活！");
+            }
+            JwtUserDto jwtUserDto = new JwtUserDto(
+                    user,
+                    dataService.getDeptIds(user),
+                    roleService.mapToGrantedAuthorities(user)
+            );
+            return jwtUserDto;
+        }
+
+    }
+
+    public static ExecutorService newThreadPool() {
+        ThreadFactory namedThreadFactory = new ThreadFactory() {
+            final AtomicInteger sequence = new AtomicInteger(1);
+
+            @Override
+            public Thread newThread(Runnable r) {
+                Thread thread = new Thread(r);
+                int seq = this.sequence.getAndIncrement();
+                thread.setName("future-task-thread" + (seq > 1 ? "-" + seq : ""));
+                if (!thread.isDaemon()) {
+                    thread.setDaemon(true);
+                }
+
+                return thread;
+            }
+        };
+        return new ThreadPoolExecutor(8, 200,
+                0L, TimeUnit.MILLISECONDS,
+                new LinkedBlockingQueue<>(1024),
+                namedThreadFactory,
+                new ThreadPoolExecutor.AbortPolicy());
     }
 }
