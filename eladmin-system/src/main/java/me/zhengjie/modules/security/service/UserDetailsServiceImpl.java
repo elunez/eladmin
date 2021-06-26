@@ -57,44 +57,35 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     final static Map<String, Future<JwtUserDto>> userDtoCache = new ConcurrentHashMap<>();
     public static ExecutorService executor = newThreadPool();
+
     @Override
     public JwtUserDto loadUserByUsername(String username) {
         JwtUserDto jwtUserDto = null;
-        Future<JwtUserDto> future=userDtoCache.get(username);
-    if(!loginProperties.isCacheEnable()){
-        UserDto user;
-        try {
-            user = userService.findByName(username);
-        } catch (EntityNotFoundException e) {
-            // SpringSecurity会自动转换UsernameNotFoundException为BadCredentialsException
-            throw new UsernameNotFoundException("", e);
-        }
-        if (user == null) {
-            throw new UsernameNotFoundException("");
-        } else {
-            if (!user.getEnabled()) {
-                throw new BadRequestException("账号未激活！");
-            }
-            jwtUserDto = new JwtUserDto(
-                    user,
-                    dataService.getDeptIds(user),
-                    roleService.mapToGrantedAuthorities(user)
-            );
-        }
-        return jwtUserDto;
-    }
-
-        if (future!=null) {
+        Future<JwtUserDto> future = userDtoCache.get(username);
+        if (!loginProperties.isCacheEnable()) {
+            UserDto user;
             try {
-                jwtUserDto=future.get();
-            }catch (InterruptedException | ExecutionException e) {
-                throw new RuntimeException(e.getMessage());
+                user = userService.findByName(username);
+            } catch (EntityNotFoundException e) {
+                // SpringSecurity会自动转换UsernameNotFoundException为BadCredentialsException
+                throw new UsernameNotFoundException("", e);
             }
-            // 检查dataScope是否修改
-            List<Long> dataScopes = jwtUserDto.getDataScopes();
-            dataScopes.clear();
-            dataScopes.addAll(dataService.getDeptIds(jwtUserDto.getUser()));
-        }else{
+            if (user == null) {
+                throw new UsernameNotFoundException("");
+            } else {
+                if (!user.getEnabled()) {
+                    throw new BadRequestException("账号未激活！");
+                }
+                jwtUserDto = new JwtUserDto(
+                        user,
+                        dataService.getDeptIds(user),
+                        roleService.mapToGrantedAuthorities(user)
+                );
+            }
+            return jwtUserDto;
+        }
+
+        if (future==null) {
             Callable<JwtUserDto> call=()->getJwtBySearchDB(username);
             FutureTask<JwtUserDto> ft=new FutureTask<>(call);
             future=userDtoCache.putIfAbsent(username,ft);
@@ -109,9 +100,22 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             }catch (InterruptedException | ExecutionException e) {
                 throw new RuntimeException(e.getMessage());
             }
+        }else{
+            try {
+                jwtUserDto=future.get();
+            }catch (InterruptedException | ExecutionException e) {
+                throw new RuntimeException(e.getMessage());
+            }
+            // 检查dataScope是否修改
+            List<Long> dataScopes = jwtUserDto.getDataScopes();
+            dataScopes.clear();
+            dataScopes.addAll(dataService.getDeptIds(jwtUserDto.getUser()));
+
         }
         return jwtUserDto;
+
     }
+
 
     private JwtUserDto getJwtBySearchDB(String username) {
         UserDto user;
@@ -153,7 +157,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 return thread;
             }
         };
-        return new ThreadPoolExecutor(8, 200,
+        return new ThreadPoolExecutor(10, 200,
                 0L, TimeUnit.MILLISECONDS,
                 new LinkedBlockingQueue<>(1024),
                 namedThreadFactory,
