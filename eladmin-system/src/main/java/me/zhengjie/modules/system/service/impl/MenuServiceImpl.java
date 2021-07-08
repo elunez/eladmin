@@ -62,7 +62,7 @@ public class MenuServiceImpl implements MenuService {
     @Override
     public List<MenuDto> queryAll(MenuQueryCriteria criteria, Boolean isQuery) throws Exception {
         Sort sort = Sort.by(Sort.Direction.ASC, "menuSort");
-        if(isQuery){
+        if(Boolean.TRUE.equals(isQuery)){
             criteria.setPidIsNull(true);
             List<Field> fields = QueryHelp.getAllFields(criteria.getClass(), new ArrayList<>());
             for (Field field : fields) {
