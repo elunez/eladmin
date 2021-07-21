@@ -17,7 +17,6 @@ package me.zhengjie;
 
 import me.zhengjie.annotation.rest.AnonymousGetMapping;
 import me.zhengjie.utils.SpringContextHolder;
-import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
@@ -28,6 +27,14 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+
+import static org.apache.commons.lang3.ArrayUtils.toArray;
+
 
 /**
  * 开启审计功能 -> @EnableJpaAuditing
