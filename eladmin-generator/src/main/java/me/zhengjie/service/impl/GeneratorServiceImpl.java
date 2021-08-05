@@ -42,6 +42,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -75,19 +77,22 @@ public class GeneratorServiceImpl implements GeneratorService {
         // 使用预编译防止sql注入
         String sql = "select table_name ,create_time , engine, table_collation, table_comment from information_schema.tables " +
                 "where table_schema = (select database()) " +
-                "and table_name like ? order by create_time desc";
+                "and table_name like :table order by create_time desc";
         Query query = em.createNativeQuery(sql);
         query.setFirstResult(startEnd[0]);
         query.setMaxResults(startEnd[1] - startEnd[0]);
-        query.setParameter(1, StringUtils.isNotBlank(name) ? ("%" + name + "%") : "%%");
+        query.setParameter("table", StringUtils.isNotBlank(name) ? ("%" + name + "%") : "%%");
         List result = query.getResultList();
         List<TableInfo> tableInfos = new ArrayList<>();
         for (Object obj : result) {
             Object[] arr = (Object[]) obj;
             tableInfos.add(new TableInfo(arr[0], arr[1], arr[2], arr[3], ObjectUtil.isNotEmpty(arr[4]) ? arr[4] : "-"));
         }
-        Query query1 = em.createNativeQuery("SELECT COUNT(*) from information_schema.tables where table_schema = (select database())");
-        Object totalElements = query1.getSingleResult();
+        String countSql = "select count(1) from information_schema.tables " +
+                "where table_schema = (select database()) and table_name like :table";
+        Query queryCount = em.createNativeQuery(countSql);
+        queryCount.setParameter("table", StringUtils.isNotBlank(name) ? ("%" + name + "%") : "%%");
+        Object totalElements = queryCount.getSingleResult();
         return PageUtil.toPage(tableInfos, totalElements);
     }
 
