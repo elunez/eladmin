@@ -217,13 +217,16 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
      */
     public static String getLocalCityInfo(String ip) {
         try {
-            DataBlock dataBlock = new DbSearcher(config, file.getPath())
-                    .binarySearch(ip);
+            DbSearcher dbSearcher = new DbSearcher(config, file.getPath());
+            DataBlock dataBlock = dbSearcher.binarySearch(ip);
             String region = dataBlock.getRegion();
             String address = region.replace("0|", "");
             char symbol = '|';
             if (address.charAt(address.length() - 1) == symbol) {
                 address = address.substring(0, address.length() - 1);
+            }
+            if (dataBlock!=null){
+                dbSearcher.close();
             }
             return address.equals(ElAdminConstant.REGION) ? "内网IP" : address;
         } catch (Exception e) {
