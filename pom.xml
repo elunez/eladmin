@@ -139,11 +139,14 @@
             <artifactId>druid-spring-boot-starter</artifactId>
             <version>${druid.version}</version>
         </dependency>
+
+        <!-- ip2region IP库 -->
         <dependency>
-            <groupId>org.lionsoul</groupId>
-            <artifactId>ip2region</artifactId>
-            <version>1.7.2</version>
+            <groupId>net.dreamlu</groupId>
+            <artifactId>mica-ip2region</artifactId>
+            <version>2.5.6</version>
         </dependency>
+
 
         <!--lombok插件-->
         <dependency>
