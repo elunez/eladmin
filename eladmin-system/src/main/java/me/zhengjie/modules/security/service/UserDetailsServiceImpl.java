@@ -55,13 +55,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
      * @see {@link UserCacheClean}
      */
 
-    final static Map<String, Future<JwtUserDto>> userDtoCache = new ConcurrentHashMap<>();
+    final static Map<String, Future<JwtUserDto>> USER_DTO_CACHE = new ConcurrentHashMap<>();
     public static ExecutorService executor = newThreadPool();
 
     @Override
     public JwtUserDto loadUserByUsername(String username) {
         JwtUserDto jwtUserDto = null;
-        Future<JwtUserDto> future = userDtoCache.get(username);
+        Future<JwtUserDto> future = USER_DTO_CACHE.get(username);
         if (!loginProperties.isCacheEnable()) {
             UserDto user;
             try {
@@ -86,9 +86,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         }
 
         if (future==null) {
-            Callable<JwtUserDto> call=()->getJwtBySearchDB(username);
+            Callable<JwtUserDto> call=()->getJwtBySearchDb(username);
             FutureTask<JwtUserDto> ft=new FutureTask<>(call);
-            future=userDtoCache.putIfAbsent(username,ft);
+            future=USER_DTO_CACHE.putIfAbsent(username,ft);
             if(future==null){
                 future=ft;
                 executor.submit(ft);
@@ -96,7 +96,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             try{
                 return future.get();
             }catch(CancellationException e){
-                userDtoCache.remove(username);
+                USER_DTO_CACHE.remove(username);
             }catch (InterruptedException | ExecutionException e) {
                 throw new RuntimeException(e.getMessage());
             }
@@ -116,8 +116,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     }
 
-
-    private JwtUserDto getJwtBySearchDB(String username) {
+    private JwtUserDto getJwtBySearchDb(String username) {
         UserDto user;
         try {
             user = userService.findByName(username);
@@ -131,12 +130,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             if (!user.getEnabled()) {
                 throw new BadRequestException("账号未激活！");
             }
-            JwtUserDto jwtUserDto = new JwtUserDto(
+            return new JwtUserDto(
                     user,
                     dataService.getDeptIds(user),
                     roleService.mapToGrantedAuthorities(user)
             );
-            return jwtUserDto;
         }
 
     }

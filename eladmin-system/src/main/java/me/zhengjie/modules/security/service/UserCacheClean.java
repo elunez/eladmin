@@ -35,7 +35,7 @@ public class UserCacheClean {
      */
     public void cleanUserCache(String userName) {
         if (StringUtils.isNotEmpty(userName)) {
-            UserDetailsServiceImpl.userDtoCache.remove(userName);
+            UserDetailsServiceImpl.USER_DTO_CACHE.remove(userName);
         }
     }
 
@@ -44,6 +44,6 @@ public class UserCacheClean {
      * ,如发生角色授权信息变化，可以简便的全部失效缓存
      */
     public void cleanAll() {
-        UserDetailsServiceImpl.userDtoCache.clear();
+        UserDetailsServiceImpl.USER_DTO_CACHE.clear();
     }
 }
