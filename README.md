@@ -105,4 +105,4 @@
 项目的发展离不开你的支持，请作者喝杯咖啡吧☕  [Donate](https://el-admin.vip/donation/)
 
 #### 反馈交流
-- QQ交流群：一群：<strike>891137268</strike> 已满、二群：947578238
+- QQ交流群：一群：<strike>891137268</strike> 、二群：<strike>947578238</strike>、三群：659622532
