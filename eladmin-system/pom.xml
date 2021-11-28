@@ -38,8 +38,18 @@
             <artifactId>eladmin-tools</artifactId>
             <version>2.6</version>
         </dependency>
-
-        <!-- Spring boot websocket -->
+        <!--    SQL管理模块    -->
+        <dependency>
+            <groupId>me.zhengjie</groupId>
+            <artifactId>eladmin-sqlManager</artifactId>
+            <version>2.6</version>
+        </dependency>
+<!--        配置管理-->
+        <dependency>
+            <groupId>me.zhengjie</groupId>
+            <artifactId>eladmin-configManager</artifactId>
+            <version>2.6</version>
+        </dependency><!-- Spring boot websocket -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-websocket</artifactId>
