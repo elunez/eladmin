@@ -125,7 +125,7 @@ public class LogServiceImpl implements LogService {
                 argList.add(map);
             }
         }
-        if (argList.size() == 0) {
+        if (argList.isEmpty() == 0) {
             return "";
         }
         return argList.size() == 1 ? JSONUtil.toJsonStr(argList.get(0)) : JSONUtil.toJsonStr(argList);
