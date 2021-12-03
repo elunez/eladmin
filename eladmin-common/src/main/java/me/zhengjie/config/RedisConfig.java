@@ -65,7 +65,7 @@ public class RedisConfig extends CachingConfigurerSupport {
         FastJsonRedisSerializer<Object> fastJsonRedisSerializer = new FastJsonRedisSerializer<>(Object.class);
         RedisCacheConfiguration configuration = RedisCacheConfiguration.defaultCacheConfig();
         configuration = configuration.serializeValuesWith(RedisSerializationContext.
-                SerializationPair.fromSerializer(fastJsonRedisSerializer)).entryTtl(Duration.ofHours(6));
+                SerializationPair.fromSerializer(fastJsonRedisSerializer)).entryTtl(Duration.ofHours(2));
         return configuration;
     }
 
@@ -97,7 +97,7 @@ public class RedisConfig extends CachingConfigurerSupport {
     @Override
     public KeyGenerator keyGenerator() {
         return (target, method, params) -> {
-            Map<String,Object> container = new HashMap<>(3);
+            Map<String,Object> container = new HashMap<>();
             Class<?> targetClassClass = target.getClass();
             // 类地址
             container.put("class",targetClassClass.toGenericString());
@@ -203,13 +203,14 @@ class StringRedisSerializer implements RedisSerializer<Object> {
         return (bytes == null ? null : new String(bytes, charset));
     }
 
-    @Override
-    public byte[] serialize(Object object) {
-        String string = JSON.toJSONString(object);
-        if (StringUtils.isBlank(string)) {
-            return null;
-        }
-        string = string.replace("\"", "");
-        return string.getBytes(charset);
-    }
+	@Override
+	public @Nullable byte[] serialize(Object object) {
+		String string = JSON.toJSONString(object);
+
+		if (org.apache.commons.lang3.StringUtils.isBlank(string)) {
+			return null;
+		}
+		string = string.replace("\"", "");
+		return string.getBytes(charset);
+	}
 }
