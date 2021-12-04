@@ -79,7 +79,9 @@ public class LogServiceImpl implements LogService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void save(String username, String browser, String ip, ProceedingJoinPoint joinPoint, Log log) {
-
+        if (log == null) {
+            throw new IllegalArgumentException("Log 不能为 null!");
+        }
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
         me.zhengjie.annotation.Log aopLog = method.getAnnotation(me.zhengjie.annotation.Log.class);
@@ -88,12 +90,9 @@ public class LogServiceImpl implements LogService {
         String methodName = joinPoint.getTarget().getClass().getName() + "." + signature.getName() + "()";
 
         // 描述
-        if (log != null) {
-            log.setDescription(aopLog.value());
-        }
-        assert log != null;
+        log.setDescription(aopLog.value());
+        
         log.setRequestIp(ip);
-
         log.setAddress(StringUtils.getCityInfo(log.getRequestIp()));
         log.setMethod(methodName);
         log.setUsername(username);
@@ -126,7 +125,7 @@ public class LogServiceImpl implements LogService {
                 argList.add(map);
             }
         }
-        if (argList.size() == 0) {
+        if (argList.isEmpty() == 0) {
             return "";
         }
         return argList.size() == 1 ? JSONUtil.toJsonStr(argList.get(0)) : JSONUtil.toJsonStr(argList);
