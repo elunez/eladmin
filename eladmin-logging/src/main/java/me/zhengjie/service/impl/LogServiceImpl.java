@@ -28,8 +28,6 @@ import me.zhengjie.service.mapstruct.LogSmallMapper;
 import me.zhengjie.utils.*;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -50,7 +48,6 @@ import java.util.*;
 @Service
 @RequiredArgsConstructor
 public class LogServiceImpl implements LogService {
-    private static final Logger log = LoggerFactory.getLogger(LogServiceImpl.class);
     private final LogRepository logRepository;
     private final LogErrorMapper logErrorMapper;
     private final LogSmallMapper logSmallMapper;
@@ -125,7 +122,7 @@ public class LogServiceImpl implements LogService {
                 argList.add(map);
             }
         }
-        if (argList.isEmpty() == 0) {
+        if (argList.isEmpty()) {
             return "";
         }
         return argList.size() == 1 ? JSONUtil.toJsonStr(argList.get(0)) : JSONUtil.toJsonStr(argList);
