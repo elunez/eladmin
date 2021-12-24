@@ -37,7 +37,6 @@ public class QuartzRunnable implements Callable<Object> {
 			throws NoSuchMethodException, SecurityException {
 		this.target = SpringContextHolder.getBean(beanName);
 		this.params = params;
-
 		if (StringUtils.isNotBlank(params)) {
 			this.method = target.getClass().getDeclaredMethod(methodName, String.class);
 		} else {
@@ -46,6 +45,7 @@ public class QuartzRunnable implements Callable<Object> {
 	}
 
 	@Override
+	@SuppressWarnings("all")
 	public Object call() throws Exception {
 		ReflectionUtils.makeAccessible(method);
 		if (StringUtils.isNotBlank(params)) {
