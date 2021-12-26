@@ -41,7 +41,7 @@ public class LimitController {
     @AnonymousGetMapping
     @ApiOperation("测试")
     @Limit(key = "test", period = 60, count = 10, name = "testLimit", prefix = "limit")
-    public int test() {
+    public int testLimit() {
         return ATOMIC_INTEGER.incrementAndGet();
     }
 }
