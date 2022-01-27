@@ -47,8 +47,8 @@ public class UserCacheManager {
     public void expel() {
         long now = System.currentTimeMillis();
         if (cache.size() < minEvictableSize ||
-                now < nextMinEvictableTime &&
-                        !expelLock.compareAndSet(true, false)) {
+                now < nextMinEvictableTime ||
+                !expelLock.compareAndSet(true, false)) {
             return;
         }
         long oldestTime = now;
