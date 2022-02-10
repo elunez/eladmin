@@ -15,8 +15,6 @@
  */
 package me.zhengjie.config.thread;
 
-import me.zhengjie.utils.SpringContextHolder;
-
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -29,13 +27,12 @@ import java.util.concurrent.TimeUnit;
 public class ThreadPoolExecutorUtil {
 
     public static ThreadPoolExecutor getPoll(){
-        AsyncTaskProperties properties = SpringContextHolder.getBean(AsyncTaskProperties.class);
         return new ThreadPoolExecutor(
-                properties.getCorePoolSize(),
-                properties.getMaxPoolSize(),
-                properties.getKeepAliveSeconds(),
+                AsyncTaskProperties.corePoolSize,
+                AsyncTaskProperties.maxPoolSize,
+                AsyncTaskProperties.keepAliveSeconds,
                 TimeUnit.SECONDS,
-                new ArrayBlockingQueue<>(properties.getQueueCapacity()),
+                new ArrayBlockingQueue<>(AsyncTaskProperties.queueCapacity),
                 new TheadFactoryName()
         );
     }

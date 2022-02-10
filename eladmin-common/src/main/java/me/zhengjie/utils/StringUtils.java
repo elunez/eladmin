@@ -18,18 +18,13 @@ package me.zhengjie.utils;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
+import lombok.extern.slf4j.Slf4j;
+import me.zhengjie.config.ElAdminProperties;
+import net.dreamlu.mica.ip2region.core.Ip2regionSearcher;
+import net.dreamlu.mica.ip2region.core.IpInfo;
 import nl.basjes.parse.useragent.UserAgent;
 import nl.basjes.parse.useragent.UserAgentAnalyzer;
-import org.lionsoul.ip2region.DataBlock;
-import org.lionsoul.ip2region.DbConfig;
-import org.lionsoul.ip2region.DbSearcher;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.core.io.ClassPathResource;
-
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.UnknownHostException;
@@ -41,41 +36,24 @@ import java.util.Enumeration;
  * @author Zheng Jie
  * 字符串工具类, 继承org.apache.commons.lang3.StringUtils类
  */
+@Slf4j
 public class StringUtils extends org.apache.commons.lang3.StringUtils {
 
-    private static final Logger log = LoggerFactory.getLogger(StringUtils.class);
-    private static boolean ipLocal = false;
-    private static File file = null;
-    private static DbConfig config;
     private static final char SEPARATOR = '_';
     private static final String UNKNOWN = "unknown";
 
-    private static final UserAgentAnalyzer userAgentAnalyzer = UserAgentAnalyzer
+    /**
+     * 注入bean
+     */
+    private final static Ip2regionSearcher IP_SEARCHER = SpringContextHolder.getBean(Ip2regionSearcher.class);
+
+
+    private static final UserAgentAnalyzer USER_AGENT_ANALYZER = UserAgentAnalyzer
             .newBuilder()
             .hideMatcherLoadStats()
             .withCache(10000)
             .withField(UserAgent.AGENT_NAME_VERSION)
             .build();
-
-
-    static {
-        SpringContextHolder.addCallBacks(() -> {
-            StringUtils.ipLocal = SpringContextHolder.getProperties("ip.local-parsing", false, Boolean.class);
-            if (ipLocal) {
-                /*
-                 * 此文件为独享 ，不必关闭
-                 */
-                String path = "ip2region/ip2region.db";
-                String name = "ip2region.db";
-                try {
-                    config = new DbConfig();
-                    file = FileUtil.inputStreamToFile(new ClassPathResource(path).getInputStream(), name);
-                } catch (Exception e) {
-                    log.error(e.getMessage(), e);
-                }
-            }
-        });
-    }
 
     /**
      * 驼峰命名法工具
@@ -196,7 +174,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
      * 根据ip获取详细地址
      */
     public static String getCityInfo(String ip) {
-        if (ipLocal) {
+        if (ElAdminProperties.ipLocal) {
             return getLocalCityInfo(ip);
         } else {
             return getHttpCityInfo(ip);
@@ -216,24 +194,16 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
      * 根据ip获取详细地址
      */
     public static String getLocalCityInfo(String ip) {
-        try {
-            DataBlock dataBlock = new DbSearcher(config, file.getPath())
-                    .binarySearch(ip);
-            String region = dataBlock.getRegion();
-            String address = region.replace("0|", "");
-            char symbol = '|';
-            if (address.charAt(address.length() - 1) == symbol) {
-                address = address.substring(0, address.length() - 1);
-            }
-            return address.equals(ElAdminConstant.REGION) ? "内网IP" : address;
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
+        IpInfo ipInfo = IP_SEARCHER.memorySearch(ip);
+        if(ipInfo != null){
+            return ipInfo.getAddress();
         }
-        return "";
+        return null;
+
     }
 
     public static String getBrowser(HttpServletRequest request) {
-        UserAgent.ImmutableUserAgent userAgent = userAgentAnalyzer.parse(request.getHeader("User-Agent"));
+        UserAgent.ImmutableUserAgent userAgent = USER_AGENT_ANALYZER.parse(request.getHeader("User-Agent"));
         return userAgent.get(UserAgent.AGENT_NAME_VERSION).getValue();
     }
 

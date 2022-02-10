@@ -49,7 +49,7 @@ public class GeneratorController {
 
     @ApiOperation("查询数据库数据")
     @GetMapping(value = "/tables/all")
-    public ResponseEntity<Object> queryTables(){
+    public ResponseEntity<Object> queryAllTables(){
         return new ResponseEntity<>(generatorService.getTables(), HttpStatus.OK);
     }
 
@@ -71,14 +71,14 @@ public class GeneratorController {
 
     @ApiOperation("保存字段数据")
     @PutMapping
-    public ResponseEntity<HttpStatus> save(@RequestBody List<ColumnInfo> columnInfos){
+    public ResponseEntity<HttpStatus> saveColumn(@RequestBody List<ColumnInfo> columnInfos){
         generatorService.save(columnInfos);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @ApiOperation("同步字段数据")
     @PostMapping(value = "sync")
-    public ResponseEntity<HttpStatus> sync(@RequestBody List<String> tables){
+    public ResponseEntity<HttpStatus> syncColumn(@RequestBody List<String> tables){
         for (String table : tables) {
             generatorService.sync(generatorService.getColumns(table), generatorService.query(table));
         }
@@ -87,7 +87,7 @@ public class GeneratorController {
 
     @ApiOperation("生成代码")
     @PostMapping(value = "/{tableName}/{type}")
-    public ResponseEntity<Object> generator(@PathVariable String tableName, @PathVariable Integer type, HttpServletRequest request, HttpServletResponse response){
+    public ResponseEntity<Object> generatorCode(@PathVariable String tableName, @PathVariable Integer type, HttpServletRequest request, HttpServletResponse response){
         if(!generatorEnabled && type == 0){
             throw new BadRequestException("此环境不允许生成代码，请选择预览或者下载查看！");
         }

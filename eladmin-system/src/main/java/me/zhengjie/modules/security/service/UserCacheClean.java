@@ -16,6 +16,7 @@
 
 package me.zhengjie.modules.security.service;
 
+import lombok.AllArgsConstructor;
 import me.zhengjie.utils.StringUtils;
 import org.springframework.stereotype.Component;
 
@@ -25,7 +26,10 @@ import org.springframework.stereotype.Component;
  * @apiNote: 用于清理 用户登录信息缓存，为防止Spring循环依赖与安全考虑 ，单独构成工具类
  */
 @Component
+@AllArgsConstructor
 public class UserCacheClean {
+
+    private final UserCacheManager userCacheManager;
 
     /**
      * 清理特定用户缓存信息<br>
@@ -35,7 +39,7 @@ public class UserCacheClean {
      */
     public void cleanUserCache(String userName) {
         if (StringUtils.isNotEmpty(userName)) {
-            UserDetailsServiceImpl.userDtoCache.remove(userName);
+            userCacheManager.remove(userName);
         }
     }
 
@@ -44,6 +48,6 @@ public class UserCacheClean {
      * ,如发生角色授权信息变化，可以简便的全部失效缓存
      */
     public void cleanAll() {
-        UserDetailsServiceImpl.userDtoCache.clear();
+        userCacheManager.clear();
     }
 }

@@ -16,6 +16,7 @@
 package me.zhengjie.config.thread;
 
 import lombok.Data;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -26,14 +27,33 @@ import org.springframework.stereotype.Component;
  */
 @Data
 @Component
-@ConfigurationProperties(prefix = "task.pool")
 public class AsyncTaskProperties {
 
-    private int corePoolSize;
+    public static int corePoolSize;
 
-    private int maxPoolSize;
+    public static int maxPoolSize;
 
-    private int keepAliveSeconds;
+    public static int keepAliveSeconds;
 
-    private int queueCapacity;
+    public static int queueCapacity;
+
+    @Value("${task.pool.core-pool-size}")
+    public void setCorePoolSize(int corePoolSize) {
+        AsyncTaskProperties.corePoolSize = corePoolSize;
+    }
+
+    @Value("${task.pool.max-pool-size}")
+    public void setMaxPoolSize(int maxPoolSize) {
+        AsyncTaskProperties.maxPoolSize = maxPoolSize;
+    }
+
+    @Value("${task.pool.keep-alive-seconds}")
+    public void setKeepAliveSeconds(int keepAliveSeconds) {
+        AsyncTaskProperties.keepAliveSeconds = keepAliveSeconds;
+    }
+
+    @Value("${task.pool.queue-capacity}")
+    public void setQueueCapacity(int queueCapacity) {
+        AsyncTaskProperties.queueCapacity = queueCapacity;
+    }
 }

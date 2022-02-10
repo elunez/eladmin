@@ -45,9 +45,9 @@ public class JobRunner implements ApplicationRunner {
      */
     @Override
     public void run(ApplicationArguments applicationArguments) {
-        log.info("--------------------注入定时任务---------------------");
+        log.info("--------------------注入系统定时任务------------------");
         List<QuartzJob> quartzJobs = quartzJobRepository.findByIsPauseIsFalse();
         quartzJobs.forEach(quartzManage::addJob);
-        log.info("--------------------定时任务注入完成---------------------");
+        log.info("--------------------定时任务注入完成------------------");
     }
 }

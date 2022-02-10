@@ -32,24 +32,17 @@ import java.util.concurrent.ThreadPoolExecutor;
 @Configuration
 public class AsyncTaskExecutePool implements AsyncConfigurer {
 
-    /** 注入配置类 */
-    private final AsyncTaskProperties config;
-
-    public AsyncTaskExecutePool(AsyncTaskProperties config) {
-        this.config = config;
-    }
-
     @Override
     public Executor getAsyncExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         //核心线程池大小
-        executor.setCorePoolSize(config.getCorePoolSize());
+        executor.setCorePoolSize(AsyncTaskProperties.corePoolSize);
         //最大线程数
-        executor.setMaxPoolSize(config.getMaxPoolSize());
+        executor.setMaxPoolSize(AsyncTaskProperties.maxPoolSize);
         //队列容量
-        executor.setQueueCapacity(config.getQueueCapacity());
+        executor.setQueueCapacity(AsyncTaskProperties.queueCapacity);
         //活跃时间
-        executor.setKeepAliveSeconds(config.getKeepAliveSeconds());
+        executor.setKeepAliveSeconds(AsyncTaskProperties.keepAliveSeconds);
         //线程名字前缀
         executor.setThreadNamePrefix("el-async-");
         // setRejectedExecutionHandler：当pool已经达到max size的时候，如何处理新任务

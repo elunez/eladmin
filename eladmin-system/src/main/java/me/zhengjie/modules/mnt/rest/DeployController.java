@@ -57,14 +57,14 @@ public class DeployController {
 	@ApiOperation("导出部署数据")
 	@GetMapping(value = "/download")
 	@PreAuthorize("@el.check('database:list')")
-	public void download(HttpServletResponse response, DeployQueryCriteria criteria) throws IOException {
+	public void exportDeployData(HttpServletResponse response, DeployQueryCriteria criteria) throws IOException {
 		deployService.download(deployService.queryAll(criteria), response);
 	}
 
     @ApiOperation(value = "查询部署")
     @GetMapping
 	@PreAuthorize("@el.check('deploy:list')")
-    public ResponseEntity<Object> query(DeployQueryCriteria criteria, Pageable pageable){
+    public ResponseEntity<Object> queryDeployData(DeployQueryCriteria criteria, Pageable pageable){
     	return new ResponseEntity<>(deployService.queryAll(criteria,pageable),HttpStatus.OK);
     }
 
@@ -72,7 +72,7 @@ public class DeployController {
     @ApiOperation(value = "新增部署")
     @PostMapping
 	@PreAuthorize("@el.check('deploy:add')")
-    public ResponseEntity<Object> create(@Validated @RequestBody Deploy resources){
+    public ResponseEntity<Object> createDeploy(@Validated @RequestBody Deploy resources){
 		deployService.create(resources);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
@@ -81,7 +81,7 @@ public class DeployController {
     @ApiOperation(value = "修改部署")
     @PutMapping
 	@PreAuthorize("@el.check('deploy:edit')")
-    public ResponseEntity<Object> update(@Validated @RequestBody Deploy resources){
+    public ResponseEntity<Object> updateDeploy(@Validated @RequestBody Deploy resources){
         deployService.update(resources);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -90,7 +90,7 @@ public class DeployController {
 	@ApiOperation(value = "删除部署")
 	@DeleteMapping
 	@PreAuthorize("@el.check('deploy:del')")
-	public ResponseEntity<Object> delete(@RequestBody Set<Long> ids){
+	public ResponseEntity<Object> deleteDeploy(@RequestBody Set<Long> ids){
 		deployService.delete(ids);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
@@ -99,7 +99,7 @@ public class DeployController {
 	@ApiOperation(value = "上传文件部署")
 	@PostMapping(value = "/upload")
 	@PreAuthorize("@el.check('deploy:edit')")
-	public ResponseEntity<Object> upload(@RequestBody MultipartFile file, HttpServletRequest request)throws Exception{
+	public ResponseEntity<Object> uploadDeploy(@RequestBody MultipartFile file, HttpServletRequest request)throws Exception{
 		Long id = Long.valueOf(request.getParameter("id"));
 		String fileName = "";
 		if(file != null){
