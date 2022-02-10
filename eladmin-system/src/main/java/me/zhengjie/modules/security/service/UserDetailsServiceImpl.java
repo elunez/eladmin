@@ -29,7 +29,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -45,17 +44,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private final DataService dataService;
     private final LoginProperties loginProperties;
 
+    private final UserCacheManager USER_DTO_CACHE;
+
     public void setEnableCache(boolean enableCache) {
         this.loginProperties.setCacheEnable(enableCache);
     }
 
-    /**
-     * 用户信息缓存
-     *
-     * @see {@link UserCacheClean}
-     */
-
-    final static Map<String, Future<JwtUserDto>> USER_DTO_CACHE = new ConcurrentHashMap<>();
     public static ExecutorService executor = newThreadPool();
 
     @Override
@@ -68,7 +62,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 user = userService.findByName(username);
             } catch (EntityNotFoundException e) {
                 // SpringSecurity会自动转换UsernameNotFoundException为BadCredentialsException
-                throw new UsernameNotFoundException("", e);
+                throw new UsernameNotFoundException(username, e);
             }
             if (user == null) {
                 throw new UsernameNotFoundException("");
@@ -85,25 +79,26 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             return jwtUserDto;
         }
 
-        if (future==null) {
-            Callable<JwtUserDto> call=()->getJwtBySearchDb(username);
-            FutureTask<JwtUserDto> ft=new FutureTask<>(call);
-            future=USER_DTO_CACHE.putIfAbsent(username,ft);
-            if(future==null){
-                future=ft;
+        if (future == null) {
+            Callable<JwtUserDto> call = () -> getJwtBySearchDb(username);
+            FutureTask<JwtUserDto> ft = new FutureTask<>(call);
+            future = USER_DTO_CACHE.putIfAbsent(username, ft);
+            if (future == null) {
+                future = ft;
                 executor.submit(ft);
             }
-            try{
+            try {
                 return future.get();
-            }catch(CancellationException e){
+            } catch (CancellationException e) {
                 USER_DTO_CACHE.remove(username);
-            }catch (InterruptedException | ExecutionException e) {
+                System.out.println("error" + Thread.currentThread().getName());
+            } catch (InterruptedException | ExecutionException e) {
                 throw new RuntimeException(e.getMessage());
             }
-        }else{
+        } else {
             try {
-                jwtUserDto=future.get();
-            }catch (InterruptedException | ExecutionException e) {
+                jwtUserDto = future.get();
+            } catch (InterruptedException | ExecutionException e) {
                 throw new RuntimeException(e.getMessage());
             }
             // 检查dataScope是否修改
