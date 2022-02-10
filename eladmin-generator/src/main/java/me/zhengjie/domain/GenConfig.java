@@ -73,6 +73,9 @@ public class GenConfig implements Serializable {
     @ApiModelProperty(value = "表前缀")
     private String prefix;
 
+    @ApiModelProperty(value = "列前缀")
+    private String columnPrefix;
+
     @ApiModelProperty(value = "是否覆盖")
     private Boolean cover = false;
 }

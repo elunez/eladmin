@@ -240,7 +240,8 @@ public class GenUtil {
         List<Map<String, Object>> betweens = new ArrayList<>();
         // 存储不为空的字段信息
         List<Map<String, Object>> isNotNullColumns = new ArrayList<>();
-
+        // 列前缀
+        String columnPrefix = genConfig.getColumnPrefix();
         for (ColumnInfo column : columnInfos) {
             Map<String, Object> listMap = new HashMap<>(16);
             // 字段描述
@@ -250,9 +251,20 @@ public class GenUtil {
             // 主键类型
             String colType = ColUtil.cloToJava(column.getColumnType());
             // 小写开头的字段名
-            String changeColumnName = StringUtils.toCamelCase(column.getColumnName());
+            String changeColumnName = "";
+            if (StrUtil.isNotBlank(columnPrefix)) {
+                changeColumnName = StringUtils.toCamelCase(StrUtil.removePrefix(column.getColumnName(), columnPrefix));
+            } else {
+                changeColumnName = StringUtils.toCamelCase(column.getColumnName());
+            }
             // 大写开头的字段名
-            String capitalColumnName = StringUtils.toCapitalizeCamelCase(column.getColumnName());
+            String capitalColumnName = "";
+            if (StrUtil.isNotBlank(columnPrefix)) {
+                capitalColumnName = StringUtils.toCapitalizeCamelCase(
+                        StrUtil.removePrefix(column.getColumnName(), columnPrefix));
+            } else {
+                capitalColumnName = StringUtils.toCapitalizeCamelCase(column.getColumnName());
+            }
             if (PK.equals(column.getKeyType())) {
                 // 存储主键类型
                 genMap.put("pkColumnType", colType);
