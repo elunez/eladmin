@@ -64,6 +64,9 @@ public class DataServiceImpl implements DataService {
                 case CUSTOMIZE:
                     deptIds.addAll(getCustomize(deptIds, role));
                     break;
+                case ALL:
+                    // 增加如果是数据权限包含有全部，则直接返回空
+                    return new ArrayList<>();
                 default:
                     return new ArrayList<>(deptIds);
             }
