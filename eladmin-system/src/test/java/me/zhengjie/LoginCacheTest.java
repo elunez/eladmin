@@ -41,4 +41,24 @@ public class LoginCacheTest {
         System.out.print("使用缓存：" + (end1 - start1) + "毫秒\n 不使用缓存：" + (end2 - start2) + "毫秒");
     }
 
+    @Test
+    public void testCacheManager() throws InterruptedException {
+        int size = 1000;
+        CountDownLatch latch = new CountDownLatch(size);
+        for (int i = 0; i < size; i++) {
+            int mod = i % 10;
+            executor.submit(() -> {
+                try {
+                    Thread.sleep(mod * 2 + (int) (Math.random() * 10000));
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                userDetailsService.loadUserByUsername("admin" + mod);
+                latch.countDown();
+                System.out.println("剩余未完成数量" + latch.getCount());
+            });
+        }
+        latch.await();
+    }
+
 }
