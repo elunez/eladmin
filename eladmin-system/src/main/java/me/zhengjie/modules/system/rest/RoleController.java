@@ -106,6 +106,9 @@ public class RoleController {
     @PutMapping
     @PreAuthorize("@el.check('roles:edit')")
     public ResponseEntity<Object> updateRole(@Validated(Role.Update.class) @RequestBody Role resources){
+        if(resources.getId() <= 1){
+            throw new BadRequestException("演示环境不可操作");
+        }
         getLevels(resources.getLevel());
         roleService.update(resources);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -116,6 +119,9 @@ public class RoleController {
     @PutMapping(value = "/menu")
     @PreAuthorize("@el.check('roles:edit')")
     public ResponseEntity<Object> updateRoleMenu(@RequestBody Role resources){
+        if(resources.getId() <= 1){
+            throw new BadRequestException("演示环境不可操作");
+        }
         RoleDto role = roleService.findById(resources.getId());
         getLevels(role.getLevel());
         roleService.updateMenu(resources,role);
@@ -128,6 +134,9 @@ public class RoleController {
     @PreAuthorize("@el.check('roles:del')")
     public ResponseEntity<Object> deleteRole(@RequestBody Set<Long> ids){
         for (Long id : ids) {
+            if(id <= 1){
+                throw new BadRequestException("演示环境不可操作");
+            }
             RoleDto role = roleService.findById(id);
             getLevels(role.getLevel());
         }

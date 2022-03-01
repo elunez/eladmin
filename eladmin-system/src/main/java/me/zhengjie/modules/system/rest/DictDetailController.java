@@ -84,6 +84,9 @@ public class DictDetailController {
     @PutMapping
     @PreAuthorize("@el.check('dict:edit')")
     public ResponseEntity<Object> updateDictDetail(@Validated(DictDetail.Update.class) @RequestBody DictDetail resources){
+        if(resources.getId() <= 6){
+            throw new BadRequestException("演示环境不可操作");
+        }
         dictDetailService.update(resources);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -93,6 +96,9 @@ public class DictDetailController {
     @DeleteMapping(value = "/{id}")
     @PreAuthorize("@el.check('dict:del')")
     public ResponseEntity<Object> deleteDictDetail(@PathVariable Long id){
+        if(id <= 6){
+            throw new BadRequestException("演示环境不可操作");
+        }
         dictDetailService.delete(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }

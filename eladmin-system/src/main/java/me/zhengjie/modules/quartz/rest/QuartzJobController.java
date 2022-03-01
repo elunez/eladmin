@@ -81,11 +81,7 @@ public class QuartzJobController {
     @PostMapping
     @PreAuthorize("@el.check('timing:add')")
     public ResponseEntity<Object> createQuartzJob(@Validated @RequestBody QuartzJob resources){
-        if (resources.getId() != null) {
-            throw new BadRequestException("A new "+ ENTITY_NAME +" cannot already have an ID");
-        }
-        quartzJobService.create(resources);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        throw new BadRequestException("演示环境不支持新增任务！");
     }
 
     @Log("修改定时任务")
@@ -102,8 +98,7 @@ public class QuartzJobController {
     @PutMapping(value = "/{id}")
     @PreAuthorize("@el.check('timing:edit')")
     public ResponseEntity<Object> updateQuartzJobStatus(@PathVariable Long id){
-        quartzJobService.updateIsPause(quartzJobService.findById(id));
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        throw new BadRequestException("演示环境请使用执行按钮运行任务！");
     }
 
     @Log("执行定时任务")
@@ -120,7 +115,6 @@ public class QuartzJobController {
     @DeleteMapping
     @PreAuthorize("@el.check('timing:del')")
     public ResponseEntity<Object> deleteQuartzJob(@RequestBody Set<Long> ids){
-        quartzJobService.delete(ids);
-        return new ResponseEntity<>(HttpStatus.OK);
+        throw new BadRequestException("演示环境不支持删除定时任务！");
     }
 }

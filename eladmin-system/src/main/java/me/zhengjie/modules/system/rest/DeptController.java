@@ -92,6 +92,9 @@ public class DeptController {
     @PutMapping
     @PreAuthorize("@el.check('dept:edit')")
     public ResponseEntity<Object> updateDept(@Validated(Dept.Update.class) @RequestBody Dept resources){
+        if(resources.getId() <= 11){
+            throw new BadRequestException("演示环境不可操作");
+        }
         deptService.update(resources);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -103,6 +106,9 @@ public class DeptController {
     public ResponseEntity<Object> deleteDept(@RequestBody Set<Long> ids){
         Set<DeptDto> deptDtos = new HashSet<>();
         for (Long id : ids) {
+            if(id <= 11){
+                throw new BadRequestException("演示环境不可操作");
+            }
             List<Dept> deptList = deptService.findByPid(id);
             deptDtos.add(deptService.findById(id));
             if(CollectionUtil.isNotEmpty(deptList)){

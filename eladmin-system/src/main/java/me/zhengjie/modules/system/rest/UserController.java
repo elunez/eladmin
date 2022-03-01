@@ -119,6 +119,9 @@ public class UserController {
     @PutMapping
     @PreAuthorize("@el.check('user:edit')")
     public ResponseEntity<Object> updateUser(@Validated(User.Update.class) @RequestBody User resources) throws Exception {
+        if(resources.getId() <= 1){
+            throw new BadRequestException("演示环境不可操作");
+        }
         checkLevel(resources);
         userService.update(resources);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -128,6 +131,9 @@ public class UserController {
     @ApiOperation("修改用户：个人中心")
     @PutMapping(value = "center")
     public ResponseEntity<Object> centerUser(@Validated(User.Update.class) @RequestBody User resources){
+        if(!resources.getId().equals(SecurityUtils.getCurrentUserId())){
+            throw new BadRequestException("不能修改他人资料");
+        }
         if(!resources.getId().equals(SecurityUtils.getCurrentUserId())){
             throw new BadRequestException("不能修改他人资料");
         }
@@ -141,6 +147,9 @@ public class UserController {
     @PreAuthorize("@el.check('user:del')")
     public ResponseEntity<Object> deleteUser(@RequestBody Set<Long> ids){
         for (Long id : ids) {
+            if(id <= 1){
+                throw new BadRequestException("演示环境不可操作");
+            }
             Integer currentLevel =  Collections.min(roleService.findByUsersId(SecurityUtils.getCurrentUserId()).stream().map(RoleSmallDto::getLevel).collect(Collectors.toList()));
             Integer optLevel =  Collections.min(roleService.findByUsersId(id).stream().map(RoleSmallDto::getLevel).collect(Collectors.toList()));
             if (currentLevel > optLevel) {
@@ -157,6 +166,9 @@ public class UserController {
         String oldPass = RsaUtils.decryptByPrivateKey(RsaProperties.privateKey,passVo.getOldPass());
         String newPass = RsaUtils.decryptByPrivateKey(RsaProperties.privateKey,passVo.getNewPass());
         UserDto user = userService.findByName(SecurityUtils.getCurrentUsername());
+        if("admin".equals(user.getUsername())){
+            throw new BadRequestException("演示环境不可操作");
+        }
         if(!passwordEncoder.matches(oldPass, user.getPassword())){
             throw new BadRequestException("修改失败，旧密码错误");
         }
@@ -170,7 +182,7 @@ public class UserController {
     @ApiOperation("修改头像")
     @PostMapping(value = "/updateAvatar")
     public ResponseEntity<Object> updateUserAvatar(@RequestParam MultipartFile avatar){
-        return new ResponseEntity<>(userService.updateAvatar(avatar), HttpStatus.OK);
+        throw new BadRequestException("演示环境不可操作");
     }
 
     @Log("修改邮箱")

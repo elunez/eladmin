@@ -19,6 +19,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import me.zhengjie.annotation.Log;
+import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.modules.mnt.domain.Deploy;
 import me.zhengjie.modules.mnt.domain.DeployHistory;
 import me.zhengjie.modules.mnt.service.DeployService;
@@ -73,8 +74,7 @@ public class DeployController {
     @PostMapping
 	@PreAuthorize("@el.check('deploy:add')")
     public ResponseEntity<Object> createDeploy(@Validated @RequestBody Deploy resources){
-		deployService.create(resources);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+		throw new BadRequestException("演示环境不可操作");
     }
 
     @Log("修改部署")

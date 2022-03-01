@@ -84,6 +84,9 @@ public class DictController {
     @PutMapping
     @PreAuthorize("@el.check('dict:edit')")
     public ResponseEntity<Object> updateDict(@Validated(Dict.Update.class) @RequestBody Dict resources){
+        if(resources.getId() <= 5){
+            throw new BadRequestException("演示环境不可操作");
+        }
         dictService.update(resources);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -93,6 +96,11 @@ public class DictController {
     @DeleteMapping
     @PreAuthorize("@el.check('dict:del')")
     public ResponseEntity<Object> deleteDict(@RequestBody Set<Long> ids){
+        for (Long id : ids) {
+            if(id <= 5){
+                throw new BadRequestException("演示环境不可操作");
+            }
+        }
         dictService.delete(ids);
         return new ResponseEntity<>(HttpStatus.OK);
     }
