@@ -123,7 +123,7 @@ public class DateUtil {
      * @param localDateTime /
      * @return /
      */
-    public String localDateTimeFormatyMd(LocalDateTime localDateTime) {
+    public static String localDateTimeFormatyMd(LocalDateTime localDateTime) {
         return DFY_MD.format(localDateTime);
     }
 

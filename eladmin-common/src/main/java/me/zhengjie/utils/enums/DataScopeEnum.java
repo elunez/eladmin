@@ -35,6 +35,9 @@ public enum DataScopeEnum {
     /* 自己部门的数据权限 */
     THIS_LEVEL("本级", "自己部门的数据权限"),
 
+    /* 自己部门的数据权限 */
+    THIS_LEVEL_AND_SUB("本级及其下属", "自己部门及其下属部门的数据权限"),
+
     /* 自定义的数据权限 */
     CUSTOMIZE("自定义", "自定义的数据权限");
 

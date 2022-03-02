@@ -45,7 +45,15 @@ public class QueryHelp {
             List<Long> dataScopes = SecurityUtils.getCurrentUserDataScope();
             if(CollectionUtil.isNotEmpty(dataScopes)){
                 if(StringUtils.isNotBlank(permission.joinName()) && StringUtils.isNotBlank(permission.fieldName())) {
-                    Join join = root.join(permission.joinName(), JoinType.LEFT);
+                    Join join = null;
+                    String[] joinNames = permission.joinName().split(">");
+                    for (String name : joinNames) {
+                        if (ObjectUtil.isNotNull(join)) {
+                            join = join.join(name, JoinType.LEFT);
+                        } else {
+                            join = root.join(name, JoinType.LEFT);
+                        }
+                    }
                     list.add(getExpression(permission.fieldName(),join, root).in(dataScopes));
                 } else if (StringUtils.isBlank(permission.joinName()) && StringUtils.isNotBlank(permission.fieldName())) {
                     list.add(getExpression(permission.fieldName(),null, root).in(dataScopes));

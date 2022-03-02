@@ -61,6 +61,13 @@ public class DataServiceImpl implements DataService {
                 case THIS_LEVEL:
                     deptIds.add(user.getDept().getId());
                     break;
+                case THIS_LEVEL_AND_SUB:
+                    deptIds.add(user.getDept().getId());
+                    List<Dept> deptChildren = deptService.findByPid(user.getDept().getId());
+                    if (deptChildren != null && deptChildren.size() != 0) {
+                        deptIds.addAll(deptService.getDeptChildren(deptChildren));
+                    }
+                    break;
                 case CUSTOMIZE:
                     deptIds.addAll(getCustomize(deptIds, role));
                     break;
