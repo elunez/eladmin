@@ -24,6 +24,8 @@ import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactor
 import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.bind.annotation.RestController;
@@ -66,5 +68,15 @@ public class AppRun {
     @AnonymousGetMapping("/")
     public String index() {
         return "Backend service started successfully";
+    }
+
+    /**
+     * 监控服务运行状态
+     *
+     * @return /generate_204
+     */
+    @AnonymousGetMapping("/generate_204")
+    public ResponseEntity<Object> monitor() {
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
