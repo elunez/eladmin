@@ -62,7 +62,7 @@ public class LoginProperties {
         if (Objects.isNull(loginCode)) {
             loginCode = new LoginCode();
             if (Objects.isNull(loginCode.getCodeType())) {
-                loginCode.setCodeType(LoginCodeEnum.arithmetic);
+                loginCode.setCodeType(LoginCodeEnum.ARITHMETIC);
             }
         }
         return switchCaptcha(loginCode);
@@ -78,25 +78,25 @@ public class LoginProperties {
         Captcha captcha;
         synchronized (this) {
             switch (loginCode.getCodeType()) {
-                case arithmetic:
+                case ARITHMETIC:
                     // 算术类型 https://gitee.com/whvse/EasyCaptcha
                     captcha = new FixedArithmeticCaptcha(loginCode.getWidth(), loginCode.getHeight());
                     // 几位数运算，默认是两位
                     captcha.setLen(loginCode.getLength());
                     break;
-                case chinese:
+                case CHINESE:
                     captcha = new ChineseCaptcha(loginCode.getWidth(), loginCode.getHeight());
                     captcha.setLen(loginCode.getLength());
                     break;
-                case chinese_gif:
+                case CHINESE_GIF:
                     captcha = new ChineseGifCaptcha(loginCode.getWidth(), loginCode.getHeight());
                     captcha.setLen(loginCode.getLength());
                     break;
-                case gif:
+                case GIF:
                     captcha = new GifCaptcha(loginCode.getWidth(), loginCode.getHeight());
                     captcha.setLen(loginCode.getLength());
                     break;
-                case spec:
+                case SPEC:
                     captcha = new SpecCaptcha(loginCode.getWidth(), loginCode.getHeight());
                     captcha.setLen(loginCode.getLength());
                     break;

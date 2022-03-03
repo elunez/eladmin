@@ -43,7 +43,7 @@ public enum DataScopeEnum {
 
     public static DataScopeEnum find(String val) {
         for (DataScopeEnum dataScopeEnum : DataScopeEnum.values()) {
-            if (val.equals(dataScopeEnum.getValue())) {
+            if (dataScopeEnum.getValue().equals(val)) {
                 return dataScopeEnum;
             }
         }
