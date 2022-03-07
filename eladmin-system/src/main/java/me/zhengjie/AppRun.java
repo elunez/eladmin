@@ -20,6 +20,7 @@ import me.zhengjie.annotation.rest.AnonymousGetMapping;
 import me.zhengjie.utils.SpringContextHolder;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.ApplicationPidFileWriter;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
@@ -45,7 +46,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class AppRun {
 
     public static void main(String[] args) {
-        SpringApplication.run(AppRun.class, args);
+        SpringApplication springApplication = new SpringApplication(AppRun.class);
+        springApplication.addListeners(new ApplicationPidFileWriter());
+        springApplication.run(args);
     }
 
     @Bean
