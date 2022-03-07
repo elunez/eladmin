@@ -65,7 +65,7 @@ public enum RequestMethodEnum {
 
     public static RequestMethodEnum find(String type) {
         for (RequestMethodEnum value : RequestMethodEnum.values()) {
-            if (type.equals(value.getType())) {
+            if (value.getType().equals(type)) {
                 return value;
             }
         }
