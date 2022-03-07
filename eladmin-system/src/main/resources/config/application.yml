@@ -12,6 +12,8 @@ spring:
     redis:
       repositories:
         enabled: false
+  pid:
+    file: /home/eladmin/app.pid
 
   #配置 Jpa
   jpa:
