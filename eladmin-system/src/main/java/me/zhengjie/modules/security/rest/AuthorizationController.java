@@ -83,14 +83,14 @@ public class AuthorizationController {
             log.error("验证码不存在或已过期");
             Map<String, Object> errorData = new HashMap<>(2);
             errorData.put("message", "验证码不存在或已过期");
-            errorData.put("code", 400);
+            errorData.put("status", 400);
             return new ResponseEntity<>(errorData, HttpStatus.BAD_REQUEST);
         }
         if (StringUtils.isBlank(authUser.getCode()) || !authUser.getCode().equalsIgnoreCase(code)) {
             log.error("验证码错误");
             Map<String, Object> errorData = new HashMap<>(2);
             errorData.put("message", "验证码错误");
-            errorData.put("code", 400);
+            errorData.put("status", 400);
             return new ResponseEntity<>(errorData, HttpStatus.BAD_REQUEST);
         }
         UsernamePasswordAuthenticationToken authenticationToken =
