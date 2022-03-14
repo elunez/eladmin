@@ -80,11 +80,13 @@ public class AuthorizationController {
         // 清除验证码
         redisUtils.del(authUser.getUuid());
         if (StringUtils.isBlank(code)) {
+            log.error("验证码不存在或已过期");
             Map<String, String> errorData = new HashMap<>(2);
             errorData.put("message", "验证码不存在或已过期");
             return new ResponseEntity<>(errorData, HttpStatus.BAD_REQUEST);
         }
         if (StringUtils.isBlank(authUser.getCode()) || !authUser.getCode().equalsIgnoreCase(code)) {
+            log.error("验证码错误");
             Map<String, String> errorData = new HashMap<>(2);
             errorData.put("message", "验证码错误");
             return new ResponseEntity<>(errorData, HttpStatus.BAD_REQUEST);
