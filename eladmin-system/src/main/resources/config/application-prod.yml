@@ -122,5 +122,5 @@ file:
     path: C:\eladmin\file\
     avatar: C:\eladmin\avatar\
   # 文件大小 /M
-  maxSize: 100
+  maxSize: 1
   avatarMaxSize: 5
