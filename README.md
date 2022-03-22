@@ -13,7 +13,7 @@
 
 **开发文档：**  [https://el-admin.vip](https://el-admin.vip)
 
-**体验地址：**  [https://el-admin.xin](https://el-admin.xin)
+**体验地址：**  [https://el-admin.vip/demo](https://el-admin.vip/demo)
 
 **账号密码：** `admin / 123456`
 
