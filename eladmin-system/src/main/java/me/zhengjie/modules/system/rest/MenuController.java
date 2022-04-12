@@ -126,7 +126,7 @@ public class MenuController {
     @PutMapping
     @PreAuthorize("@el.check('menu:edit')")
     public ResponseEntity<Object> updateMenu(@Validated(Menu.Update.class) @RequestBody Menu resources){
-        if(resources.getId() <= 116){
+        if(resources.getId() <= 126){
             throw new BadRequestException("演示环境不可操作");
         }
         menuService.update(resources);
@@ -140,7 +140,7 @@ public class MenuController {
     public ResponseEntity<Object> deleteMenu(@RequestBody Set<Long> ids){
         Set<Menu> menuSet = new HashSet<>();
         for (Long id : ids) {
-            if(id <= 116){
+            if(id <= 126){
                 throw new BadRequestException("演示环境不可操作");
             }
             List<MenuDto> menuList = menuService.getMenus(id);
