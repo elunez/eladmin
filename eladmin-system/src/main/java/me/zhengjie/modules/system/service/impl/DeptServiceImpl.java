@@ -195,7 +195,7 @@ public class DeptServiceImpl implements DeptService {
             depts.addAll(deptRepository.findByPidIsNull());
             return deptMapper.toDto(depts);
         }
-        depts.addAll(deptRepository.findByPid(deptDto.getPid()));
+        depts.addAll(deptRepository.findByPid(deptDto.getPid()).stream().filter(dept -> dept.getEnabled()).collect(Collectors.toList()));
         return getSuperior(findById(deptDto.getPid()), depts);
     }
 
