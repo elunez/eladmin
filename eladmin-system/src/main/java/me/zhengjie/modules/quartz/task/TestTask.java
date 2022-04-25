@@ -16,6 +16,7 @@
 package me.zhengjie.modules.quartz.task;
 
 import lombok.extern.slf4j.Slf4j;
+import me.zhengjie.exception.TaskException;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
@@ -27,17 +28,31 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Async
 @Component
+@SuppressWarnings({"unused"})
 public class TestTask {
 
+    @SuppressWarnings({"unused"})
     public void run(){
         log.info("run 执行成功");
     }
 
+    @SuppressWarnings({"unused"})
     public void run1(String str){
         log.info("run1 执行成功，参数为： {}" + str);
     }
 
+    @SuppressWarnings({"unused"})
     public void run2(){
         log.info("run2 执行成功");
+    }
+
+    @SuppressWarnings({"unused"})
+    public void runWithException() {
+        throw new TaskException("返回一个测试错误");
+    }
+
+    @SuppressWarnings({"unused"})
+    public void runWithException(String param) {
+        throw new TaskException("返回一个带参数的测试错误", param);
     }
 }
