@@ -40,7 +40,7 @@ public enum CodeBiEnum {
 
     public static CodeBiEnum find(Integer code) {
         for (CodeBiEnum value : CodeBiEnum.values()) {
-            if (code.equals(value.getCode())) {
+            if (value.getCode().equals(code)) {
                 return value;
             }
         }

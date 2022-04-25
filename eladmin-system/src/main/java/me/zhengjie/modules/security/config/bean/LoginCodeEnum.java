@@ -26,18 +26,18 @@ public enum LoginCodeEnum {
     /**
      * 算数
      */
-    arithmetic,
+    ARITHMETIC,
     /**
      * 中文
      */
-    chinese,
+    CHINESE,
     /**
      * 中文闪图
      */
-    chinese_gif,
+    CHINESE_GIF,
     /**
      * 闪图
      */
-    gif,
-    spec
+    GIF,
+    SPEC
 }
