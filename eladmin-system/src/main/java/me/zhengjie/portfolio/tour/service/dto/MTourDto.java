@@ -13,25 +13,43 @@
 *  See the License for the specific language governing permissions and
 *  limitations under the License.
 */
-package me.zhengjie.portfolio.room.service.dto;
+package me.zhengjie.portfolio.tour.service.dto;
 
 import lombok.Data;
+import java.sql.Timestamp;
+import java.io.Serializable;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
-import me.zhengjie.annotation.Query;
 
 /**
 * @website https://el-admin.vip
-* @author Chanheng
-* @date 2022-05-01
+* @description /
+* @author smk
+* @date 2022-05-03
 **/
 @Data
-public class RoomQueryCriteria{
+public class MTourDto implements Serializable {
 
-    /** 模糊 */
-    @Query(type = Query.Type.INNER_LIKE)
+    private Long id;
+
     private String name;
 
-    /** 模糊 */
-    @Query(type = Query.Type.INNER_LIKE)
+    private Date startDate;
+
+    private Integer period;
+
+    private String location;
+
+    private String tourCode;
+
+    private String tourType;
+
     private String description;
+
+    private HashMap<String, String> extraTourDetail;
+
+    private HashMap<String, String> extraRoomDetail;
+
+    private List<String> images;
 }

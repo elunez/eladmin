@@ -15,9 +15,9 @@
 */
 package me.zhengjie.portfolio.room.service;
 
-import me.zhengjie.portfolio.room.domain.Room;
-import me.zhengjie.portfolio.room.service.dto.RoomDto;
-import me.zhengjie.portfolio.room.service.dto.RoomQueryCriteria;
+import me.zhengjie.portfolio.room.domain.MRoom;
+import me.zhengjie.portfolio.room.service.dto.MRoomDto;
+import me.zhengjie.portfolio.room.service.dto.MRoomQueryCriteria;
 import org.springframework.data.domain.Pageable;
 import java.util.Map;
 import java.util.List;
@@ -27,10 +27,10 @@ import javax.servlet.http.HttpServletResponse;
 /**
 * @website https://el-admin.vip
 * @description 服务接口
-* @author Chanheng
-* @date 2022-05-01
+* @author smk
+* @date 2022-05-03
 **/
-public interface RoomService {
+public interface MRoomService {
 
     /**
     * 查询数据分页
@@ -38,34 +38,34 @@ public interface RoomService {
     * @param pageable 分页参数
     * @return Map<String,Object>
     */
-    Map<String,Object> queryAll(RoomQueryCriteria criteria, Pageable pageable);
+    Map<String,Object> queryAll(MRoomQueryCriteria criteria, Pageable pageable);
 
     /**
     * 查询所有数据不分页
     * @param criteria 条件参数
-    * @return List<RoomDto>
+    * @return List<MRoomDto>
     */
-    List<RoomDto> queryAll(RoomQueryCriteria criteria);
+    List<MRoomDto> queryAll(MRoomQueryCriteria criteria);
 
     /**
      * 根据ID查询
      * @param id ID
-     * @return RoomDto
+     * @return MRoomDto
      */
-    RoomDto findById(Long id);
+    MRoomDto findById(Long id);
 
     /**
     * 创建
     * @param resources /
-    * @return RoomDto
+    * @return MRoomDto
     */
-    RoomDto create(Room resources);
+    MRoomDto create(MRoom resources);
 
     /**
     * 编辑
     * @param resources /
     */
-    void update(Room resources);
+    void update(MRoom resources);
 
     /**
     * 多选删除
@@ -79,5 +79,5 @@ public interface RoomService {
     * @param response /
     * @throws IOException /
     */
-    void download(List<RoomDto> all, HttpServletResponse response) throws IOException;
+    void download(List<MRoomDto> all, HttpServletResponse response) throws IOException;
 }

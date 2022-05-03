@@ -817,6 +817,28 @@ CREATE TABLE `tool_qiniu_content` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='七牛云文件存储';
 
 -- ----------------------------
+-- eladmin.m_room definition
+-- ----------------------------
+
+
+-- eladmin.m_room definition
+
+CREATE TABLE `m_room` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `type` varchar(20) DEFAULT NULL,
+  `size` varchar(20) DEFAULT NULL,
+  `air_conditional` tinyint(1) NOT NULL DEFAULT '0',
+  `fan` tinyint(1) NOT NULL DEFAULT '0',
+  `free_parking` tinyint(1) DEFAULT '0',
+  `description` varchar(255) DEFAULT NULL,
+  `bad` int NOT NULL,
+  `free_breakfast` tinyint(1) DEFAULT '0',
+  `image` text NOT NULL,
+  `extra_information` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- ----------------------------
 -- Records of tool_qiniu_content
 -- ----------------------------
 BEGIN;

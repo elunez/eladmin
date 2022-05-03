@@ -1,0 +1,22 @@
+version: '3.7'
+services:
+
+  redis:
+    image: ghcr.io/mbanq/redis:latest
+    ports:
+      - "6379:6379"
+    expose:
+      - 6379
+
+  db:
+    image: mysql
+    container_name: mysql
+    ports:
+      - "3306:3306"
+    expose:
+      - 3306
+    environment:
+      MYSQL_ROOT_PASSWORD: "root"
+      MYSQL_DATABASE: "eladmin"
+      #MYSQL_USER: "root"
+      #MYSQL_PASSWORD: "root"

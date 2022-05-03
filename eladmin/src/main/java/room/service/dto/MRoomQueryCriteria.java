@@ -13,20 +13,17 @@
 *  See the License for the specific language governing permissions and
 *  limitations under the License.
 */
-package me.zhengjie.portfolio.room.service.mapstruct;
+package room.service.dto;
 
-import me.zhengjie.base.BaseMapper;
-import me.zhengjie.portfolio.room.domain.Room;
-import me.zhengjie.portfolio.room.service.dto.RoomDto;
-import org.mapstruct.Mapper;
-import org.mapstruct.ReportingPolicy;
+import lombok.Data;
+import java.util.List;
+import me.zhengjie.annotation.Query;
 
 /**
 * @website https://el-admin.vip
-* @author Chanheng
-* @date 2022-05-01
+* @author smk
+* @date 2022-05-03
 **/
-@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
-public interface RoomMapper extends BaseMapper<RoomDto, Room> {
-
+@Data
+public class MRoomQueryCriteria{
 }
