@@ -93,7 +93,7 @@ jwt:
 
 # IP 本地解析
 ip:
-  local-parsing: false
+  local-parsing: true
 
 #是否允许生成代码，生产环境设置为false
 generator:
