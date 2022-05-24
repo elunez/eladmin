@@ -181,7 +181,7 @@ public class MonitorServiceImpl implements MonitorService {
         // 系统信息
         systemInfo.put("os", os.toString());
         systemInfo.put("day", formatBetween);
-        systemInfo.put("ip", StringUtils.getLocalIp());
+        systemInfo.put("ip", "172.17.0.1");
         return systemInfo;
     }
 }
