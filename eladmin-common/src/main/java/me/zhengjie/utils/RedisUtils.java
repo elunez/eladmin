@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.*;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -41,6 +42,9 @@ public class RedisUtils {
 
     public RedisUtils(RedisTemplate<Object, Object> redisTemplate) {
         this.redisTemplate = redisTemplate;
+        this.redisTemplate.setHashKeySerializer(new StringRedisSerializer());
+        this.redisTemplate.setKeySerializer(new StringRedisSerializer());
+        this.redisTemplate.setStringSerializer(new StringRedisSerializer());
     }
 
     /**
