@@ -19,6 +19,7 @@ import cn.hutool.core.collection.CollectionUtil;
 import lombok.RequiredArgsConstructor;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.modules.security.service.UserCacheClean;
+import me.zhengjie.modules.security.service.dto.AuthorityDto;
 import me.zhengjie.modules.system.domain.Menu;
 import me.zhengjie.modules.system.domain.Role;
 import me.zhengjie.exception.EntityExistException;
@@ -38,11 +39,8 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
@@ -166,19 +164,19 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     @Cacheable(key = "'auth:' + #p0.id")
-    public List<GrantedAuthority> mapToGrantedAuthorities(UserDto user) {
+    public List<AuthorityDto> mapToGrantedAuthorities(UserDto user) {
         Set<String> permissions = new HashSet<>();
         // 如果是管理员直接返回
         if (user.getIsAdmin()) {
             permissions.add("admin");
-            return permissions.stream().map(SimpleGrantedAuthority::new)
+            return permissions.stream().map(AuthorityDto::new)
                     .collect(Collectors.toList());
         }
         Set<Role> roles = roleRepository.findByUserId(user.getId());
         permissions = roles.stream().flatMap(role -> role.getMenus().stream())
-                .filter(menu -> StringUtils.isNotBlank(menu.getPermission()))
-                .map(Menu::getPermission).collect(Collectors.toSet());
-        return permissions.stream().map(SimpleGrantedAuthority::new)
+                .map(Menu::getPermission)
+                .filter(StringUtils::isNotBlank).collect(Collectors.toSet());
+        return permissions.stream().map(AuthorityDto::new)
                 .collect(Collectors.toList());
     }
 

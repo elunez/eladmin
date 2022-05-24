@@ -38,10 +38,10 @@ public class JwtUserDto implements UserDetails {
     private final List<Long> dataScopes;
 
     @JSONField(serialize = false)
-    private final List<GrantedAuthority> authorities;
+    private final List<AuthorityDto> authorities;
 
     public Set<String> getRoles() {
-        return authorities.stream().map(GrantedAuthority::getAuthority).collect(Collectors.toSet());
+        return authorities.stream().map(AuthorityDto::getAuthority).collect(Collectors.toSet());
     }
 
     @Override
