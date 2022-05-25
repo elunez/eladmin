@@ -49,7 +49,7 @@ task:
 #七牛云
 qiniu:
   # 文件大小 /M
-  max-size: 15
+  max-size: 1
 
 #邮箱验证码有效时间/秒
 code:
