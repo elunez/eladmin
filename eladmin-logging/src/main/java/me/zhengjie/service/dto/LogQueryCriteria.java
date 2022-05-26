@@ -32,6 +32,9 @@ public class LogQueryCriteria {
     private String blurry;
 
     @Query
+    private String username;
+
+    @Query
     private String logType;
 
     @Query(type = Query.Type.BETWEEN)
