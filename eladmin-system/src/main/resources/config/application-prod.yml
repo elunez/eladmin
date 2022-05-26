@@ -38,8 +38,8 @@ spring:
         # 控制台管理用户名和密码
         url-pattern: /druid/*
         reset-enable: false
-        login-username: admin
-        login-password: 123456
+        login-username: jie123
+        login-password: jie123
       filter:
         stat:
           enabled: true
