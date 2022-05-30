@@ -16,7 +16,6 @@
 package me.zhengjie.modules.quartz.task;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 /**
@@ -25,7 +24,6 @@ import org.springframework.stereotype.Component;
  * @date 2019-01-08
  */
 @Slf4j
-@Async
 @Component
 public class TestTask {
 
