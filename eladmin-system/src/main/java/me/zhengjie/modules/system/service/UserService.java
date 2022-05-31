@@ -17,6 +17,7 @@ package me.zhengjie.modules.system.service;
 
 import me.zhengjie.modules.system.domain.User;
 import me.zhengjie.modules.system.service.dto.UserDto;
+import me.zhengjie.modules.system.service.dto.UserLoginDto;
 import me.zhengjie.modules.system.service.dto.UserQueryCriteria;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
@@ -64,6 +65,13 @@ public interface UserService {
      * @return /
      */
     UserDto findByName(String userName);
+
+    /**
+     * 根据用户名查询
+     * @param userName /
+     * @return /
+     */
+    UserLoginDto getLoginData(String userName);
 
     /**
      * 修改密码

@@ -13,30 +13,16 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package me.zhengjie.service.dto;
-
-import lombok.Data;
-import me.zhengjie.annotation.Query;
-import java.sql.Timestamp;
-import java.util.List;
+package me.zhengjie.modules.system.service.dto;
 
 /**
- * 日志查询类
  * @author Zheng Jie
- * @date 2019-6-4 09:23:07
- */
-@Data
-public class LogQueryCriteria {
+ * @description 用户缓存时使用
+ * @date 2022-05-26
+ **/
+public class UserLoginDto extends UserDto {
 
-    @Query(blurry = "username,description,address,requestIp,method,params")
-    private String blurry;
+    private String password;
 
-    @Query
-    private String username;
-
-    @Query
-    private String logType;
-
-    @Query(type = Query.Type.BETWEEN)
-    private List<Timestamp> createTime;
+    private Boolean isAdmin;
 }

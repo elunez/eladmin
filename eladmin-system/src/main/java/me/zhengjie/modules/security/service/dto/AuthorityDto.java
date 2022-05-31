@@ -13,30 +13,22 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package me.zhengjie.service.dto;
+package me.zhengjie.modules.security.service.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import me.zhengjie.annotation.Query;
-import java.sql.Timestamp;
-import java.util.List;
+import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
 
 /**
- * 日志查询类
+ * 避免序列化问题
  * @author Zheng Jie
- * @date 2019-6-4 09:23:07
+ * @date 2018-11-30
  */
 @Data
-public class LogQueryCriteria {
+@NoArgsConstructor
+@AllArgsConstructor
+public class AuthorityDto implements GrantedAuthority {
 
-    @Query(blurry = "username,description,address,requestIp,method,params")
-    private String blurry;
-
-    @Query
-    private String username;
-
-    @Query
-    private String logType;
-
-    @Query(type = Query.Type.BETWEEN)
-    private List<Timestamp> createTime;
+    private String authority;
 }

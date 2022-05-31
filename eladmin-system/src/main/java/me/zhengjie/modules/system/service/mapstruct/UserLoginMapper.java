@@ -13,30 +13,18 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package me.zhengjie.service.dto;
+package me.zhengjie.modules.system.service.mapstruct;
 
-import lombok.Data;
-import me.zhengjie.annotation.Query;
-import java.sql.Timestamp;
-import java.util.List;
+import me.zhengjie.base.BaseMapper;
+import me.zhengjie.modules.system.domain.User;
+import me.zhengjie.modules.system.service.dto.UserLoginDto;
+import org.mapstruct.Mapper;
+import org.mapstruct.ReportingPolicy;
 
 /**
- * 日志查询类
  * @author Zheng Jie
- * @date 2019-6-4 09:23:07
+ * @date 2018-11-23
  */
-@Data
-public class LogQueryCriteria {
-
-    @Query(blurry = "username,description,address,requestIp,method,params")
-    private String blurry;
-
-    @Query
-    private String username;
-
-    @Query
-    private String logType;
-
-    @Query(type = Query.Type.BETWEEN)
-    private List<Timestamp> createTime;
+@Mapper(componentModel = "spring",uses = {RoleMapper.class, DeptMapper.class, JobMapper.class},unmappedTargetPolicy = ReportingPolicy.IGNORE)
+public interface UserLoginMapper extends BaseMapper<UserLoginDto, User> {
 }
