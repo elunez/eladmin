@@ -15,8 +15,8 @@
  */
 package me.zhengjie.config;
 
+import cn.hutool.core.collection.CollUtil;
 import com.fasterxml.classmate.TypeResolver;
-import com.google.common.base.Predicates;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -29,14 +29,18 @@ import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.schema.AlternateTypeRule;
 import springfox.documentation.schema.AlternateTypeRuleConvention;
-import springfox.documentation.service.*;
+import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.ApiKey;
+import springfox.documentation.service.AuthorizationScope;
+import springfox.documentation.service.SecurityReference;
+import springfox.documentation.service.SecurityScheme;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
+
 import java.util.ArrayList;
 import java.util.List;
-import static com.google.common.collect.Lists.newArrayList;
 import static springfox.documentation.schema.AlternateTypeRules.newRule;
 
 /**
@@ -62,7 +66,7 @@ public class SwaggerConfig {
                 .pathMapping("/")
                 .apiInfo(apiInfo())
                 .select()
-                .paths(Predicates.not(PathSelectors.regex("/error.*")))
+                .paths(PathSelectors.regex("^(?!/error).*"))
                 .paths(PathSelectors.any())
                 .build()
                 //添加登陆认证
@@ -98,7 +102,7 @@ public class SwaggerConfig {
     private SecurityContext getContextByPath() {
         return SecurityContext.builder()
                 .securityReferences(defaultAuth())
-                .forPaths(PathSelectors.regex("^(?!/auth).*$"))
+                .operationSelector(o->o.requestMappingPattern().matches("^(?!/auth).*$"))
                 .build();
     }
 
@@ -128,7 +132,7 @@ class SwaggerDataConfig {
 
             @Override
             public List<AlternateTypeRule> rules() {
-                return newArrayList(newRule(resolver.resolve(Pageable.class), resolver.resolve(Page.class)));
+                return CollUtil.newArrayList(newRule(resolver.resolve(Pageable.class), resolver.resolve(Page.class)));
             }
         };
     }
