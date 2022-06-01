@@ -13,7 +13,7 @@
     <name>代码生成模块</name>
 
     <properties>
-        <configuration.version>1.9</configuration.version>
+        <configuration.version>1.10</configuration.version>
     </properties>
 
     <dependencies>

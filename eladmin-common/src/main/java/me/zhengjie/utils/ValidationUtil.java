@@ -15,16 +15,17 @@
  */
 package me.zhengjie.utils;
 
+import cn.hutool.core.lang.Validator;
 import cn.hutool.core.util.ObjectUtil;
 import me.zhengjie.exception.BadRequestException;
-import org.hibernate.validator.internal.constraintvalidators.hv.EmailValidator;
 
 /**
  * 验证工具
+ *
  * @author Zheng Jie
  * @date 2018-11-23
  */
-public class ValidationUtil{
+public class ValidationUtil {
 
     /**
      * 验证空
@@ -36,10 +37,10 @@ public class ValidationUtil{
         }
     }
 
-    /**
-     * 验证是否为邮箱
-     */
-    public static boolean isEmail(String email) {
-        return new EmailValidator().isValid(email, null);
-    }
+  /**
+   * 验证是否为邮箱
+   */
+  public static boolean isEmail(String email) {
+    return Validator.isEmail(email);
+  }
 }
