@@ -21,12 +21,12 @@
     <dependencies>
         <!-- 代码生成模块 -->
         <dependency>
-            <groupId>me.zhengjie</groupId>
+            <groupId>me.guoguojie</groupId>
             <artifactId>eladmin-generator</artifactId>
             <version>2.6</version>
             <exclusions>
                 <exclusion>
-                    <groupId>me.zhengjie</groupId>
+                    <groupId>me.guoguojie</groupId>
                     <artifactId>eladmin-common</artifactId>
                 </exclusion>
             </exclusions>
@@ -34,7 +34,7 @@
 
         <!-- tools 模块包含了 common 和 logging 模块 -->
         <dependency>
-            <groupId>me.zhengjie</groupId>
+            <groupId>me.guoguojie</groupId>
             <artifactId>eladmin-tools</artifactId>
             <version>2.6</version>
         </dependency>

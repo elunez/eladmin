@@ -21,7 +21,7 @@
     <dependencies>
         <!-- 同时需要common模块和logging模块只需要引入logging模块即可 -->
         <dependency>
-            <groupId>me.zhengjie</groupId>
+            <groupId>me.guoguojie</groupId>
             <artifactId>eladmin-logging</artifactId>
             <version>2.6</version>
         </dependency>

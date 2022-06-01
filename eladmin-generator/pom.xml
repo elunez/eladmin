@@ -18,7 +18,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>me.zhengjie</groupId>
+            <groupId>me.guoguojie</groupId>
             <artifactId>eladmin-common</artifactId>
             <version>2.6</version>
         </dependency>

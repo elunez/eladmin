@@ -1,8 +1,8 @@
-package me.zhengjie.utils;
+package me.guoguojie.utils;
 
 import org.junit.Test;
 import static org.junit.Assert.*;
-import static me.zhengjie.utils.EncryptUtils.*;
+import static me.guoguojie.utils.EncryptUtils.*;
 
 public class EncryptUtilsTest {
 

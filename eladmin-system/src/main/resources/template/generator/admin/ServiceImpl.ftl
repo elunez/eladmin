@@ -20,13 +20,13 @@ import ${package}.domain.${className};
     <#list columns as column>
         <#if column.columnKey = 'UNI'>
             <#if column_index = 1>
-import me.zhengjie.exception.EntityExistException;
+import me.guoguojie.exception.EntityExistException;
             </#if>
         </#if>
     </#list>
 </#if>
-import me.zhengjie.utils.ValidationUtil;
-import me.zhengjie.utils.FileUtil;
+import me.guoguojie.utils.ValidationUtil;
+import me.guoguojie.utils.FileUtil;
 import lombok.RequiredArgsConstructor;
 import ${package}.repository.${className}Repository;
 import ${package}.service.${className}Service;
@@ -44,8 +44,8 @@ import cn.hutool.core.util.IdUtil;
 </#if>
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import me.zhengjie.utils.PageUtil;
-import me.zhengjie.utils.QueryHelp;
+import me.guoguojie.utils.PageUtil;
+import me.guoguojie.utils.QueryHelp;
 import java.util.List;
 import java.util.Map;
 import java.io.IOException;
@@ -90,10 +90,10 @@ public class ${className}ServiceImpl implements ${className}Service {
     public ${className}Dto create(${className} resources) {
 <#if !auto && pkColumnType = 'Long'>
         Snowflake snowflake = IdUtil.createSnowflake(1, 1);
-        resources.set${pkCapitalColName}(snowflake.nextId()); 
+        resources.set${pkCapitalColName}(snowflake.nextId());
 </#if>
 <#if !auto && pkColumnType = 'String'>
-        resources.set${pkCapitalColName}(IdUtil.simpleUUID()); 
+        resources.set${pkCapitalColName}(IdUtil.simpleUUID());
 </#if>
 <#if columns??>
     <#list columns as column>

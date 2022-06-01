@@ -1,12 +1,13 @@
-package me.zhengjie.utils;
+package me.guoguojie.utils;
 
+import me.guoguojie.utils.StringUtils;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static me.zhengjie.utils.StringUtils.*;
+import static me.guoguojie.utils.StringUtils.*;
 import static org.junit.Assert.*;
 
 public class StringUtilsTest {
