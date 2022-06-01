@@ -75,7 +75,7 @@ public @interface Query {
         ,NOT_NULL
         // 为空
         ,IS_NULL,
-        // Aborn Jiang 2022/06/01, 对应SQL: SELECT * FROM table WHERE FIND_IN_SET('querytag', md_markdown_meta.tags);
+        // Aborn Jiang 2022/06/01, 对应SQL: SELECT * FROM table WHERE FIND_IN_SET('querytag', table.tags);
         FIND_IN_SET
     }
 
