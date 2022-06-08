@@ -17,6 +17,7 @@ package me.zhengjie.service.impl;
 
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import lombok.RequiredArgsConstructor;
 import me.zhengjie.domain.Log;
@@ -94,6 +95,12 @@ public class LogServiceImpl implements LogService {
         log.setMethod(methodName);
         log.setUsername(username);
         log.setParams(getParameter(method, joinPoint.getArgs()));
+        // 记录登录用户，隐藏密码信息
+        if(log.getDescription().equals("用户登录")){
+            JSONObject obj = JSONUtil.parseObj(log.getParams());
+            log.setUsername(obj.get("username").toString());
+            log.setParams(JSONUtil.toJsonStr(Dict.create().set("username", log.getUsername())));
+        }
         log.setBrowser(browser);
         logRepository.save(log);
     }
