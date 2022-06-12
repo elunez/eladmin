@@ -16,7 +16,7 @@
 package me.zhengjie.modules.quartz.task;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 /**
  * 测试用
@@ -24,7 +24,7 @@ import org.springframework.stereotype.Component;
  * @date 2019-01-08
  */
 @Slf4j
-@Component
+@Service
 public class TestTask {
 
     public void run(){
