@@ -189,7 +189,7 @@ public class MenuServiceImpl implements MenuService {
     public Set<Menu> getChildMenus(List<Menu> menuList, Set<Menu> menuSet) {
         for (Menu menu : menuList) {
             menuSet.add(menu);
-            List<Menu> menus = menuRepository.findByPid(menu.getId());
+            List<Menu> menus = menuRepository.findByPidOrderByMenuSort(menu.getId());
             if(menus!=null && menus.size()!=0){
                 getChildMenus(menus, menuSet);
             }
@@ -213,9 +213,9 @@ public class MenuServiceImpl implements MenuService {
     public List<MenuDto> getMenus(Long pid) {
         List<Menu> menus;
         if(pid != null && !pid.equals(0L)){
-            menus = menuRepository.findByPid(pid);
+            menus = menuRepository.findByPidOrderByMenuSort(pid);
         } else {
-            menus = menuRepository.findByPidIsNull();
+            menus = menuRepository.findByPidIsNullOrderByMenuSort();
         }
         return menuMapper.toDto(menus);
     }
@@ -223,10 +223,10 @@ public class MenuServiceImpl implements MenuService {
     @Override
     public List<MenuDto> getSuperior(MenuDto menuDto, List<Menu> menus) {
         if(menuDto.getPid() == null){
-            menus.addAll(menuRepository.findByPidIsNull());
+            menus.addAll(menuRepository.findByPidIsNullOrderByMenuSort());
             return menuMapper.toDto(menus);
         }
-        menus.addAll(menuRepository.findByPid(menuDto.getPid()));
+        menus.addAll(menuRepository.findByPidOrderByMenuSort(menuDto.getPid()));
         return getSuperior(findById(menuDto.getPid()), menus);
     }
 

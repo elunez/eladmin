@@ -49,13 +49,13 @@ public interface MenuRepository extends JpaRepository<Menu, Long>, JpaSpecificat
      * @param pid /
      * @return /
      */
-    List<Menu> findByPid(long pid);
+    List<Menu> findByPidOrderByMenuSort(long pid);
 
     /**
      * 查询顶级菜单
      * @return /
      */
-    List<Menu> findByPidIsNull();
+    List<Menu> findByPidIsNullOrderByMenuSort();
 
     /**
      * 根据角色ID与菜单类型查询菜单
