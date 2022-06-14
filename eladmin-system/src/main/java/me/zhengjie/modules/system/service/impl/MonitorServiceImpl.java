@@ -153,8 +153,8 @@ public class MonitorServiceImpl implements MonitorService {
         Util.sleep(time);
         long[] ticks = processor.getSystemCpuLoadTicks();
         while (Arrays.toString(prevTicks).equals(Arrays.toString(ticks)) && time < 1000){
-            time += 10;
-            Util.sleep(10);
+            time += 25;
+            Util.sleep(25);
             ticks = processor.getSystemCpuLoadTicks();
         }
         long user = ticks[CentralProcessor.TickType.USER.getIndex()] - prevTicks[CentralProcessor.TickType.USER.getIndex()];
