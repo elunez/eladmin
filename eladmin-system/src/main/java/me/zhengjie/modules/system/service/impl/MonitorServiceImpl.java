@@ -148,8 +148,8 @@ public class MonitorServiceImpl implements MonitorService {
         cpuInfo.put("logic", processor.getLogicalProcessorCount() + "个逻辑CPU");
         // CPU信息
         long[] prevTicks = processor.getSystemCpuLoadTicks();
-        // 等待1秒...
-        Util.sleep(1000);
+        // 等待300毫秒...
+        Util.sleep(300);
         long[] ticks = processor.getSystemCpuLoadTicks();
         long user = ticks[CentralProcessor.TickType.USER.getIndex()] - prevTicks[CentralProcessor.TickType.USER.getIndex()];
         long nice = ticks[CentralProcessor.TickType.NICE.getIndex()] - prevTicks[CentralProcessor.TickType.NICE.getIndex()];
