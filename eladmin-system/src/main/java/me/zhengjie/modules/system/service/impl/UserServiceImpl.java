@@ -120,7 +120,7 @@ public class UserServiceImpl implements UserService {
             redisUtils.del(CacheKey.ROLE_AUTH + resources.getId());
         }
         // 修改部门会影响 数据权限
-        if (!resources.getDept().equals(user.getDept())) {
+        if (!Objects.equals(resources.getDept(),user.getDept())) {
             redisUtils.del(CacheKey.DATA_USER + resources.getId());
         }
         // 如果用户被禁用，则清除用户登录信息
