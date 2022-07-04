@@ -276,7 +276,8 @@ public class GenUtil {
             // 主键存在字典
             if (StringUtils.isNotBlank(column.getDictName())) {
                 genMap.put("hasDict", true);
-                dicts.add(column.getDictName());
+                if(!dicts.contains(column.getDictName()))
+                    dicts.add(column.getDictName());
             }
 
             // 存储字段类型
