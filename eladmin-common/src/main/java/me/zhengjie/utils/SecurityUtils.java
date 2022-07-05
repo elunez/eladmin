@@ -15,10 +15,10 @@
  */
 package me.zhengjie.utils;
 
-import cn.hutool.json.JSONArray;
-import cn.hutool.json.JSONObject;
-import cn.hutool.json.JSONUtil;
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
+import me.zhengjie.constant.SecurityConstant;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.utils.enums.DataScopeEnum;
 import org.springframework.http.HttpStatus;
@@ -26,10 +26,15 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 获取当前登录的用户
+ *
  * @author Zheng Jie
  * @date 2019-01-17
  */
@@ -38,11 +43,14 @@ public class SecurityUtils {
 
     /**
      * 获取当前登录的用户
+     *
      * @return UserDetails
      */
     public static UserDetails getCurrentUser() {
         UserDetailsService userDetailsService = SpringContextHolder.getBean(UserDetailsService.class);
-        return userDetailsService.loadUserByUsername(getCurrentUsername());
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        return userDetailsService.loadUserByUsername(userDetails.getUsername());
     }
 
     /**
@@ -51,45 +59,85 @@ public class SecurityUtils {
      * @return 系统用户名称
      */
     public static String getCurrentUsername() {
-        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null) {
-            throw new BadRequestException(HttpStatus.UNAUTHORIZED, "当前登录状态过期");
+        return getHeaderByAuthException(SecurityConstant.JWT_KEY_USERNAME);
+    }
+
+    /**
+     * 获取系统用户ID
+     *
+     * @return 系统用户ID
+     */
+    public static Long getCurrentUserId() {
+        return getLongHeaderByAuthException(SecurityConstant.JWT_KEY_USER_ID);
+    }
+
+    /**
+     * 获取当前用户的数据权限
+     *
+     * @return /
+     */
+    public static List<Long> getCurrentUserDataScope() {
+        Set<String> deptStrIds = RequestHolder.getHeaders(SecurityConstant.JWT_KEY_DATA_SCOPE_DEPT_IDS);
+        List<Long> deptIds = new ArrayList<>();
+        if (CollUtil.isNotEmpty(deptStrIds)) {
+            deptIds = deptStrIds.stream().map(o -> Long.parseLong(o)).collect(Collectors.toList());
         }
-        if (authentication.getPrincipal() instanceof UserDetails) {
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            return userDetails.getUsername();
+        return deptIds;
+    }
+
+    /**
+     * 获取数据权限级别
+     *
+     * @return 级别
+     */
+    public static String getDataScopeType() {
+        List<Long> dataScopes = getCurrentUserDataScope();
+        if (dataScopes.size() != 0) {
+            return "";
+        }
+        return DataScopeEnum.ALL.getValue();
+    }
+
+    /**
+     * <p>
+     * 获取权限列表
+     * </p>
+     *
+     * @return /
+     */
+    public static Set<String> listPermission() {
+        return RequestHolder.getHeaders(SecurityConstant.JWT_KEY_PERMISSION);
+    }
+
+    /**
+     * <p>
+     * 获取header，验证用户信息抛出异常
+     * </p>
+     *
+     * @author miaoyj
+     * @since 2022-06-23
+     */
+    private static String getHeaderByAuthException(String headerName) {
+        String value = RequestHolder.getHeader(headerName);
+        if (StrUtil.isNotBlank(value)) {
+            return value;
         }
         throw new BadRequestException(HttpStatus.UNAUTHORIZED, "找不到当前登录的信息");
     }
 
     /**
-     * 获取系统用户ID
-     * @return 系统用户ID
+     * <p>
+     * 获取header，验证用户信息抛出异常
+     * </p>
+     *
+     * @author miaoyj
+     * @since 2022-06-23
      */
-    public static Long getCurrentUserId() {
-        UserDetails userDetails = getCurrentUser();
-        return new JSONObject(new JSONObject(userDetails).get("user")).get("id", Long.class);
-    }
-
-    /**
-     * 获取当前用户的数据权限
-     * @return /
-     */
-    public static List<Long> getCurrentUserDataScope(){
-        UserDetails userDetails = getCurrentUser();
-        JSONArray array = JSONUtil.parseArray(new JSONObject(userDetails).get("dataScopes"));
-        return JSONUtil.toList(array,Long.class);
-    }
-
-    /**
-     * 获取数据权限级别
-     * @return 级别
-     */
-    public static String getDataScopeType() {
-        List<Long> dataScopes = getCurrentUserDataScope();
-        if(dataScopes.size() != 0){
-            return "";
+    private static Long getLongHeaderByAuthException(String headerName) {
+        Long value = RequestHolder.getHeaderLong(headerName);
+        if (value != null && value > 0) {
+            return value;
         }
-        return DataScopeEnum.ALL.getValue();
+        throw new BadRequestException(HttpStatus.UNAUTHORIZED, "找不到当前登录的信息");
     }
 }

@@ -18,21 +18,27 @@ package me.zhengjie.modules.security.security;
 import cn.hutool.core.util.StrUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import me.zhengjie.modules.security.config.bean.SecurityProperties;
+import me.zhengjie.modules.security.service.OnlineUserService;
 import me.zhengjie.modules.security.service.UserCacheManager;
 import me.zhengjie.modules.security.service.dto.OnlineUserDto;
-import me.zhengjie.modules.security.service.OnlineUserService;
+import me.zhengjie.utils.HttpUtil;
+import me.zhengjie.utils.SecurityUtils;
+import me.zhengjie.wrapper.HeaderMapRequestWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.GenericFilterBean;
+
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -64,6 +70,8 @@ public class TokenFilter extends GenericFilterBean {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
             throws IOException, ServletException {
         HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
+        HeaderMapRequestWrapper reqWrapper = new HeaderMapRequestWrapper((HttpServletRequest) servletRequest);
+
         String token = resolveToken(httpServletRequest);
         // 对于 Token 为空的不需要去查 Redis
         if (StrUtil.isNotBlank(token)) {
@@ -84,9 +92,13 @@ public class TokenFilter extends GenericFilterBean {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
                 // Token 续期
                 tokenProvider.checkRenewal(token);
+                //设置用户信息到头部
+                UserDetails userDetails = SecurityUtils.getCurrentUser();
+                Map<String, Object> userHeaders = HttpUtil.getUserHeaders(userDetails);
+                reqWrapper.addHeaders(userHeaders);
             }
         }
-        filterChain.doFilter(servletRequest, servletResponse);
+        filterChain.doFilter(reqWrapper, servletResponse);
     }
 
     /**
