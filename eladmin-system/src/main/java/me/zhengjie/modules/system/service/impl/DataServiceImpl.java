@@ -43,7 +43,7 @@ public class DataServiceImpl implements DataService {
     private final DeptService deptService;
 
     /**
-     * 用户角色改变时需清理缓存
+     * 用户角色和用户部门改变时需清理缓存
      * @param user /
      * @return /
      */
