@@ -106,7 +106,7 @@ public class RedisConfig extends CachingConfigurerSupport {
     @Override
     public KeyGenerator keyGenerator() {
         return (target, method, params) -> {
-            Map<String,Object> container = new HashMap<>(4);
+            Map<String,Object> container = new HashMap<>(8);
             Class<?> targetClassClass = target.getClass();
             // 类地址
             container.put("class",targetClassClass.toGenericString());
