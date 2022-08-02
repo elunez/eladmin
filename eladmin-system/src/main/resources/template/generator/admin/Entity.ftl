@@ -37,7 +37,7 @@ import java.math.BigDecimal;
 import java.io.Serializable;
 
 /**
-* @website https://el-admin.vip
+* @website https://eladmin.vip
 * @description /
 * @author ${author}
 * @date ${date}

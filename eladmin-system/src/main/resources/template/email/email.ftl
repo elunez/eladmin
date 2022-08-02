@@ -39,7 +39,7 @@
 			font-size: 12px;
 			padding: 20px 0px;
 			font-family: Microsoft YaHei;">
-            Copyright &copy;${.now?string("yyyy")} <a hover="color: #DA251D;" style="color: #999;" href="https://github.com/elunez/eladmin" target="_blank">EL-ADMIN</a> 后台管理系统 All Rights Reserved.
+            Copyright &copy;${.now?string("yyyy")} <a hover="color: #DA251D;" style="color: #999;" href="https://github.com/elunez/eladmin" target="_blank">ELADMIN</a> 后台管理系统 All Rights Reserved.
         </div>
 
     </div>
