@@ -96,9 +96,9 @@ public class LogServiceImpl implements LogService {
         log.setUsername(username);
         log.setParams(getParameter(method, joinPoint.getArgs()));
         // 记录登录用户，隐藏密码信息
-        if(log.getDescription().equals("用户登录")){
+        if(signature.getName().equals("login") && StringUtils.isNotEmpty(log.getParams())){
             JSONObject obj = JSONUtil.parseObj(log.getParams());
-            log.setUsername(obj.get("username").toString());
+            log.setUsername(obj.getStr("username", ""));
             log.setParams(JSONUtil.toJsonStr(Dict.create().set("username", log.getUsername())));
         }
         log.setBrowser(browser);
@@ -120,7 +120,7 @@ public class LogServiceImpl implements LogService {
             //将RequestParam注解修饰的参数作为请求参数
             RequestParam requestParam = parameters[i].getAnnotation(RequestParam.class);
             if (requestParam != null) {
-                Map<String, Object> map = new HashMap<>(4);
+                Map<String, Object> map = new HashMap<>(2);
                 String key = parameters[i].getName();
                 if (!StringUtils.isEmpty(requestParam.value())) {
                     key = requestParam.value();
