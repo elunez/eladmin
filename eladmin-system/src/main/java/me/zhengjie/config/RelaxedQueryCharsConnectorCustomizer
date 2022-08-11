@@ -1,0 +1,7 @@
+    @Configuration(proxyBeanMethods = false)
+    public class RelaxedQueryCharsConnectorCustomizer implements TomcatConnectorCustomizer {
+        @Override
+        public void customize(Connector connector) {
+            connector.setProperty("relaxedQueryChars", "[]{}");
+        }
+    }
