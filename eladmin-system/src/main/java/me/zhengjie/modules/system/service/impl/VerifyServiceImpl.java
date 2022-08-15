@@ -60,11 +60,11 @@ public class VerifyServiceImpl implements VerifyService {
                 throw new BadRequestException("服务异常，请联系网站负责人");
             }
             content = template.render(Dict.create().set("code",code));
-            emailVo = new EmailVo(Collections.singletonList(email),"EL-ADMIN后台管理系统",content);
+            emailVo = new EmailVo(Collections.singletonList(email),"ELADMIN后台管理系统",content);
         // 存在就再次发送原来的验证码
         } else {
             content = template.render(Dict.create().set("code",oldCode));
-            emailVo = new EmailVo(Collections.singletonList(email),"EL-ADMIN后台管理系统",content);
+            emailVo = new EmailVo(Collections.singletonList(email),"ELADMIN后台管理系统",content);
         }
         return emailVo;
     }

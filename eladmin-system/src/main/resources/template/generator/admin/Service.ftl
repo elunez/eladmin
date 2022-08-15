@@ -25,7 +25,7 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
 
 /**
-* @website https://el-admin.vip
+* @website https://eladmin.vip
 * @description 服务接口
 * @author ${author}
 * @date ${date}

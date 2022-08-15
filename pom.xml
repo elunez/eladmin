@@ -17,8 +17,8 @@
         <module>eladmin-generator</module>
     </modules>
 
-    <name>EL-ADMIN 后台管理</name>
-    <url>https://el-admin.vip</url>
+    <name>ELADMIN 后台管理</name>
+    <url>https://eladmin.vip</url>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
