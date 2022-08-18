@@ -20,7 +20,7 @@ import lombok.Getter;
 
 /**
  * @author Zheng Jie
- * @website https://el-admin.vip
+ * @website https://eladmin.vip
  * @description
  * @date 2020-06-10
  **/
