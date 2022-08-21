@@ -1,0 +1,15 @@
+version: "3"
+
+services:
+  redis:
+    image: 'redis:6.0'
+    ports:
+      - "6379:6379"
+  mysql:
+    image: 'mysql:5.7.35'
+    environment:
+      - MYSQL_ROOT_PASSWORD=123456
+    volumes:
+      - ./sql/eladmin.sql:/docker-entrypoint-initdb.d/init_mysal.sql
+    ports:
+      - "3306:3306"
