@@ -19,6 +19,7 @@ import com.wf.captcha.*;
 import com.wf.captcha.base.Captcha;
 import lombok.Data;
 import me.zhengjie.exception.BadConfigurationException;
+import me.zhengjie.utils.CacheKey;
 import me.zhengjie.utils.StringUtils;
 import java.awt.*;
 import java.util.Objects;
@@ -39,7 +40,7 @@ public class LoginProperties {
 
     private LoginCode loginCode;
 
-    public static final String cacheKey = "USER-LOGIN-DATA";
+    public static final String cacheKey = CacheKey.PROJECT + "USER-LOGIN-DATA";
 
     public boolean isSingleLogin() {
         return singleLogin;
