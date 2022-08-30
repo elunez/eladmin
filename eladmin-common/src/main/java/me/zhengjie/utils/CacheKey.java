@@ -29,7 +29,7 @@ public interface CacheKey {
     /**
      * 项目名称
      */
-    String PROJECT = "baiKe-";
+    String PROJECT = "eladmin-";
     /**
      * 用户部分
      */
