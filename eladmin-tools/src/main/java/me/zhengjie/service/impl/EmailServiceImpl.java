@@ -23,6 +23,7 @@ import me.zhengjie.domain.vo.EmailVo;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.repository.EmailRepository;
 import me.zhengjie.service.EmailService;
+import me.zhengjie.utils.CacheKey;
 import me.zhengjie.utils.EncryptUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CachePut;
@@ -37,13 +38,13 @@ import java.util.Optional;
  */
 @Service
 @RequiredArgsConstructor
-@CacheConfig(cacheNames = "email")
+@CacheConfig(cacheNames = CacheKey.PROJECT + CacheKey.EMAIL)
 public class EmailServiceImpl implements EmailService {
 
     private final EmailRepository emailRepository;
 
     @Override
-    @CachePut(key = "'config'")
+    @CachePut(key = CacheKey.CONFIG)
     @Transactional(rollbackFor = Exception.class)
     public EmailConfig config(EmailConfig emailConfig, EmailConfig old) throws Exception {
         emailConfig.setId(1L);
@@ -55,7 +56,7 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    @Cacheable(key = "'config'")
+    @Cacheable(key = CacheKey.CONFIG)
     public EmailConfig find() {
         Optional<EmailConfig> emailConfig = emailRepository.findById(1L);
         return emailConfig.orElseGet(EmailConfig::new);

@@ -43,7 +43,7 @@ import java.util.*;
 */
 @Service
 @RequiredArgsConstructor
-@CacheConfig(cacheNames = "job")
+@CacheConfig(cacheNames = CacheKey.PROJECT + CacheKey.JOB_KEY)
 public class JobServiceImpl implements JobService {
 
     private final JobRepository jobRepository;
@@ -64,7 +64,7 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    @Cacheable(key = "'id:' + #p0")
+    @Cacheable(key = "'" + CacheKey.ID + ":' + #id")
     public JobDto findById(Long id) {
         Job job = jobRepository.findById(id).orElseGet(Job::new);
         ValidationUtil.isNull(job.getId(),"Job","id",id);
@@ -82,7 +82,7 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    @CacheEvict(key = "'id:' + #p0.id")
+    @CacheEvict(key = "'" + CacheKey.ID + ":' + #resources.id")
     @Transactional(rollbackFor = Exception.class)
     public void update(Job resources) {
         Job job = jobRepository.findById(resources.getId()).orElseGet(Job::new);
@@ -100,7 +100,7 @@ public class JobServiceImpl implements JobService {
     public void delete(Set<Long> ids) {
         jobRepository.deleteAllByIdIn(ids);
         // 删除缓存
-        redisUtils.delByKeys(CacheKey.JOB_ID, ids);
+        redisUtils.delByKeys(CacheKey.keyAndTarget(CacheKey.JOB_KEY, CacheKey.ID), ids);
     }
 
     @Override

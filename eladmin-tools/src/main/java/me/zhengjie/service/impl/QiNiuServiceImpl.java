@@ -29,14 +29,10 @@ import me.zhengjie.domain.QiniuConfig;
 import me.zhengjie.domain.QiniuContent;
 import me.zhengjie.repository.QiniuContentRepository;
 import me.zhengjie.service.dto.QiniuQueryCriteria;
-import me.zhengjie.utils.QiNiuUtil;
+import me.zhengjie.utils.*;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.repository.QiNiuConfigRepository;
 import me.zhengjie.service.QiNiuService;
-import me.zhengjie.utils.FileUtil;
-import me.zhengjie.utils.PageUtil;
-import me.zhengjie.utils.QueryHelp;
-import me.zhengjie.utils.ValidationUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CachePut;
@@ -55,7 +51,7 @@ import java.util.*;
  */
 @Service
 @RequiredArgsConstructor
-@CacheConfig(cacheNames = "qiNiu")
+@CacheConfig(cacheNames = CacheKey.PROJECT + CacheKey.QI_NIU)
 public class QiNiuServiceImpl implements QiNiuService {
 
     private final QiNiuConfigRepository qiNiuConfigRepository;
@@ -65,14 +61,14 @@ public class QiNiuServiceImpl implements QiNiuService {
     private Long maxSize;
 
     @Override
-    @Cacheable(key = "'config'")
+    @Cacheable(key = CacheKey.CONFIG)
     public QiniuConfig find() {
         Optional<QiniuConfig> qiniuConfig = qiNiuConfigRepository.findById(1L);
         return qiniuConfig.orElseGet(QiniuConfig::new);
     }
 
     @Override
-    @CachePut(key = "'config'")
+    @CachePut(key = CacheKey.CONFIG)
     @Transactional(rollbackFor = Exception.class)
     public QiniuConfig config(QiniuConfig qiniuConfig) {
         qiniuConfig.setId(1L);

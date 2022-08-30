@@ -40,7 +40,7 @@ import java.util.Map;
 */
 @Service
 @RequiredArgsConstructor
-@CacheConfig(cacheNames = "dict")
+@CacheConfig(cacheNames = CacheKey.PROJECT + CacheKey.DICT_KEY)
 public class DictDetailServiceImpl implements DictDetailService {
 
     private final DictRepository dictRepository;
@@ -74,7 +74,7 @@ public class DictDetailServiceImpl implements DictDetailService {
     }
 
     @Override
-    @Cacheable(key = "'name:' + #p0")
+    @Cacheable(key = "'" + CacheKey.NAME + ":' + #name")
     public List<DictDetailDto> getDictByName(String name) {
         return dictDetailMapper.toDto(dictDetailRepository.findByDictName(name));
     }
@@ -90,6 +90,6 @@ public class DictDetailServiceImpl implements DictDetailService {
 
     public void delCaches(DictDetail dictDetail){
         Dict dict = dictRepository.findById(dictDetail.getDict().getId()).orElseGet(Dict::new);
-        redisUtils.del(CacheKey.DICT_NAME + dict.getName());
+        redisUtils.del(CacheKey.keyAndTarget(CacheKey.DICT_KEY, CacheKey.NAME) + dict.getName());
     }
 }

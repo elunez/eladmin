@@ -52,7 +52,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @RequiredArgsConstructor
-@CacheConfig(cacheNames = "role")
+@CacheConfig(cacheNames = CacheKey.PROJECT + CacheKey.ROLE_KEY)
 public class RoleServiceImpl implements RoleService {
 
     private final RoleRepository roleRepository;
@@ -80,7 +80,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    @Cacheable(key = "'id:' + #p0")
+    @Cacheable(key = "'" + CacheKey.ID + ":' + #id")
     @Transactional(rollbackFor = Exception.class)
     public RoleDto findById(long id) {
         Role role = roleRepository.findById(id).orElseGet(Role::new);
@@ -163,7 +163,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    @Cacheable(key = "'auth:' + #p0.id")
+    @Cacheable(key = "'" + CacheKey.AUTH_KEY + ":' + #user.id")
     public List<AuthorityDto> mapToGrantedAuthorities(UserDto user) {
         Set<String> permissions = new HashSet<>();
         // 如果是管理员直接返回
@@ -215,10 +215,10 @@ public class RoleServiceImpl implements RoleService {
         if (CollectionUtil.isNotEmpty(users)) {
             users.forEach(item -> userCacheManager.cleanUserCache(item.getUsername()));
             Set<Long> userIds = users.stream().map(User::getId).collect(Collectors.toSet());
-            redisUtils.delByKeys(CacheKey.DATA_USER, userIds);
-            redisUtils.delByKeys(CacheKey.MENU_USER, userIds);
-            redisUtils.delByKeys(CacheKey.ROLE_AUTH, userIds);
+            redisUtils.delByKeys(CacheKey.keyAndTarget(CacheKey.DATA_KEY, CacheKey.USER_KEY), userIds);
+            redisUtils.delByKeys(CacheKey.keyAndTarget(CacheKey.MENU_KEY, CacheKey.USER_KEY), userIds);
+            redisUtils.delByKeys(CacheKey.keyAndTarget(CacheKey.ROLE_KEY, CacheKey.AUTH_KEY), userIds);
         }
-        redisUtils.del(CacheKey.ROLE_ID + id);
+        redisUtils.del(CacheKey.keyAndTarget(CacheKey.ROLE_KEY, CacheKey.ID) + id);
     }
 }

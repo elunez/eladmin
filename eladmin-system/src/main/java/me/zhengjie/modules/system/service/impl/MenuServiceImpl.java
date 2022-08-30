@@ -50,7 +50,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @RequiredArgsConstructor
-@CacheConfig(cacheNames = "menu")
+@CacheConfig(cacheNames = CacheKey.PROJECT + CacheKey.MENU_KEY)
 public class MenuServiceImpl implements MenuService {
 
     private final MenuRepository menuRepository;
@@ -82,7 +82,7 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
-    @Cacheable(key = "'id:' + #p0")
+    @Cacheable(key = "'" + CacheKey.ID + ":' + #id")
     public MenuDto findById(long id) {
         Menu menu = menuRepository.findById(id).orElseGet(Menu::new);
         ValidationUtil.isNull(menu.getId(),"Menu","id",id);
@@ -95,7 +95,7 @@ public class MenuServiceImpl implements MenuService {
      * @return /
      */
     @Override
-    @Cacheable(key = "'user:' + #p0")
+    @Cacheable(key = "'" + CacheKey.USER_KEY + ":' + #currentUserId")
     public List<MenuDto> findByUser(Long currentUserId) {
         List<RoleSmallDto> roles = roleService.findByUsersId(currentUserId);
         Set<Long> roleIds = roles.stream().map(RoleSmallDto::getId).collect(Collectors.toSet());
@@ -344,12 +344,12 @@ public class MenuServiceImpl implements MenuService {
      */
     public void delCaches(Long id){
         List<User> users = userRepository.findByMenuId(id);
-        redisUtils.del(CacheKey.MENU_ID + id);
-        redisUtils.delByKeys(CacheKey.MENU_USER, users.stream().map(User::getId).collect(Collectors.toSet()));
+        redisUtils.del(CacheKey.keyAndTarget(CacheKey.MENU_KEY, CacheKey.ID) + id);
+        redisUtils.delByKeys(CacheKey.keyAndTarget(CacheKey.MENU_KEY, CacheKey.USER_KEY), users.stream().map(User::getId).collect(Collectors.toSet()));
         // 清除 Role 缓存
         List<Role> roles = roleService.findInMenuId(new ArrayList<Long>(){{
             add(id);
         }});
-        redisUtils.delByKeys(CacheKey.ROLE_ID, roles.stream().map(Role::getId).collect(Collectors.toSet()));
+        redisUtils.delByKeys(CacheKey.keyAndTarget(CacheKey.ROLE_KEY, CacheKey.ID), roles.stream().map(Role::getId).collect(Collectors.toSet()));
     }
 }

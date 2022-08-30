@@ -49,7 +49,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @RequiredArgsConstructor
-@CacheConfig(cacheNames = "user")
+@CacheConfig(cacheNames = CacheKey.PROJECT + CacheKey.USER_KEY)
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
@@ -73,7 +73,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Cacheable(key = "'id:' + #p0")
+    @Cacheable(key = "'" + CacheKey.ID + ":' + #id")
     @Transactional(rollbackFor = Exception.class)
     public UserDto findById(long id) {
         User user = userRepository.findById(id).orElseGet(User::new);
@@ -115,13 +115,13 @@ public class UserServiceImpl implements UserService {
         }
         // 如果用户的角色改变
         if (!resources.getRoles().equals(user.getRoles())) {
-            redisUtils.del(CacheKey.DATA_USER + resources.getId());
-            redisUtils.del(CacheKey.MENU_USER + resources.getId());
-            redisUtils.del(CacheKey.ROLE_AUTH + resources.getId());
+            redisUtils.del(CacheKey.keyAndTarget(CacheKey.DATA_KEY, CacheKey.USER_KEY) + resources.getId());
+            redisUtils.del(CacheKey.keyAndTarget(CacheKey.MENU_KEY, CacheKey.USER_KEY) + resources.getId());
+            redisUtils.del(CacheKey.keyAndTarget(CacheKey.ROLE_KEY, CacheKey.AUTH_KEY) + resources.getId());
         }
         // 修改部门会影响 数据权限
         if (!Objects.equals(resources.getDept(),user.getDept())) {
-            redisUtils.del(CacheKey.DATA_USER + resources.getId());
+            redisUtils.del(CacheKey.keyAndTarget(CacheKey.DATA_KEY, CacheKey.USER_KEY) + resources.getId());
         }
         // 如果用户被禁用，则清除用户登录信息
         if(!resources.getEnabled()){
@@ -255,7 +255,7 @@ public class UserServiceImpl implements UserService {
      * @param id /
      */
     public void delCaches(Long id, String username) {
-        redisUtils.del(CacheKey.USER_ID + id);
+        redisUtils.del(CacheKey.keyAndTarget(CacheKey.USER_KEY, CacheKey.ID) + id);
         flushCache(username);
     }
 

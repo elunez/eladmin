@@ -16,6 +16,10 @@
 package me.zhengjie.utils;
 
 /**
+ * 实际上缓存中的记录的Key为 PROJECT + xxx_KEY + :: + ID|NAME + : + 数据
+ * <p>
+ * 即最终保存的key为 baiKe-user-id-1
+ *
  * @author: liaojinlong
  * @date: 2020/6/11 15:49
  * @apiNote: 关于缓存的Key集合
@@ -23,36 +27,97 @@ package me.zhengjie.utils;
 public interface CacheKey {
 
     /**
-     * 用户
+     * 项目名称
      */
-    String USER_ID = "user::id:";
+    String PROJECT = "baiKe-";
     /**
-     * 数据
+     * 用户部分
      */
-    String DATA_USER = "data::user:";
+    String USER_KEY = "user";
     /**
-     * 菜单
+     * 目录部分
      */
-    String MENU_ID = "menu::id:";
-    String MENU_USER = "menu::user:";
+    String MENU_KEY = "menu";
     /**
-     * 角色授权
+     * 角色部分
      */
-    String ROLE_AUTH = "role::auth:";
+    String ROLE_KEY = "role";
     /**
-     * 角色信息
+     * 部门部分
      */
-    String ROLE_ID = "role::id:";
-    /**
-     * 部门
-     */
-    String DEPT_ID = "dept::id:";
+    String DEPT_KEY = "dept";
     /**
      * 岗位
      */
-    String JOB_ID = "job::id:";
+    String JOB_KEY = "job";
+    /**
+     * 数据部分
+     */
+    String DATA_KEY = "data";
+    /**
+     * 鉴权部分
+     */
+    String AUTH_KEY = "auth";
     /**
      * 数据字典
      */
-    String DICT_NAME = "dict::name:";
+    String DICT_KEY = "dict";
+    /**
+     * 支付宝
+     */
+    String ALI_PAY = "aliPay";
+    /**
+     * 邮箱
+     */
+    String EMAIL = "email";
+    /**
+     * 七牛云
+     */
+    String QI_NIU = "qiNiu";
+    /**
+     * 通用ID部分
+     */
+    String ID = "id";
+    /**
+     * 通用名称部分
+     */
+    String NAME = "name";
+    /**
+     * 配置
+     */
+    String CONFIG = "config";
+
+    /**
+     * 依据传入的 key 拼接为 PROJECT + xx_KEY
+     * 例如 baiKe-user
+     *
+     * @param key xx_KEY
+     * @return /
+     */
+    static String projectAndKey(String key) {
+        return String.format(
+                "%1$s%2$s",
+                PROJECT,
+                key
+        );
+    }
+
+    /**
+     * 一般用于手动操作Redis时，拼接存入的Key
+     * <p>
+     * 依据传入的 key 和 target 拼接为 PROJECT + xx_KEY + target::
+     * <p>
+     * 例如 返回 baiKe-user::id:，后面自行拼接区分的标识，例如ID值
+     *
+     * @param key    xx_KEY
+     * @param target target
+     * @return PROJECT-key::target:
+     */
+    static String keyAndTarget(String key, String target) {
+        return String.format(
+                "%1$s::%2$s:",
+                projectAndKey(key),
+                target
+        );
+    }
 }

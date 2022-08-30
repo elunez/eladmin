@@ -25,6 +25,7 @@ import me.zhengjie.domain.AlipayConfig;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.repository.AliPayRepository;
 import me.zhengjie.service.AliPayService;
+import me.zhengjie.utils.CacheKey;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -38,20 +39,20 @@ import java.util.Optional;
  */
 @Service
 @RequiredArgsConstructor
-@CacheConfig(cacheNames = "aliPay")
+@CacheConfig(cacheNames = CacheKey.PROJECT + CacheKey.ALI_PAY)
 public class AliPayServiceImpl implements AliPayService {
 
     private final AliPayRepository alipayRepository;
 
     @Override
-    @Cacheable(key = "'config'")
+    @Cacheable(key = CacheKey.CONFIG)
     public AlipayConfig find() {
         Optional<AlipayConfig> alipayConfig = alipayRepository.findById(1L);
         return alipayConfig.orElseGet(AlipayConfig::new);
     }
 
     @Override
-    @CachePut(key = "'config'")
+    @CachePut(key = CacheKey.CONFIG)
     @Transactional(rollbackFor = Exception.class)
     public AlipayConfig config(AlipayConfig alipayConfig) {
         alipayConfig.setId(1L);

@@ -40,7 +40,7 @@ import java.util.*;
 */
 @Service
 @RequiredArgsConstructor
-@CacheConfig(cacheNames = "dict")
+@CacheConfig(cacheNames = CacheKey.PROJECT + CacheKey.DICT_KEY)
 public class DictServiceImpl implements DictService {
 
     private final DictRepository dictRepository;
@@ -116,6 +116,6 @@ public class DictServiceImpl implements DictService {
     }
 
     public void delCaches(Dict dict){
-        redisUtils.del(CacheKey.DICT_NAME + dict.getName());
+        redisUtils.del(CacheKey.keyAndTarget(CacheKey.DICT_KEY, CacheKey.NAME) + dict.getName());
     }
 }

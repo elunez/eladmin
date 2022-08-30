@@ -47,7 +47,7 @@ import java.util.stream.Collectors;
 */
 @Service
 @RequiredArgsConstructor
-@CacheConfig(cacheNames = "dept")
+@CacheConfig(cacheNames = CacheKey.PROJECT + CacheKey.DEPT_KEY)
 public class DeptServiceImpl implements DeptService {
 
     private final DeptRepository deptRepository;
@@ -88,7 +88,7 @@ public class DeptServiceImpl implements DeptService {
     }
 
     @Override
-    @Cacheable(key = "'id:' + #p0")
+    @Cacheable(key = "'" + CacheKey.ID + ":' + #id")
     public DeptDto findById(Long id) {
         Dept dept = deptRepository.findById(id).orElseGet(Dept::new);
         ValidationUtil.isNull(dept.getId(),"Dept","id",id);
@@ -277,7 +277,10 @@ public class DeptServiceImpl implements DeptService {
     public void delCaches(Long id){
         List<User> users = userRepository.findByRoleDeptId(id);
         // 删除数据权限
-        redisUtils.delByKeys(CacheKey.DATA_USER, users.stream().map(User::getId).collect(Collectors.toSet()));
-        redisUtils.del(CacheKey.DEPT_ID + id);
+        redisUtils.delByKeys(
+                CacheKey.keyAndTarget(CacheKey.DATA_KEY, CacheKey.USER_KEY),
+                users.stream().map(User::getId).collect(Collectors.toSet())
+        );
+        redisUtils.del(CacheKey.keyAndTarget(CacheKey.DEPT_KEY, CacheKey.ID) + id);
     }
 }
