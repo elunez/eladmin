@@ -13,10 +13,11 @@
 
  Date: 05/09/2020 10:49:19
 */
+CREATE database eladmin;
+USE eladmin;
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
-
 -- ----------------------------
 -- Table structure for code_column_config
 -- ----------------------------

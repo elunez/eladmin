@@ -17,6 +17,8 @@
 
 **账号密码：** `admin / 123456`
 
+docker 启动时 请在 wsl 获取对应的服务器的ip
+填写到 eladmin\eladmin-system\src\main\resources\application.properties 路径下
 #### 项目源码
 
 |     |   后端源码  |   前端源码  |
