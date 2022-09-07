@@ -67,6 +67,7 @@ public class QueryHelp {
                     Class<?> fieldType = field.getType();
                     Object val = field.get(query);
                     if (ObjectUtil.isNull(val) || "".equals(val)) {
+                        field.setAccessible(accessible);
                         continue;
                     }
                     Join join = null;
@@ -80,6 +81,7 @@ public class QueryHelp {
                         }
                         Predicate[] p = new Predicate[orPredicate.size()];
                         list.add(cb.or(orPredicate.toArray(p)));
+                        field.setAccessible(accessible);
                         continue;
                     }
                     if (ObjectUtil.isNotEmpty(joinName)) {
