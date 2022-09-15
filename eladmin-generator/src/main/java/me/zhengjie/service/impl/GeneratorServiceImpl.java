@@ -59,6 +59,7 @@ public class GeneratorServiceImpl implements GeneratorService {
 
     private final ColumnInfoRepository columnInfoRepository;
 
+    private final String CONFIG_MESSAGE = "请先配置生成器";
     @Override
     public Object getTables() {
         // 使用预编译防止sql注入
@@ -169,7 +170,7 @@ public class GeneratorServiceImpl implements GeneratorService {
     @Override
     public void generator(GenConfig genConfig, List<ColumnInfo> columns) {
         if (genConfig.getId() == null) {
-            throw new BadRequestException("请先配置生成器");
+            throw new BadRequestException(CONFIG_MESSAGE);
         }
         try {
             GenUtil.generatorCode(columns, genConfig);
@@ -182,7 +183,7 @@ public class GeneratorServiceImpl implements GeneratorService {
     @Override
     public ResponseEntity<Object> preview(GenConfig genConfig, List<ColumnInfo> columns) {
         if (genConfig.getId() == null) {
-            throw new BadRequestException("请先配置生成器");
+            throw new BadRequestException(CONFIG_MESSAGE);
         }
         List<Map<String, Object>> genList = GenUtil.preview(columns, genConfig);
         return new ResponseEntity<>(genList, HttpStatus.OK);
@@ -191,7 +192,7 @@ public class GeneratorServiceImpl implements GeneratorService {
     @Override
     public void download(GenConfig genConfig, List<ColumnInfo> columns, HttpServletRequest request, HttpServletResponse response) {
         if (genConfig.getId() == null) {
-            throw new BadRequestException("请先配置生成器");
+            throw new BadRequestException(CONFIG_MESSAGE);
         }
         try {
             File file = new File(GenUtil.download(columns, genConfig));

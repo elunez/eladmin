@@ -114,7 +114,7 @@ public class MenuServiceImpl implements MenuService {
                 throw new EntityExistException(Menu.class,"componentName",resources.getComponentName());
             }
         }
-        if(resources.getPid().equals(0L)){
+        if (Long.valueOf(0L).equals(resources.getPid())) {
             resources.setPid(null);
         }
         if(resources.getIFrame()){
