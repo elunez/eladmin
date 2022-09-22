@@ -16,6 +16,7 @@
 package me.zhengjie.modules.security.config.bean;
 
 import lombok.Data;
+import me.zhengjie.utils.CacheKey;
 
 /**
  * Jwt参数配置
@@ -65,6 +66,14 @@ public class SecurityProperties {
      * 续期时间
      */
     private Long renew;
+
+    public void setOnlineKey(String onlineKey) {
+        this.onlineKey = CacheKey.PROJECT + onlineKey;
+    }
+
+    public void setCodeKey(String codeKey) {
+        this.codeKey = CacheKey.PROJECT + codeKey;
+    }
 
     public String getTokenStartWith() {
         return tokenStartWith + " ";
