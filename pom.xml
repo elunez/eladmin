@@ -185,6 +185,12 @@
             <version>1.6.2</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-text</artifactId>
+            <version>1.10.0</version>
+        </dependency>
+
         <!-- 解析客户端操作系统、浏览器信息 -->
         <dependency>
             <groupId>nl.basjes.parse.useragent</groupId>
