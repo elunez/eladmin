@@ -56,13 +56,6 @@ public class AppRun {
         return new SpringContextHolder();
     }
 
-    @Bean
-    public ServletWebServerFactory webServerFactory() {
-        TomcatServletWebServerFactory fa = new TomcatServletWebServerFactory();
-        fa.addConnectorCustomizers(connector -> connector.setProperty("relaxedQueryChars", "[]{}"));
-        return fa;
-    }
-
     /**
      * 访问首页提示
      *
