@@ -23,10 +23,11 @@ import me.zhengjie.utils.ThrowableUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import java.util.Objects;
 import static org.springframework.http.HttpStatus.*;
 
 /**
@@ -95,11 +96,10 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiError> handleMethodArgumentNotValidException(MethodArgumentNotValidException e){
         // 打印堆栈信息
         log.error(ThrowableUtil.getStackTrace(e));
-        String[] str = Objects.requireNonNull(e.getBindingResult().getAllErrors().get(0).getCodes())[1].split("\\.");
-        String message = e.getBindingResult().getAllErrors().get(0).getDefaultMessage();
-        String msg = "不能为空";
-        if(msg.equals(message)){
-            message = str[1] + ":" + message;
+        ObjectError objectError = e.getBindingResult().getAllErrors().get(0);
+        String message = objectError.getDefaultMessage();
+        if (objectError instanceof FieldError) {
+            message = ((FieldError) objectError).getField() + ": " + message;
         }
         return buildResponseEntity(ApiError.error(message));
     }
