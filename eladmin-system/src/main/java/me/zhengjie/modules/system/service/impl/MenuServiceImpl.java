@@ -59,6 +59,12 @@ public class MenuServiceImpl implements MenuService {
     private final RoleService roleService;
     private final RedisUtils redisUtils;
 
+    private static final String HTTP_PRE = "http://";
+    private static final String HTTPS_PRE = "https://";
+    private static final String YES_STR = "是";
+    private static final String NO_STR = "否";
+    private static final String BAD_REQUEST = "外链必须以http://或者https://开头";
+    
     @Override
     public List<MenuDto> queryAll(MenuQueryCriteria criteria, Boolean isQuery) throws Exception {
         Sort sort = Sort.by(Sort.Direction.ASC, "menuSort");
@@ -114,13 +120,12 @@ public class MenuServiceImpl implements MenuService {
                 throw new EntityExistException(Menu.class,"componentName",resources.getComponentName());
             }
         }
-        if(resources.getPid().equals(0L)){
+        if (Long.valueOf(0L).equals(resources.getPid())) {
             resources.setPid(null);
         }
         if(resources.getIFrame()){
-            String http = "http://", https = "https://";
-            if (!(resources.getPath().toLowerCase().startsWith(http)||resources.getPath().toLowerCase().startsWith(https))) {
-                throw new BadRequestException("外链必须以http://或者https://开头");
+            if (!(resources.getPath().toLowerCase().startsWith(HTTP_PRE)||resources.getPath().toLowerCase().startsWith(HTTPS_PRE))) {
+                throw new BadRequestException(BAD_REQUEST);
             }
         }
         menuRepository.save(resources);
@@ -140,9 +145,8 @@ public class MenuServiceImpl implements MenuService {
         ValidationUtil.isNull(menu.getId(),"Permission","id",resources.getId());
 
         if(resources.getIFrame()){
-            String http = "http://", https = "https://";
-            if (!(resources.getPath().toLowerCase().startsWith(http)||resources.getPath().toLowerCase().startsWith(https))) {
-                throw new BadRequestException("外链必须以http://或者https://开头");
+            if (!(resources.getPath().toLowerCase().startsWith(HTTP_PRE)||resources.getPath().toLowerCase().startsWith(HTTPS_PRE))) {
+                throw new BadRequestException(BAD_REQUEST);
             }
         }
         Menu menu1 = menuRepository.findByTitle(resources.getTitle());
@@ -322,9 +326,9 @@ public class MenuServiceImpl implements MenuService {
             map.put("菜单标题", menuDTO.getTitle());
             map.put("菜单类型", menuDTO.getType() == null ? "目录" : menuDTO.getType() == 1 ? "菜单" : "按钮");
             map.put("权限标识", menuDTO.getPermission());
-            map.put("外链菜单", menuDTO.getIFrame() ? "是" : "否");
-            map.put("菜单可见", menuDTO.getHidden() ? "否" : "是");
-            map.put("是否缓存", menuDTO.getCache() ? "是" : "否");
+            map.put("外链菜单", menuDTO.getIFrame() ? YES_STR : NO_STR);
+            map.put("菜单可见", menuDTO.getHidden() ? NO_STR : YES_STR);
+            map.put("是否缓存", menuDTO.getCache() ? YES_STR : NO_STR);
             map.put("创建日期", menuDTO.getCreateTime());
             list.add(map);
         }
