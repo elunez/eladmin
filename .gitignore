@@ -5,3 +5,4 @@
 */*.iml
 /.gradle/
 /application.pid
+.vscode/
