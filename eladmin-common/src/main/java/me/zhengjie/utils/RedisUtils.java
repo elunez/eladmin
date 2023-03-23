@@ -185,7 +185,8 @@ public class RedisUtils {
             } else {
                 Set<Object> keySet = new HashSet<>();
                 for (String key : keys) {
-                    keySet.addAll(redisTemplate.keys(key));
+                    if (redisTemplate.hasKey(key))
+                        keySet.add(key);
                 }
                 long count = redisTemplate.delete(keySet);
                 log.debug("--------------------------------------------");
