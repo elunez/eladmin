@@ -1,4 +1,4 @@
-<h1 style="text-align: center">EL-ADMIN 后台管理系统</h1>
+<h1 style="text-align: center">ELADMIN 后台管理系统</h1>
 <div style="text-align: center">
 
 [![AUR](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg)](https://github.com/elunez/eladmin/blob/master/LICENSE)
@@ -11,9 +11,9 @@
 #### 项目简介
 一个基于 Spring Boot 2.1.0 、 Spring Boot Jpa、 JWT、Spring Security、Redis、Vue的前后端分离的后台管理系统
 
-**开发文档：**  [https://el-admin.vip](https://el-admin.vip)
+**开发文档：**  [https://eladmin.vip](https://eladmin.vip)
 
-**体验地址：**  [https://el-admin.vip/demo](https://el-admin.vip/demo)
+**体验地址：**  [https://eladmin.vip/demo](https://eladmin.vip/demo)
 
 **账号密码：** `admin / 123456`
 
@@ -87,9 +87,9 @@
 
 #### 特别鸣谢
 
-- 感谢 [JetBrains](https://www.jetbrains.com/) 提供的非商业开源软件开发授权
+- 感谢 [七牛云](https://portal.qiniu.com/signup?utm_source=kaiyuan&utm_media=ELADMIN) 提供的免费云存储与CDN加速支持
 
-- 感谢 [七牛云](https://www.qiniu.com/) 提供的免费云存储与CDN加速支持
+- 感谢 [JetBrains](https://www.jetbrains.com/) 提供的非商业开源软件开发授权
 
 - 感谢 [PanJiaChen](https://github.com/PanJiaChen/vue-element-admin) 大佬提供的前端模板
 
@@ -102,7 +102,7 @@
 - 感谢 [d15801543974](https://github.com/d15801543974) 大佬提供的基于注解的通用查询方式
 
 #### 项目捐赠
-项目的发展离不开你的支持，请作者喝杯咖啡吧☕  [Donate](https://el-admin.vip/donation/)
+项目的发展离不开你的支持，请作者喝杯咖啡吧☕  [Donate](https://eladmin.vip/donation/)
 
 #### 反馈交流
 - QQ交流群：一群：<strike>891137268</strike> 、二群：<strike>947578238</strike>、三群：659622532

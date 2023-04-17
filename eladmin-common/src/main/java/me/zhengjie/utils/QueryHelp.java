@@ -161,8 +161,10 @@ public class QueryHelp {
                             break;
                         case BETWEEN:
                             List<Object> between = new ArrayList<>((List<Object>)val);
-                            list.add(cb.between(getExpression(attributeName, join, root).as((Class<? extends Comparable>) between.get(0).getClass()),
-                                    (Comparable) between.get(0), (Comparable) between.get(1)));
+                            if(between.size() == 2){
+                                list.add(cb.between(getExpression(attributeName, join, root).as((Class<? extends Comparable>) between.get(0).getClass()),
+                                        (Comparable) between.get(0), (Comparable) between.get(1)));
+                            }
                             break;
                         default: break;
                     }

@@ -17,8 +17,8 @@
         <module>eladmin-generator</module>
     </modules>
 
-    <name>EL-ADMIN 后台管理</name>
-    <url>https://el-admin.vip</url>
+    <name>ELADMIN 后台管理</name>
+    <url>https://eladmin.vip</url>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -183,6 +183,12 @@
             <groupId>com.github.whvcse</groupId>
             <artifactId>easy-captcha</artifactId>
             <version>1.6.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-text</artifactId>
+            <version>1.10.0</version>
         </dependency>
 
         <!-- 解析客户端操作系统、浏览器信息 -->
