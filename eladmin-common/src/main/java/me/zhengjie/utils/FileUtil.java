@@ -182,7 +182,8 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
     public static File upload(MultipartFile file, String filePath) {
         Date date = new Date();
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMddhhmmssS");
-        String name = getFileNameNoEx(file.getOriginalFilename());
+        // 过滤非法文件名
+        String name = getFileNameNoEx(verifyFilename(file.getOriginalFilename()));
         String suffix = getExtensionName(file.getOriginalFilename());
         String nowStr = "-" + format.format(date);
         try {
@@ -349,6 +350,44 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
             }
         }
     }
+
+    /**
+     * 验证并过滤非法的文件名
+     * @param fileName 文件名
+     * @return 文件名
+     */
+    public static String verifyFilename(String fileName) {
+        // 过滤掉特殊字符
+        fileName = fileName.replaceAll("[\\\\/:*?\"<>|~\\s]", "");
+
+        // 去掉文件名开头和结尾的空格和点
+        fileName = fileName.trim().replaceAll("^[. ]+|[. ]+$", "");
+
+        // 不允许文件名超过255（在Mac和Linux中）或260（在Windows中）个字符
+        int maxFileNameLength = 255;
+        if (System.getProperty("os.name").startsWith("Windows")) {
+            maxFileNameLength = 260;
+        }
+        if (fileName.length() > maxFileNameLength) {
+            fileName = fileName.substring(0, maxFileNameLength);
+        }
+
+        // 过滤掉控制字符
+        fileName = fileName.replaceAll("[\\p{Cntrl}]", "");
+
+        // 过滤掉 ".." 路径
+        fileName = fileName.replaceAll("\\.{2,}", "");
+
+        // 去掉文件名开头的 ".."
+        fileName = fileName.replaceAll("^\\.+/", "");
+
+        // 保留文件名中最后一个 "." 字符，过滤掉其他 "."
+        fileName = fileName.replaceAll("^(.*)(\\.[^.]*)$", "$1").replaceAll("\\.", "") +
+                fileName.replaceAll("^(.*)(\\.[^.]*)$", "$2");
+
+        return fileName;
+    }
+
 
     public static String getMd5(File file) {
         return getMd5(getByte(file));
