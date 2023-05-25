@@ -43,9 +43,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(Throwable.class)
     public ResponseEntity<ApiError> handleException(Throwable e) {
-        // 打印堆栈信息
-        log.error(ThrowableUtil.getStackTrace(e));
-        return buildResponseEntity(ApiError.error(e.getMessage()));
+        return printErrorStackTrace(e);
     }
 
     /**
@@ -74,9 +72,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(value = EntityExistException.class)
     public ResponseEntity<ApiError> entityExistException(EntityExistException e) {
-        // 打印堆栈信息
-        log.error(ThrowableUtil.getStackTrace(e));
-        return buildResponseEntity(ApiError.error(e.getMessage()));
+        return printErrorStackTrace(e);
     }
 
     /**
@@ -109,5 +105,14 @@ public class GlobalExceptionHandler {
      */
     private ResponseEntity<ApiError> buildResponseEntity(ApiError apiError) {
         return new ResponseEntity<>(apiError, HttpStatus.valueOf(apiError.getStatus()));
+    }
+
+    /**
+     * 处理所有不可知的异常
+     */
+    public ResponseEntity<ApiError> printErrorStackTrace(Throwable e) {
+        // 打印堆栈信息
+        log.error(ThrowableUtil.getStackTrace(e));
+        return buildResponseEntity(ApiError.error(e.getMessage()));
     }
 }
