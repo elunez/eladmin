@@ -39,7 +39,7 @@ public class AlipayUtils {
      */
     public String getOrderCode() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        int a = (int)(Math.random() * 9000.0D) + 1000;
+        int a = (int) (Math.random() * 9000.0D) + 1000;
         System.out.println(a);
         Date date = new Date();
         String str = sdf.format(date);
@@ -57,27 +57,21 @@ public class AlipayUtils {
      * @param alipay 阿里云配置
      * @return boolean
      */
-    public boolean rsaCheck(HttpServletRequest request, AlipayConfig alipay){
-
+    public boolean rsaCheck(HttpServletRequest request, AlipayConfig alipay) {
         // 获取支付宝POST过来反馈信息
-        Map<String,String> params = new HashMap<>(1);
+        Map<String, String> params = new HashMap<>(1);
         Map<String, String[]> requestParams = request.getParameterMap();
         for (Object o : requestParams.keySet()) {
             String name = (String) o;
             String[] values = requestParams.get(name);
             String valueStr = "";
             for (int i = 0; i < values.length; i++) {
-                valueStr = (i == values.length - 1) ? valueStr + values[i]
-                        : valueStr + values[i] + ",";
+                valueStr = (i == values.length - 1) ? valueStr + values[i] : valueStr + values[i] + ",";
             }
             params.put(name, valueStr);
         }
-
         try {
-            return AlipaySignature.rsaCheckV1(params,
-                    alipay.getPublicKey(),
-                    alipay.getCharset(),
-                    alipay.getSignType());
+            return AlipaySignature.rsaCheckV1(params, alipay.getPublicKey(), alipay.getCharset(), alipay.getSignType());
         } catch (AlipayApiException e) {
             return false;
         }

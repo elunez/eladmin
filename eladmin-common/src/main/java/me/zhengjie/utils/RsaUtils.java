@@ -13,7 +13,7 @@ import java.security.spec.X509EncodedKeySpec;
  * @author https://www.cnblogs.com/nihaorz/p/10690643.html
  * @description Rsa 工具类，公钥私钥生成，加解密
  * @date 2020-05-18
- **/
+ */
 public class RsaUtils {
 
     private static final String SRC = "123456";
@@ -138,7 +138,7 @@ public class RsaUtils {
         return Base64.encodeBase64String(result);
     }
 
-    private static byte[] doLongerCipherFinal(int opMode,Cipher cipher, byte[] source) throws Exception {
+    private static byte[] doLongerCipherFinal(int opMode, Cipher cipher, byte[] source) throws Exception {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         if (opMode == Cipher.DECRYPT_MODE) {
             out.write(cipher.doFinal(source));
@@ -172,13 +172,13 @@ public class RsaUtils {
         return new RsaKeyPair(publicKeyString, privateKeyString);
     }
 
-
     /**
      * RSA密钥对对象
      */
     public static class RsaKeyPair {
 
         private final String publicKey;
+
         private final String privateKey;
 
         public RsaKeyPair(String publicKey, String privateKey) {
@@ -193,6 +193,5 @@ public class RsaUtils {
         public String getPrivateKey() {
             return privateKey;
         }
-
     }
 }

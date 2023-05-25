@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package me.zhengjie.utils;
 
 import java.time.*;
@@ -28,6 +27,7 @@ import java.util.Date;
 public class DateUtil {
 
     public static final DateTimeFormatter DFY_MD_HMS = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
     public static final DateTimeFormatter DFY_MD = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     /**
@@ -71,7 +71,6 @@ public class DateUtil {
     public static Date toDate(LocalDate localDate) {
         return toDate(localDate.atTime(LocalTime.now(ZoneId.systemDefault())));
     }
-
 
     /**
      * Date转 LocalDateTime

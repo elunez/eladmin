@@ -28,10 +28,14 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "file")
 public class FileProperties {
 
-    /** 文件大小限制 */
+    /**
+     * 文件大小限制
+     */
     private Long maxSize;
 
-    /** 头像大小限制 */
+    /**
+     * 头像大小限制
+     */
     private Long avatarMaxSize;
 
     private ElPath mac;
@@ -40,18 +44,18 @@ public class FileProperties {
 
     private ElPath windows;
 
-    public ElPath getPath(){
+    public ElPath getPath() {
         String os = System.getProperty("os.name");
-        if(os.toLowerCase().startsWith(ElAdminConstant.WIN)) {
+        if (os.toLowerCase().startsWith(ElAdminConstant.WIN)) {
             return windows;
-        } else if(os.toLowerCase().startsWith(ElAdminConstant.MAC)){
+        } else if (os.toLowerCase().startsWith(ElAdminConstant.MAC)) {
             return mac;
         }
         return linux;
     }
 
     @Data
-    public static class ElPath{
+    public static class ElPath {
 
         private String path;
 

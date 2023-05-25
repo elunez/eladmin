@@ -45,41 +45,44 @@ import java.util.*;
 public class QuartzJobServiceImpl implements QuartzJobService {
 
     private final QuartzJobRepository quartzJobRepository;
+
     private final QuartzLogRepository quartzLogRepository;
+
     private final QuartzManage quartzManage;
+
     private final RedisUtils redisUtils;
 
     @Override
-    public Object queryAll(JobQueryCriteria criteria, Pageable pageable){
-        return PageUtil.toPage(quartzJobRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable));
+    public Object queryAll(JobQueryCriteria criteria, Pageable pageable) {
+        return PageUtil.toPage(quartzJobRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root, criteria, criteriaBuilder), pageable));
     }
 
     @Override
-    public Object queryAllLog(JobQueryCriteria criteria, Pageable pageable){
-        return PageUtil.toPage(quartzLogRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable));
+    public Object queryAllLog(JobQueryCriteria criteria, Pageable pageable) {
+        return PageUtil.toPage(quartzLogRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root, criteria, criteriaBuilder), pageable));
     }
 
     @Override
     public List<QuartzJob> queryAll(JobQueryCriteria criteria) {
-        return quartzJobRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder));
+        return quartzJobRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root, criteria, criteriaBuilder));
     }
 
     @Override
     public List<QuartzLog> queryAllLog(JobQueryCriteria criteria) {
-        return quartzLogRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder));
+        return quartzLogRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root, criteria, criteriaBuilder));
     }
 
     @Override
     public QuartzJob findById(Long id) {
         QuartzJob quartzJob = quartzJobRepository.findById(id).orElseGet(QuartzJob::new);
-        ValidationUtil.isNull(quartzJob.getId(),"QuartzJob","id",id);
+        ValidationUtil.isNull(quartzJob.getId(), "QuartzJob", "id", id);
         return quartzJob;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void create(QuartzJob resources) {
-        if (!CronExpression.isValidExpression(resources.getCronExpression())){
+        if (!CronExpression.isValidExpression(resources.getCronExpression())) {
             throw new BadRequestException("cron表达式格式错误");
         }
         resources = quartzJobRepository.save(resources);
@@ -89,10 +92,10 @@ public class QuartzJobServiceImpl implements QuartzJobService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void update(QuartzJob resources) {
-        if (!CronExpression.isValidExpression(resources.getCronExpression())){
+        if (!CronExpression.isValidExpression(resources.getCronExpression())) {
             throw new BadRequestException("cron表达式格式错误");
         }
-        if(StringUtils.isNotBlank(resources.getSubTask())){
+        if (StringUtils.isNotBlank(resources.getSubTask())) {
             List<String> tasks = Arrays.asList(resources.getSubTask().split("[,，]"));
             if (tasks.contains(resources.getId().toString())) {
                 throw new BadRequestException("子任务中不能添加当前任务ID");
@@ -151,7 +154,7 @@ public class QuartzJobServiceImpl implements QuartzJobService {
                 Thread.sleep(5000);
                 result = (Boolean) redisUtils.get(uuid);
             }
-            if(!result){
+            if (!result) {
                 redisUtils.del(uuid);
                 break;
             }
@@ -162,7 +165,7 @@ public class QuartzJobServiceImpl implements QuartzJobService {
     public void download(List<QuartzJob> quartzJobs, HttpServletResponse response) throws IOException {
         List<Map<String, Object>> list = new ArrayList<>();
         for (QuartzJob quartzJob : quartzJobs) {
-            Map<String,Object> map = new LinkedHashMap<>();
+            Map<String, Object> map = new LinkedHashMap<>();
             map.put("任务名称", quartzJob.getJobName());
             map.put("Bean名称", quartzJob.getBeanName());
             map.put("执行方法", quartzJob.getMethodName());
@@ -180,7 +183,7 @@ public class QuartzJobServiceImpl implements QuartzJobService {
     public void downloadLog(List<QuartzLog> queryAllLog, HttpServletResponse response) throws IOException {
         List<Map<String, Object>> list = new ArrayList<>();
         for (QuartzLog quartzLog : queryAllLog) {
-            Map<String,Object> map = new LinkedHashMap<>();
+            Map<String, Object> map = new LinkedHashMap<>();
             map.put("任务名称", quartzLog.getJobName());
             map.put("Bean名称", quartzLog.getBeanName());
             map.put("执行方法", quartzLog.getMethodName());

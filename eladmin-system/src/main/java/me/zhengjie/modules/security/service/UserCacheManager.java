@@ -29,12 +29,13 @@ import javax.annotation.Resource;
  * @author Zheng Jie
  * @description 用户缓存管理
  * @date 2022-05-26
- **/
+ */
 @Component
 public class UserCacheManager {
 
     @Resource
     private RedisUtils redisUtils;
+
     @Value("${login.user-cache.idle-time}")
     private long idleTime;
 
@@ -47,8 +48,8 @@ public class UserCacheManager {
         if (StringUtils.isNotEmpty(userName)) {
             // 获取数据
             Object obj = redisUtils.hget(LoginProperties.cacheKey, userName);
-            if(obj != null){
-                return (JwtUserDto)obj;
+            if (obj != null) {
+                return (JwtUserDto) obj;
             }
         }
         return null;

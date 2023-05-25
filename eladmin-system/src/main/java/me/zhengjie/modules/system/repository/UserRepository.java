@@ -58,7 +58,7 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
      * @param lastPasswordResetTime /
      */
     @Modifying
-    @Query(value = "update sys_user set password = ?2 , pwd_reset_time = ?3 where username = ?1",nativeQuery = true)
+    @Query(value = "update sys_user set password = ?2 , pwd_reset_time = ?3 where username = ?1", nativeQuery = true)
     void updatePass(String username, String pass, Date lastPasswordResetTime);
 
     /**
@@ -67,7 +67,7 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
      * @param email 邮箱
      */
     @Modifying
-    @Query(value = "update sys_user set email = ?2 where username = ?1",nativeQuery = true)
+    @Query(value = "update sys_user set email = ?2 where username = ?1", nativeQuery = true)
     void updateEmail(String username, String email);
 
     /**
@@ -75,8 +75,7 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
      * @param roleId /
      * @return /
      */
-    @Query(value = "SELECT u.* FROM sys_user u, sys_users_roles r WHERE" +
-            " u.user_id = r.user_id AND r.role_id = ?1", nativeQuery = true)
+    @Query(value = "SELECT u.* FROM sys_user u, sys_users_roles r WHERE" + " u.user_id = r.user_id AND r.role_id = ?1", nativeQuery = true)
     List<User> findByRoleId(Long roleId);
 
     /**
@@ -84,8 +83,7 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
      * @param deptId /
      * @return /
      */
-    @Query(value = "SELECT u.* FROM sys_user u, sys_users_roles r, sys_roles_depts d WHERE " +
-            "u.user_id = r.user_id AND r.role_id = d.role_id AND d.dept_id = ?1 group by u.user_id", nativeQuery = true)
+    @Query(value = "SELECT u.* FROM sys_user u, sys_users_roles r, sys_roles_depts d WHERE " + "u.user_id = r.user_id AND r.role_id = d.role_id AND d.dept_id = ?1 group by u.user_id", nativeQuery = true)
     List<User> findByRoleDeptId(Long deptId);
 
     /**
@@ -93,8 +91,7 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
      * @param id 菜单ID
      * @return /
      */
-    @Query(value = "SELECT u.* FROM sys_user u, sys_users_roles ur, sys_roles_menus rm WHERE\n" +
-            "u.user_id = ur.user_id AND ur.role_id = rm.role_id AND rm.menu_id = ?1 group by u.user_id", nativeQuery = true)
+    @Query(value = "SELECT u.* FROM sys_user u, sys_users_roles ur, sys_roles_menus rm WHERE\n" + "u.user_id = ur.user_id AND ur.role_id = rm.role_id AND rm.menu_id = ?1 group by u.user_id", nativeQuery = true)
     List<User> findByMenuId(Long id);
 
     /**
@@ -124,7 +121,6 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
      * @param ids /
      * @return /
      */
-    @Query(value = "SELECT count(1) FROM sys_user u, sys_users_roles r WHERE " +
-            "u.user_id = r.user_id AND r.role_id in ?1", nativeQuery = true)
+    @Query(value = "SELECT count(1) FROM sys_user u, sys_users_roles r WHERE " + "u.user_id = r.user_id AND r.role_id in ?1", nativeQuery = true)
     int countByRoles(Set<Long> ids);
 }

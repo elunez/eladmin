@@ -22,7 +22,7 @@ import java.io.Closeable;
  * @website https://eladmin.vip
  * @description 用于关闭各种连接，缺啥补啥
  * @date 2021-03-05
- **/
+ */
 public class CloseUtil {
 
     public static void close(Closeable closeable) {

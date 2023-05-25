@@ -39,12 +39,15 @@ import java.util.Objects;
  * @author /
  */
 public class TokenFilter extends GenericFilterBean {
+
     private static final Logger log = LoggerFactory.getLogger(TokenFilter.class);
 
-
     private final TokenProvider tokenProvider;
+
     private final SecurityProperties properties;
+
     private final OnlineUserService onlineUserService;
+
     private final UserCacheManager userCacheManager;
 
     /**
@@ -61,8 +64,7 @@ public class TokenFilter extends GenericFilterBean {
     }
 
     @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
-            throws IOException, ServletException {
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
         String token = resolveToken(httpServletRequest);
         // 对于 Token 为空的不需要去查 Redis

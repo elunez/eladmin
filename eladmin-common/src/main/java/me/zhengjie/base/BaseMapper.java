@@ -42,12 +42,12 @@ public interface BaseMapper<D, E> {
      * @param dtoList /
      * @return /
      */
-    List <E> toEntity(List<D> dtoList);
+    List<E> toEntity(List<D> dtoList);
 
     /**
      * Entity集合转DTO集合
      * @param entityList /
      * @return /
      */
-    List <D> toDto(List<E> entityList);
+    List<D> toDto(List<E> entityList);
 }

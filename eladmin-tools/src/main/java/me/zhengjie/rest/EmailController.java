@@ -41,23 +41,23 @@ public class EmailController {
     private final EmailService emailService;
 
     @GetMapping
-    public ResponseEntity<Object> queryEmailConfig(){
-        return new ResponseEntity<>(emailService.find(),HttpStatus.OK);
+    public ResponseEntity<Object> queryEmailConfig() {
+        return new ResponseEntity<>(emailService.find(), HttpStatus.OK);
     }
 
     @Log("配置邮件")
     @PutMapping
     @ApiOperation("配置邮件")
     public ResponseEntity<Object> updateEmailConfig(@Validated @RequestBody EmailConfig emailConfig) throws Exception {
-        emailService.config(emailConfig,emailService.find());
+        emailService.config(emailConfig, emailService.find());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Log("发送邮件")
     @PostMapping
     @ApiOperation("发送邮件")
-    public ResponseEntity<Object> sendEmail(@Validated @RequestBody EmailVo emailVo){
-        emailService.send(emailVo,emailService.find());
+    public ResponseEntity<Object> sendEmail(@Validated @RequestBody EmailVo emailVo) {
+        emailService.send(emailVo, emailService.find());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

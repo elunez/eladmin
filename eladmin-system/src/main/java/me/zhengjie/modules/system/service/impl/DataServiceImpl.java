@@ -33,13 +33,14 @@ import java.util.*;
  * @website https://eladmin.vip
  * @description 数据权限服务实现
  * @date 2020-05-07
- **/
+ */
 @Service
 @RequiredArgsConstructor
 @CacheConfig(cacheNames = "data")
 public class DataServiceImpl implements DataService {
 
     private final RoleService roleService;
+
     private final DeptService deptService;
 
     /**
@@ -57,7 +58,7 @@ public class DataServiceImpl implements DataService {
         // 获取对应的部门ID
         for (RoleSmallDto role : roleSet) {
             DataScopeEnum dataScopeEnum = DataScopeEnum.find(role.getDataScope());
-            switch (Objects.requireNonNull(dataScopeEnum)) {
+            switch(Objects.requireNonNull(dataScopeEnum)) {
                 case THIS_LEVEL:
                     deptIds.add(user.getDept().getId());
                     break;
@@ -77,7 +78,7 @@ public class DataServiceImpl implements DataService {
      * @param role 角色
      * @return 数据权限ID
      */
-    public Set<Long> getCustomize(Set<Long> deptIds, RoleSmallDto role){
+    public Set<Long> getCustomize(Set<Long> deptIds, RoleSmallDto role) {
         Set<Dept> depts = deptService.findByRoleId(role.getId());
         for (Dept dept : depts) {
             deptIds.add(dept.getId());

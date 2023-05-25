@@ -24,9 +24,9 @@ import java.util.List;
 import java.util.Set;
 
 /**
-* @author Zheng Jie
-* @date 2019-03-25
-*/
+ * @author Zheng Jie
+ * @date 2019-03-25
+ */
 public interface DeptService {
 
     /**
@@ -60,7 +60,6 @@ public interface DeptService {
     /**
      * 删除
      * @param deptDtos /
-     *
      */
     void delete(Set<DeptDto> deptDtos);
 

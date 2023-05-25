@@ -59,14 +59,17 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
      * </pre>
      */
     public static final String SYS_TEM_DIR = System.getProperty("java.io.tmpdir") + File.separator;
+
     /**
      * 定义GB的计算常量
      */
     private static final int GB = 1024 * 1024 * 1024;
+
     /**
      * 定义MB的计算常量
      */
     private static final int MB = 1024 * 1024;
+
     /**
      * 定义KB的计算常量
      */
@@ -78,11 +81,14 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
     private static final DecimalFormat DF = new DecimalFormat("0.00");
 
     public static final String IMAGE = "图片";
-    public static final String TXT = "文档";
-    public static final String MUSIC = "音乐";
-    public static final String VIDEO = "视频";
-    public static final String OTHER = "其他";
 
+    public static final String TXT = "文档";
+
+    public static final String MUSIC = "音乐";
+
+    public static final String VIDEO = "视频";
+
+    public static final String OTHER = "其他";
 
     /**
      * MultipartFile转File
@@ -153,7 +159,7 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
     /**
      * inputStream 转 File
      */
-    static File inputStreamToFile(InputStream ins, String name){
+    static File inputStreamToFile(InputStream ins, String name) {
         File file = new File(SYS_TEM_DIR + name);
         if (file.exists()) {
             return file;
@@ -215,7 +221,7 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
         BigExcelWriter writer = ExcelUtil.getBigWriter(file);
         // 一次性写出内容，使用默认样式，强制输出标题
         writer.write(list, true);
-        SXSSFSheet sheet = (SXSSFSheet)writer.getSheet();
+        SXSSFSheet sheet = (SXSSFSheet) writer.getSheet();
         //上面需要强转SXSSFSheet  不然没有trackAllColumnsForAutoSizing方法
         sheet.trackAllColumnsForAutoSizing();
         //列宽自适应
@@ -264,7 +270,7 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
     public static boolean check(File file1, File file2) {
         String img1Md5 = getMd5(file1);
         String img2Md5 = getMd5(file2);
-        if(img1Md5 != null){
+        if (img1Md5 != null) {
             return img1Md5.equals(img2Md5);
         }
         return false;
@@ -299,7 +305,7 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
 
     private static String getMd5(byte[] bytes) {
         // 16进制字符
-        char[] hexDigits = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
+        char[] hexDigits = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
         try {
             MessageDigest mdTemp = MessageDigest.getInstance("MD5");
             mdTemp.update(bytes);
@@ -359,10 +365,8 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
     public static String verifyFilename(String fileName) {
         // 过滤掉特殊字符
         fileName = fileName.replaceAll("[\\\\/:*?\"<>|~\\s]", "");
-
         // 去掉文件名开头和结尾的空格和点
         fileName = fileName.trim().replaceAll("^[. ]+|[. ]+$", "");
-
         // 不允许文件名超过255（在Mac和Linux中）或260（在Windows中）个字符
         int maxFileNameLength = 255;
         if (System.getProperty("os.name").startsWith("Windows")) {
@@ -371,23 +375,16 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
         if (fileName.length() > maxFileNameLength) {
             fileName = fileName.substring(0, maxFileNameLength);
         }
-
         // 过滤掉控制字符
         fileName = fileName.replaceAll("[\\p{Cntrl}]", "");
-
         // 过滤掉 ".." 路径
         fileName = fileName.replaceAll("\\.{2,}", "");
-
         // 去掉文件名开头的 ".."
         fileName = fileName.replaceAll("^\\.+/", "");
-
         // 保留文件名中最后一个 "." 字符，过滤掉其他 "."
-        fileName = fileName.replaceAll("^(.*)(\\.[^.]*)$", "$1").replaceAll("\\.", "") +
-                fileName.replaceAll("^(.*)(\\.[^.]*)$", "$2");
-
+        fileName = fileName.replaceAll("^(.*)(\\.[^.]*)$", "$1").replaceAll("\\.", "") + fileName.replaceAll("^(.*)(\\.[^.]*)$", "$2");
         return fileName;
     }
-
 
     public static String getMd5(File file) {
         return getMd5(getByte(file));

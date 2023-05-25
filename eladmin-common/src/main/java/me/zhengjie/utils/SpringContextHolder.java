@@ -34,7 +34,9 @@ import java.util.List;
 public class SpringContextHolder implements ApplicationContextAware, DisposableBean {
 
     private static ApplicationContext applicationContext = null;
+
     private static final List<CallBack> CALL_BACKS = new ArrayList<>();
+
     private static boolean addCallback = true;
 
     /**
@@ -81,7 +83,8 @@ public class SpringContextHolder implements ApplicationContextAware, DisposableB
         T result = defaultValue;
         try {
             result = getBean(Environment.class).getProperty(property, requiredType);
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
         return result;
     }
 
@@ -111,8 +114,7 @@ public class SpringContextHolder implements ApplicationContextAware, DisposableB
      */
     private static void assertContextInjected() {
         if (applicationContext == null) {
-            throw new IllegalStateException("applicaitonContext属性未注入, 请在applicationContext" +
-                    ".xml中定义SpringContextHolder或在SpringBoot启动类中注册SpringContextHolder.");
+            throw new IllegalStateException("applicaitonContext属性未注入, 请在applicationContext" + ".xml中定义SpringContextHolder或在SpringBoot启动类中注册SpringContextHolder.");
         }
     }
 
@@ -120,8 +122,7 @@ public class SpringContextHolder implements ApplicationContextAware, DisposableB
      * 清除SpringContextHolder中的ApplicationContext为Null.
      */
     private static void clearHolder() {
-        log.debug("清除SpringContextHolder中的ApplicationContext:"
-                + applicationContext);
+        log.debug("清除SpringContextHolder中的ApplicationContext:" + applicationContext);
         applicationContext = null;
     }
 
@@ -150,7 +151,6 @@ public class SpringContextHolder implements ApplicationContextAware, DisposableB
      * @return /
      */
     public static List<String> getAllServiceBeanName() {
-        return new ArrayList<>(Arrays.asList(applicationContext
-                .getBeanNamesForAnnotation(Service.class)));
+        return new ArrayList<>(Arrays.asList(applicationContext.getBeanNamesForAnnotation(Service.class)));
     }
 }

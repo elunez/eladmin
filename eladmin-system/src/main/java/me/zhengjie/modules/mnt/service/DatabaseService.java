@@ -19,7 +19,6 @@ import me.zhengjie.modules.mnt.domain.Database;
 import me.zhengjie.modules.mnt.service.dto.DatabaseDto;
 import me.zhengjie.modules.mnt.service.dto.DatabaseQueryCriteria;
 import org.springframework.data.domain.Pageable;
-
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
@@ -71,12 +70,12 @@ public interface DatabaseService {
      */
     void delete(Set<String> ids);
 
-	/**
-	 * 测试连接数据库
-	 * @param resources /
-	 * @return /
-	 */
-	boolean testConnection(Database resources);
+    /**
+     * 测试连接数据库
+     * @param resources /
+     * @return /
+     */
+    boolean testConnection(Database resources);
 
     /**
      * 导出数据

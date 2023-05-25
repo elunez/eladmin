@@ -24,13 +24,13 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
-* @author Zheng Jie
-* @date 2019-04-10
-*/
+ * @author Zheng Jie
+ * @date 2019-04-10
+ */
 @Entity
 @Getter
 @Setter
-@Table(name="sys_dict_detail")
+@Table(name = "sys_dict_detail")
 public class DictDetail extends BaseEntity implements Serializable {
 
     @Id
@@ -41,7 +41,7 @@ public class DictDetail extends BaseEntity implements Serializable {
     private Long id;
 
     @JoinColumn(name = "dict_id")
-    @ManyToOne(fetch=FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @ApiModelProperty(value = "字典", hidden = true)
     private Dict dict;
 

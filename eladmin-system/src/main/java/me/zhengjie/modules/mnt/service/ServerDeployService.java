@@ -19,16 +19,15 @@ import me.zhengjie.modules.mnt.domain.ServerDeploy;
 import me.zhengjie.modules.mnt.service.dto.ServerDeployDto;
 import me.zhengjie.modules.mnt.service.dto.ServerDeployQueryCriteria;
 import org.springframework.data.domain.Pageable;
-
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
 /**
-* @author zhanghouying
-* @date 2019-08-24
-*/
+ * @author zhanghouying
+ * @date 2019-08-24
+ */
 public interface ServerDeployService {
 
     /**
@@ -78,12 +77,12 @@ public interface ServerDeployService {
      */
     ServerDeployDto findByIp(String ip);
 
-	/**
-	 * 测试登录服务器
-	 * @param resources /
-	 * @return /
-	 */
-	Boolean testConnect(ServerDeploy resources);
+    /**
+     * 测试登录服务器
+     * @param resources /
+     * @return /
+     */
+    Boolean testConnect(ServerDeploy resources);
 
     /**
      * 导出数据

@@ -20,16 +20,15 @@ import me.zhengjie.modules.mnt.domain.DeployHistory;
 import me.zhengjie.modules.mnt.service.dto.DeployDto;
 import me.zhengjie.modules.mnt.service.dto.DeployQueryCriteria;
 import org.springframework.data.domain.Pageable;
-
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
 /**
-* @author zhanghouying
-* @date 2019-08-24
-*/
+ * @author zhanghouying
+ * @date 2019-08-24
+ */
 public interface DeployService {
 
     /**
@@ -60,7 +59,6 @@ public interface DeployService {
      */
     void create(Deploy resources);
 
-
     /**
      * 编辑
      * @param resources /
@@ -73,12 +71,12 @@ public interface DeployService {
      */
     void delete(Set<Long> ids);
 
-	/**
-	 * 部署文件到服务器
-	 * @param fileSavePath 文件路径
-	 * @param appId 应用ID
+    /**
+     * 部署文件到服务器
+     * @param fileSavePath 文件路径
+     * @param appId 应用ID
      */
-	void deploy(String fileSavePath, Long appId);
+    void deploy(String fileSavePath, Long appId);
 
     /**
      * 查询部署状态
@@ -86,12 +84,14 @@ public interface DeployService {
      * @return /
      */
     String serverStatus(Deploy resources);
+
     /**
      * 启动服务
      * @param resources /
      * @return /
      */
     String startServer(Deploy resources);
+
     /**
      * 停止服务
      * @param resources /

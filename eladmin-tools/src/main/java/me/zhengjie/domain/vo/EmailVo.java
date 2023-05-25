@@ -32,7 +32,9 @@ import java.util.List;
 @NoArgsConstructor
 public class EmailVo {
 
-    /** 收件人，支持多个收件人 */
+    /**
+     * 收件人，支持多个收件人
+     */
     @NotEmpty
     private List<String> tos;
 

@@ -63,8 +63,7 @@ public interface MenuRepository extends JpaRepository<Menu, Long>, JpaSpecificat
      * @param type 类型
      * @return /
      */
-    @Query(value = "SELECT m.* FROM sys_menu m, sys_roles_menus r WHERE " +
-            "m.menu_id = r.menu_id AND r.role_id IN ?1 AND type != ?2 order by m.menu_sort asc",nativeQuery = true)
+    @Query(value = "SELECT m.* FROM sys_menu m, sys_roles_menus r WHERE " + "m.menu_id = r.menu_id AND r.role_id IN ?1 AND type != ?2 order by m.menu_sort asc", nativeQuery = true)
     LinkedHashSet<Menu> findByRoleIdsAndTypeNot(Set<Long> roleIds, int type);
 
     /**
@@ -80,6 +79,6 @@ public interface MenuRepository extends JpaRepository<Menu, Long>, JpaSpecificat
      * @param menuId /
      */
     @Modifying
-    @Query(value = " update sys_menu set sub_count = ?1 where menu_id = ?2 ",nativeQuery = true)
+    @Query(value = " update sys_menu set sub_count = ?1 where menu_id = ?2 ", nativeQuery = true)
     void updateSubCntById(int count, Long menuId);
 }
