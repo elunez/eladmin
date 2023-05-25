@@ -28,13 +28,13 @@ import java.util.Objects;
 import java.util.Set;
 
 /**
-* @author Zheng Jie
-* @date 2019-03-25
-*/
+ * @author Zheng Jie
+ * @date 2019-03-25
+ */
 @Entity
 @Getter
 @Setter
-@Table(name="sys_dept")
+@Table(name = "sys_dept")
 public class Dept extends BaseEntity implements Serializable {
 
     @Id
@@ -75,8 +75,7 @@ public class Dept extends BaseEntity implements Serializable {
             return false;
         }
         Dept dept = (Dept) o;
-        return Objects.equals(id, dept.id) &&
-                Objects.equals(name, dept.name);
+        return Objects.equals(id, dept.id) && Objects.equals(name, dept.name);
     }
 
     @Override

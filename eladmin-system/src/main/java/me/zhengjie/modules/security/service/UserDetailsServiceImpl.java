@@ -36,15 +36,19 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Service("userDetailsService")
 public class UserDetailsServiceImpl implements UserDetailsService {
+
     private final UserService userService;
+
     private final RoleService roleService;
+
     private final DataService dataService;
+
     private final UserCacheManager userCacheManager;
 
     @Override
     public JwtUserDto loadUserByUsername(String username) {
         JwtUserDto jwtUserDto = userCacheManager.getUserCache(username);
-        if(jwtUserDto == null){
+        if (jwtUserDto == null) {
             UserLoginDto user;
             try {
                 user = userService.getLoginData(username);
@@ -58,11 +62,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 if (!user.getEnabled()) {
                     throw new BadRequestException("账号未激活！");
                 }
-                jwtUserDto = new JwtUserDto(
-                        user,
-                        dataService.getDeptIds(user),
-                        roleService.mapToGrantedAuthorities(user)
-                );
+                jwtUserDto = new JwtUserDto(user, dataService.getDeptIds(user), roleService.mapToGrantedAuthorities(user));
                 // 添加缓存数据
                 userCacheManager.addUserCache(username, jwtUserDto);
             }

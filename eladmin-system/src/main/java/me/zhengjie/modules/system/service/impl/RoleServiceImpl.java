@@ -56,10 +56,15 @@ import java.util.stream.Collectors;
 public class RoleServiceImpl implements RoleService {
 
     private final RoleRepository roleRepository;
+
     private final RoleMapper roleMapper;
+
     private final RoleSmallMapper roleSmallMapper;
+
     private final RedisUtils redisUtils;
+
     private final UserRepository userRepository;
+
     private final UserCacheManager userCacheManager;
 
     @Override
@@ -102,9 +107,7 @@ public class RoleServiceImpl implements RoleService {
     public void update(Role resources) {
         Role role = roleRepository.findById(resources.getId()).orElseGet(Role::new);
         ValidationUtil.isNull(role.getId(), "Role", "id", resources.getId());
-
         Role role1 = roleRepository.findByName(resources.getName());
-
         if (role1 != null && !role1.getId().equals(role.getId())) {
             throw new EntityExistException(Role.class, "username", resources.getName());
         }
@@ -169,15 +172,11 @@ public class RoleServiceImpl implements RoleService {
         // 如果是管理员直接返回
         if (user.getIsAdmin()) {
             permissions.add("admin");
-            return permissions.stream().map(AuthorityDto::new)
-                    .collect(Collectors.toList());
+            return permissions.stream().map(AuthorityDto::new).collect(Collectors.toList());
         }
         Set<Role> roles = roleRepository.findByUserId(user.getId());
-        permissions = roles.stream().flatMap(role -> role.getMenus().stream())
-                .map(Menu::getPermission)
-                .filter(StringUtils::isNotBlank).collect(Collectors.toSet());
-        return permissions.stream().map(AuthorityDto::new)
-                .collect(Collectors.toList());
+        permissions = roles.stream().flatMap(role -> role.getMenus().stream()).map(Menu::getPermission).filter(StringUtils::isNotBlank).collect(Collectors.toSet());
+        return permissions.stream().map(AuthorityDto::new).collect(Collectors.toList());
     }
 
     @Override

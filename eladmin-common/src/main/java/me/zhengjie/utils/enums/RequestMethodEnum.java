@@ -23,7 +23,7 @@ import lombok.Getter;
  * @website https://eladmin.vip
  * @description
  * @date 2020-06-10
- **/
+ */
 @Getter
 @AllArgsConstructor
 public enum RequestMethodEnum {
@@ -32,27 +32,22 @@ public enum RequestMethodEnum {
      * 搜寻 @AnonymousGetMapping
      */
     GET("GET"),
-
     /**
      * 搜寻 @AnonymousPostMapping
      */
     POST("POST"),
-
     /**
      * 搜寻 @AnonymousPutMapping
      */
     PUT("PUT"),
-
     /**
      * 搜寻 @AnonymousPatchMapping
      */
     PATCH("PATCH"),
-
     /**
      * 搜寻 @AnonymousDeleteMapping
      */
     DELETE("DELETE"),
-
     /**
      * 否则就是所有 Request 接口都放行
      */

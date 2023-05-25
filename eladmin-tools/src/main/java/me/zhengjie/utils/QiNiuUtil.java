@@ -39,15 +39,14 @@ public class QiNiuUtil {
      * @param zone 机房名称
      * @return Region
      */
-    public static Region getRegion(String zone){
-
-        if(HUAD.equals(zone)){
+    public static Region getRegion(String zone) {
+        if (HUAD.equals(zone)) {
             return Region.huadong();
-        } else if(HUAB.equals(zone)){
+        } else if (HUAB.equals(zone)) {
             return Region.huabei();
-        } else if(HUAN.equals(zone)){
+        } else if (HUAN.equals(zone)) {
             return Region.huanan();
-        } else if (BEIM.equals(zone)){
+        } else if (BEIM.equals(zone)) {
             return Region.beimei();
             // 否则就是东南亚
         } else {
@@ -60,12 +59,9 @@ public class QiNiuUtil {
      * @param file 文件名
      * @return String
      */
-    public static String getKey(String file){
+    public static String getKey(String file) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
         Date date = new Date();
-        return FileUtil.getFileNameNoEx(file) + "-" +
-                sdf.format(date) +
-                "." +
-                FileUtil.getExtensionName(file);
+        return FileUtil.getFileNameNoEx(file) + "-" + sdf.format(date) + "." + FileUtil.getExtensionName(file);
     }
 }

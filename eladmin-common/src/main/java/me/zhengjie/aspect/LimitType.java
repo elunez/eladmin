@@ -20,6 +20,7 @@ package me.zhengjie.aspect;
  * @author /
  */
 public enum LimitType {
+
     // 默认
     CUSTOMER,
     //  by ip addr

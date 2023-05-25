@@ -57,24 +57,28 @@ public class JwtUserDto implements UserDetails {
     @JSONField(serialize = false)
     @Override
     public boolean isAccountNonExpired() {
-        return true;
+        return isValid();
     }
 
     @JSONField(serialize = false)
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return isValid();
     }
 
     @JSONField(serialize = false)
     @Override
     public boolean isCredentialsNonExpired() {
-        return true;
+        return isValid();
     }
 
     @Override
     @JSONField(serialize = false)
     public boolean isEnabled() {
         return user.getEnabled();
+    }
+
+    public boolean isValid() {
+        return true;
     }
 }

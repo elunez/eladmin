@@ -35,22 +35,25 @@ import java.util.List;
 import java.util.Map;
 
 /**
-* @author Zheng Jie
-* @date 2019-04-10
-*/
+ * @author Zheng Jie
+ * @date 2019-04-10
+ */
 @Service
 @RequiredArgsConstructor
 @CacheConfig(cacheNames = "dict")
 public class DictDetailServiceImpl implements DictDetailService {
 
     private final DictRepository dictRepository;
+
     private final DictDetailRepository dictDetailRepository;
+
     private final DictDetailMapper dictDetailMapper;
+
     private final RedisUtils redisUtils;
 
     @Override
-    public Map<String,Object> queryAll(DictDetailQueryCriteria criteria, Pageable pageable) {
-        Page<DictDetail> page = dictDetailRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable);
+    public Map<String, Object> queryAll(DictDetailQueryCriteria criteria, Pageable pageable) {
+        Page<DictDetail> page = dictDetailRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root, criteria, criteriaBuilder), pageable);
         return PageUtil.toPage(page.map(dictDetailMapper::toDto));
     }
 
@@ -66,7 +69,7 @@ public class DictDetailServiceImpl implements DictDetailService {
     @Transactional(rollbackFor = Exception.class)
     public void update(DictDetail resources) {
         DictDetail dictDetail = dictDetailRepository.findById(resources.getId()).orElseGet(DictDetail::new);
-        ValidationUtil.isNull( dictDetail.getId(),"DictDetail","id",resources.getId());
+        ValidationUtil.isNull(dictDetail.getId(), "DictDetail", "id", resources.getId());
         resources.setId(dictDetail.getId());
         dictDetailRepository.save(resources);
         // 清理缓存
@@ -88,7 +91,7 @@ public class DictDetailServiceImpl implements DictDetailService {
         dictDetailRepository.deleteById(id);
     }
 
-    public void delCaches(DictDetail dictDetail){
+    public void delCaches(DictDetail dictDetail) {
         Dict dict = dictRepository.findById(dictDetail.getDict().getId()).orElseGet(Dict::new);
         redisUtils.del(CacheKey.DICT_NAME + dict.getName());
     }

@@ -68,7 +68,7 @@ public class LoginProperties {
      */
     private Captcha switchCaptcha(LoginCode loginCode) {
         Captcha captcha;
-        switch (loginCode.getCodeType()) {
+        switch(loginCode.getCodeType()) {
             case ARITHMETIC:
                 // 算术类型 https://gitee.com/whvse/EasyCaptcha
                 captcha = new FixedArithmeticCaptcha(loginCode.getWidth(), loginCode.getHeight());
@@ -94,13 +94,14 @@ public class LoginProperties {
             default:
                 throw new BadConfigurationException("验证码配置信息错误！正确配置查看 LoginCodeEnum ");
         }
-        if(StringUtils.isNotBlank(loginCode.getFontName())){
+        if (StringUtils.isNotBlank(loginCode.getFontName())) {
             captcha.setFont(new Font(loginCode.getFontName(), Font.PLAIN, loginCode.getFontSize()));
         }
         return captcha;
     }
 
     static class FixedArithmeticCaptcha extends ArithmeticCaptcha {
+
         public FixedArithmeticCaptcha(int width, int height) {
             super(width, height);
         }
@@ -110,15 +111,12 @@ public class LoginProperties {
             // 生成随机数字和运算符
             int n1 = num(1, 10), n2 = num(1, 10);
             int opt = num(3);
-
             // 计算结果
-            int res = new int[]{n1 + n2, n1 - n2, n1 * n2}[opt];
+            int res = new int[] { n1 + n2, n1 - n2, n1 * n2 }[opt];
             // 转换为字符运算符
             char optChar = "+-x".charAt(opt);
-
             this.setArithmeticString(String.format("%s%c%s=?", n1, optChar, n2));
             this.chars = String.valueOf(res);
-
             return chars.toCharArray();
         }
     }

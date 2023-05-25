@@ -29,24 +29,24 @@ import org.springframework.stereotype.Component;
 @Configuration
 public class QuartzConfig {
 
-	/**
-	 * 解决Job中注入Spring Bean为null的问题
-	 */
-	@Component("quartzJobFactory")
-	public static class QuartzJobFactory extends AdaptableJobFactory {
+    /**
+     * 解决Job中注入Spring Bean为null的问题
+     */
+    @Component("quartzJobFactory")
+    public static class QuartzJobFactory extends AdaptableJobFactory {
 
-		private final AutowireCapableBeanFactory capableBeanFactory;
+        private final AutowireCapableBeanFactory capableBeanFactory;
 
-		public QuartzJobFactory(AutowireCapableBeanFactory capableBeanFactory) {
-			this.capableBeanFactory = capableBeanFactory;
-		}
+        public QuartzJobFactory(AutowireCapableBeanFactory capableBeanFactory) {
+            this.capableBeanFactory = capableBeanFactory;
+        }
 
-		@Override
-		protected Object createJobInstance(TriggerFiredBundle bundle) throws Exception {
-			//调用父类的方法，把Job注入到spring中
-			Object jobInstance = super.createJobInstance(bundle);
-			capableBeanFactory.autowireBean(jobInstance);
-			return jobInstance;
-		}
-	}
+        @Override
+        protected Object createJobInstance(TriggerFiredBundle bundle) throws Exception {
+            //调用父类的方法，把Job注入到spring中
+            Object jobInstance = super.createJobInstance(bundle);
+            capableBeanFactory.autowireBean(jobInstance);
+            return jobInstance;
+        }
+    }
 }

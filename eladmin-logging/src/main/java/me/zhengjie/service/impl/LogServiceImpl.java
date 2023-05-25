@@ -35,7 +35,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -49,8 +48,11 @@ import java.util.*;
 @Service
 @RequiredArgsConstructor
 public class LogServiceImpl implements LogService {
+
     private final LogRepository logRepository;
+
     private final LogErrorMapper logErrorMapper;
+
     private final LogSmallMapper logSmallMapper;
 
     @Override
@@ -83,20 +85,17 @@ public class LogServiceImpl implements LogService {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
         me.zhengjie.annotation.Log aopLog = method.getAnnotation(me.zhengjie.annotation.Log.class);
-
         // 方法路径
         String methodName = joinPoint.getTarget().getClass().getName() + "." + signature.getName() + "()";
-
         // 描述
         log.setDescription(aopLog.value());
-        
         log.setRequestIp(ip);
         log.setAddress(StringUtils.getCityInfo(log.getRequestIp()));
         log.setMethod(methodName);
         log.setUsername(username);
         log.setParams(getParameter(method, joinPoint.getArgs()));
         // 记录登录用户，隐藏密码信息
-        if(signature.getName().equals("login") && StringUtils.isNotEmpty(log.getParams())){
+        if (signature.getName().equals("login") && StringUtils.isNotEmpty(log.getParams())) {
             JSONObject obj = JSONUtil.parseObj(log.getParams());
             log.setUsername(obj.getStr("username", ""));
             log.setParams(JSONUtil.toJsonStr(Dict.create().set("username", log.getUsername())));

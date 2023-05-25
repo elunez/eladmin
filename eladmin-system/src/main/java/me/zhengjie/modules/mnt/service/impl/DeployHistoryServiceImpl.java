@@ -36,31 +36,32 @@ import java.io.IOException;
 import java.util.*;
 
 /**
-* @author zhanghouying
-* @date 2019-08-24
-*/
+ * @author zhanghouying
+ * @date 2019-08-24
+ */
 @Service
 @RequiredArgsConstructor
 public class DeployHistoryServiceImpl implements DeployHistoryService {
 
     private final DeployHistoryRepository deployhistoryRepository;
+
     private final DeployHistoryMapper deployhistoryMapper;
 
     @Override
-    public Object queryAll(DeployHistoryQueryCriteria criteria, Pageable pageable){
-        Page<DeployHistory> page = deployhistoryRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable);
+    public Object queryAll(DeployHistoryQueryCriteria criteria, Pageable pageable) {
+        Page<DeployHistory> page = deployhistoryRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root, criteria, criteriaBuilder), pageable);
         return PageUtil.toPage(page.map(deployhistoryMapper::toDto));
     }
 
     @Override
-    public List<DeployHistoryDto> queryAll(DeployHistoryQueryCriteria criteria){
-        return deployhistoryMapper.toDto(deployhistoryRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder)));
+    public List<DeployHistoryDto> queryAll(DeployHistoryQueryCriteria criteria) {
+        return deployhistoryMapper.toDto(deployhistoryRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root, criteria, criteriaBuilder)));
     }
 
     @Override
     public DeployHistoryDto findById(String id) {
         DeployHistory deployhistory = deployhistoryRepository.findById(id).orElseGet(DeployHistory::new);
-        ValidationUtil.isNull(deployhistory.getId(),"DeployHistory","id",id);
+        ValidationUtil.isNull(deployhistory.getId(), "DeployHistory", "id", id);
         return deployhistoryMapper.toDto(deployhistory);
     }
 
@@ -83,7 +84,7 @@ public class DeployHistoryServiceImpl implements DeployHistoryService {
     public void download(List<DeployHistoryDto> queryAll, HttpServletResponse response) throws IOException {
         List<Map<String, Object>> list = new ArrayList<>();
         for (DeployHistoryDto deployHistoryDto : queryAll) {
-            Map<String,Object> map = new LinkedHashMap<>();
+            Map<String, Object> map = new LinkedHashMap<>();
             map.put("部署编号", deployHistoryDto.getDeployId());
             map.put("应用名称", deployHistoryDto.getAppName());
             map.put("部署IP", deployHistoryDto.getIp());

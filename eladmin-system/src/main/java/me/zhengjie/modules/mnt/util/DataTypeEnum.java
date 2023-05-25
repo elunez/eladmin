@@ -16,68 +16,90 @@
  *  >>
  *
  */
-
 package me.zhengjie.modules.mnt.util;
+
 import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author /
  */
 @Slf4j
-@SuppressWarnings({"unchecked","all"})
+@SuppressWarnings({ "unchecked", "all" })
 public enum DataTypeEnum {
 
-    /** mysql */
+    /**
+     * mysql
+     */
     MYSQL("mysql", "mysql", "com.mysql.jdbc.Driver", "`", "`", "'", "'"),
-
-    /** oracle */
+    /**
+     * oracle
+     */
     ORACLE("oracle", "oracle", "oracle.jdbc.driver.OracleDriver", "\"", "\"", "\"", "\""),
-
-    /** sql server */
+    /**
+     * sql server
+     */
     SQLSERVER("sqlserver", "sqlserver", "com.microsoft.sqlserver.jdbc.SQLServerDriver", "\"", "\"", "\"", "\""),
-
-    /** h2 */
+    /**
+     * h2
+     */
     H2("h2", "h2", "org.h2.Driver", "`", "`", "\"", "\""),
-
-    /** phoenix */
+    /**
+     * phoenix
+     */
     PHOENIX("phoenix", "hbase phoenix", "org.apache.phoenix.jdbc.PhoenixDriver", "", "", "\"", "\""),
-
-    /** mongo */
+    /**
+     * mongo
+     */
     MONGODB("mongo", "mongodb", "mongodb.jdbc.MongoDriver", "`", "`", "\"", "\""),
-
-    /** sql4es */
+    /**
+     * sql4es
+     */
     ELASTICSEARCH("sql4es", "elasticsearch", "nl.anchormen.sql4es.jdbc.ESDriver", "", "", "'", "'"),
-
-    /** presto */
+    /**
+     * presto
+     */
     PRESTO("presto", "presto", "com.facebook.presto.jdbc.PrestoDriver", "", "", "\"", "\""),
-
-    /** moonbox */
+    /**
+     * moonbox
+     */
     MOONBOX("moonbox", "moonbox", "moonbox.jdbc.MbDriver", "`", "`", "`", "`"),
-
-    /** cassandra */
+    /**
+     * cassandra
+     */
     CASSANDRA("cassandra", "cassandra", "com.github.adejanovski.cassandra.jdbc.CassandraDriver", "", "", "'", "'"),
-
-    /** click house */
+    /**
+     * click house
+     */
     CLICKHOUSE("clickhouse", "clickhouse", "ru.yandex.clickhouse.ClickHouseDriver", "", "", "\"", "\""),
-
-    /** kylin */
+    /**
+     * kylin
+     */
     KYLIN("kylin", "kylin", "org.apache.kylin.jdbc.Driver", "\"", "\"", "\"", "\""),
-
-    /** vertica */
+    /**
+     * vertica
+     */
     VERTICA("vertica", "vertica", "com.vertica.jdbc.Driver", "", "", "'", "'"),
-
-    /** sap */
+    /**
+     * sap
+     */
     HANA("sap", "sap hana", "com.sap.db.jdbc.Driver", "", "", "'", "'"),
-
-    /** impala */
+    /**
+     * impala
+     */
     IMPALA("impala", "impala", "com.cloudera.impala.jdbc41.Driver", "", "", "'", "'");
 
     private String feature;
+
     private String desc;
+
     private String driver;
+
     private String keywordPrefix;
+
     private String keywordSuffix;
+
     private String aliasPrefix;
+
     private String aliasSuffix;
 
     private static final String JDBC_URL_PREFIX = "jdbc:";

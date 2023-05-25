@@ -27,7 +27,7 @@ import org.springframework.stereotype.Repository;
  * @date 2018-11-24
  */
 @Repository
-public interface LogRepository extends JpaRepository<Log,Long>, JpaSpecificationExecutor<Log> {
+public interface LogRepository extends JpaRepository<Log, Long>, JpaSpecificationExecutor<Log> {
 
     /**
      * 根据日志类型删除信息

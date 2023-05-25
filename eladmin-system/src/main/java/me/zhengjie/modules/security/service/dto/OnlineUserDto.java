@@ -68,6 +68,4 @@ public class OnlineUserDto {
      * 登录时间
      */
     private Date loginTime;
-
-
 }

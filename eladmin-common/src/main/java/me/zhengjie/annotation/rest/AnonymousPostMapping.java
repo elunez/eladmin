@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package me.zhengjie.annotation.rest;
 
 import java.lang.annotation.Documented;
@@ -21,7 +20,6 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-
 import me.zhengjie.annotation.AnonymousAccess;
 import org.springframework.core.annotation.AliasFor;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -87,5 +85,4 @@ public @interface AnonymousPostMapping {
      */
     @AliasFor(annotation = RequestMapping.class)
     String[] produces() default {};
-
 }

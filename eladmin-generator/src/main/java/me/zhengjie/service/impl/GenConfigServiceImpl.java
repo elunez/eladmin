@@ -36,7 +36,7 @@ public class GenConfigServiceImpl implements GenConfigService {
     @Override
     public GenConfig find(String tableName) {
         GenConfig genConfig = genConfigRepository.findByTableName(tableName);
-        if(genConfig == null){
+        if (genConfig == null) {
             return new GenConfig(tableName);
         }
         return genConfig;

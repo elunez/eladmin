@@ -30,7 +30,7 @@ import java.lang.annotation.Target;
  * @author Zheng Jie
  * @website https://eladmin.vip
  * @date 2020-05-07
- **/
+ */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface DataPermission {

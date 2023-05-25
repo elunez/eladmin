@@ -24,7 +24,7 @@ import org.springframework.stereotype.Component;
  * @author Zheng Jie
  * @description
  * @date 2021-11-22
- **/
+ */
 @Data
 @Component
 public class ElAdminProperties {

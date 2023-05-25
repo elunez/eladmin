@@ -53,19 +53,20 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class GeneratorServiceImpl implements GeneratorService {
+
     private static final Logger log = LoggerFactory.getLogger(GeneratorServiceImpl.class);
+
     @PersistenceContext
     private EntityManager em;
 
     private final ColumnInfoRepository columnInfoRepository;
 
     private final String CONFIG_MESSAGE = "请先配置生成器";
+
     @Override
     public Object getTables() {
         // 使用预编译防止sql注入
-        String sql = "select table_name ,create_time , engine, table_collation, table_comment from information_schema.tables " +
-                "where table_schema = (select database()) " +
-                "order by create_time desc";
+        String sql = "select table_name ,create_time , engine, table_collation, table_comment from information_schema.tables " + "where table_schema = (select database()) " + "order by create_time desc";
         Query query = em.createNativeQuery(sql);
         return query.getResultList();
     }
@@ -73,9 +74,7 @@ public class GeneratorServiceImpl implements GeneratorService {
     @Override
     public Object getTables(String name, int[] startEnd) {
         // 使用预编译防止sql注入
-        String sql = "select table_name ,create_time , engine, table_collation, table_comment from information_schema.tables " +
-                "where table_schema = (select database()) " +
-                "and table_name like :table order by create_time desc";
+        String sql = "select table_name ,create_time , engine, table_collation, table_comment from information_schema.tables " + "where table_schema = (select database()) " + "and table_name like :table order by create_time desc";
         Query query = em.createNativeQuery(sql);
         query.setFirstResult(startEnd[0]);
         query.setMaxResults(startEnd[1] - startEnd[0]);
@@ -86,8 +85,7 @@ public class GeneratorServiceImpl implements GeneratorService {
             Object[] arr = (Object[]) obj;
             tableInfos.add(new TableInfo(arr[0], arr[1], arr[2], arr[3], ObjectUtil.isNotEmpty(arr[4]) ? arr[4] : "-"));
         }
-        String countSql = "select count(1) from information_schema.tables " +
-                "where table_schema = (select database()) and table_name like :table";
+        String countSql = "select count(1) from information_schema.tables " + "where table_schema = (select database()) and table_name like :table";
         Query queryCount = em.createNativeQuery(countSql);
         queryCount.setParameter("table", StringUtils.isNotBlank(name) ? ("%" + name + "%") : "%%");
         Object totalElements = queryCount.getSingleResult();
@@ -108,24 +106,14 @@ public class GeneratorServiceImpl implements GeneratorService {
     @Override
     public List<ColumnInfo> query(String tableName) {
         // 使用预编译防止sql注入
-        String sql = "select column_name, is_nullable, data_type, column_comment, column_key, extra from information_schema.columns " +
-                "where table_name = ? and table_schema = (select database()) order by ordinal_position";
+        String sql = "select column_name, is_nullable, data_type, column_comment, column_key, extra from information_schema.columns " + "where table_name = ? and table_schema = (select database()) order by ordinal_position";
         Query query = em.createNativeQuery(sql);
         query.setParameter(1, tableName);
         List result = query.getResultList();
         List<ColumnInfo> columnInfos = new ArrayList<>();
         for (Object obj : result) {
             Object[] arr = (Object[]) obj;
-            columnInfos.add(
-                    new ColumnInfo(
-                            tableName,
-                            arr[0].toString(),
-                            "NO".equals(arr[1]),
-                            arr[2].toString(),
-                            ObjectUtil.isNotNull(arr[3]) ? arr[3].toString() : null,
-                            ObjectUtil.isNotNull(arr[4]) ? arr[4].toString() : null,
-                            ObjectUtil.isNotNull(arr[5]) ? arr[5].toString() : null)
-            );
+            columnInfos.add(new ColumnInfo(tableName, arr[0].toString(), "NO".equals(arr[1]), arr[2].toString(), ObjectUtil.isNotNull(arr[3]) ? arr[3].toString() : null, ObjectUtil.isNotNull(arr[4]) ? arr[4].toString() : null, ObjectUtil.isNotNull(arr[5]) ? arr[5].toString() : null));
         }
         return columnInfos;
     }

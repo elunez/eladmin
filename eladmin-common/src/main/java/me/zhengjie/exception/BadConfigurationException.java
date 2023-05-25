@@ -22,6 +22,7 @@ package me.zhengjie.exception;
  * @date: 2020/6/10 18:06
  */
 public class BadConfigurationException extends RuntimeException {
+
     /**
      * Constructs a new runtime exception with {@code null} as its
      * detail message.  The cause is not initialized, and may subsequently be

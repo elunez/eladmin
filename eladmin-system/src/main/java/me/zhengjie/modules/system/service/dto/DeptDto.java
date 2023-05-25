@@ -24,9 +24,9 @@ import java.util.List;
 import java.util.Objects;
 
 /**
-* @author Zheng Jie
-* @date 2019-03-25
-*/
+ * @author Zheng Jie
+ * @date 2019-03-25
+ */
 @Getter
 @Setter
 public class DeptDto extends BaseDTO implements Serializable {
@@ -67,8 +67,7 @@ public class DeptDto extends BaseDTO implements Serializable {
             return false;
         }
         DeptDto deptDto = (DeptDto) o;
-        return Objects.equals(id, deptDto.id) &&
-                Objects.equals(name, deptDto.name);
+        return Objects.equals(id, deptDto.id) && Objects.equals(name, deptDto.name);
     }
 
     @Override

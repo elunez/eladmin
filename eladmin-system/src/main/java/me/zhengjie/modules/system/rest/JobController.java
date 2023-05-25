@@ -34,9 +34,9 @@ import java.io.IOException;
 import java.util.Set;
 
 /**
-* @author Zheng Jie
-* @date 2019-03-29
-*/
+ * @author Zheng Jie
+ * @date 2019-03-29
+ */
 @RestController
 @RequiredArgsConstructor
 @Api(tags = "系统：岗位管理")
@@ -44,6 +44,7 @@ import java.util.Set;
 public class JobController {
 
     private final JobService jobService;
+
     private static final String ENTITY_NAME = "job";
 
     @ApiOperation("导出岗位数据")
@@ -56,17 +57,17 @@ public class JobController {
     @ApiOperation("查询岗位")
     @GetMapping
     @PreAuthorize("@el.check('job:list','user:list')")
-    public ResponseEntity<Object> queryJob(JobQueryCriteria criteria, Pageable pageable){
-        return new ResponseEntity<>(jobService.queryAll(criteria, pageable),HttpStatus.OK);
+    public ResponseEntity<Object> queryJob(JobQueryCriteria criteria, Pageable pageable) {
+        return new ResponseEntity<>(jobService.queryAll(criteria, pageable), HttpStatus.OK);
     }
 
     @Log("新增岗位")
     @ApiOperation("新增岗位")
     @PostMapping
     @PreAuthorize("@el.check('job:add')")
-    public ResponseEntity<Object> createJob(@Validated @RequestBody Job resources){
+    public ResponseEntity<Object> createJob(@Validated @RequestBody Job resources) {
         if (resources.getId() != null) {
-            throw new BadRequestException("A new "+ ENTITY_NAME +" cannot already have an ID");
+            throw new BadRequestException("A new " + ENTITY_NAME + " cannot already have an ID");
         }
         jobService.create(resources);
         return new ResponseEntity<>(HttpStatus.CREATED);
@@ -76,7 +77,7 @@ public class JobController {
     @ApiOperation("修改岗位")
     @PutMapping
     @PreAuthorize("@el.check('job:edit')")
-    public ResponseEntity<Object> updateJob(@Validated(Job.Update.class) @RequestBody Job resources){
+    public ResponseEntity<Object> updateJob(@Validated(Job.Update.class) @RequestBody Job resources) {
         jobService.update(resources);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -85,7 +86,7 @@ public class JobController {
     @ApiOperation("删除岗位")
     @DeleteMapping
     @PreAuthorize("@el.check('job:del')")
-    public ResponseEntity<Object> deleteJob(@RequestBody Set<Long> ids){
+    public ResponseEntity<Object> deleteJob(@RequestBody Set<Long> ids) {
         // 验证是否被用户关联
         jobService.verification(ids);
         jobService.delete(ids);

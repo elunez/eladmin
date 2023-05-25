@@ -24,7 +24,7 @@ import org.springframework.data.jpa.repository.Query;
  * @author Zheng Jie
  * @date 2018-12-31
  */
-public interface QiNiuConfigRepository extends JpaRepository<QiniuConfig,Long> {
+public interface QiNiuConfigRepository extends JpaRepository<QiniuConfig, Long> {
 
     /**
      * 编辑类型

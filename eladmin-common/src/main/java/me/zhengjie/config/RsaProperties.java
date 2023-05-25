@@ -24,7 +24,7 @@ import org.springframework.stereotype.Component;
  * @website https://eladmin.vip
  * @description
  * @date 2020-05-18
- **/
+ */
 @Data
 @Component
 public class RsaProperties {

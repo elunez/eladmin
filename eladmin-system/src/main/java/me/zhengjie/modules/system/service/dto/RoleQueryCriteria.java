@@ -17,7 +17,6 @@ package me.zhengjie.modules.system.service.dto;
 
 import lombok.Data;
 import me.zhengjie.annotation.Query;
-
 import java.sql.Timestamp;
 import java.util.List;
 

@@ -55,8 +55,8 @@ public class AsyncTaskExecutePool implements AsyncConfigurer {
     @Override
     public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {
         return (throwable, method, objects) -> {
-            log.error("===="+throwable.getMessage()+"====", throwable);
-            log.error("exception method:"+method.getName());
+            log.error("====" + throwable.getMessage() + "====", throwable);
+            log.error("exception method:" + method.getName());
         };
     }
 }
