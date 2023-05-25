@@ -123,18 +123,14 @@ public class MenuServiceImpl implements MenuService {
         if (menuRepository.findByTitle(resources.getTitle()) != null) {
             throw new EntityExistException(Menu.class, "title", resources.getTitle());
         }
-        if (StringUtils.isNotBlank(resources.getComponentName())) {
-            if (menuRepository.findByComponentName(resources.getComponentName()) != null) {
-                throw new EntityExistException(Menu.class, "componentName", resources.getComponentName());
-            }
+        if (StringUtils.isNotBlank(resources.getComponentName()) && menuRepository.findByComponentName(resources.getComponentName()) != null) {
+            throw new EntityExistException(Menu.class, "componentName", resources.getComponentName());
         }
         if (Long.valueOf(0L).equals(resources.getPid())) {
             resources.setPid(null);
         }
-        if (resources.getIFrame()) {
-            if (!(resources.getPath().toLowerCase().startsWith(HTTP_PRE) || resources.getPath().toLowerCase().startsWith(HTTPS_PRE))) {
-                throw new BadRequestException(BAD_REQUEST);
-            }
+        if (resources.getIFrame() && !(resources.getPath().toLowerCase().startsWith(HTTP_PRE) || resources.getPath().toLowerCase().startsWith(HTTPS_PRE))) {
+            throw new BadRequestException(BAD_REQUEST);
         }
         menuRepository.save(resources);
         // 计算子节点数目
@@ -151,10 +147,8 @@ public class MenuServiceImpl implements MenuService {
         }
         Menu menu = menuRepository.findById(resources.getId()).orElseGet(Menu::new);
         ValidationUtil.isNull(menu.getId(), "Permission", "id", resources.getId());
-        if (resources.getIFrame()) {
-            if (!(resources.getPath().toLowerCase().startsWith(HTTP_PRE) || resources.getPath().toLowerCase().startsWith(HTTPS_PRE))) {
-                throw new BadRequestException(BAD_REQUEST);
-            }
+        if (resources.getIFrame() && !(resources.getPath().toLowerCase().startsWith(HTTP_PRE) || resources.getPath().toLowerCase().startsWith(HTTPS_PRE))) {
+            throw new BadRequestException(BAD_REQUEST);
         }
         Menu menu1 = menuRepository.findByTitle(resources.getTitle());
         if (menu1 != null && !menu1.getId().equals(menu.getId())) {

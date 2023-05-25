@@ -144,10 +144,8 @@ public class RoleController {
     private int getLevels(Integer level) {
         List<Integer> levels = roleService.findByUsersId(SecurityUtils.getCurrentUserId()).stream().map(RoleSmallDto::getLevel).collect(Collectors.toList());
         int min = Collections.min(levels);
-        if (level != null) {
-            if (level < min) {
-                throw new BadRequestException("权限不足，你的角色级别：" + min + "，低于操作的角色级别：" + level);
-            }
+        if (level != null && level < min) {
+            throw new BadRequestException("权限不足，你的角色级别：" + min + "，低于操作的角色级别：" + level);
         }
         return min;
     }
