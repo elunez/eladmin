@@ -24,6 +24,12 @@
 |  github   |  https://github.com/elunez/eladmin   |  https://github.com/elunez/eladmin-web   |
 |  码云   |  https://gitee.com/elunez/eladmin   |  https://gitee.com/elunez/eladmin-web   |
 
+#### 🌈 特别赞助
+
+<a href="https://www.mingdao.com/?s=utm_79&utm_source=eladmin&utm_medium=banner&utm_campaign=github&utm_content=IT赋能业务" target="_blank">
+<img src="https://eladmin.vip/images/banner/index.png" alt="明道云零代码构建平台" style="width: 351px;border-radius: 2px;">
+</a>
+
 #### 主要特性
 - 使用最新技术栈，社区资源丰富。
 - 高效率开发，代码生成器可一键生成前后端代码
