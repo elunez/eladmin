@@ -24,7 +24,7 @@
 |  github   |  https://github.com/elunez/eladmin   |  https://github.com/elunez/eladmin-web   |
 |  码云   |  https://gitee.com/elunez/eladmin   |  https://gitee.com/elunez/eladmin-web   |
 
-#### 🌈 特别赞助
+#### 赞助商 | Sponsor
 
 <a href="https://www.mingdao.com/?s=utm_79&utm_source=eladmin&utm_medium=banner&utm_campaign=github&utm_content=IT赋能业务" target="_blank">
 <img src="https://eladmin.vip/images/banner/index.png" alt="明道云零代码构建平台" style="width: 351px;border-radius: 2px;">
