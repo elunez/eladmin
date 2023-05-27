@@ -43,8 +43,8 @@ public class OnlineController {
     @ApiOperation("查询在线用户")
     @GetMapping
     @PreAuthorize("@el.check()")
-    public ResponseEntity<Object> queryOnlineUser(String filter, Pageable pageable){
-        return new ResponseEntity<>(onlineUserService.getAll(filter, pageable),HttpStatus.OK);
+    public ResponseEntity<Object> queryOnlineUser(String filter, Pageable pageable) {
+        return new ResponseEntity<>(onlineUserService.getAll(filter, pageable), HttpStatus.OK);
     }
 
     @ApiOperation("导出数据")

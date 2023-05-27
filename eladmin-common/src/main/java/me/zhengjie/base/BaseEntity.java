@@ -63,10 +63,12 @@ public class BaseEntity implements Serializable {
     private Timestamp updateTime;
 
     /* 分组校验 */
-    public @interface Create {}
+    public @interface Create {
+    }
 
     /* 分组校验 */
-    public @interface Update {}
+    public @interface Update {
+    }
 
     @Override
     public String toString() {

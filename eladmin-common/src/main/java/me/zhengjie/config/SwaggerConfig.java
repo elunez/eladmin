@@ -38,7 +38,6 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
-
 import java.util.ArrayList;
 import java.util.List;
 import static springfox.documentation.schema.AlternateTypeRules.newRule;
@@ -61,25 +60,12 @@ public class SwaggerConfig {
     @Bean
     @SuppressWarnings("all")
     public Docket createRestApi() {
-        return new Docket(DocumentationType.SWAGGER_2)
-                .enable(enabled)
-                .pathMapping("/")
-                .apiInfo(apiInfo())
-                .select()
-                .paths(PathSelectors.regex("^(?!/error).*"))
-                .paths(PathSelectors.any())
-                .build()
-                //添加登陆认证
-                .securitySchemes(securitySchemes())
-                .securityContexts(securityContexts());
+        return new Docket(DocumentationType.SWAGGER_2).enable(enabled).pathMapping("/").apiInfo(apiInfo()).select().paths(PathSelectors.regex("^(?!/error).*")).paths(PathSelectors.any()).build().//添加登陆认证
+        securitySchemes(securitySchemes()).securityContexts(securityContexts());
     }
 
     private ApiInfo apiInfo() {
-        return new ApiInfoBuilder()
-                .description("一个简单且易上手的 Spring boot 后台管理框架")
-                .title("ELADMIN 接口文档")
-                .version("2.6")
-                .build();
+        return new ApiInfoBuilder().description("一个简单且易上手的 Spring boot 后台管理框架").title("ELADMIN 接口文档").version("2.6").build();
     }
 
     private List<SecurityScheme> securitySchemes() {
@@ -100,10 +86,7 @@ public class SwaggerConfig {
     }
 
     private SecurityContext getContextByPath() {
-        return SecurityContext.builder()
-                .securityReferences(defaultAuth())
-                .operationSelector(o->o.requestMappingPattern().matches("^(?!/auth).*$"))
-                .build();
+        return SecurityContext.builder().securityReferences(defaultAuth()).operationSelector(o -> o.requestMappingPattern().matches("^(?!/auth).*$")).build();
     }
 
     private List<SecurityReference> defaultAuth() {
@@ -125,6 +108,7 @@ class SwaggerDataConfig {
     @Bean
     public AlternateTypeRuleConvention pageableConvention(final TypeResolver resolver) {
         return new AlternateTypeRuleConvention() {
+
             @Override
             public int getOrder() {
                 return Ordered.HIGHEST_PRECEDENCE;
@@ -140,6 +124,7 @@ class SwaggerDataConfig {
     @ApiModel
     @Data
     private static class Page {
+
         @ApiModelProperty("页码 (0..N)")
         private Integer page;
 

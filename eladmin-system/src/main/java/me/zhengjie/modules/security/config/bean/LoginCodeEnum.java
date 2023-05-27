@@ -21,8 +21,8 @@ package me.zhengjie.modules.security.config.bean;
  * @author: liaojinlong
  * @date: 2020/6/10 17:40
  */
-
 public enum LoginCodeEnum {
+
     /**
      * 算数
      */

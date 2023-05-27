@@ -23,7 +23,7 @@ import java.util.List;
  * @author Zheng Jie
  * @date 2019-01-14
  */
-public interface ColumnInfoRepository extends JpaRepository<ColumnInfo,Long> {
+public interface ColumnInfoRepository extends JpaRepository<ColumnInfo, Long> {
 
     /**
      * 查询表信息

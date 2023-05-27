@@ -21,14 +21,12 @@ import lombok.extern.slf4j.Slf4j;
 import me.zhengjie.domain.GenConfig;
 import me.zhengjie.domain.ColumnInfo;
 import org.springframework.util.ObjectUtils;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.time.LocalDate;
 import java.util.*;
-
 import static me.zhengjie.utils.FileUtil.SYS_TEM_DIR;
 
 /**
@@ -38,7 +36,7 @@ import static me.zhengjie.utils.FileUtil.SYS_TEM_DIR;
  * @date 2019-01-02
  */
 @Slf4j
-@SuppressWarnings({"unchecked", "all"})
+@SuppressWarnings({ "unchecked", "all" })
 public class GenUtil {
 
     private static final String TIMESTAMP = "Timestamp";
@@ -154,10 +152,8 @@ public class GenUtil {
             Template template = engine.getTemplate("generator/admin/" + templateName + ".ftl");
             String rootPath = System.getProperty("user.dir");
             String filePath = getAdminFilePath(templateName, genConfig, genMap.get("className").toString(), rootPath);
-
             assert filePath != null;
             File file = new File(filePath);
-
             // 如果非覆盖生成
             if (!genConfig.getCover() && FileUtil.exist(file)) {
                 continue;
@@ -165,16 +161,13 @@ public class GenUtil {
             // 生成代码
             genFile(file, template, genMap);
         }
-
         // 生成前端代码
         templates = getFrontTemplateNames();
         for (String templateName : templates) {
             Template template = engine.getTemplate("generator/front/" + templateName + ".ftl");
             String filePath = getFrontFilePath(templateName, genConfig.getApiPath(), genConfig.getPath(), genMap.get("changeClassName").toString());
-
             assert filePath != null;
             File file = new File(filePath);
-
             // 如果非覆盖生成
             if (!genConfig.getCover() && FileUtil.exist(file)) {
                 continue;
@@ -240,7 +233,6 @@ public class GenUtil {
         List<Map<String, Object>> betweens = new ArrayList<>();
         // 存储不为空的字段信息
         List<Map<String, Object>> isNotNullColumns = new ArrayList<>();
-
         for (ColumnInfo column : columnInfos) {
             Map<String, Object> listMap = new HashMap<>(16);
             // 字段描述
@@ -276,10 +268,9 @@ public class GenUtil {
             // 主键存在字典
             if (StringUtils.isNotBlank(column.getDictName())) {
                 genMap.put("hasDict", true);
-                if(!dicts.contains(column.getDictName()))
+                if (!dicts.contains(column.getDictName()))
                     dicts.add(column.getDictName());
             }
-
             // 存储字段类型
             listMap.put("columnType", colType);
             // 存储字原始段名称
@@ -353,39 +344,30 @@ public class GenUtil {
         if (!ObjectUtils.isEmpty(genConfig.getPack())) {
             packagePath += genConfig.getPack().replace(".", File.separator) + File.separator;
         }
-
         if ("Entity".equals(templateName)) {
             return packagePath + "domain" + File.separator + className + ".java";
         }
-
         if ("Controller".equals(templateName)) {
             return packagePath + "rest" + File.separator + className + "Controller.java";
         }
-
         if ("Service".equals(templateName)) {
             return packagePath + "service" + File.separator + className + "Service.java";
         }
-
         if ("ServiceImpl".equals(templateName)) {
             return packagePath + "service" + File.separator + "impl" + File.separator + className + "ServiceImpl.java";
         }
-
         if ("Dto".equals(templateName)) {
             return packagePath + "service" + File.separator + "dto" + File.separator + className + "Dto.java";
         }
-
         if ("QueryCriteria".equals(templateName)) {
             return packagePath + "service" + File.separator + "dto" + File.separator + className + "QueryCriteria.java";
         }
-
         if ("Mapper".equals(templateName)) {
             return packagePath + "service" + File.separator + "mapstruct" + File.separator + className + "Mapper.java";
         }
-
         if ("Repository".equals(templateName)) {
             return packagePath + "repository" + File.separator + className + "Repository.java";
         }
-
         return null;
     }
 
@@ -393,15 +375,12 @@ public class GenUtil {
      * 定义前端文件路径以及名称
      */
     private static String getFrontFilePath(String templateName, String apiPath, String path, String apiName) {
-
         if ("api".equals(templateName)) {
             return apiPath + File.separator + apiName + ".js";
         }
-
         if ("index".equals(templateName)) {
             return path + File.separator + "index.vue";
         }
-
         return null;
     }
 

@@ -1,11 +1,11 @@
 package me.zhengjie.utils;
 
 import org.junit.jupiter.api.Test;
-
 import java.time.LocalDateTime;
 import java.util.Date;
 
 public class DateUtilsTest {
+
     @Test
     public void test1() {
         long l = System.currentTimeMillis() / 1000;

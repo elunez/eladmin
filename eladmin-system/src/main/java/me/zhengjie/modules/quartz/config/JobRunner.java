@@ -33,8 +33,11 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class JobRunner implements ApplicationRunner {
+
     private static final Logger log = LoggerFactory.getLogger(JobRunner.class);
+
     private final QuartzJobRepository quartzJobRepository;
+
     private final QuartzManage quartzManage;
 
     /**

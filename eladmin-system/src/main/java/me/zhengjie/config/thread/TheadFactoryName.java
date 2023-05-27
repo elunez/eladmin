@@ -29,8 +29,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class TheadFactoryName implements ThreadFactory {
 
     private static final AtomicInteger POOL_NUMBER = new AtomicInteger(1);
+
     private final ThreadGroup group;
+
     private final AtomicInteger threadNumber = new AtomicInteger(1);
+
     private final String namePrefix;
 
     private final static String DEF_NAME = "el-pool-";
@@ -39,10 +42,9 @@ public class TheadFactoryName implements ThreadFactory {
         this(DEF_NAME);
     }
 
-    public TheadFactoryName(String name){
+    public TheadFactoryName(String name) {
         SecurityManager s = System.getSecurityManager();
-        group = (s != null) ? s.getThreadGroup() :
-                Thread.currentThread().getThreadGroup();
+        group = (s != null) ? s.getThreadGroup() : Thread.currentThread().getThreadGroup();
         //此时namePrefix就是 name + 第几个用这个工厂创建线程池的
         this.namePrefix = (StringUtils.isNotBlank(name) ? name : DEF_NAME) + "-" + POOL_NUMBER.getAndIncrement();
     }
@@ -50,9 +52,7 @@ public class TheadFactoryName implements ThreadFactory {
     @Override
     public Thread newThread(Runnable r) {
         //此时线程的名字 就是 namePrefix + -exec- + 这个线程池中第几个执行的线程
-        Thread t = new Thread(group, r,
-                namePrefix + "-exec-"+threadNumber.getAndIncrement(),
-                0);
+        Thread t = new Thread(group, r, namePrefix + "-exec-" + threadNumber.getAndIncrement(), 0);
         if (t.isDaemon()) {
             t.setDaemon(false);
         }

@@ -28,7 +28,6 @@ public class EntityExistException extends RuntimeException {
     }
 
     private static String generateMessage(String entity, String field, String val) {
-        return StringUtils.capitalize(entity)
-                + " with " + field + " "+ val + " existed";
+        return StringUtils.capitalize(entity) + " with " + field + " " + val + " existed";
     }
 }

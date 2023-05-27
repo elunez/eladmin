@@ -26,9 +26,9 @@ import java.util.Map;
 import java.util.Set;
 
 /**
-* @author Zheng Jie
-* @date 2019-04-10
-*/
+ * @author Zheng Jie
+ * @date 2019-04-10
+ */
 public interface DictService {
 
     /**
@@ -37,7 +37,7 @@ public interface DictService {
      * @param pageable 分页参数
      * @return /
      */
-    Map<String,Object> queryAll(DictQueryCriteria criteria, Pageable pageable);
+    Map<String, Object> queryAll(DictQueryCriteria criteria, Pageable pageable);
 
     /**
      * 查询全部数据

@@ -28,7 +28,6 @@ public class EntityNotFoundException extends RuntimeException {
     }
 
     private static String generateMessage(String entity, String field, String val) {
-        return StringUtils.capitalize(entity)
-                + " with " + field + " "+ val + " does not exist";
+        return StringUtils.capitalize(entity) + " with " + field + " " + val + " does not exist";
     }
 }

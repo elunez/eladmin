@@ -42,9 +42,13 @@ import java.util.concurrent.TimeUnit;
 public class TokenProvider implements InitializingBean {
 
     private final SecurityProperties properties;
+
     private final RedisUtils redisUtils;
+
     public static final String AUTHORITIES_KEY = "user";
+
     private JwtParser jwtParser;
+
     private JwtBuilder jwtBuilder;
 
     public TokenProvider(SecurityProperties properties, RedisUtils redisUtils) {
@@ -56,11 +60,8 @@ public class TokenProvider implements InitializingBean {
     public void afterPropertiesSet() {
         byte[] keyBytes = Decoders.BASE64.decode(properties.getBase64Secret());
         Key key = Keys.hmacShaKeyFor(keyBytes);
-        jwtParser = Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build();
-        jwtBuilder = Jwts.builder()
-                .signWith(key, SignatureAlgorithm.HS512);
+        jwtParser = Jwts.parserBuilder().setSigningKey(key).build();
+        jwtBuilder = Jwts.builder().signWith(key, SignatureAlgorithm.HS512);
     }
 
     /**
@@ -71,12 +72,8 @@ public class TokenProvider implements InitializingBean {
      * @return /
      */
     public String createToken(Authentication authentication) {
-        return jwtBuilder
-                // 加入ID确保生成的 Token 都不一致
-                .setId(IdUtil.simpleUUID())
-                .claim(AUTHORITIES_KEY, authentication.getName())
-                .setSubject(authentication.getName())
-                .compact();
+        return jwtBuilder.// 加入ID确保生成的 Token 都不一致
+        setId(IdUtil.simpleUUID()).claim(AUTHORITIES_KEY, authentication.getName()).setSubject(authentication.getName()).compact();
     }
 
     /**
@@ -92,9 +89,7 @@ public class TokenProvider implements InitializingBean {
     }
 
     public Claims getClaims(String token) {
-        return jwtParser
-                .parseClaimsJws(token)
-                .getBody();
+        return jwtParser.parseClaimsJws(token).getBody();
     }
 
     /**

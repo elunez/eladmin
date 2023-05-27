@@ -39,13 +39,13 @@ public class GenConfigController {
 
     @ApiOperation("查询")
     @GetMapping(value = "/{tableName}")
-    public ResponseEntity<Object> queryGenConfig(@PathVariable String tableName){
+    public ResponseEntity<Object> queryGenConfig(@PathVariable String tableName) {
         return new ResponseEntity<>(genConfigService.find(tableName), HttpStatus.OK);
     }
 
     @PutMapping
     @ApiOperation("修改")
-    public ResponseEntity<Object> updateGenConfig(@Validated @RequestBody GenConfig genConfig){
-        return new ResponseEntity<>(genConfigService.update(genConfig.getTableName(), genConfig),HttpStatus.OK);
+    public ResponseEntity<Object> updateGenConfig(@Validated @RequestBody GenConfig genConfig) {
+        return new ResponseEntity<>(genConfigService.update(genConfig.getTableName(), genConfig), HttpStatus.OK);
     }
 }

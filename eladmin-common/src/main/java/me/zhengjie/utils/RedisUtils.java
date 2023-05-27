@@ -25,7 +25,6 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.*;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.stereotype.Component;
-
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -33,10 +32,13 @@ import java.util.concurrent.TimeUnit;
  * @author /
  */
 @Component
-@SuppressWarnings({"unchecked", "all"})
+@SuppressWarnings({ "unchecked", "all" })
 public class RedisUtils {
+
     private static final Logger log = LoggerFactory.getLogger(RedisUtils.class);
+
     private RedisTemplate<Object, Object> redisTemplate;
+
     @Value("${jwt.online-key}")
     private String onlineKey;
 
@@ -198,7 +200,6 @@ public class RedisUtils {
     }
 
     // ============================String=============================
-
     /**
      * 普通缓存获取
      *
@@ -218,7 +219,7 @@ public class RedisUtils {
     public List<Object> multiGet(List<String> keys) {
         List list = redisTemplate.opsForValue().multiGet(Sets.newHashSet(keys));
         List resultList = Lists.newArrayList();
-        Optional.ofNullable(list).ifPresent(e-> list.forEach(ele-> Optional.ofNullable(ele).ifPresent(resultList::add)));
+        Optional.ofNullable(list).ifPresent(e -> list.forEach(ele -> Optional.ofNullable(ele).ifPresent(resultList::add)));
         return resultList;
     }
 
@@ -285,7 +286,6 @@ public class RedisUtils {
     }
 
     // ================================Map=================================
-
     /**
      * HashGet
      *
@@ -305,7 +305,6 @@ public class RedisUtils {
      */
     public Map<Object, Object> hmget(String key) {
         return redisTemplate.opsForHash().entries(key);
-
     }
 
     /**
@@ -432,7 +431,6 @@ public class RedisUtils {
     }
 
     // ============================set=============================
-
     /**
      * 根据key获取Set中的所有值
      *
@@ -534,7 +532,6 @@ public class RedisUtils {
     }
 
     // ===============================list=================================
-
     /**
      * 获取list缓存的内容
      *

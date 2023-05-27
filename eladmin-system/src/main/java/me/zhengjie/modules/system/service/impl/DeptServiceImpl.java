@@ -42,18 +42,22 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
-* @author Zheng Jie
-* @date 2019-03-25
-*/
+ * @author Zheng Jie
+ * @date 2019-03-25
+ */
 @Service
 @RequiredArgsConstructor
 @CacheConfig(cacheNames = "dept")
 public class DeptServiceImpl implements DeptService {
 
     private final DeptRepository deptRepository;
+
     private final DeptMapper deptMapper;
+
     private final UserRepository userRepository;
+
     private final RedisUtils redisUtils;
+
     private final RoleRepository roleRepository;
 
     @Override
@@ -61,16 +65,22 @@ public class DeptServiceImpl implements DeptService {
         Sort sort = Sort.by(Sort.Direction.ASC, "deptSort");
         String dataScopeType = SecurityUtils.getDataScopeType();
         if (isQuery) {
-            if(dataScopeType.equals(DataScopeEnum.ALL.getValue())){
+            if (dataScopeType.equals(DataScopeEnum.ALL.getValue())) {
                 criteria.setPidIsNull(true);
             }
             List<Field> fields = QueryHelp.getAllFields(criteria.getClass(), new ArrayList<>());
-            List<String> fieldNames = new ArrayList<String>(){{ add("pidIsNull");add("enabled");}};
+            List<String> fieldNames = new ArrayList<String>() {
+
+                {
+                    add("pidIsNull");
+                    add("enabled");
+                }
+            };
             for (Field field : fields) {
                 //设置对象的访问权限，保证对private的属性的访问
                 field.setAccessible(true);
                 Object val = field.get(criteria);
-                if(fieldNames.contains(field.getName())){
+                if (fieldNames.contains(field.getName())) {
                     continue;
                 }
                 if (ObjectUtil.isNotNull(val)) {
@@ -79,9 +89,9 @@ public class DeptServiceImpl implements DeptService {
                 }
             }
         }
-        List<DeptDto> list = deptMapper.toDto(deptRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),sort));
+        List<DeptDto> list = deptMapper.toDto(deptRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root, criteria, criteriaBuilder), sort));
         // 如果为空，就代表为自定义权限或者本级权限，就需要去重，不理解可以注释掉，看查询结果
-        if(StringUtils.isBlank(dataScopeType)){
+        if (StringUtils.isBlank(dataScopeType)) {
             return deduplication(list);
         }
         return list;
@@ -91,7 +101,7 @@ public class DeptServiceImpl implements DeptService {
     @Cacheable(key = "'id:' + #p0")
     public DeptDto findById(Long id) {
         Dept dept = deptRepository.findById(id).orElseGet(Dept::new);
-        ValidationUtil.isNull(dept.getId(),"Dept","id",id);
+        ValidationUtil.isNull(dept.getId(), "Dept", "id", id);
         return deptMapper.toDto(dept);
     }
 
@@ -123,11 +133,11 @@ public class DeptServiceImpl implements DeptService {
         // 旧的部门
         Long oldPid = findById(resources.getId()).getPid();
         Long newPid = resources.getPid();
-        if(resources.getPid() != null && resources.getId().equals(resources.getPid())) {
+        if (resources.getPid() != null && resources.getId().equals(resources.getPid())) {
             throw new BadRequestException("上级不能为自己");
         }
         Dept dept = deptRepository.findById(resources.getId()).orElseGet(Dept::new);
-        ValidationUtil.isNull( dept.getId(),"Dept","id",resources.getId());
+        ValidationUtil.isNull(dept.getId(), "Dept", "id", resources.getId());
         resources.setId(dept.getId());
         deptRepository.save(resources);
         // 更新父节点中子节点数目
@@ -152,7 +162,7 @@ public class DeptServiceImpl implements DeptService {
     public void download(List<DeptDto> deptDtos, HttpServletResponse response) throws IOException {
         List<Map<String, Object>> list = new ArrayList<>();
         for (DeptDto deptDTO : deptDtos) {
-            Map<String,Object> map = new LinkedHashMap<>();
+            Map<String, Object> map = new LinkedHashMap<>();
             map.put("部门名称", deptDTO.getName());
             map.put("部门状态", deptDTO.getEnabled() ? "启用" : "停用");
             map.put("创建日期", deptDTO.getCreateTime());
@@ -166,7 +176,7 @@ public class DeptServiceImpl implements DeptService {
         for (Dept dept : menuList) {
             deptDtos.add(deptMapper.toDto(dept));
             List<Dept> depts = deptRepository.findByPid(dept.getId());
-            if(depts!=null && depts.size()!=0){
+            if (depts != null && depts.size() != 0) {
                 getDeleteDepts(depts, deptDtos);
             }
         }
@@ -177,21 +187,20 @@ public class DeptServiceImpl implements DeptService {
     public List<Long> getDeptChildren(List<Dept> deptList) {
         List<Long> list = new ArrayList<>();
         deptList.forEach(dept -> {
-                    if (dept!=null && dept.getEnabled()) {
-                        List<Dept> depts = deptRepository.findByPid(dept.getId());
-                        if (depts.size() != 0) {
-                            list.addAll(getDeptChildren(depts));
-                        }
-                        list.add(dept.getId());
-                    }
+            if (dept != null && dept.getEnabled()) {
+                List<Dept> depts = deptRepository.findByPid(dept.getId());
+                if (depts.size() != 0) {
+                    list.addAll(getDeptChildren(depts));
                 }
-        );
+                list.add(dept.getId());
+            }
+        });
         return list;
     }
 
     @Override
     public List<DeptDto> getSuperior(DeptDto deptDto, List<Dept> depts) {
-        if(deptDto.getPid() == null){
+        if (deptDto.getPid() == null) {
             depts.addAll(deptRepository.findByPidIsNull());
             return deptMapper.toDto(depts);
         }
@@ -202,7 +211,7 @@ public class DeptServiceImpl implements DeptService {
     @Override
     public Object buildTree(List<DeptDto> deptDtos) {
         Set<DeptDto> trees = new LinkedHashSet<>();
-        Set<DeptDto> depts= new LinkedHashSet<>();
+        Set<DeptDto> depts = new LinkedHashSet<>();
         List<String> deptNames = deptDtos.stream().map(DeptDto::getName).collect(Collectors.toList());
         boolean isChild;
         for (DeptDto deptDTO : deptDtos) {
@@ -219,35 +228,34 @@ public class DeptServiceImpl implements DeptService {
                     deptDTO.getChildren().add(it);
                 }
             }
-            if(isChild) {
+            if (isChild) {
                 depts.add(deptDTO);
-            } else if(deptDTO.getPid() != null &&  !deptNames.contains(findById(deptDTO.getPid()).getName())) {
+            } else if (deptDTO.getPid() != null && !deptNames.contains(findById(deptDTO.getPid()).getName())) {
                 depts.add(deptDTO);
             }
         }
-
         if (CollectionUtil.isEmpty(trees)) {
             trees = depts;
         }
-        Map<String,Object> map = new HashMap<>(2);
-        map.put("totalElements",deptDtos.size());
-        map.put("content",CollectionUtil.isEmpty(trees)? deptDtos :trees);
+        Map<String, Object> map = new HashMap<>(2);
+        map.put("totalElements", deptDtos.size());
+        map.put("content", CollectionUtil.isEmpty(trees) ? deptDtos : trees);
         return map;
     }
 
     @Override
     public void verification(Set<DeptDto> deptDtos) {
         Set<Long> deptIds = deptDtos.stream().map(DeptDto::getId).collect(Collectors.toSet());
-        if(userRepository.countByDepts(deptIds) > 0){
+        if (userRepository.countByDepts(deptIds) > 0) {
             throw new BadRequestException("所选部门存在用户关联，请解除后再试！");
         }
-        if(roleRepository.countByDepts(deptIds) > 0){
+        if (roleRepository.countByDepts(deptIds) > 0) {
             throw new BadRequestException("所选部门存在角色关联，请解除后再试！");
         }
     }
 
-    private void updateSubCnt(Long deptId){
-        if(deptId != null){
+    private void updateSubCnt(Long deptId) {
+        if (deptId != null) {
             int count = deptRepository.countByPid(deptId);
             deptRepository.updateSubCntById(count, deptId);
         }
@@ -263,7 +271,7 @@ public class DeptServiceImpl implements DeptService {
                     break;
                 }
             }
-            if (flag){
+            if (flag) {
                 deptDtos.add(deptDto);
             }
         }
@@ -274,7 +282,7 @@ public class DeptServiceImpl implements DeptService {
      * 清理缓存
      * @param id /
      */
-    public void delCaches(Long id){
+    public void delCaches(Long id) {
         List<User> users = userRepository.findByRoleDeptId(id);
         // 删除数据权限
         redisUtils.delByKeys(CacheKey.DATA_USER, users.stream().map(User::getId).collect(Collectors.toSet()));

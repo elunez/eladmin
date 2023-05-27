@@ -75,10 +75,10 @@ public class SecurityUtils {
      * 获取当前用户的数据权限
      * @return /
      */
-    public static List<Long> getCurrentUserDataScope(){
+    public static List<Long> getCurrentUserDataScope() {
         UserDetails userDetails = getCurrentUser();
         JSONArray array = JSONUtil.parseArray(new JSONObject(userDetails).get("dataScopes"));
-        return JSONUtil.toList(array,Long.class);
+        return JSONUtil.toList(array, Long.class);
     }
 
     /**
@@ -87,7 +87,7 @@ public class SecurityUtils {
      */
     public static String getDataScopeType() {
         List<Long> dataScopes = getCurrentUserDataScope();
-        if(dataScopes.size() != 0){
+        if (dataScopes.size() != 0) {
             return "";
         }
         return DataScopeEnum.ALL.getValue();

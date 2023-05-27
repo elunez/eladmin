@@ -31,7 +31,6 @@ public interface VerifyService {
      */
     EmailVo sendEmail(String email, String key);
 
-
     /**
      * 验证
      * @param code /

@@ -53,11 +53,17 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+
     private final UserMapper userMapper;
+
     private final FileProperties properties;
+
     private final RedisUtils redisUtils;
+
     private final UserCacheManager userCacheManager;
+
     private final OnlineUserService onlineUserService;
+
     private final UserLoginMapper userLoginMapper;
 
     @Override
@@ -120,11 +126,11 @@ public class UserServiceImpl implements UserService {
             redisUtils.del(CacheKey.ROLE_AUTH + resources.getId());
         }
         // 修改部门会影响 数据权限
-        if (!Objects.equals(resources.getDept(),user.getDept())) {
+        if (!Objects.equals(resources.getDept(), user.getDept())) {
             redisUtils.del(CacheKey.DATA_USER + resources.getId());
         }
         // 如果用户被禁用，则清除用户登录信息
-        if(!resources.getEnabled()){
+        if (!resources.getEnabled()) {
             onlineUserService.kickOutForUsername(resources.getUsername());
         }
         user.setUsername(resources.getUsername());
@@ -203,8 +209,8 @@ public class UserServiceImpl implements UserService {
         // 验证文件上传的格式
         String image = "gif jpg png jpeg";
         String fileType = FileUtil.getExtensionName(multipartFile.getOriginalFilename());
-        if(fileType != null && !image.contains(fileType)){
-            throw new BadRequestException("文件格式错误！, 仅支持 " + image +" 格式");
+        if (fileType != null && !image.contains(fileType)) {
+            throw new BadRequestException("文件格式错误！, 仅支持 " + image + " 格式");
         }
         User user = userRepository.findByUsername(SecurityUtils.getCurrentUsername());
         String oldPath = user.getAvatarPath();
@@ -215,11 +221,15 @@ public class UserServiceImpl implements UserService {
         if (StringUtils.isNotBlank(oldPath)) {
             FileUtil.del(oldPath);
         }
-        @NotBlank String username = user.getUsername();
+        @NotBlank
+        String username = user.getUsername();
         flushCache(username);
-        return new HashMap<String, String>(1) {{
-            put("avatar", file.getName());
-        }};
+        return new HashMap<String, String>(1) {
+
+            {
+                put("avatar", file.getName());
+            }
+        };
     }
 
     @Override

@@ -26,9 +26,9 @@ import java.util.Map;
 import java.util.Set;
 
 /**
-* @author Zheng Jie
-* @date 2019-03-29
-*/
+ * @author Zheng Jie
+ * @date 2019-03-29
+ */
 public interface JobService {
 
     /**
@@ -63,7 +63,7 @@ public interface JobService {
      * @param pageable 分页参数
      * @return /
      */
-    Map<String,Object> queryAll(JobQueryCriteria criteria, Pageable pageable);
+    Map<String, Object> queryAll(JobQueryCriteria criteria, Pageable pageable);
 
     /**
      * 查询全部数据

@@ -21,7 +21,6 @@ import me.zhengjie.annotation.Limit;
 import me.zhengjie.annotation.rest.AnonymousGetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**

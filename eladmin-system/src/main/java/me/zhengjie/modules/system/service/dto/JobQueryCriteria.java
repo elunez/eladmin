@@ -22,9 +22,9 @@ import java.sql.Timestamp;
 import java.util.List;
 
 /**
-* @author Zheng Jie
-* @date 2019-6-4 14:49:34
-*/
+ * @author Zheng Jie
+ * @date 2019-6-4 14:49:34
+ */
 @Data
 @NoArgsConstructor
 public class JobQueryCriteria {

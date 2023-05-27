@@ -38,7 +38,7 @@ public class QuartzJob extends BaseEntity implements Serializable {
 
     @Id
     @Column(name = "job_id")
-    @NotNull(groups = {Update.class})
+    @NotNull(groups = { Update.class })
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

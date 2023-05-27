@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
  * @date 2019-01-03
  */
 public class ColUtil {
+
     private static final Logger log = LoggerFactory.getLogger(ColUtil.class);
 
     /**

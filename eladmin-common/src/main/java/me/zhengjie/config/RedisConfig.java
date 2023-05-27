@@ -45,7 +45,6 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
-
 /**
  * @author Zheng Jie
  * @date 2018-11-24
@@ -62,11 +61,10 @@ public class RedisConfig extends CachingConfigurerSupport {
      *  设置@cacheable 序列化方式
      */
     @Bean
-    public RedisCacheConfiguration redisCacheConfiguration(){
+    public RedisCacheConfiguration redisCacheConfiguration() {
         FastJsonRedisSerializer<Object> fastJsonRedisSerializer = new FastJsonRedisSerializer<>(Object.class);
         RedisCacheConfiguration configuration = RedisCacheConfiguration.defaultCacheConfig();
-        configuration = configuration.serializeValuesWith(RedisSerializationContext.
-                SerializationPair.fromSerializer(fastJsonRedisSerializer)).entryTtl(Duration.ofHours(2));
+        configuration = configuration.serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(fastJsonRedisSerializer)).entryTtl(Duration.ofHours(2));
         return configuration;
     }
 
@@ -106,17 +104,17 @@ public class RedisConfig extends CachingConfigurerSupport {
     @Override
     public KeyGenerator keyGenerator() {
         return (target, method, params) -> {
-            Map<String,Object> container = new HashMap<>(8);
+            Map<String, Object> container = new HashMap<>(8);
             Class<?> targetClassClass = target.getClass();
             // 类地址
-            container.put("class",targetClassClass.toGenericString());
+            container.put("class", targetClassClass.toGenericString());
             // 方法名称
-            container.put("methodName",method.getName());
+            container.put("methodName", method.getName());
             // 包名称
-            container.put("package",targetClassClass.getPackage());
+            container.put("package", targetClassClass.getPackage());
             // 参数列表
             for (int i = 0; i < params.length; i++) {
-                container.put(String.valueOf(i),params[i]);
+                container.put(String.valueOf(i), params[i]);
             }
             // 转为JSON字符串
             String jsonString = JSON.toJSONString(container);
@@ -131,6 +129,7 @@ public class RedisConfig extends CachingConfigurerSupport {
         // 异常处理，当Redis发生异常时，打印日志，但是程序正常走
         log.info("初始化 -> [{}]", "Redis CacheErrorHandler");
         return new CacheErrorHandler() {
+
             @Override
             public void handleCacheGetError(RuntimeException e, Cache cache, Object key) {
                 log.error("Redis occur handleCacheGetError：key -> [{}]", key, e);
@@ -152,7 +151,6 @@ public class RedisConfig extends CachingConfigurerSupport {
             }
         };
     }
-
 }
 
 /**
@@ -161,7 +159,7 @@ public class RedisConfig extends CachingConfigurerSupport {
  * @author /
  * @param <T>
  */
- class FastJsonRedisSerializer<T> implements RedisSerializer<T> {
+class FastJsonRedisSerializer<T> implements RedisSerializer<T> {
 
     private final Class<T> clazz;
 
@@ -186,7 +184,6 @@ public class RedisConfig extends CachingConfigurerSupport {
         String str = new String(bytes, StandardCharsets.UTF_8);
         return JSON.parseObject(str, clazz);
     }
-
 }
 
 /**
@@ -212,14 +209,14 @@ class StringRedisSerializer implements RedisSerializer<Object> {
         return (bytes == null ? null : new String(bytes, charset));
     }
 
-	@Override
-	public @Nullable byte[] serialize(Object object) {
-		String string = JSON.toJSONString(object);
-
-		if (org.apache.commons.lang3.StringUtils.isBlank(string)) {
-			return null;
-		}
-		string = string.replace("\"", "");
-		return string.getBytes(charset);
-	}
+    @Override
+    @Nullable
+    public byte[] serialize(Object object) {
+        String string = JSON.toJSONString(object);
+        if (org.apache.commons.lang3.StringUtils.isBlank(string)) {
+            return null;
+        }
+        string = string.replace("\"", "");
+        return string.getBytes(charset);
+    }
 }

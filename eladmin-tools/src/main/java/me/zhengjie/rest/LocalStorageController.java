@@ -34,9 +34,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
-* @author Zheng Jie
-* @date 2019-09-05
-*/
+ * @author Zheng Jie
+ * @date 2019-09-05
+ */
 @RestController
 @RequiredArgsConstructor
 @Api(tags = "工具：本地存储管理")
@@ -48,8 +48,8 @@ public class LocalStorageController {
     @GetMapping
     @ApiOperation("查询文件")
     @PreAuthorize("@el.check('storage:list')")
-    public ResponseEntity<Object> queryFile(LocalStorageQueryCriteria criteria, Pageable pageable){
-        return new ResponseEntity<>(localStorageService.queryAll(criteria,pageable),HttpStatus.OK);
+    public ResponseEntity<Object> queryFile(LocalStorageQueryCriteria criteria, Pageable pageable) {
+        return new ResponseEntity<>(localStorageService.queryAll(criteria, pageable), HttpStatus.OK);
     }
 
     @ApiOperation("导出数据")
@@ -62,17 +62,17 @@ public class LocalStorageController {
     @PostMapping
     @ApiOperation("上传文件")
     @PreAuthorize("@el.check('storage:add')")
-    public ResponseEntity<Object> createFile(@RequestParam String name, @RequestParam("file") MultipartFile file){
+    public ResponseEntity<Object> createFile(@RequestParam String name, @RequestParam("file") MultipartFile file) {
         localStorageService.create(name, file);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @ApiOperation("上传图片")
     @PostMapping("/pictures")
-    public ResponseEntity<Object> uploadPicture(@RequestParam MultipartFile file){
+    public ResponseEntity<Object> uploadPicture(@RequestParam MultipartFile file) {
         // 判断文件是否为图片
         String suffix = FileUtil.getExtensionName(file.getOriginalFilename());
-        if(!FileUtil.IMAGE.equals(FileUtil.getFileType(suffix))){
+        if (!FileUtil.IMAGE.equals(FileUtil.getFileType(suffix))) {
             throw new BadRequestException("只能上传图片");
         }
         LocalStorage localStorage = localStorageService.create(null, file);
@@ -83,7 +83,7 @@ public class LocalStorageController {
     @Log("修改文件")
     @ApiOperation("修改文件")
     @PreAuthorize("@el.check('storage:edit')")
-    public ResponseEntity<Object> updateFile(@Validated @RequestBody LocalStorage resources){
+    public ResponseEntity<Object> updateFile(@Validated @RequestBody LocalStorage resources) {
         localStorageService.update(resources);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

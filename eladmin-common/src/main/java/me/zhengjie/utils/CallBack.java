@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package me.zhengjie.utils;
 
 /**
@@ -25,8 +24,8 @@ package me.zhengjie.utils;
  * 可提交一个 提交回调任务。<br>
  * 在SpringContextHolder 初始化后，进行回调使用
  */
-
 public interface CallBack {
+
     /**
      * 回调执行方法
      */
@@ -40,4 +39,3 @@ public interface CallBack {
         return Thread.currentThread().getId() + ":" + this.getClass().getName();
     }
 }
-

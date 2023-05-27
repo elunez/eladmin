@@ -24,13 +24,13 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 /**
-* @author Zheng Jie
-* @date 2019-09-05
-*/
+ * @author Zheng Jie
+ * @date 2019-09-05
+ */
 @Getter
 @Setter
 @Entity
-@Table(name="tool_local_storage")
+@Table(name = "tool_local_storage")
 @NoArgsConstructor
 public class LocalStorage extends BaseEntity implements Serializable {
 
@@ -58,7 +58,7 @@ public class LocalStorage extends BaseEntity implements Serializable {
     @ApiModelProperty(value = "大小")
     private String size;
 
-    public LocalStorage(String realName,String name, String suffix, String path, String type, String size) {
+    public LocalStorage(String realName, String name, String suffix, String path, String type, String size) {
         this.realName = realName;
         this.name = name;
         this.suffix = suffix;
@@ -67,7 +67,7 @@ public class LocalStorage extends BaseEntity implements Serializable {
         this.size = size;
     }
 
-    public void copy(LocalStorage source){
-        BeanUtil.copyProperties(source,this, CopyOptions.create().setIgnoreNullValue(true));
+    public void copy(LocalStorage source) {
+        BeanUtil.copyProperties(source, this, CopyOptions.create().setIgnoreNullValue(true));
     }
 }

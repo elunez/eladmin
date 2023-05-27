@@ -20,7 +20,6 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 import me.zhengjie.base.BaseEntity;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -39,7 +38,7 @@ public class Menu extends BaseEntity implements Serializable {
 
     @Id
     @Column(name = "menu_id")
-    @NotNull(groups = {Update.class})
+    @NotNull(groups = { Update.class })
     @ApiModelProperty(value = "ID", hidden = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

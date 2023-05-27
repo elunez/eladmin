@@ -87,7 +87,7 @@ public class ColumnInfo implements Serializable {
         this.keyType = keyType;
         this.extra = extra;
         this.notNull = notNull;
-        if(GenUtil.PK.equalsIgnoreCase(keyType) && GenUtil.EXTRA.equalsIgnoreCase(extra)){
+        if (GenUtil.PK.equalsIgnoreCase(keyType) && GenUtil.EXTRA.equalsIgnoreCase(extra)) {
             this.notNull = false;
         }
         this.remark = remark;
