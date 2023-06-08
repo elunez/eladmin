@@ -32,6 +32,7 @@ import me.zhengjie.utils.ThrowableUtil;
 import org.quartz.JobExecutionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 import java.util.*;
@@ -42,6 +43,7 @@ import java.util.concurrent.*;
  * @author /
  * @date 2019-01-07
  */
+@Async
 public class ExecutionJob extends QuartzJobBean {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
