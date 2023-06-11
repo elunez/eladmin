@@ -100,10 +100,6 @@ generator:
 swagger:
   enabled: true
 
-# IP 本地解析
-ip:
-  local-parsing: true
-
 # 文件存储路径
 file:
   mac:
