@@ -121,12 +121,11 @@
             <version>${druid.version}</version>
         </dependency>
 
-        <!-- ip2region IP库 -->
         <!-- https://mvnrepository.com/artifact/net.dreamlu/mica-ip2region -->
         <dependency>
             <groupId>net.dreamlu</groupId>
             <artifactId>mica-ip2region</artifactId>
-            <version>2.6.3</version>
+            <version>2.7.12</version>
         </dependency>
 
         <!--lombok插件-->
