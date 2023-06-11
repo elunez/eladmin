@@ -19,7 +19,6 @@ import cn.hutool.extra.template.Template;
 import cn.hutool.extra.template.TemplateConfig;
 import cn.hutool.extra.template.TemplateEngine;
 import cn.hutool.extra.template.TemplateUtil;
-import me.zhengjie.config.thread.ThreadPoolExecutorUtil;
 import me.zhengjie.domain.vo.EmailVo;
 import me.zhengjie.modules.quartz.domain.QuartzJob;
 import me.zhengjie.modules.quartz.domain.QuartzLog;
@@ -33,21 +32,24 @@ import me.zhengjie.utils.ThrowableUtil;
 import org.quartz.JobExecutionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 import java.util.*;
 import java.util.concurrent.*;
 
 /**
- * 参考人人开源，https://gitee.com/renrenio/renren-security
+ * 参考人人开源，<a href="https://gitee.com/renrenio/renren-security">...</a>
  * @author /
  * @date 2019-01-07
  */
+@Async
 public class ExecutionJob extends QuartzJobBean {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     // 此处仅供参考，可根据任务执行情况自定义线程池参数
-    private final static ExecutorService executor = ThreadPoolExecutorUtil.getPoll("el-quartz-job");
+    private final ThreadPoolTaskExecutor executor = SpringContextHolder.getBean("elAsync");
 
     @Override
     public void executeInternal(JobExecutionContext context) {

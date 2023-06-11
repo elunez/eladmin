@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
  * @author Zheng Jie
  */
 @Service(value = "el")
-public class ElPermissionConfig {
+public class AuthorityConfig {
 
     public Boolean check(String ...permissions){
         // 获取当前用户的所有权限
