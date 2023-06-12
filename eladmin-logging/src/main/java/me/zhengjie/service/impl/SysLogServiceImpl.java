@@ -20,10 +20,10 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import lombok.RequiredArgsConstructor;
-import me.zhengjie.domain.Log;
+import me.zhengjie.domain.SysLog;
 import me.zhengjie.repository.LogRepository;
-import me.zhengjie.service.LogService;
-import me.zhengjie.service.dto.LogQueryCriteria;
+import me.zhengjie.service.SysLogService;
+import me.zhengjie.service.dto.SysLogQueryCriteria;
 import me.zhengjie.service.mapstruct.LogErrorMapper;
 import me.zhengjie.service.mapstruct.LogSmallMapper;
 import me.zhengjie.utils.*;
@@ -48,14 +48,14 @@ import java.util.*;
  */
 @Service
 @RequiredArgsConstructor
-public class LogServiceImpl implements LogService {
+public class SysLogServiceImpl implements SysLogService {
     private final LogRepository logRepository;
     private final LogErrorMapper logErrorMapper;
     private final LogSmallMapper logSmallMapper;
 
     @Override
-    public Object queryAll(LogQueryCriteria criteria, Pageable pageable) {
-        Page<Log> page = logRepository.findAll(((root, criteriaQuery, cb) -> QueryHelp.getPredicate(root, criteria, cb)), pageable);
+    public Object queryAll(SysLogQueryCriteria criteria, Pageable pageable) {
+        Page<SysLog> page = logRepository.findAll(((root, criteriaQuery, cb) -> QueryHelp.getPredicate(root, criteria, cb)), pageable);
         String status = "ERROR";
         if (status.equals(criteria.getLogType())) {
             return PageUtil.toPage(page.map(logErrorMapper::toDto));
@@ -64,20 +64,20 @@ public class LogServiceImpl implements LogService {
     }
 
     @Override
-    public List<Log> queryAll(LogQueryCriteria criteria) {
+    public List<SysLog> queryAll(SysLogQueryCriteria criteria) {
         return logRepository.findAll(((root, criteriaQuery, cb) -> QueryHelp.getPredicate(root, criteria, cb)));
     }
 
     @Override
-    public Object queryAllByUser(LogQueryCriteria criteria, Pageable pageable) {
-        Page<Log> page = logRepository.findAll(((root, criteriaQuery, cb) -> QueryHelp.getPredicate(root, criteria, cb)), pageable);
+    public Object queryAllByUser(SysLogQueryCriteria criteria, Pageable pageable) {
+        Page<SysLog> page = logRepository.findAll(((root, criteriaQuery, cb) -> QueryHelp.getPredicate(root, criteria, cb)), pageable);
         return PageUtil.toPage(page.map(logSmallMapper::toDto));
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void save(String username, String browser, String ip, ProceedingJoinPoint joinPoint, Log log) {
-        if (log == null) {
+    public void save(String username, String browser, String ip, ProceedingJoinPoint joinPoint, SysLog sysLog) {
+        if (sysLog == null) {
             throw new IllegalArgumentException("Log 不能为 null!");
         }
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
@@ -88,21 +88,21 @@ public class LogServiceImpl implements LogService {
         String methodName = joinPoint.getTarget().getClass().getName() + "." + signature.getName() + "()";
 
         // 描述
-        log.setDescription(aopLog.value());
+        sysLog.setDescription(aopLog.value());
         
-        log.setRequestIp(ip);
-        log.setAddress(StringUtils.getCityInfo(log.getRequestIp()));
-        log.setMethod(methodName);
-        log.setUsername(username);
-        log.setParams(getParameter(method, joinPoint.getArgs()));
+        sysLog.setRequestIp(ip);
+        sysLog.setAddress(StringUtils.getCityInfo(sysLog.getRequestIp()));
+        sysLog.setMethod(methodName);
+        sysLog.setUsername(username);
+        sysLog.setParams(getParameter(method, joinPoint.getArgs()));
         // 记录登录用户，隐藏密码信息
-        if(signature.getName().equals("login") && StringUtils.isNotEmpty(log.getParams())){
-            JSONObject obj = JSONUtil.parseObj(log.getParams());
-            log.setUsername(obj.getStr("username", ""));
-            log.setParams(JSONUtil.toJsonStr(Dict.create().set("username", log.getUsername())));
+        if(signature.getName().equals("login") && StringUtils.isNotEmpty(sysLog.getParams())){
+            JSONObject obj = JSONUtil.parseObj(sysLog.getParams());
+            sysLog.setUsername(obj.getStr("username", ""));
+            sysLog.setParams(JSONUtil.toJsonStr(Dict.create().set("username", sysLog.getUsername())));
         }
-        log.setBrowser(browser);
-        logRepository.save(log);
+        sysLog.setBrowser(browser);
+        logRepository.save(sysLog);
     }
 
     /**
@@ -137,25 +137,25 @@ public class LogServiceImpl implements LogService {
 
     @Override
     public Object findByErrDetail(Long id) {
-        Log log = logRepository.findById(id).orElseGet(Log::new);
-        ValidationUtil.isNull(log.getId(), "Log", "id", id);
-        byte[] details = log.getExceptionDetail();
+        SysLog sysLog = logRepository.findById(id).orElseGet(SysLog::new);
+        ValidationUtil.isNull(sysLog.getId(), "Log", "id", id);
+        byte[] details = sysLog.getExceptionDetail();
         return Dict.create().set("exception", new String(ObjectUtil.isNotNull(details) ? details : "".getBytes()));
     }
 
     @Override
-    public void download(List<Log> logs, HttpServletResponse response) throws IOException {
+    public void download(List<SysLog> sysLogs, HttpServletResponse response) throws IOException {
         List<Map<String, Object>> list = new ArrayList<>();
-        for (Log log : logs) {
+        for (SysLog sysLog : sysLogs) {
             Map<String, Object> map = new LinkedHashMap<>();
-            map.put("用户名", log.getUsername());
-            map.put("IP", log.getRequestIp());
-            map.put("IP来源", log.getAddress());
-            map.put("描述", log.getDescription());
-            map.put("浏览器", log.getBrowser());
-            map.put("请求耗时/毫秒", log.getTime());
-            map.put("异常详情", new String(ObjectUtil.isNotNull(log.getExceptionDetail()) ? log.getExceptionDetail() : "".getBytes()));
-            map.put("创建日期", log.getCreateTime());
+            map.put("用户名", sysLog.getUsername());
+            map.put("IP", sysLog.getRequestIp());
+            map.put("IP来源", sysLog.getAddress());
+            map.put("描述", sysLog.getDescription());
+            map.put("浏览器", sysLog.getBrowser());
+            map.put("请求耗时/毫秒", sysLog.getTime());
+            map.put("异常详情", new String(ObjectUtil.isNotNull(sysLog.getExceptionDetail()) ? sysLog.getExceptionDetail() : "".getBytes()));
+            map.put("创建日期", sysLog.getCreateTime());
             list.add(map);
         }
         FileUtil.downloadExcel(list, response);

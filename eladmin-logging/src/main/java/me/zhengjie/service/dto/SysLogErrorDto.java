@@ -24,7 +24,7 @@ import java.sql.Timestamp;
 * @date 2019-5-22
 */
 @Data
-public class LogErrorDTO implements Serializable {
+public class SysLogErrorDto implements Serializable {
 
     private Long id;
 
