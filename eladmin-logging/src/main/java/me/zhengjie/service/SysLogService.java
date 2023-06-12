@@ -15,8 +15,8 @@
  */
 package me.zhengjie.service;
 
-import me.zhengjie.domain.Log;
-import me.zhengjie.service.dto.LogQueryCriteria;
+import me.zhengjie.domain.SysLog;
+import me.zhengjie.service.dto.SysLogQueryCriteria;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Async;
@@ -29,7 +29,7 @@ import java.util.List;
  * @author Zheng Jie
  * @date 2018-11-24
  */
-public interface LogService {
+public interface SysLogService {
 
     /**
      * 分页查询
@@ -37,14 +37,14 @@ public interface LogService {
      * @param pageable 分页参数
      * @return /
      */
-    Object queryAll(LogQueryCriteria criteria, Pageable pageable);
+    Object queryAll(SysLogQueryCriteria criteria, Pageable pageable);
 
     /**
      * 查询全部数据
      * @param criteria 查询条件
      * @return /
      */
-    List<Log> queryAll(LogQueryCriteria criteria);
+    List<SysLog> queryAll(SysLogQueryCriteria criteria);
 
     /**
      * 查询用户日志
@@ -52,7 +52,7 @@ public interface LogService {
      * @param pageable 分页参数
      * @return -
      */
-    Object queryAllByUser(LogQueryCriteria criteria, Pageable pageable);
+    Object queryAllByUser(SysLogQueryCriteria criteria, Pageable pageable);
 
     /**
      * 保存日志数据
@@ -60,10 +60,10 @@ public interface LogService {
      * @param browser 浏览器
      * @param ip 请求IP
      * @param joinPoint /
-     * @param log 日志实体
+     * @param sysLog 日志实体
      */
     @Async
-    void save(String username, String browser, String ip, ProceedingJoinPoint joinPoint, Log log);
+    void save(String username, String browser, String ip, ProceedingJoinPoint joinPoint, SysLog sysLog);
 
     /**
      * 查询异常详情
@@ -74,11 +74,11 @@ public interface LogService {
 
     /**
      * 导出日志
-     * @param logs 待导出的数据
+     * @param sysLogs 待导出的数据
      * @param response /
      * @throws IOException /
      */
-    void download(List<Log> logs, HttpServletResponse response) throws IOException;
+    void download(List<SysLog> sysLogs, HttpServletResponse response) throws IOException;
 
     /**
      * 删除所有错误日志

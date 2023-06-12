@@ -15,7 +15,7 @@
  */
 package me.zhengjie.repository;
 
-import me.zhengjie.domain.Log;
+import me.zhengjie.domain.SysLog;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
@@ -27,7 +27,7 @@ import org.springframework.stereotype.Repository;
  * @date 2018-11-24
  */
 @Repository
-public interface LogRepository extends JpaRepository<Log,Long>, JpaSpecificationExecutor<Log> {
+public interface LogRepository extends JpaRepository<SysLog,Long>, JpaSpecificationExecutor<SysLog> {
 
     /**
      * 根据日志类型删除信息
