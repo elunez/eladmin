@@ -26,7 +26,7 @@ import java.util.List;
  * @date 2019-6-4 09:23:07
  */
 @Data
-public class LogQueryCriteria {
+public class SysLogQueryCriteria {
 
     @Query(blurry = "username,description,address,requestIp,method,params")
     private String blurry;

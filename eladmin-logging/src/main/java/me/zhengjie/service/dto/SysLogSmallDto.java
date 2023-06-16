@@ -24,7 +24,7 @@ import java.sql.Timestamp;
  * @date 2019-5-22
  */
 @Data
-public class LogSmallDTO implements Serializable {
+public class SysLogSmallDto implements Serializable {
 
     private String description;
 
