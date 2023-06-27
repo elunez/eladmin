@@ -54,6 +54,7 @@ CREATE TABLE `code_gen_config` (
   `api_path` varchar(255) DEFAULT NULL COMMENT '前端Api文件路径',
   `prefix` varchar(255) DEFAULT NULL COMMENT '表前缀',
   `api_alias` varchar(255) DEFAULT NULL COMMENT '接口名称',
+  `date_annotation` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`config_id`) USING BTREE,
   KEY `idx_table_name` (`table_name`(100))
 ) ENGINE=InnoDB AUTO_INCREMENT=7 ROW_FORMAT=COMPACT COMMENT='代码生成器配置';
