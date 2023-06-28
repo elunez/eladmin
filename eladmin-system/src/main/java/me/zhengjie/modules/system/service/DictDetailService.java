@@ -15,7 +15,7 @@
  */
 package me.zhengjie.modules.system.service;
 
-import me.zhengjie.utils.APage;
+import me.zhengjie.utils.PageResult;
 import me.zhengjie.modules.system.domain.DictDetail;
 import me.zhengjie.modules.system.service.dto.DictDetailDto;
 import me.zhengjie.modules.system.service.dto.DictDetailQueryCriteria;
@@ -52,7 +52,7 @@ public interface DictDetailService {
      * @param pageable 分页参数
      * @return /
      */
-    APage<DictDetailDto> queryAll(DictDetailQueryCriteria criteria, Pageable pageable);
+    PageResult<DictDetailDto> queryAll(DictDetailQueryCriteria criteria, Pageable pageable);
 
     /**
      * 根据字典名称获取字典详情

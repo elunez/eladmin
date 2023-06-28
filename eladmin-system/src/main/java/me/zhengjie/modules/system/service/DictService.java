@@ -15,7 +15,7 @@
  */
 package me.zhengjie.modules.system.service;
 
-import me.zhengjie.utils.APage;
+import me.zhengjie.utils.PageResult;
 import me.zhengjie.modules.system.domain.Dict;
 import me.zhengjie.modules.system.service.dto.DictDto;
 import me.zhengjie.modules.system.service.dto.DictQueryCriteria;
@@ -37,7 +37,7 @@ public interface DictService {
      * @param pageable 分页参数
      * @return /
      */
-    APage<DictDto> queryAll(DictQueryCriteria criteria, Pageable pageable);
+    PageResult<DictDto> queryAll(DictQueryCriteria criteria, Pageable pageable);
 
     /**
      * 查询全部数据

@@ -15,7 +15,7 @@
  */
 package me.zhengjie.modules.system.service;
 
-import me.zhengjie.utils.APage;
+import me.zhengjie.utils.PageResult;
 import me.zhengjie.modules.system.domain.Job;
 import me.zhengjie.modules.system.service.dto.JobDto;
 import me.zhengjie.modules.system.service.dto.JobQueryCriteria;
@@ -63,7 +63,7 @@ public interface JobService {
      * @param pageable 分页参数
      * @return /
      */
-    APage<JobDto> queryAll(JobQueryCriteria criteria, Pageable pageable);
+    PageResult<JobDto> queryAll(JobQueryCriteria criteria, Pageable pageable);
 
     /**
      * 查询全部数据

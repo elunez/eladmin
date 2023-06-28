@@ -16,7 +16,7 @@
 package me.zhengjie.modules.system.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import me.zhengjie.utils.APage;
+import me.zhengjie.utils.PageResult;
 import me.zhengjie.modules.system.domain.Dict;
 import me.zhengjie.modules.system.domain.DictDetail;
 import me.zhengjie.modules.system.repository.DictRepository;
@@ -49,7 +49,7 @@ public class DictDetailServiceImpl implements DictDetailService {
     private final RedisUtils redisUtils;
 
     @Override
-    public APage<DictDetailDto> queryAll(DictDetailQueryCriteria criteria, Pageable pageable) {
+    public PageResult<DictDetailDto> queryAll(DictDetailQueryCriteria criteria, Pageable pageable) {
         Page<DictDetail> page = dictDetailRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable);
         return PageUtil.toPage(page.map(dictDetailMapper::toDto));
     }

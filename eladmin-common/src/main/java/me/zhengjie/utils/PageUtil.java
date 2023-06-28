@@ -43,15 +43,15 @@ public class PageUtil extends cn.hutool.core.util.PageUtil {
     /**
      * Page 数据处理，预防redis反序列化报错
      */
-    public static <T> APage<T> toPage(Page<T> page) {
-        return new APage<>(page.getContent(), page.getTotalElements());
+    public static <T> PageResult<T> toPage(Page<T> page) {
+        return new PageResult<>(page.getContent(), page.getTotalElements());
     }
 
     /**
      * 自定义分页
      */
-    public static <T> APage<T> toPage(List<T> list, long totalElements) {
-        return new APage<>(list, totalElements);
+    public static <T> PageResult<T> toPage(List<T> list, long totalElements) {
+        return new PageResult<>(list, totalElements);
     }
 
 }

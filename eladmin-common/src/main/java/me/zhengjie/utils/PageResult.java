@@ -8,7 +8,7 @@ import java.util.List;
 
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
-public class APage<T> {
+public class PageResult<T> {
 
     private final List<T> content;
 
