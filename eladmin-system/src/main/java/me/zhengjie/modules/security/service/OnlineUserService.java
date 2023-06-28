@@ -16,6 +16,7 @@
 package me.zhengjie.modules.security.service;
 
 import lombok.extern.slf4j.Slf4j;
+import me.zhengjie.utils.APage;
 import me.zhengjie.modules.security.config.bean.SecurityProperties;
 import me.zhengjie.modules.security.service.dto.JwtUserDto;
 import me.zhengjie.modules.security.service.dto.OnlineUserDto;
@@ -70,10 +71,10 @@ public class OnlineUserService {
      * @param pageable /
      * @return /
      */
-    public Map<String,Object> getAll(String filter, Pageable pageable){
+    public APage<OnlineUserDto> getAll(String filter, Pageable pageable){
         List<OnlineUserDto> onlineUserDtos = getAll(filter);
         return PageUtil.toPage(
-                PageUtil.toPage(pageable.getPageNumber(),pageable.getPageSize(), onlineUserDtos),
+                PageUtil.paging(pageable.getPageNumber(),pageable.getPageSize(), onlineUserDtos),
                 onlineUserDtos.size()
         );
     }
