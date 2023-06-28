@@ -124,7 +124,7 @@ public class ExecutionJob extends QuartzJobBean {
         data.put("task", quartzJob);
         data.put("msg", msg);
         TemplateEngine engine = TemplateUtil.createEngine(new TemplateConfig("template", TemplateConfig.ResourceMode.CLASSPATH));
-        Template template = engine.getTemplate("email/taskAlarm.ftl");
+        Template template = engine.getTemplate("taskAlarm.ftl");
         emailVo.setContent(template.render(data));
         List<String> emails = Arrays.asList(quartzJob.getEmail().split("[,，]"));
         emailVo.setTos(emails);

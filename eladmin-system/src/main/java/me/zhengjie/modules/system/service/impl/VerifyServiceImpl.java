@@ -51,7 +51,7 @@ public class VerifyServiceImpl implements VerifyService {
         String redisKey = key + email;
         // 如果不存在有效的验证码，就创建一个新的
         TemplateEngine engine = TemplateUtil.createEngine(new TemplateConfig("template", TemplateConfig.ResourceMode.CLASSPATH));
-        Template template = engine.getTemplate("email/email.ftl");
+        Template template = engine.getTemplate("email.ftl");
         Object oldCode =  redisUtils.get(redisKey);
         if(oldCode == null){
             String code = RandomUtil.randomNumbers (6);

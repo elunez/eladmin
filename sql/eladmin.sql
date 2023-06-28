@@ -23,7 +23,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `code_column_config`;
 CREATE TABLE `code_column_config` (
   `column_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'ID',
-  `table_name` varchar(255) DEFAULT NULL,
+  `table_name` varchar(180) DEFAULT NULL,
   `column_name` varchar(255) DEFAULT NULL,
   `column_type` varchar(255) DEFAULT NULL,
   `dict_name` varchar(255) DEFAULT NULL,
@@ -35,10 +35,9 @@ CREATE TABLE `code_column_config` (
   `not_null` bit(1) DEFAULT NULL,
   `query_type` varchar(255) DEFAULT NULL,
   `remark` varchar(255) DEFAULT NULL,
-  `date_annotation` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`column_id`) USING BTREE,
   KEY `idx_table_name` (`table_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=191 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='代码生成字段信息存储';
+) ENGINE=InnoDB AUTO_INCREMENT=191 ROW_FORMAT=COMPACT COMMENT='代码生成字段信息存储';
 
 -- ----------------------------
 -- Table structure for code_gen_config
@@ -55,9 +54,10 @@ CREATE TABLE `code_gen_config` (
   `api_path` varchar(255) DEFAULT NULL COMMENT '前端Api文件路径',
   `prefix` varchar(255) DEFAULT NULL COMMENT '表前缀',
   `api_alias` varchar(255) DEFAULT NULL COMMENT '接口名称',
+  `date_annotation` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`config_id`) USING BTREE,
   KEY `idx_table_name` (`table_name`(100))
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='代码生成器配置';
+) ENGINE=InnoDB AUTO_INCREMENT=7 ROW_FORMAT=COMPACT COMMENT='代码生成器配置';
 
 -- ----------------------------
 -- Table structure for mnt_app
@@ -77,7 +77,7 @@ CREATE TABLE `mnt_app` (
   `create_time` datetime DEFAULT NULL COMMENT '创建日期',
   `update_time` datetime DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`app_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='应用管理';
+) ENGINE=InnoDB ROW_FORMAT=COMPACT COMMENT='应用管理';
 
 -- ----------------------------
 -- Records of mnt_app
@@ -100,7 +100,7 @@ CREATE TABLE `mnt_database` (
   `create_time` datetime DEFAULT NULL COMMENT '创建时间',
   `update_time` datetime DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`db_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='数据库管理';
+) ENGINE=InnoDB ROW_FORMAT=COMPACT COMMENT='数据库管理';
 
 -- ----------------------------
 -- Records of mnt_database
@@ -121,7 +121,7 @@ CREATE TABLE `mnt_deploy` (
   `update_time` datetime DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`deploy_id`) USING BTREE,
   KEY `FK6sy157pseoxx4fmcqr1vnvvhy` (`app_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='部署管理';
+) ENGINE=InnoDB ROW_FORMAT=COMPACT COMMENT='部署管理';
 
 -- ----------------------------
 -- Records of mnt_deploy
@@ -141,7 +141,7 @@ CREATE TABLE `mnt_deploy_history` (
   `ip` varchar(20) NOT NULL COMMENT '服务器IP',
   `deploy_id` bigint(20) DEFAULT NULL COMMENT '部署编号',
   PRIMARY KEY (`history_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='部署历史管理';
+) ENGINE=InnoDB ROW_FORMAT=COMPACT COMMENT='部署历史管理';
 
 -- ----------------------------
 -- Records of mnt_deploy_history
@@ -158,7 +158,7 @@ CREATE TABLE `mnt_deploy_server` (
   `server_id` bigint(20) NOT NULL COMMENT '服务ID',
   PRIMARY KEY (`deploy_id`,`server_id`) USING BTREE,
   KEY `FKeaaha7jew9a02b3bk9ghols53` (`server_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='应用与服务器关联';
+) ENGINE=InnoDB ROW_FORMAT=COMPACT COMMENT='应用与服务器关联';
 
 -- ----------------------------
 -- Records of mnt_deploy_server
@@ -183,7 +183,7 @@ CREATE TABLE `mnt_server` (
   `update_time` datetime DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`server_id`) USING BTREE,
   KEY `idx_ip` (`ip`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='服务器管理';
+) ENGINE=InnoDB AUTO_INCREMENT=2 ROW_FORMAT=COMPACT COMMENT='服务器管理';
 
 -- ----------------------------
 -- Table structure for sys_dept
@@ -203,7 +203,7 @@ CREATE TABLE `sys_dept` (
   PRIMARY KEY (`dept_id`) USING BTREE,
   KEY `inx_pid` (`pid`),
   KEY `inx_enabled` (`enabled`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='部门';
+) ENGINE=InnoDB AUTO_INCREMENT=18 ROW_FORMAT=COMPACT COMMENT='部门';
 
 -- ----------------------------
 -- Records of sys_dept
@@ -231,7 +231,7 @@ CREATE TABLE `sys_dict` (
   `create_time` datetime DEFAULT NULL COMMENT '创建日期',
   `update_time` datetime DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`dict_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='数据字典';
+) ENGINE=InnoDB AUTO_INCREMENT=6 ROW_FORMAT=COMPACT COMMENT='数据字典';
 
 -- ----------------------------
 -- Records of sys_dict
@@ -258,7 +258,7 @@ CREATE TABLE `sys_dict_detail` (
   `update_time` datetime DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`detail_id`) USING BTREE,
   KEY `FK5tpkputc6d9nboxojdbgnpmyb` (`dict_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='数据字典详情';
+) ENGINE=InnoDB AUTO_INCREMENT=7 ROW_FORMAT=COMPACT COMMENT='数据字典详情';
 
 -- ----------------------------
 -- Records of sys_dict_detail
@@ -278,7 +278,7 @@ COMMIT;
 DROP TABLE IF EXISTS `sys_job`;
 CREATE TABLE `sys_job` (
   `job_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'ID',
-  `name` varchar(255) NOT NULL COMMENT '岗位名称',
+  `name` varchar(180) NOT NULL COMMENT '岗位名称',
   `enabled` bit(1) NOT NULL COMMENT '岗位状态',
   `job_sort` int(5) DEFAULT NULL COMMENT '排序',
   `create_by` varchar(255) DEFAULT NULL COMMENT '创建者',
@@ -288,7 +288,7 @@ CREATE TABLE `sys_job` (
   PRIMARY KEY (`job_id`) USING BTREE,
   UNIQUE KEY `uniq_name` (`name`),
   KEY `inx_enabled` (`enabled`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='岗位';
+) ENGINE=InnoDB AUTO_INCREMENT=13 ROW_FORMAT=COMPACT COMMENT='岗位';
 
 -- ----------------------------
 -- Records of sys_job
@@ -307,7 +307,7 @@ DROP TABLE IF EXISTS `sys_log`;
 CREATE TABLE `sys_log` (
   `log_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'ID',
   `description` varchar(255) DEFAULT NULL,
-  `log_type` varchar(255) DEFAULT NULL,
+  `log_type` varchar(10) DEFAULT NULL,
   `method` varchar(255) DEFAULT NULL,
   `params` text DEFAULT NULL,
   `request_ip` varchar(255) DEFAULT NULL,
@@ -320,7 +320,7 @@ CREATE TABLE `sys_log` (
   PRIMARY KEY (`log_id`) USING BTREE,
   KEY `log_create_time_index` (`create_time`),
   KEY `inx_log_type` (`log_type`)
-) ENGINE=InnoDB AUTO_INCREMENT=3537 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='系统日志';
+) ENGINE=InnoDB AUTO_INCREMENT=3537 ROW_FORMAT=COMPACT COMMENT='系统日志';
 
 -- ----------------------------
 -- Table structure for sys_menu
@@ -331,8 +331,8 @@ CREATE TABLE `sys_menu` (
   `pid` bigint(20) DEFAULT NULL COMMENT '上级菜单ID',
   `sub_count` int(5) DEFAULT 0 COMMENT '子菜单数目',
   `type` int(11) DEFAULT NULL COMMENT '菜单类型',
-  `title` varchar(255) DEFAULT NULL COMMENT '菜单标题',
-  `name` varchar(255) DEFAULT NULL COMMENT '组件名称',
+  `title` varchar(100) DEFAULT NULL COMMENT '菜单标题',
+  `name` varchar(100) DEFAULT NULL COMMENT '组件名称',
   `component` varchar(255) DEFAULT NULL COMMENT '组件',
   `menu_sort` int(5) DEFAULT NULL COMMENT '排序',
   `icon` varchar(255) DEFAULT NULL COMMENT '图标',
@@ -349,7 +349,7 @@ CREATE TABLE `sys_menu` (
   UNIQUE KEY `uniq_title` (`title`),
   UNIQUE KEY `uniq_name` (`name`),
   KEY `inx_pid` (`pid`)
-) ENGINE=InnoDB AUTO_INCREMENT=118 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='系统菜单';
+) ENGINE=InnoDB AUTO_INCREMENT=118 ROW_FORMAT=COMPACT COMMENT='系统菜单';
 
 -- ----------------------------
 -- Records of sys_menu
@@ -456,7 +456,7 @@ CREATE TABLE `sys_quartz_job` (
   `update_time` datetime DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`job_id`) USING BTREE,
   KEY `inx_is_pause` (`is_pause`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='定时任务';
+) ENGINE=InnoDB AUTO_INCREMENT=7 ROW_FORMAT=COMPACT COMMENT='定时任务';
 
 -- ----------------------------
 -- Records of sys_quartz_job
@@ -484,7 +484,7 @@ CREATE TABLE `sys_quartz_log` (
   `params` varchar(255) DEFAULT NULL,
   `time` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`log_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=151 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='定时任务日志';
+) ENGINE=InnoDB AUTO_INCREMENT=151 ROW_FORMAT=COMPACT COMMENT='定时任务日志';
 
 -- ----------------------------
 -- Table structure for sys_role
@@ -492,8 +492,8 @@ CREATE TABLE `sys_quartz_log` (
 DROP TABLE IF EXISTS `sys_role`;
 CREATE TABLE `sys_role` (
   `role_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'ID',
-  `name` varchar(255) NOT NULL COMMENT '名称',
-  `level` int(255) DEFAULT NULL COMMENT '角色级别',
+  `name` varchar(100) NOT NULL COMMENT '名称',
+  `level` int(50) DEFAULT NULL COMMENT '角色级别',
   `description` varchar(255) DEFAULT NULL COMMENT '描述',
   `data_scope` varchar(255) DEFAULT NULL COMMENT '数据权限',
   `create_by` varchar(255) DEFAULT NULL COMMENT '创建者',
@@ -503,7 +503,7 @@ CREATE TABLE `sys_role` (
   PRIMARY KEY (`role_id`) USING BTREE,
   UNIQUE KEY `uniq_name` (`name`),
   KEY `role_name_index` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='角色表';
+) ENGINE=InnoDB AUTO_INCREMENT=3 ROW_FORMAT=COMPACT COMMENT='角色表';
 
 -- ----------------------------
 -- Records of sys_role
@@ -522,7 +522,7 @@ CREATE TABLE `sys_roles_depts` (
   `dept_id` bigint(20) NOT NULL,
   PRIMARY KEY (`role_id`,`dept_id`) USING BTREE,
   KEY `FK7qg6itn5ajdoa9h9o78v9ksur` (`dept_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='角色部门关联';
+) ENGINE=InnoDB ROW_FORMAT=COMPACT COMMENT='角色部门关联';
 
 -- ----------------------------
 -- Table structure for sys_roles_menus
@@ -533,7 +533,7 @@ CREATE TABLE `sys_roles_menus` (
   `role_id` bigint(20) NOT NULL COMMENT '角色ID',
   PRIMARY KEY (`menu_id`,`role_id`) USING BTREE,
   KEY `FKcngg2qadojhi3a651a5adkvbq` (`role_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='角色菜单关联';
+) ENGINE=InnoDB ROW_FORMAT=COMPACT COMMENT='角色菜单关联';
 
 -- ----------------------------
 -- Records of sys_roles_menus
@@ -649,11 +649,11 @@ DROP TABLE IF EXISTS `sys_user`;
 CREATE TABLE `sys_user` (
   `user_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'ID',
   `dept_id` bigint(20) DEFAULT NULL COMMENT '部门名称',
-  `username` varchar(255) DEFAULT NULL COMMENT '用户名',
+  `username` varchar(180) DEFAULT NULL COMMENT '用户名',
   `nick_name` varchar(255) DEFAULT NULL COMMENT '昵称',
   `gender` varchar(2) DEFAULT NULL COMMENT '性别',
   `phone` varchar(255) DEFAULT NULL COMMENT '手机号码',
-  `email` varchar(255) DEFAULT NULL COMMENT '邮箱',
+  `email` varchar(180) DEFAULT NULL COMMENT '邮箱',
   `avatar_name` varchar(255) DEFAULT NULL COMMENT '头像地址',
   `avatar_path` varchar(255) DEFAULT NULL COMMENT '头像真实路径',
   `password` varchar(255) DEFAULT NULL COMMENT '密码',
@@ -670,9 +670,8 @@ CREATE TABLE `sys_user` (
   UNIQUE KEY `uniq_username` (`username`),
   UNIQUE KEY `uniq_email` (`email`),
   KEY `FK5rwmryny6jthaaxkogownknqp` (`dept_id`) USING BTREE,
-  KEY `FKpq2dhypk2qgt68nauh2by22jb` (`avatar_name`) USING BTREE,
   KEY `inx_enabled` (`enabled`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='系统用户';
+) ENGINE=InnoDB AUTO_INCREMENT=3 ROW_FORMAT=COMPACT COMMENT='系统用户';
 
 -- ----------------------------
 -- Records of sys_user
@@ -709,7 +708,7 @@ CREATE TABLE `sys_users_roles` (
   `role_id` bigint(20) NOT NULL COMMENT '角色ID',
   PRIMARY KEY (`user_id`,`role_id`) USING BTREE,
   KEY `FKq4eq273l04bpu4efj0jd0jb98` (`role_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='用户角色关联';
+) ENGINE=InnoDB ROW_FORMAT=COMPACT COMMENT='用户角色关联';
 
 -- ----------------------------
 -- Records of sys_users_roles
@@ -736,7 +735,7 @@ CREATE TABLE `tool_alipay_config` (
   `sign_type` varchar(255) DEFAULT NULL COMMENT '签名方式',
   `sys_service_provider_id` varchar(255) DEFAULT NULL COMMENT '商户号',
   PRIMARY KEY (`config_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='支付宝配置类';
+) ENGINE=InnoDB ROW_FORMAT=COMPACT COMMENT='支付宝配置类';
 
 -- ----------------------------
 -- Records of tool_alipay_config
@@ -757,7 +756,7 @@ CREATE TABLE `tool_email_config` (
   `port` varchar(255) DEFAULT NULL COMMENT '端口',
   `user` varchar(255) DEFAULT NULL COMMENT '发件者用户名',
   PRIMARY KEY (`config_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='邮箱配置';
+) ENGINE=InnoDB ROW_FORMAT=COMPACT COMMENT='邮箱配置';
 
 -- ----------------------------
 -- Table structure for tool_local_storage
@@ -776,7 +775,7 @@ CREATE TABLE `tool_local_storage` (
   `create_time` datetime DEFAULT NULL COMMENT '创建日期',
   `update_time` datetime DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`storage_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='本地存储';
+) ENGINE=InnoDB AUTO_INCREMENT=10 ROW_FORMAT=COMPACT COMMENT='本地存储';
 
 -- ----------------------------
 -- Records of tool_local_storage
@@ -797,7 +796,7 @@ CREATE TABLE `tool_qiniu_config` (
   `type` varchar(255) DEFAULT NULL COMMENT '空间类型',
   `zone` varchar(255) DEFAULT NULL COMMENT '机房',
   PRIMARY KEY (`config_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='七牛云配置';
+) ENGINE=InnoDB ROW_FORMAT=COMPACT COMMENT='七牛云配置';
 
 -- ----------------------------
 -- Table structure for tool_qiniu_content
@@ -806,7 +805,7 @@ DROP TABLE IF EXISTS `tool_qiniu_content`;
 CREATE TABLE `tool_qiniu_content` (
   `content_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'ID',
   `bucket` varchar(255) DEFAULT NULL COMMENT 'Bucket 识别符',
-  `name` varchar(255) DEFAULT NULL COMMENT '文件名称',
+  `name` varchar(180) DEFAULT NULL COMMENT '文件名称',
   `size` varchar(255) DEFAULT NULL COMMENT '文件大小',
   `type` varchar(255) DEFAULT NULL COMMENT '文件类型：私有或公开',
   `url` varchar(255) DEFAULT NULL COMMENT '文件url',
@@ -814,7 +813,7 @@ CREATE TABLE `tool_qiniu_content` (
   `update_time` datetime DEFAULT NULL COMMENT '上传或同步的时间',
   PRIMARY KEY (`content_id`) USING BTREE,
   UNIQUE KEY `uniq_name` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='七牛云文件存储';
+) ENGINE=InnoDB ROW_FORMAT=COMPACT COMMENT='七牛云文件存储';
 
 -- ----------------------------
 -- Records of tool_qiniu_content
