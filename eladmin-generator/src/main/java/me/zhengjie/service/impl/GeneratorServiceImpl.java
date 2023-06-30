@@ -38,6 +38,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -87,8 +88,8 @@ public class GeneratorServiceImpl implements GeneratorService {
                 "where table_schema = (select database()) and table_name like :table";
         Query queryCount = em.createNativeQuery(countSql);
         queryCount.setParameter("table", StringUtils.isNotBlank(name) ? ("%" + name + "%") : "%%");
-        long totalElements = (long) queryCount.getSingleResult();
-        return PageUtil.toPage(tableInfos, totalElements);
+        BigInteger totalElements = (BigInteger) queryCount.getSingleResult();
+        return PageUtil.toPage(tableInfos, totalElements.longValue());
     }
 
     @Override
