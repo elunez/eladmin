@@ -13,5 +13,4 @@ public class PageResult<T> {
     private final List<T> content;
 
     private final long totalElements;
-
 }
