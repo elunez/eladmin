@@ -25,6 +25,7 @@ import me.zhengjie.modules.system.domain.Dept;
 import me.zhengjie.modules.system.service.DeptService;
 import me.zhengjie.modules.system.service.dto.DeptDto;
 import me.zhengjie.modules.system.service.dto.DeptQueryCriteria;
+import me.zhengjie.utils.PageResult;
 import me.zhengjie.utils.PageUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -57,22 +58,22 @@ public class DeptController {
     @ApiOperation("查询部门")
     @GetMapping
     @PreAuthorize("@el.check('user:list','dept:list')")
-    public ResponseEntity<Object> queryDept(DeptQueryCriteria criteria) throws Exception {
-        List<DeptDto> deptDtos = deptService.queryAll(criteria, true);
-        return new ResponseEntity<>(PageUtil.toPage(deptDtos, deptDtos.size()),HttpStatus.OK);
+    public ResponseEntity<PageResult<DeptDto>> queryDept(DeptQueryCriteria criteria) throws Exception {
+        List<DeptDto> depts = deptService.queryAll(criteria, true);
+        return new ResponseEntity<>(PageUtil.toPage(depts, depts.size()),HttpStatus.OK);
     }
 
     @ApiOperation("查询部门:根据ID获取同级与上级数据")
     @PostMapping("/superior")
     @PreAuthorize("@el.check('user:list','dept:list')")
     public ResponseEntity<Object> getDeptSuperior(@RequestBody List<Long> ids) {
-        Set<DeptDto> deptDtos  = new LinkedHashSet<>();
+        Set<DeptDto> deptSet  = new LinkedHashSet<>();
         for (Long id : ids) {
             DeptDto deptDto = deptService.findById(id);
             List<DeptDto> depts = deptService.getSuperior(deptDto, new ArrayList<>());
-            deptDtos.addAll(depts);
+            deptSet.addAll(depts);
         }
-        return new ResponseEntity<>(deptService.buildTree(new ArrayList<>(deptDtos)),HttpStatus.OK);
+        return new ResponseEntity<>(deptService.buildTree(new ArrayList<>(deptSet)),HttpStatus.OK);
     }
 
     @Log("新增部门")

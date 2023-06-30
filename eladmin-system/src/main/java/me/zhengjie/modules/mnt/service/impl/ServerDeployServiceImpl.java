@@ -23,10 +23,7 @@ import me.zhengjie.modules.mnt.service.dto.ServerDeployDto;
 import me.zhengjie.modules.mnt.service.dto.ServerDeployQueryCriteria;
 import me.zhengjie.modules.mnt.service.mapstruct.ServerDeployMapper;
 import me.zhengjie.modules.mnt.util.ExecuteShellUtil;
-import me.zhengjie.utils.FileUtil;
-import me.zhengjie.utils.PageUtil;
-import me.zhengjie.utils.QueryHelp;
-import me.zhengjie.utils.ValidationUtil;
+import me.zhengjie.utils.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -47,7 +44,7 @@ public class ServerDeployServiceImpl implements ServerDeployService {
     private final ServerDeployMapper serverDeployMapper;
 
     @Override
-    public Object queryAll(ServerDeployQueryCriteria criteria, Pageable pageable){
+    public PageResult<ServerDeployDto> queryAll(ServerDeployQueryCriteria criteria, Pageable pageable){
         Page<ServerDeploy> page = serverDeployRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable);
         return PageUtil.toPage(page.map(serverDeployMapper::toDto));
     }

@@ -21,6 +21,8 @@ import lombok.RequiredArgsConstructor;
 import me.zhengjie.annotation.Log;
 import me.zhengjie.service.SysLogService;
 import me.zhengjie.service.dto.SysLogQueryCriteria;
+import me.zhengjie.service.dto.SysLogSmallDto;
+import me.zhengjie.utils.PageResult;
 import me.zhengjie.utils.SecurityUtils;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -69,7 +71,7 @@ public class SysLogController {
 
     @GetMapping(value = "/user")
     @ApiOperation("用户日志查询")
-    public ResponseEntity<Object> queryUserLog(SysLogQueryCriteria criteria, Pageable pageable){
+    public ResponseEntity<PageResult<SysLogSmallDto>> queryUserLog(SysLogQueryCriteria criteria, Pageable pageable){
         criteria.setLogType("INFO");
         criteria.setUsername(SecurityUtils.getCurrentUsername());
         return new ResponseEntity<>(sysLogService.queryAllByUser(criteria,pageable), HttpStatus.OK);

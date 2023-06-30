@@ -25,10 +25,7 @@ import me.zhengjie.domain.vo.TableInfo;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.repository.ColumnInfoRepository;
 import me.zhengjie.service.GeneratorService;
-import me.zhengjie.utils.FileUtil;
-import me.zhengjie.utils.GenUtil;
-import me.zhengjie.utils.PageUtil;
-import me.zhengjie.utils.StringUtils;
+import me.zhengjie.utils.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -71,7 +68,7 @@ public class GeneratorServiceImpl implements GeneratorService {
     }
 
     @Override
-    public Object getTables(String name, int[] startEnd) {
+    public PageResult<TableInfo> getTables(String name, int[] startEnd) {
         // 使用预编译防止sql注入
         String sql = "select table_name ,create_time , engine, table_collation, table_comment from information_schema.tables " +
                 "where table_schema = (select database()) " +

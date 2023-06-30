@@ -111,8 +111,8 @@ public interface DeptService {
 
     /**
      * 获取
-     * @param deptList
-     * @return
+     * @param deptList /
+     * @return /
      */
     List<Long> getDeptChildren(List<Dept> deptList);
 

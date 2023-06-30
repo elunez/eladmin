@@ -52,7 +52,7 @@ public class LocalStorageServiceImpl implements LocalStorageService {
     private final FileProperties properties;
 
     @Override
-    public Object queryAll(LocalStorageQueryCriteria criteria, Pageable pageable){
+    public PageResult<LocalStorageDto> queryAll(LocalStorageQueryCriteria criteria, Pageable pageable){
         Page<LocalStorage> page = localStorageRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable);
         return PageUtil.toPage(page.map(localStorageMapper::toDto));
     }

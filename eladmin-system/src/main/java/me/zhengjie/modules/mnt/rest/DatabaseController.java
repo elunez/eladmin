@@ -26,6 +26,7 @@ import me.zhengjie.modules.mnt.service.dto.DatabaseDto;
 import me.zhengjie.modules.mnt.service.dto.DatabaseQueryCriteria;
 import me.zhengjie.modules.mnt.util.SqlUtils;
 import me.zhengjie.utils.FileUtil;
+import me.zhengjie.utils.PageResult;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -62,7 +63,7 @@ public class DatabaseController {
     @ApiOperation(value = "查询数据库")
     @GetMapping
 	@PreAuthorize("@el.check('database:list')")
-    public ResponseEntity<Object> queryDatabase(DatabaseQueryCriteria criteria, Pageable pageable){
+    public ResponseEntity<PageResult<DatabaseDto>> queryDatabase(DatabaseQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity<>(databaseService.queryAll(criteria,pageable),HttpStatus.OK);
     }
 

@@ -24,6 +24,7 @@ import me.zhengjie.domain.SysLog;
 import me.zhengjie.repository.LogRepository;
 import me.zhengjie.service.SysLogService;
 import me.zhengjie.service.dto.SysLogQueryCriteria;
+import me.zhengjie.service.dto.SysLogSmallDto;
 import me.zhengjie.service.mapstruct.LogErrorMapper;
 import me.zhengjie.service.mapstruct.LogSmallMapper;
 import me.zhengjie.utils.*;
@@ -60,7 +61,7 @@ public class SysLogServiceImpl implements SysLogService {
         if (status.equals(criteria.getLogType())) {
             return PageUtil.toPage(page.map(logErrorMapper::toDto));
         }
-        return page;
+        return PageUtil.toPage(page);
     }
 
     @Override
@@ -69,7 +70,7 @@ public class SysLogServiceImpl implements SysLogService {
     }
 
     @Override
-    public Object queryAllByUser(SysLogQueryCriteria criteria, Pageable pageable) {
+    public PageResult<SysLogSmallDto> queryAllByUser(SysLogQueryCriteria criteria, Pageable pageable) {
         Page<SysLog> page = logRepository.findAll(((root, criteriaQuery, cb) -> QueryHelp.getPredicate(root, criteria, cb)), pageable);
         return PageUtil.toPage(page.map(logSmallMapper::toDto));
     }

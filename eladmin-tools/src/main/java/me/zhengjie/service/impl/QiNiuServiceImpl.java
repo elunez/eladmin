@@ -29,14 +29,10 @@ import me.zhengjie.domain.QiniuConfig;
 import me.zhengjie.domain.QiniuContent;
 import me.zhengjie.repository.QiniuContentRepository;
 import me.zhengjie.service.dto.QiniuQueryCriteria;
-import me.zhengjie.utils.QiNiuUtil;
+import me.zhengjie.utils.*;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.repository.QiNiuConfigRepository;
 import me.zhengjie.service.QiNiuService;
-import me.zhengjie.utils.FileUtil;
-import me.zhengjie.utils.PageUtil;
-import me.zhengjie.utils.QueryHelp;
-import me.zhengjie.utils.ValidationUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CachePut;
@@ -84,7 +80,7 @@ public class QiNiuServiceImpl implements QiNiuService {
     }
 
     @Override
-    public Object queryAll(QiniuQueryCriteria criteria, Pageable pageable){
+    public PageResult<QiniuContent> queryAll(QiniuQueryCriteria criteria, Pageable pageable){
         return PageUtil.toPage(qiniuContentRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable));
     }
 

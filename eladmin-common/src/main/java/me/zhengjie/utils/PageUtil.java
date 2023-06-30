@@ -54,4 +54,10 @@ public class PageUtil extends cn.hutool.core.util.PageUtil {
         return new PageResult<>(list, totalElements);
     }
 
+    /**
+     * 返回空数据
+     */
+    public static <T> PageResult<T> noData () {
+        return new PageResult<>(null, 0);
+    }
 }
