@@ -16,6 +16,7 @@
 package me.zhengjie.modules.system.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import me.zhengjie.utils.PageResult;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.exception.EntityExistException;
 import me.zhengjie.modules.system.domain.Job;
@@ -52,7 +53,7 @@ public class JobServiceImpl implements JobService {
     private final UserRepository userRepository;
 
     @Override
-    public Map<String,Object> queryAll(JobQueryCriteria criteria, Pageable pageable) {
+    public PageResult<JobDto> queryAll(JobQueryCriteria criteria, Pageable pageable) {
         Page<Job> page = jobRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable);
         return PageUtil.toPage(page.map(jobMapper::toDto).getContent(),page.getTotalElements());
     }

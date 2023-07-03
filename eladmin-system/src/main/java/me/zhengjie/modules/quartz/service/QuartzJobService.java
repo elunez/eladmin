@@ -18,6 +18,7 @@ package me.zhengjie.modules.quartz.service;
 import me.zhengjie.modules.quartz.domain.QuartzJob;
 import me.zhengjie.modules.quartz.domain.QuartzLog;
 import me.zhengjie.modules.quartz.service.dto.JobQueryCriteria;
+import me.zhengjie.utils.PageResult;
 import org.springframework.data.domain.Pageable;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -36,7 +37,7 @@ public interface QuartzJobService {
      * @param pageable 分页参数
      * @return /
      */
-    Object queryAll(JobQueryCriteria criteria, Pageable pageable);
+    PageResult<QuartzJob> queryAll(JobQueryCriteria criteria, Pageable pageable);
 
     /**
      * 查询全部
@@ -51,7 +52,7 @@ public interface QuartzJobService {
      * @param pageable 分页参数
      * @return /
      */
-    Object queryAllLog(JobQueryCriteria criteria, Pageable pageable);
+    PageResult<QuartzLog> queryAllLog(JobQueryCriteria criteria, Pageable pageable);
 
     /**
      * 查询全部

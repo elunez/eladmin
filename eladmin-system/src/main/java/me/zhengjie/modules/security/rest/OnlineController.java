@@ -19,7 +19,9 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import me.zhengjie.modules.security.service.OnlineUserService;
+import me.zhengjie.modules.security.service.dto.OnlineUserDto;
 import me.zhengjie.utils.EncryptUtils;
+import me.zhengjie.utils.PageResult;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,7 +45,7 @@ public class OnlineController {
     @ApiOperation("查询在线用户")
     @GetMapping
     @PreAuthorize("@el.check()")
-    public ResponseEntity<Object> queryOnlineUser(String filter, Pageable pageable){
+    public ResponseEntity<PageResult<OnlineUserDto>> queryOnlineUser(String filter, Pageable pageable){
         return new ResponseEntity<>(onlineUserService.getAll(filter, pageable),HttpStatus.OK);
     }
 

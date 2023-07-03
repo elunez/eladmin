@@ -21,7 +21,9 @@ import lombok.RequiredArgsConstructor;
 import me.zhengjie.annotation.Log;
 import me.zhengjie.modules.mnt.domain.App;
 import me.zhengjie.modules.mnt.service.AppService;
+import me.zhengjie.modules.mnt.service.dto.AppDto;
 import me.zhengjie.modules.mnt.service.dto.AppQueryCriteria;
+import me.zhengjie.utils.PageResult;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -54,7 +56,7 @@ public class AppController {
     @ApiOperation(value = "查询应用")
     @GetMapping
 	@PreAuthorize("@el.check('app:list')")
-    public ResponseEntity<Object> queryApp(AppQueryCriteria criteria, Pageable pageable){
+    public ResponseEntity<PageResult<AppDto>> queryApp(AppQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity<>(appService.queryAll(criteria,pageable),HttpStatus.OK);
     }
 

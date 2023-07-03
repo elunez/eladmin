@@ -17,6 +17,7 @@ package me.zhengjie.modules.system.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
 import lombok.RequiredArgsConstructor;
+import me.zhengjie.utils.PageResult;
 import me.zhengjie.modules.system.domain.Dict;
 import me.zhengjie.modules.system.service.dto.DictDetailDto;
 import me.zhengjie.modules.system.service.dto.DictQueryCriteria;
@@ -48,7 +49,7 @@ public class DictServiceImpl implements DictService {
     private final RedisUtils redisUtils;
 
     @Override
-    public Map<String, Object> queryAll(DictQueryCriteria dict, Pageable pageable){
+    public PageResult<DictDto> queryAll(DictQueryCriteria dict, Pageable pageable){
         Page<Dict> page = dictRepository.findAll((root, query, cb) -> QueryHelp.getPredicate(root, dict, cb), pageable);
         return PageUtil.toPage(page.map(dictMapper::toDto));
     }

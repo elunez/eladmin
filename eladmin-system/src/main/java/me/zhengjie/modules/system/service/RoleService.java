@@ -21,6 +21,7 @@ import me.zhengjie.modules.system.service.dto.RoleDto;
 import me.zhengjie.modules.system.service.dto.RoleQueryCriteria;
 import me.zhengjie.modules.system.service.dto.RoleSmallDto;
 import me.zhengjie.modules.system.service.dto.UserDto;
+import me.zhengjie.utils.PageResult;
 import org.springframework.data.domain.Pageable;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -97,7 +98,7 @@ public interface RoleService {
      * @param pageable 分页参数
      * @return /
      */
-    Object queryAll(RoleQueryCriteria criteria, Pageable pageable);
+    PageResult<RoleDto> queryAll(RoleQueryCriteria criteria, Pageable pageable);
 
     /**
      * 查询全部

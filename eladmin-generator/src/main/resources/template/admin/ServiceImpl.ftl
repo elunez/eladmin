@@ -52,6 +52,7 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import me.zhengjie.utils.PageResult;
 
 /**
 * @website https://eladmin.vip
@@ -67,7 +68,7 @@ public class ${className}ServiceImpl implements ${className}Service {
     private final ${className}Mapper ${changeClassName}Mapper;
 
     @Override
-    public Map<String,Object> queryAll(${className}QueryCriteria criteria, Pageable pageable){
+    public PageResult<${className}Dto> queryAll(${className}QueryCriteria criteria, Pageable pageable){
         Page<${className}> page = ${changeClassName}Repository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable);
         return PageUtil.toPage(page.map(${changeClassName}Mapper::toDto));
     }
@@ -87,7 +88,7 @@ public class ${className}ServiceImpl implements ${className}Service {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ${className}Dto create(${className} resources) {
+    public void create(${className} resources) {
 <#if !auto && pkColumnType = 'Long'>
         Snowflake snowflake = IdUtil.createSnowflake(1, 1);
         resources.set${pkCapitalColName}(snowflake.nextId()); 
@@ -104,7 +105,7 @@ public class ${className}ServiceImpl implements ${className}Service {
     </#if>
     </#list>
 </#if>
-        return ${changeClassName}Mapper.toDto(${changeClassName}Repository.save(resources));
+        ${changeClassName}Repository.save(resources);
     }
 
     @Override

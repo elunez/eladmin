@@ -20,8 +20,10 @@ import me.zhengjie.annotation.Log;
 import me.zhengjie.domain.LocalStorage;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.service.LocalStorageService;
+import me.zhengjie.service.dto.LocalStorageDto;
 import me.zhengjie.service.dto.LocalStorageQueryCriteria;
 import me.zhengjie.utils.FileUtil;
+import me.zhengjie.utils.PageResult;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -48,7 +50,7 @@ public class LocalStorageController {
     @GetMapping
     @ApiOperation("查询文件")
     @PreAuthorize("@el.check('storage:list')")
-    public ResponseEntity<Object> queryFile(LocalStorageQueryCriteria criteria, Pageable pageable){
+    public ResponseEntity<PageResult<LocalStorageDto>> queryFile(LocalStorageQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity<>(localStorageService.queryAll(criteria,pageable),HttpStatus.OK);
     }
 
@@ -69,7 +71,7 @@ public class LocalStorageController {
 
     @ApiOperation("上传图片")
     @PostMapping("/pictures")
-    public ResponseEntity<Object> uploadPicture(@RequestParam MultipartFile file){
+    public ResponseEntity<LocalStorage> uploadPicture(@RequestParam MultipartFile file){
         // 判断文件是否为图片
         String suffix = FileUtil.getExtensionName(file.getOriginalFilename());
         if(!FileUtil.IMAGE.equals(FileUtil.getFileType(suffix))){

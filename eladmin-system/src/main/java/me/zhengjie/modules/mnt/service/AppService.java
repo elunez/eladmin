@@ -18,6 +18,7 @@ package me.zhengjie.modules.mnt.service;
 import me.zhengjie.modules.mnt.domain.App;
 import me.zhengjie.modules.mnt.service.dto.AppDto;
 import me.zhengjie.modules.mnt.service.dto.AppQueryCriteria;
+import me.zhengjie.utils.PageResult;
 import org.springframework.data.domain.Pageable;
 
 import javax.servlet.http.HttpServletResponse;
@@ -37,7 +38,7 @@ public interface AppService {
      * @param pageable 分页参数
      * @return /
      */
-    Object queryAll(AppQueryCriteria criteria, Pageable pageable);
+    PageResult<AppDto> queryAll(AppQueryCriteria criteria, Pageable pageable);
 
     /**
      * 查询全部数据

@@ -17,6 +17,8 @@ package me.zhengjie.service;
 
 import me.zhengjie.domain.SysLog;
 import me.zhengjie.service.dto.SysLogQueryCriteria;
+import me.zhengjie.service.dto.SysLogSmallDto;
+import me.zhengjie.utils.PageResult;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Async;
@@ -52,7 +54,7 @@ public interface SysLogService {
      * @param pageable 分页参数
      * @return -
      */
-    Object queryAllByUser(SysLogQueryCriteria criteria, Pageable pageable);
+    PageResult<SysLogSmallDto> queryAllByUser(SysLogQueryCriteria criteria, Pageable pageable);
 
     /**
      * 保存日志数据

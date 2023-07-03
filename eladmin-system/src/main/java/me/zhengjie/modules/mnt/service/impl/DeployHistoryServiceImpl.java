@@ -23,10 +23,7 @@ import me.zhengjie.modules.mnt.service.DeployHistoryService;
 import me.zhengjie.modules.mnt.service.dto.DeployHistoryDto;
 import me.zhengjie.modules.mnt.service.dto.DeployHistoryQueryCriteria;
 import me.zhengjie.modules.mnt.service.mapstruct.DeployHistoryMapper;
-import me.zhengjie.utils.FileUtil;
-import me.zhengjie.utils.PageUtil;
-import me.zhengjie.utils.QueryHelp;
-import me.zhengjie.utils.ValidationUtil;
+import me.zhengjie.utils.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -47,7 +44,7 @@ public class DeployHistoryServiceImpl implements DeployHistoryService {
     private final DeployHistoryMapper deployhistoryMapper;
 
     @Override
-    public Object queryAll(DeployHistoryQueryCriteria criteria, Pageable pageable){
+    public PageResult<DeployHistoryDto> queryAll(DeployHistoryQueryCriteria criteria, Pageable pageable){
         Page<DeployHistory> page = deployhistoryRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable);
         return PageUtil.toPage(page.map(deployhistoryMapper::toDto));
     }

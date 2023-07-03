@@ -21,7 +21,9 @@ import lombok.RequiredArgsConstructor;
 import me.zhengjie.annotation.Log;
 import me.zhengjie.modules.mnt.domain.ServerDeploy;
 import me.zhengjie.modules.mnt.service.ServerDeployService;
+import me.zhengjie.modules.mnt.service.dto.ServerDeployDto;
 import me.zhengjie.modules.mnt.service.dto.ServerDeployQueryCriteria;
+import me.zhengjie.utils.PageResult;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -54,7 +56,7 @@ public class ServerDeployController {
     @ApiOperation(value = "查询服务器")
     @GetMapping
 	@PreAuthorize("@el.check('serverDeploy:list')")
-    public ResponseEntity<Object> queryServerDeploy(ServerDeployQueryCriteria criteria, Pageable pageable){
+    public ResponseEntity<PageResult<ServerDeployDto>> queryServerDeploy(ServerDeployQueryCriteria criteria, Pageable pageable){
     	return new ResponseEntity<>(serverDeployService.queryAll(criteria,pageable),HttpStatus.OK);
     }
 

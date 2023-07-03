@@ -15,12 +15,12 @@
  */
 package me.zhengjie.modules.system.service;
 
+import me.zhengjie.utils.PageResult;
 import me.zhengjie.modules.system.domain.DictDetail;
 import me.zhengjie.modules.system.service.dto.DictDetailDto;
 import me.zhengjie.modules.system.service.dto.DictDetailQueryCriteria;
 import org.springframework.data.domain.Pageable;
 import java.util.List;
-import java.util.Map;
 
 /**
 * @author Zheng Jie
@@ -52,7 +52,7 @@ public interface DictDetailService {
      * @param pageable 分页参数
      * @return /
      */
-    Map<String,Object> queryAll(DictDetailQueryCriteria criteria, Pageable pageable);
+    PageResult<DictDetailDto> queryAll(DictDetailQueryCriteria criteria, Pageable pageable);
 
     /**
      * 根据字典名称获取字典详情

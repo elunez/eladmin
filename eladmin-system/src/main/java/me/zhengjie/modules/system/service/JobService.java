@@ -15,6 +15,7 @@
  */
 package me.zhengjie.modules.system.service;
 
+import me.zhengjie.utils.PageResult;
 import me.zhengjie.modules.system.domain.Job;
 import me.zhengjie.modules.system.service.dto.JobDto;
 import me.zhengjie.modules.system.service.dto.JobQueryCriteria;
@@ -22,7 +23,6 @@ import org.springframework.data.domain.Pageable;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -63,7 +63,7 @@ public interface JobService {
      * @param pageable 分页参数
      * @return /
      */
-    Map<String,Object> queryAll(JobQueryCriteria criteria, Pageable pageable);
+    PageResult<JobDto> queryAll(JobQueryCriteria criteria, Pageable pageable);
 
     /**
      * 查询全部数据

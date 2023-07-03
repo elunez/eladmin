@@ -19,9 +19,11 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import me.zhengjie.domain.ColumnInfo;
+import me.zhengjie.domain.vo.TableInfo;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.service.GenConfigService;
 import me.zhengjie.service.GeneratorService;
+import me.zhengjie.utils.PageResult;
 import me.zhengjie.utils.PageUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -55,16 +57,16 @@ public class GeneratorController {
 
     @ApiOperation("查询数据库数据")
     @GetMapping(value = "/tables")
-    public ResponseEntity<Object> queryTables(@RequestParam(defaultValue = "") String name,
-                                    @RequestParam(defaultValue = "0")Integer page,
-                                    @RequestParam(defaultValue = "10")Integer size){
+    public ResponseEntity<PageResult<TableInfo>> queryTables(@RequestParam(defaultValue = "") String name,
+                                                             @RequestParam(defaultValue = "0")Integer page,
+                                                             @RequestParam(defaultValue = "10")Integer size){
         int[] startEnd = PageUtil.transToStartEnd(page, size);
         return new ResponseEntity<>(generatorService.getTables(name,startEnd), HttpStatus.OK);
     }
 
     @ApiOperation("查询字段数据")
     @GetMapping(value = "/columns")
-    public ResponseEntity<Object> queryColumns(@RequestParam String tableName){
+    public ResponseEntity<PageResult<ColumnInfo>> queryColumns(@RequestParam String tableName){
         List<ColumnInfo> columnInfos = generatorService.getColumns(tableName);
         return new ResponseEntity<>(PageUtil.toPage(columnInfos,columnInfos.size()), HttpStatus.OK);
     }
