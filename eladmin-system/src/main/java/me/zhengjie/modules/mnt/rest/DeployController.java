@@ -23,8 +23,10 @@ import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.modules.mnt.domain.Deploy;
 import me.zhengjie.modules.mnt.domain.DeployHistory;
 import me.zhengjie.modules.mnt.service.DeployService;
+import me.zhengjie.modules.mnt.service.dto.DeployDto;
 import me.zhengjie.modules.mnt.service.dto.DeployQueryCriteria;
 import me.zhengjie.utils.FileUtil;
+import me.zhengjie.utils.PageResult;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -65,7 +67,7 @@ public class DeployController {
     @ApiOperation(value = "查询部署")
     @GetMapping
 	@PreAuthorize("@el.check('deploy:list')")
-    public ResponseEntity<Object> queryDeployData(DeployQueryCriteria criteria, Pageable pageable){
+    public ResponseEntity<PageResult<DeployDto>> queryDeployData(DeployQueryCriteria criteria, Pageable pageable){
     	return new ResponseEntity<>(deployService.queryAll(criteria,pageable),HttpStatus.OK);
     }
 

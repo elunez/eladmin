@@ -166,6 +166,10 @@ public class QueryHelp {
                                         (Comparable) between.get(0), (Comparable) between.get(1)));
                             }
                             break;
+                        case FIND_IN_SET:
+                            list.add(cb.greaterThan(cb.function("FIND_IN_SET", Integer.class,
+                                    cb.literal(val.toString()), root.get(attributeName)), 0));
+                            break;
                         default: break;
                     }
                 }

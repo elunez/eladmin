@@ -18,6 +18,7 @@ package me.zhengjie.modules.mnt.service;
 import me.zhengjie.modules.mnt.domain.DeployHistory;
 import me.zhengjie.modules.mnt.service.dto.DeployHistoryDto;
 import me.zhengjie.modules.mnt.service.dto.DeployHistoryQueryCriteria;
+import me.zhengjie.utils.PageResult;
 import org.springframework.data.domain.Pageable;
 
 import javax.servlet.http.HttpServletResponse;
@@ -36,7 +37,7 @@ public interface DeployHistoryService {
      * @param pageable 分页参数
      * @return /
      */
-    Object queryAll(DeployHistoryQueryCriteria criteria, Pageable pageable);
+    PageResult<DeployHistoryDto> queryAll(DeployHistoryQueryCriteria criteria, Pageable pageable);
 
     /**
      * 查询全部

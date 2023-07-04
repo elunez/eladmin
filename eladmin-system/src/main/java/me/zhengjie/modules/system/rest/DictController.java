@@ -22,7 +22,10 @@ import me.zhengjie.annotation.Log;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.modules.system.domain.Dict;
 import me.zhengjie.modules.system.service.DictService;
+import me.zhengjie.modules.system.service.dto.DictDto;
 import me.zhengjie.modules.system.service.dto.DictQueryCriteria;
+import me.zhengjie.utils.PageResult;
+import me.zhengjie.utils.PageUtil;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +34,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -56,14 +60,14 @@ public class DictController {
     @ApiOperation("查询字典")
     @GetMapping(value = "/all")
     @PreAuthorize("@el.check('dict:list')")
-    public ResponseEntity<Object> queryAllDict(){
+    public ResponseEntity<List<DictDto>> queryAllDict(){
         return new ResponseEntity<>(dictService.queryAll(new DictQueryCriteria()),HttpStatus.OK);
     }
 
     @ApiOperation("查询字典")
     @GetMapping
     @PreAuthorize("@el.check('dict:list')")
-    public ResponseEntity<Object> queryDict(DictQueryCriteria resources, Pageable pageable){
+    public ResponseEntity<PageResult<DictDto>> queryDict(DictQueryCriteria resources, Pageable pageable){
         return new ResponseEntity<>(dictService.queryAll(resources,pageable),HttpStatus.OK);
     }
 

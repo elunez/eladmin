@@ -41,7 +41,7 @@ public class EmailController {
     private final EmailService emailService;
 
     @GetMapping
-    public ResponseEntity<Object> queryEmailConfig(){
+    public ResponseEntity<EmailConfig> queryEmailConfig(){
         return new ResponseEntity<>(emailService.find(),HttpStatus.OK);
     }
 

@@ -87,7 +87,7 @@ public class GenUtil {
         TemplateEngine engine = TemplateUtil.createEngine(new TemplateConfig("template", TemplateConfig.ResourceMode.CLASSPATH));
         for (String templateName : templates) {
             Map<String, Object> map = new HashMap<>(1);
-            Template template = engine.getTemplate("generator/admin/" + templateName + ".ftl");
+            Template template = engine.getTemplate("admin/" + templateName + ".ftl");
             map.put("content", template.render(genMap));
             map.put("name", templateName);
             genList.add(map);
@@ -96,7 +96,7 @@ public class GenUtil {
         templates = getFrontTemplateNames();
         for (String templateName : templates) {
             Map<String, Object> map = new HashMap<>(1);
-            Template template = engine.getTemplate("generator/front/" + templateName + ".ftl");
+            Template template = engine.getTemplate("front/" + templateName + ".ftl");
             map.put(templateName, template.render(genMap));
             map.put("content", template.render(genMap));
             map.put("name", templateName);
@@ -114,7 +114,7 @@ public class GenUtil {
         // 生成后端代码
         List<String> templates = getAdminTemplateNames();
         for (String templateName : templates) {
-            Template template = engine.getTemplate("generator/admin/" + templateName + ".ftl");
+            Template template = engine.getTemplate("admin/" + templateName + ".ftl");
             String filePath = getAdminFilePath(templateName, genConfig, genMap.get("className").toString(), tempPath + "eladmin" + File.separator);
             assert filePath != null;
             File file = new File(filePath);
@@ -128,7 +128,7 @@ public class GenUtil {
         // 生成前端代码
         templates = getFrontTemplateNames();
         for (String templateName : templates) {
-            Template template = engine.getTemplate("generator/front/" + templateName + ".ftl");
+            Template template = engine.getTemplate("front/" + templateName + ".ftl");
             String path = tempPath + "eladmin-web" + File.separator;
             String apiPath = path + "src" + File.separator + "api" + File.separator;
             String srcPath = path + "src" + File.separator + "views" + File.separator + genMap.get("changeClassName").toString() + File.separator;
@@ -151,7 +151,7 @@ public class GenUtil {
         // 生成后端代码
         List<String> templates = getAdminTemplateNames();
         for (String templateName : templates) {
-            Template template = engine.getTemplate("generator/admin/" + templateName + ".ftl");
+            Template template = engine.getTemplate("admin/" + templateName + ".ftl");
             String rootPath = System.getProperty("user.dir");
             String filePath = getAdminFilePath(templateName, genConfig, genMap.get("className").toString(), rootPath);
 
@@ -169,7 +169,7 @@ public class GenUtil {
         // 生成前端代码
         templates = getFrontTemplateNames();
         for (String templateName : templates) {
-            Template template = engine.getTemplate("generator/front/" + templateName + ".ftl");
+            Template template = engine.getTemplate("front/" + templateName + ".ftl");
             String filePath = getFrontFilePath(templateName, genConfig.getApiPath(), genConfig.getPath(), genMap.get("changeClassName").toString());
 
             assert filePath != null;

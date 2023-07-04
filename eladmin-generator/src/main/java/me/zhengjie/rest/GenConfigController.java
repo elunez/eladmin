@@ -39,7 +39,7 @@ public class GenConfigController {
 
     @ApiOperation("查询")
     @GetMapping(value = "/{tableName}")
-    public ResponseEntity<Object> queryGenConfig(@PathVariable String tableName){
+    public ResponseEntity<GenConfig> queryGenConfig(@PathVariable String tableName){
         return new ResponseEntity<>(genConfigService.find(tableName), HttpStatus.OK);
     }
 

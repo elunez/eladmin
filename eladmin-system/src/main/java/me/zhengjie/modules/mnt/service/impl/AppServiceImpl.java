@@ -23,10 +23,7 @@ import me.zhengjie.modules.mnt.service.AppService;
 import me.zhengjie.modules.mnt.service.dto.AppDto;
 import me.zhengjie.modules.mnt.service.dto.AppQueryCriteria;
 import me.zhengjie.modules.mnt.service.mapstruct.AppMapper;
-import me.zhengjie.utils.FileUtil;
-import me.zhengjie.utils.PageUtil;
-import me.zhengjie.utils.QueryHelp;
-import me.zhengjie.utils.ValidationUtil;
+import me.zhengjie.utils.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -47,7 +44,7 @@ public class AppServiceImpl implements AppService {
     private final AppMapper appMapper;
 
     @Override
-    public Object queryAll(AppQueryCriteria criteria, Pageable pageable){
+    public PageResult<AppDto> queryAll(AppQueryCriteria criteria, Pageable pageable){
         Page<App> page = appRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable);
         return PageUtil.toPage(page.map(appMapper::toDto));
     }

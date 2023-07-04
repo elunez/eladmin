@@ -18,6 +18,7 @@ package me.zhengjie.service;
 import me.zhengjie.domain.QiniuConfig;
 import me.zhengjie.domain.QiniuContent;
 import me.zhengjie.service.dto.QiniuQueryCriteria;
+import me.zhengjie.utils.PageResult;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -50,7 +51,7 @@ public interface QiNiuService {
      * @param pageable 分页参数
      * @return /
      */
-    Object queryAll(QiniuQueryCriteria criteria, Pageable pageable);
+    PageResult<QiniuContent> queryAll(QiniuQueryCriteria criteria, Pageable pageable);
 
     /**
      * 查询全部

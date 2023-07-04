@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.List;
 import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
+import me.zhengjie.utils.PageResult;
 
 /**
 * @website https://eladmin.vip
@@ -38,7 +39,7 @@ public interface ${className}Service {
     * @param pageable 分页参数
     * @return Map<String,Object>
     */
-    Map<String,Object> queryAll(${className}QueryCriteria criteria, Pageable pageable);
+    PageResult<${className}Dto> queryAll(${className}QueryCriteria criteria, Pageable pageable);
 
     /**
     * 查询所有数据不分页
@@ -57,9 +58,8 @@ public interface ${className}Service {
     /**
     * 创建
     * @param resources /
-    * @return ${className}Dto
     */
-    ${className}Dto create(${className} resources);
+    void create(${className} resources);
 
     /**
     * 编辑

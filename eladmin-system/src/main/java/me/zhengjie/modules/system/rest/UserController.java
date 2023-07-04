@@ -20,6 +20,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import me.zhengjie.annotation.Log;
+import me.zhengjie.utils.PageResult;
 import me.zhengjie.config.RsaProperties;
 import me.zhengjie.modules.system.domain.Dept;
 import me.zhengjie.modules.system.service.DataService;
@@ -77,7 +78,7 @@ public class UserController {
     @ApiOperation("查询用户")
     @GetMapping
     @PreAuthorize("@el.check('user:list')")
-    public ResponseEntity<Object> queryUser(UserQueryCriteria criteria, Pageable pageable){
+    public ResponseEntity<PageResult<UserDto>> queryUser(UserQueryCriteria criteria, Pageable pageable){
         if (!ObjectUtils.isEmpty(criteria.getDeptId())) {
             criteria.getDeptIds().add(criteria.getDeptId());
             // 先查找是否存在子节点
@@ -99,7 +100,7 @@ public class UserController {
             criteria.getDeptIds().addAll(dataScopes);
             return new ResponseEntity<>(userService.queryAll(criteria,pageable),HttpStatus.OK);
         }
-        return new ResponseEntity<>(PageUtil.toPage(null,0),HttpStatus.OK);
+        return new ResponseEntity<>(PageUtil.noData(),HttpStatus.OK);
     }
 
     @Log("新增用户")

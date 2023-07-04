@@ -25,10 +25,7 @@ import me.zhengjie.modules.mnt.service.dto.DatabaseDto;
 import me.zhengjie.modules.mnt.service.dto.DatabaseQueryCriteria;
 import me.zhengjie.modules.mnt.service.mapstruct.DatabaseMapper;
 import me.zhengjie.modules.mnt.util.SqlUtils;
-import me.zhengjie.utils.FileUtil;
-import me.zhengjie.utils.PageUtil;
-import me.zhengjie.utils.QueryHelp;
-import me.zhengjie.utils.ValidationUtil;
+import me.zhengjie.utils.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -50,7 +47,7 @@ public class DatabaseServiceImpl implements DatabaseService {
     private final DatabaseMapper databaseMapper;
 
     @Override
-    public Object queryAll(DatabaseQueryCriteria criteria, Pageable pageable){
+    public PageResult<DatabaseDto> queryAll(DatabaseQueryCriteria criteria, Pageable pageable){
         Page<Database> page = databaseRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable);
         return PageUtil.toPage(page.map(databaseMapper::toDto));
     }
