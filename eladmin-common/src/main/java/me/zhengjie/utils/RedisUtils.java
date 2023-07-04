@@ -51,7 +51,7 @@ public class RedisUtils {
      * 指定缓存失效时间
      *
      * @param key  键
-     * @param time 时间(秒)
+     * @param time 时间(秒) 注意:这里将会替换原有的时间
      */
     public boolean expire(String key, long time) {
         try {
@@ -69,7 +69,7 @@ public class RedisUtils {
      * 指定缓存失效时间
      *
      * @param key      键
-     * @param time     时间(秒)
+     * @param time     时间(秒) 注意:这里将会替换原有的时间
      * @param timeUnit 单位
      */
     public boolean expire(String key, long time, TimeUnit timeUnit) {
@@ -244,7 +244,7 @@ public class RedisUtils {
      *
      * @param key   键
      * @param value 值
-     * @param time  时间(秒) time要大于0 如果time小于等于0 将设置无限期
+     * @param time  时间(秒) time要大于0 如果time小于等于0 将设置无限期，注意:这里将会替换原有的时间
      * @return true成功 false 失败
      */
     public boolean set(String key, Object value, long time) {
@@ -266,7 +266,7 @@ public class RedisUtils {
      *
      * @param key      键
      * @param value    值
-     * @param time     时间
+     * @param time     时间，注意:这里将会替换原有的时间
      * @param timeUnit 类型
      * @return true成功 false 失败
      */
@@ -326,11 +326,11 @@ public class RedisUtils {
     }
 
     /**
-     * HashSet 并设置时间
+     * HashSet
      *
      * @param key  键
      * @param map  对应多个键值
-     * @param time 时间(秒)
+     * @param time 时间(秒) 注意:如果已存在的hash表有时间,这里将会替换原有的时间
      * @return true成功 false失败
      */
     public boolean hmset(String key, Map<String, Object> map, long time) {
@@ -484,7 +484,7 @@ public class RedisUtils {
      * 将set数据放入缓存
      *
      * @param key    键
-     * @param time   时间(秒)
+     * @param time   时间(秒) 注意:这里将会替换原有的时间
      * @param values 值 可以是多个
      * @return 成功个数
      */
@@ -605,7 +605,7 @@ public class RedisUtils {
      *
      * @param key   键
      * @param value 值
-     * @param time  时间(秒)
+     * @param time  时间(秒) 注意:这里将会替换原有的时间
      * @return
      */
     public boolean lSet(String key, Object value, long time) {
@@ -643,7 +643,7 @@ public class RedisUtils {
      *
      * @param key   键
      * @param value 值
-     * @param time  时间(秒)
+     * @param time  时间(秒) 注意:这里将会替换原有的时间
      * @return
      */
     public boolean lSet(String key, List<Object> value, long time) {
