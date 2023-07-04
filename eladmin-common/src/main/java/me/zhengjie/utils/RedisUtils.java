@@ -19,13 +19,11 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.*;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.stereotype.Component;
-
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -36,9 +34,8 @@ import java.util.concurrent.TimeUnit;
 @SuppressWarnings({"unchecked", "all"})
 public class RedisUtils {
     private static final Logger log = LoggerFactory.getLogger(RedisUtils.class);
+
     private RedisTemplate<Object, Object> redisTemplate;
-    @Value("${jwt.online-key}")
-    private String onlineKey;
 
     public RedisUtils(RedisTemplate<Object, Object> redisTemplate) {
         this.redisTemplate = redisTemplate;
@@ -193,6 +190,21 @@ public class RedisUtils {
                 log.debug("成功删除缓存：" + keySet.toString());
                 log.debug("缓存删除数量：" + count + "个");
                 log.debug("--------------------------------------------");
+            }
+        }
+    }
+
+    /**
+     * 批量模糊删除key
+     * @param pattern
+     */
+    public void scanDel(String pattern){
+        ScanOptions options = ScanOptions.scanOptions().match(pattern).build();
+        try (Cursor<byte[]> cursor = redisTemplate.executeWithStickyConnection(
+                (RedisCallback<Cursor<byte[]>>) connection -> (Cursor<byte[]>) new ConvertingCursor<>(
+                        connection.scan(options), redisTemplate.getKeySerializer()::deserialize))) {
+            while (cursor.hasNext()) {
+                redisTemplate.delete(cursor.next());
             }
         }
     }

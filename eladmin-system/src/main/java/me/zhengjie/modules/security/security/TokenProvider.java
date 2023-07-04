@@ -18,6 +18,7 @@ package me.zhengjie.modules.security.security;
 import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.crypto.digest.DigestUtil;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -119,5 +120,16 @@ public class TokenProvider implements InitializingBean {
             return requestHeader.substring(7);
         }
         return null;
+    }
+
+    /**
+     * 获取登录用户RedisKey
+     * @param token /
+     * @return key
+     */
+    public String loginKey(String token) {
+        Claims claims = getClaims(token);
+        String md5Token = DigestUtil.md5Hex(token);
+        return properties.getOnlineKey() + claims.getSubject() + "-" + md5Token;
     }
 }

@@ -39,7 +39,7 @@ public class LoginProperties {
 
     private LoginCode loginCode;
 
-    public static final String cacheKey = "USER-LOGIN-DATA";
+    public static final String cacheKey = "user-login-cache:";
 
     public boolean isSingleLogin() {
         return singleLogin;

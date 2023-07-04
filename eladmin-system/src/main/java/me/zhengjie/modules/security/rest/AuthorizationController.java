@@ -98,17 +98,18 @@ public class AuthorizationController {
         // SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = tokenProvider.createToken(authentication);
         final JwtUserDto jwtUserDto = (JwtUserDto) authentication.getPrincipal();
-        // 保存在线信息
-        onlineUserService.save(jwtUserDto, token, request);
         // 返回 token 与 用户信息
         Map<String, Object> authInfo = new HashMap<String, Object>(2) {{
             put("token", properties.getTokenStartWith() + token);
             put("user", jwtUserDto);
         }};
         if (loginProperties.isSingleLogin()) {
-            //踢掉之前已经登录的token
-            onlineUserService.checkLoginOnUser(authUser.getUsername(), token);
+            // 踢掉之前已经登录的token
+            onlineUserService.kickOutForUsername(authUser.getUsername());
         }
+        // 保存在线信息
+        onlineUserService.save(jwtUserDto, token, request);
+        // 返回登录信息
         return ResponseEntity.ok(authInfo);
     }
 
