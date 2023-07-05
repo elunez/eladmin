@@ -8,8 +8,6 @@ spring:
     check-template-location: false
   profiles:
     active: dev
-  jackson:
-    time-zone: GMT+8
   data:
     redis:
       repositories:
