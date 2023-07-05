@@ -2,14 +2,13 @@ server:
   port: 8000
   compression:
     enabled: true
+    mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json
 
 spring:
   freemarker:
     check-template-location: false
   profiles:
     active: dev
-  jackson:
-    time-zone: GMT+8
   data:
     redis:
       repositories:

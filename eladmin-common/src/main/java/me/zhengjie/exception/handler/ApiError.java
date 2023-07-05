@@ -15,9 +15,7 @@
  */
 package me.zhengjie.exception.handler;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
-import java.time.LocalDateTime;
 
 /**
  * @author Zheng Jie
@@ -27,12 +25,11 @@ import java.time.LocalDateTime;
 class ApiError {
 
     private Integer status = 400;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime timestamp;
+    private Long timestamp;
     private String message;
 
     private ApiError() {
-        timestamp = LocalDateTime.now();
+        timestamp = System.currentTimeMillis();
     }
 
     public static ApiError error(String message){
