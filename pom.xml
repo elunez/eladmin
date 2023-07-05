@@ -188,13 +188,6 @@
             <artifactId>commons-text</artifactId>
             <version>1.10.0</version>
         </dependency>
-
-        <!-- 解析客户端操作系统、浏览器信息 -->
-        <dependency>
-            <groupId>nl.basjes.parse.useragent</groupId>
-            <artifactId>yauaa</artifactId>
-            <version>6.11</version>
-        </dependency>
     </dependencies>
 
     <build>

@@ -15,11 +15,11 @@
  */
 package me.zhengjie.utils;
 
+import cn.hutool.http.useragent.UserAgent;
+import cn.hutool.http.useragent.UserAgentUtil;
 import lombok.extern.slf4j.Slf4j;
 import net.dreamlu.mica.ip2region.core.Ip2regionSearcher;
 import net.dreamlu.mica.ip2region.core.IpInfo;
-import nl.basjes.parse.useragent.UserAgent;
-import nl.basjes.parse.useragent.UserAgentAnalyzer;
 import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -42,14 +42,6 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
      * 注入bean
      */
     private final static Ip2regionSearcher IP_SEARCHER = SpringContextHolder.getBean(Ip2regionSearcher.class);
-
-
-    private static final UserAgentAnalyzer USER_AGENT_ANALYZER = UserAgentAnalyzer
-            .newBuilder()
-            .hideMatcherLoadStats()
-            .withCache(10000)
-            .withField(UserAgent.AGENT_NAME_VERSION)
-            .build();
 
     /**
      * 驼峰命名法工具
@@ -178,8 +170,8 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
     }
 
     public static String getBrowser(HttpServletRequest request) {
-        UserAgent.ImmutableUserAgent userAgent = USER_AGENT_ANALYZER.parse(request.getHeader("User-Agent"));
-        return userAgent.get(UserAgent.AGENT_NAME_VERSION).getValue();
+        UserAgent ua = UserAgentUtil.parse(request.getHeader("User-Agent"));
+        return ua.getBrowser().toString() + " " + ua.getVersion();
     }
 
     /**
