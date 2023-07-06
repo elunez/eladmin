@@ -168,6 +168,14 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @ApiOperation("重置密码")
+    @PutMapping(value = "/resetPwd")
+    public ResponseEntity<Object> resetPwd(@RequestBody Set<Long> ids) {
+        String pwd = passwordEncoder.encode("123456");
+        userService.resetPwd(ids, pwd);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     @ApiOperation("修改头像")
     @PostMapping(value = "/updateAvatar")
     public ResponseEntity<Object> updateUserAvatar(@RequestParam MultipartFile avatar){

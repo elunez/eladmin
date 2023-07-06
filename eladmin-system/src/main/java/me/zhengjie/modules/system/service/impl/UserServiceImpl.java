@@ -198,6 +198,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    public void resetPwd(Set<Long> ids, String pwd) {
+        userRepository.resetPwd(ids, pwd);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
     public Map<String, String> updateAvatar(MultipartFile multipartFile) {
         // 文件大小验证
         FileUtil.checkSize(properties.getAvatarMaxSize(), multipartFile.getSize());
