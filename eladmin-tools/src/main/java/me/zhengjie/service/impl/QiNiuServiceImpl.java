@@ -119,7 +119,7 @@ public class QiNiuServiceImpl implements QiNiuService {
                 qiniuContent.setType(qiniuConfig.getType());
                 qiniuContent.setKey(FileUtil.getFileNameNoEx(putRet.key));
                 qiniuContent.setUrl(qiniuConfig.getHost()+"/"+putRet.key);
-                qiniuContent.setSize(FileUtil.getSize(Integer.parseInt(file.getSize()+"")));
+                qiniuContent.setSize(FileUtil.getSize(Integer.parseInt(String.valueOf(file.getSize()))));
                 return qiniuContentRepository.save(qiniuContent);
             }
             return content;
@@ -190,7 +190,7 @@ public class QiNiuServiceImpl implements QiNiuService {
             for (FileInfo item : items) {
                 if(qiniuContentRepository.findByKey(FileUtil.getFileNameNoEx(item.key)) == null){
                     qiniuContent = new QiniuContent();
-                    qiniuContent.setSize(FileUtil.getSize(Integer.parseInt(item.fsize+"")));
+                    qiniuContent.setSize(FileUtil.getSize(Integer.parseInt(String.valueOf(item.fsize))));
                     qiniuContent.setSuffix(FileUtil.getExtensionName(item.key));
                     qiniuContent.setKey(FileUtil.getFileNameNoEx(item.key));
                     qiniuContent.setType(config.getType());
@@ -203,6 +203,7 @@ public class QiNiuServiceImpl implements QiNiuService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void deleteAll(Long[] ids, QiniuConfig config) {
         for (Long id : ids) {
             delete(findByContentId(id), config);

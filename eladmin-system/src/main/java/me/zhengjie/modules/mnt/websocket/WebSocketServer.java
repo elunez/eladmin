@@ -15,10 +15,9 @@
  */
 package me.zhengjie.modules.mnt.websocket;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
@@ -37,7 +36,7 @@ public class WebSocketServer {
 	/**
 	 * concurrent包的线程安全Set，用来存放每个客户端对应的MyWebSocket对象。
 	 */
-	private static CopyOnWriteArraySet<WebSocketServer> webSocketSet = new CopyOnWriteArraySet<WebSocketServer>();
+	private static final CopyOnWriteArraySet<WebSocketServer> webSocketSet = new CopyOnWriteArraySet<WebSocketServer>();
 
 	/**
 	 * 与某个客户端的连接会话，需要通过它来给客户端发送数据
@@ -55,11 +54,7 @@ public class WebSocketServer {
 	public void onOpen(Session session,@PathParam("sid") String sid) {
 		this.session = session;
 		//如果存在就先删除一个，防止重复推送消息
-		for (WebSocketServer webSocket:webSocketSet) {
-			if (webSocket.sid.equals(sid)) {
-				webSocketSet.remove(webSocket);
-			}
-		}
+		webSocketSet.removeIf(webSocket -> webSocket.sid.equals(sid));
 		webSocketSet.add(this);
 		this.sid=sid;
 	}
@@ -105,7 +100,7 @@ public class WebSocketServer {
 	 * 群发自定义消息
 	 * */
 	public static void sendInfo(SocketMsg socketMsg,@PathParam("sid") String sid) throws IOException {
-		String message = JSONObject.toJSONString(socketMsg);
+		String message = JSON.toJSONString(socketMsg);
 		log.info("推送消息到"+sid+"，推送内容:"+message);
 		for (WebSocketServer item : webSocketSet) {
 			try {
