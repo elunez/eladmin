@@ -17,8 +17,8 @@ package me.zhengjie.service.impl;
 
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.json.JSONObject;
-import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import lombok.RequiredArgsConstructor;
 import me.zhengjie.domain.SysLog;
 import me.zhengjie.repository.LogRepository;
@@ -36,7 +36,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -98,9 +97,9 @@ public class SysLogServiceImpl implements SysLogService {
         sysLog.setParams(getParameter(method, joinPoint.getArgs()));
         // 记录登录用户，隐藏密码信息
         if(signature.getName().equals("login") && StringUtils.isNotEmpty(sysLog.getParams())){
-            JSONObject obj = JSONUtil.parseObj(sysLog.getParams());
-            sysLog.setUsername(obj.getStr("username", ""));
-            sysLog.setParams(JSONUtil.toJsonStr(Dict.create().set("username", sysLog.getUsername())));
+            JSONObject obj = JSON.parseObject(sysLog.getParams());
+            sysLog.setUsername(obj.getString("username"));
+            sysLog.setParams(JSON.toJSONString(Dict.create().set("username", sysLog.getUsername())));
         }
         sysLog.setBrowser(browser);
         logRepository.save(sysLog);
@@ -133,7 +132,7 @@ public class SysLogServiceImpl implements SysLogService {
         if (argList.isEmpty()) {
             return "";
         }
-        return argList.size() == 1 ? JSONUtil.toJsonStr(argList.get(0)) : JSONUtil.toJsonStr(argList);
+        return argList.size() == 1 ? JSON.toJSONString(argList.get(0)) : JSON.toJSONString(argList);
     }
 
     @Override

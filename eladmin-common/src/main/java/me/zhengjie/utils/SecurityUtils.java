@@ -15,9 +15,9 @@
  */
 package me.zhengjie.utils;
 
-import cn.hutool.json.JSONArray;
-import cn.hutool.json.JSONObject;
-import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.utils.enums.DataScopeEnum;
@@ -68,7 +68,9 @@ public class SecurityUtils {
      */
     public static Long getCurrentUserId() {
         UserDetails userDetails = getCurrentUser();
-        return new JSONObject(new JSONObject(userDetails).get("user")).get("id", Long.class);
+        // 将 Java 对象转换为 JSONObject 对象
+        JSONObject jsonObject = (JSONObject) JSON.toJSON(userDetails);
+        return jsonObject.getJSONObject("user").getLong("id");
     }
 
     /**
@@ -77,8 +79,10 @@ public class SecurityUtils {
      */
     public static List<Long> getCurrentUserDataScope(){
         UserDetails userDetails = getCurrentUser();
-        JSONArray array = JSONUtil.parseArray(new JSONObject(userDetails).get("dataScopes"));
-        return JSONUtil.toList(array,Long.class);
+        // 将 Java 对象转换为 JSONObject 对象
+        JSONObject jsonObject = (JSONObject) JSON.toJSON(userDetails);
+        JSONArray jsonArray = jsonObject.getJSONArray("dataScopes");
+        return JSON.parseArray(jsonArray.toJSONString(), Long.class);
     }
 
     /**
