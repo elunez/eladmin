@@ -9,8 +9,9 @@
 </div>
 
 #### 项目简介
-一个基于 Spring Boot 2.1.0 、 Spring Boot Jpa、 JWT、Spring Security、Redis、Vue的前后端分离的后台管理系统
-现已发布基于 mybatis-plus 版本，项目地址：[https://github.com/elunez/eladmin-mp](https://github.com/elunez/eladmin-mp)。
+一个基于 Spring Boot 2.6.4 、 Spring Boot Jpa、 JWT、Spring Security、Redis、Vue的前后端分离的后台管理系统
+
+现已发布基于 mybatis-plus 版本，项目地址：[https://github.com/elunez/eladmin-mp](https://github.com/elunez/eladmin-mp)、[https://gitee.com/elunez/eladmin-mp](https://gitee.com/elunez/eladmin-mp)。
 
 **开发文档：**  [https://eladmin.vip](https://eladmin.vip)
 
@@ -69,9 +70,9 @@
 
 - `eladmin-logging` 为系统的日志模块，其他模块如果需要记录日志需要引入该模块
 
-- `eladmin-tools` 为第三方工具模块，包含：图床、邮件、云存储、本地存储、支付宝
+- `eladmin-tools` 为第三方工具模块，包含：邮件、七牛云存储、本地存储、支付宝
 
-- `eladmin-generator` 为系统的代码生成模块，代码生成的模板在 system 模块中
+- `eladmin-generator` 为系统的代码生成模块，支持生成前后端CRUD代码
 
 #### 详细结构
 
@@ -93,10 +94,6 @@
 ```
 
 #### 特别鸣谢
-
-- 感谢 [七牛云](https://portal.qiniu.com/signup?utm_source=kaiyuan&utm_media=ELADMIN) 提供的免费云存储与CDN加速支持
-
-- 感谢 [JetBrains](https://www.jetbrains.com/) 提供的非商业开源软件开发授权
 
 - 感谢 [PanJiaChen](https://github.com/PanJiaChen/vue-element-admin) 大佬提供的前端模板
 
