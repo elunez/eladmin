@@ -24,6 +24,7 @@ import me.zhengjie.modules.system.domain.Menu;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.modules.system.domain.vo.MenuVo;
 import me.zhengjie.modules.system.service.MenuService;
+import me.zhengjie.modules.system.service.dto.DeptDto;
 import me.zhengjie.modules.system.service.dto.MenuDto;
 import me.zhengjie.modules.system.service.dto.MenuQueryCriteria;
 import me.zhengjie.modules.system.service.mapstruct.MenuMapper;
@@ -43,7 +44,6 @@ import java.util.stream.Collectors;
  * @author Zheng Jie
  * @date 2018-12-03
  */
-
 @RestController
 @RequiredArgsConstructor
 @Api(tags = "系统：菜单管理")
@@ -104,8 +104,16 @@ public class MenuController {
         if(CollectionUtil.isNotEmpty(ids)){
             for (Long id : ids) {
                 MenuDto menuDto = menuService.findById(id);
-                menuDtos.addAll(menuService.getSuperior(menuDto, new ArrayList<>()));
+                List<MenuDto> menuDtoList = menuService.getSuperior(menuDto, new ArrayList<>());
+                for (MenuDto menu : menuDtoList) {
+                    if(menu.getId().equals(menuDto.getPid())) {
+                        menu.setSubCount(menu.getSubCount() - 1);
+                    }
+                }
+                menuDtos.addAll(menuDtoList);
             }
+            // 编辑菜单时不显示自己以及自己下级的数据，避免出现PID数据环形问题
+            menuDtos = menuDtos.stream().filter(i -> !ids.contains(i.getId())).collect(Collectors.toSet());
             return new ResponseEntity<>(menuService.buildTree(new ArrayList<>(menuDtos)),HttpStatus.OK);
         }
         return new ResponseEntity<>(menuService.getMenus(null),HttpStatus.OK);
