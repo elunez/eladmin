@@ -67,20 +67,23 @@ public class DeptController {
     @ApiOperation("查询部门:根据ID获取同级与上级数据")
     @PostMapping("/superior")
     @PreAuthorize("@el.check('user:list','dept:list')")
-    public ResponseEntity<Object> getDeptSuperior(@RequestBody List<Long> ids) {
+    public ResponseEntity<Object> getDeptSuperior(@RequestBody List<Long> ids,
+                                                  @RequestParam(defaultValue = "false") Boolean exclude) {
         Set<DeptDto> deptSet  = new LinkedHashSet<>();
         for (Long id : ids) {
             DeptDto deptDto = deptService.findById(id);
             List<DeptDto> depts = deptService.getSuperior(deptDto, new ArrayList<>());
-            for (DeptDto dept : depts) {
-                if(dept.getId().equals(deptDto.getPid())) {
-                    dept.setSubCount(dept.getSubCount() - 1);
+            if(exclude){
+                for (DeptDto dept : depts) {
+                    if(dept.getId().equals(deptDto.getPid())) {
+                        dept.setSubCount(dept.getSubCount() - 1);
+                    }
                 }
+                // 编辑部门时不显示自己以及自己下级的数据，避免出现PID数据环形问题
+                depts = depts.stream().filter(i -> !ids.contains(i.getId())).collect(Collectors.toList());
             }
             deptSet.addAll(depts);
         }
-        // 编辑部门时不显示自己以及自己下级的数据，避免出现PID数据环形问题
-        deptSet = deptSet.stream().filter(i -> !ids.contains(i.getId())).collect(Collectors.toSet());
         return new ResponseEntity<>(deptService.buildTree(new ArrayList<>(deptSet)),HttpStatus.OK);
     }
 
