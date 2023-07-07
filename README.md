@@ -27,11 +27,11 @@
 |  码云   |  https://gitee.com/elunez/eladmin   |  https://gitee.com/elunez/eladmin-web   |
 
 #### VPS推荐
-🎉 使用优惠码: `BWHNCXNVXV`，可获得 6.81% 的折扣， [查看更多介绍](https://eladmin.vip/pages/050101/)
-
 <a href="https://bwh81.net/aff.php?aff=70876" target="_blank">
-<img src="https://eladmin.vip/images/banner/side.jpeg" alt="明道云零代码构建平台" style="width: 400px;border-radius: 2px;">
+<img src="https://eladmin.vip/images/banner/side.jpeg" alt="明道云零代码构建平台" style="width: 435px;border-radius: 2px;">
 </a>
+
+使用优惠码: `BWHNCXNVXV`，可获得 6.81% 的折扣， [查看介绍](https://eladmin.vip/pages/050101/)
 
 #### 主要特性
 - 使用最新技术栈，社区资源丰富。
