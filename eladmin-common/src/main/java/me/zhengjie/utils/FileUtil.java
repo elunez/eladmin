@@ -328,6 +328,16 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
      */
     public static void downloadFile(HttpServletRequest request, HttpServletResponse response, File file, boolean deleteOnExit) {
         response.setCharacterEncoding(request.getCharacterEncoding());
+        downloadFile(response, file, deleteOnExit);
+    }
+
+    /**
+     * 下载文件
+     *
+     * @param response /
+     * @param file     /
+     */
+    public static void downloadFile(HttpServletResponse response, File file, boolean deleteOnExit) {
         response.setContentType("application/octet-stream");
         FileInputStream fis = null;
         try {
