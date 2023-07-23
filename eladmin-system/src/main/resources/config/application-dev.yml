@@ -114,3 +114,38 @@ file:
   # 文件大小 /M
   maxSize: 100
   avatarMaxSize: 5
+  
+management:
+  # 可以指定暴露哪些actuator服务，'*'为全部，注意加上引号，被注释的写法表示只允许health，info, metrics, shutdown
+  endpoints:
+    web:
+      exposure:
+        include: health,info, metrics, shutdown
+        # include: '*'  # all
+    # default: http://localhost:8000/actuator/*
+    # base-path: http://localhost:8000/${base-path}/*
+    # base-path: /check (web.base-path)
+  endpoint:
+    # 通过/actuator/shutdown停止服务
+    shutdown:
+      enabled: true
+    # 显示health的详细内容
+    health:
+      show-details: always
+  info: # 显示任意的应用信息，默认关闭，如果是更低一些的版本默认是开启的
+    env:
+      enabled: true
+# 自定义/actuator/info中的各种内容，可以自定义，也可以取默认的一些系统/服务环境变量
+info:
+  app:
+    encoding: "@project.build.sourceEncoding@"
+    java:
+      source: "@java.version@"
+      target: "@java.version@"
+  build:
+    artifact: @project.artifactId@
+    name: @project.name@
+    description: @project.description@
+    pomVersion: @project.version@
+    # 甚至可以自定义test
+    test: 'I love Spring Boot'
