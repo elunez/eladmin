@@ -86,6 +86,8 @@ public class EmailServiceImpl implements EmailService {
         account.setSslEnable(true);
         // 使用STARTTLS安全连接
         account.setStarttlsEnable(true);
+        // 解决jdk8之后默认禁用部分tls协议，导致邮件发送失败的问题
+        account.setSslProtocols("TLSv1 TLSv1.1 TLSv1.2");
         String content = emailVo.getContent();
         // 发送
         try {
