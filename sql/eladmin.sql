@@ -658,7 +658,7 @@ CREATE TABLE `sys_user` (
   `avatar_path` varchar(255) DEFAULT NULL COMMENT '头像真实路径',
   `password` varchar(255) DEFAULT NULL COMMENT '密码',
   `is_admin` bit(1) DEFAULT b'0' COMMENT '是否为admin账号',
-  `enabled` bigint(20) DEFAULT NULL COMMENT '状态：1启用、0禁用',
+  `enabled`  bit(1) DEFAULT NULL COMMENT '状态：1启用、0禁用',
   `create_by` varchar(255) DEFAULT NULL COMMENT '创建者',
   `update_by` varchar(255) DEFAULT NULL COMMENT '更新者',
   `pwd_reset_time` datetime DEFAULT NULL COMMENT '修改密码的时间',
