@@ -120,7 +120,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: health,info, metrics, shutdown
+        include: health,info, metrics, shutdown, prometheus
         # include: '*'  # all
     # default: http://localhost:8000/actuator/*
     # base-path: http://localhost:8000/${base-path}/*

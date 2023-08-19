@@ -19,6 +19,7 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 
+import me.zhengjie.modules.security.security.PromethuseResponseFilter;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import org.springframework.boot.actuate.autoconfigure.endpoint.web.CorsEndpointProperties;
@@ -33,6 +34,7 @@ import org.springframework.boot.actuate.endpoint.web.WebEndpointsSupplier;
 import org.springframework.boot.actuate.endpoint.web.annotation.ControllerEndpointsSupplier;
 import org.springframework.boot.actuate.endpoint.web.annotation.ServletEndpointsSupplier;
 import org.springframework.boot.actuate.endpoint.web.servlet.WebMvcEndpointHandlerMapping;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
@@ -96,6 +98,11 @@ public class ConfigurerAdapter implements WebMvcConfigurer {
         FastJsonHttpMessageConverter converter = new FastJsonHttpMessageConverter();
         List<MediaType> supportMediaTypeList = new ArrayList<>();
         supportMediaTypeList.add(MediaType.APPLICATION_JSON);
+        supportMediaTypeList.add(MediaType.TEXT_PLAIN);
+
+        // Promethuse sends request with header 'Accept: application/openmetrics-text; version=1.0.0; charset=utf-8'
+        MediaType openMetrics = MediaType.parseMediaType("application/openmetrics-text;version=1.0.0;charset=utf-8"); 
+        supportMediaTypeList.add(openMetrics);
         FastJsonConfig config = new FastJsonConfig();
         config.setDateFormat("yyyy-MM-dd HH:mm:ss");
         config.setSerializerFeatures(SerializerFeature.DisableCircularReferenceDetect);
@@ -120,9 +127,7 @@ public class ConfigurerAdapter implements WebMvcConfigurer {
     */
     @Bean
     public WebMvcEndpointHandlerMapping webEndpointServletHandlerMapping(WebEndpointsSupplier webEndpointsSupplier, ServletEndpointsSupplier servletEndpointsSupplier,
-    ControllerEndpointsSupplier controllerEndpointsSupplier, EndpointMediaTypes endpointMediaTypes,
-    CorsEndpointProperties corsProperties, WebEndpointProperties webEndpointProperties,
-    Environment environment) {
+    ControllerEndpointsSupplier controllerEndpointsSupplier, EndpointMediaTypes endpointMediaTypes, CorsEndpointProperties corsProperties, WebEndpointProperties webEndpointProperties, Environment environment) {
         List<ExposableEndpoint<?>> allEndpoints = new ArrayList<>();
         Collection<ExposableWebEndpoint> webEndpoints = webEndpointsSupplier.getEndpoints();
         allEndpoints.addAll(webEndpoints);
@@ -149,4 +154,22 @@ public class ConfigurerAdapter implements WebMvcConfigurer {
     return webEndpointProperties.getDiscovery().isEnabled() && (StringUtils.hasText(basePath)
       || ManagementPortType.get(environment).equals(ManagementPortType.DIFFERENT));
     }
+
+
+    /**
+     * 配置过滤器
+     * 
+     * @return
+     */
+    @Bean
+    public FilterRegistrationBean someFilterRegistration()
+    {
+        FilterRegistrationBean registration = new FilterRegistrationBean();
+        registration.setFilter(new PromethuseResponseFilter());// 配置一个返回值过滤器
+        registration.addUrlPatterns("/actuator/prometheus");
+        registration.addInitParameter("paramName", "paramValue");
+        registration.setName("responseFilter");
+        return registration;
+    }
+
 }
