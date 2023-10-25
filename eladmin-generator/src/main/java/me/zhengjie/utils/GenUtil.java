@@ -64,6 +64,7 @@ public class GenUtil {
         templateNames.add("Service");
         templateNames.add("ServiceImpl");
         templateNames.add("Repository");
+        templateNames.add("Sql");
         return templateNames;
     }
 
@@ -384,6 +385,10 @@ public class GenUtil {
 
         if ("Repository".equals(templateName)) {
             return packagePath + "repository" + File.separator + className + "Repository.java";
+        }
+
+        if ("Sql".equals(templateName)) {
+            return packagePath + "sql" + File.separator + className + ".sql";
         }
 
         return null;
