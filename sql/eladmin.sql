@@ -35,6 +35,7 @@ CREATE TABLE `code_column_config` (
   `not_null` bit(1) DEFAULT NULL,
   `query_type` varchar(255) DEFAULT NULL,
   `remark` varchar(255) DEFAULT NULL,
+  `date_annotation` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`column_id`) USING BTREE,
   KEY `idx_table_name` (`table_name`)
 ) ENGINE=InnoDB AUTO_INCREMENT=191 ROW_FORMAT=COMPACT COMMENT='代码生成字段信息存储';
@@ -54,7 +55,6 @@ CREATE TABLE `code_gen_config` (
   `api_path` varchar(255) DEFAULT NULL COMMENT '前端Api文件路径',
   `prefix` varchar(255) DEFAULT NULL COMMENT '表前缀',
   `api_alias` varchar(255) DEFAULT NULL COMMENT '接口名称',
-  `date_annotation` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`config_id`) USING BTREE,
   KEY `idx_table_name` (`table_name`(100))
 ) ENGINE=InnoDB AUTO_INCREMENT=7 ROW_FORMAT=COMPACT COMMENT='代码生成器配置';
@@ -658,7 +658,7 @@ CREATE TABLE `sys_user` (
   `avatar_path` varchar(255) DEFAULT NULL COMMENT '头像真实路径',
   `password` varchar(255) DEFAULT NULL COMMENT '密码',
   `is_admin` bit(1) DEFAULT b'0' COMMENT '是否为admin账号',
-  `enabled` bigint(20) DEFAULT NULL COMMENT '状态：1启用、0禁用',
+  `enabled`  bit(1) DEFAULT NULL COMMENT '状态：1启用、0禁用',
   `create_by` varchar(255) DEFAULT NULL COMMENT '创建者',
   `update_by` varchar(255) DEFAULT NULL COMMENT '更新者',
   `pwd_reset_time` datetime DEFAULT NULL COMMENT '修改密码的时间',

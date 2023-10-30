@@ -78,7 +78,7 @@ public class SwaggerConfig {
         return new ApiInfoBuilder()
                 .description("一个简单且易上手的 Spring boot 后台管理框架")
                 .title("ELADMIN 接口文档")
-                .version("2.6")
+                .version("2.7")
                 .build();
     }
 
@@ -93,8 +93,6 @@ public class SwaggerConfig {
     private List<SecurityContext> securityContexts() {
         //设置需要登录认证的路径
         List<SecurityContext> securityContexts = new ArrayList<>();
-        // ^(?!auth).*$ 表示所有包含auth的接口不需要使用securitySchemes即不需要带token
-        // ^标识开始  ()里是一子表达式  ?!/auth表示匹配不是/auth的位置，匹配上则添加请求头，注意路径已/开头  .表示任意字符  *表示前面的字符匹配多次 $标识结束
         securityContexts.add(getContextByPath());
         return securityContexts;
     }
@@ -102,7 +100,8 @@ public class SwaggerConfig {
     private SecurityContext getContextByPath() {
         return SecurityContext.builder()
                 .securityReferences(defaultAuth())
-                .operationSelector(o->o.requestMappingPattern().matches("^(?!/auth).*$"))
+                // 表示 /auth/code、/auth/login 接口不需要使用securitySchemes即不需要带token
+                .operationSelector(o->o.requestMappingPattern().matches("^(?!/auth/code|/auth/login).*$"))
                 .build();
     }
 
