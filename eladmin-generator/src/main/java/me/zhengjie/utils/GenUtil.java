@@ -64,6 +64,7 @@ public class GenUtil {
         templateNames.add("Service");
         templateNames.add("ServiceImpl");
         templateNames.add("Repository");
+        templateNames.add("Sql");
         return templateNames;
     }
 
@@ -341,6 +342,8 @@ public class GenUtil {
         genMap.put("betweens", betweens);
         // 保存非空字段信息
         genMap.put("isNotNullColumns", isNotNullColumns);
+        // 添加前端组件路径
+        genMap.put("apiPath", genConfig.getApiPath());
         return genMap;
     }
 
