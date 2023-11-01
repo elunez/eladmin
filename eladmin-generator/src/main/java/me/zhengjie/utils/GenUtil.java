@@ -389,6 +389,10 @@ public class GenUtil {
             return packagePath + "repository" + File.separator + className + "Repository.java";
         }
 
+        if ("Sql".equals(templateName)) {
+            return packagePath + "sql" + File.separator + className + ".sql";
+        }
+
         return null;
     }
 
