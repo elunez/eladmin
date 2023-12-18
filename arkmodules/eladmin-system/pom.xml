@@ -6,6 +6,7 @@
         <artifactId>eladmin</artifactId>
         <groupId>me.zhengjie</groupId>
         <version>2.7</version>
+        <relativePath>../../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -16,6 +17,7 @@
         <jjwt.version>0.11.5</jjwt.version>
         <!-- oshi监控需要指定jna版本, 问题详见 https://github.com/oshi/oshi/issues/1040 -->
         <jna.version>5.8.0</jna.version>
+        <sofa.ark.version>2.2.5</sofa.ark.version>
     </properties>
 
     <dependencies>
@@ -92,15 +94,25 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-            <!-- 跳过单元测试 -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
+                <groupId>com.alipay.sofa</groupId>
+                <artifactId>sofa-ark-maven-plugin</artifactId>
+                <version>${sofa.ark.version}</version>
+                <executions>
+                    <execution>
+                        <id>default-cli</id>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
                 <configuration>
-                    <skipTests>true</skipTests>
+                    <skipArkExecutable>true</skipArkExecutable>
+                    <outputDirectory>./target</outputDirectory>
+                    <bizName>eladmin-system</bizName>
+                    <!-- 单host下需更换 web context path -->
+                    <webContextPath>eladmin-system</webContextPath>
+                    <declaredMode>true</declaredMode>
+                    <packExcludesConfig>rules.txt</packExcludesConfig>
                 </configuration>
             </plugin>
         </plugins>
