@@ -1,3 +1,4 @@
+
 server:
   port: 8000
   compression:
@@ -33,6 +34,8 @@ spring:
     password: ${REDIS_PWD:}
     #连接超时时间
     timeout: 5000
+  application:
+    name: eladmin-system
 
 task:
   pool:

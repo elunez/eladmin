@@ -17,7 +17,6 @@
         <jjwt.version>0.11.5</jjwt.version>
         <!-- oshi监控需要指定jna版本, 问题详见 https://github.com/oshi/oshi/issues/1040 -->
         <jna.version>5.8.0</jna.version>
-        <sofa.ark.version>2.2.5</sofa.ark.version>
     </properties>
 
     <dependencies>
@@ -87,6 +86,12 @@
             <groupId>com.github.oshi</groupId>
             <artifactId>oshi-core</artifactId>
             <version>6.1.4</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alipay.sofa.serverless</groupId>
+            <artifactId>sofa-serverless-app-starter</artifactId>
+            <version>${sofa.serverless.version}</version>
         </dependency>
     </dependencies>
 

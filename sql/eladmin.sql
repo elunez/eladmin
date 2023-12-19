@@ -14,6 +14,10 @@
  Date: 05/09/2020 10:49:19
 */
 
+CREATE DATABASE IF NOT EXISTS eladmin;
+
+USE eladmin;
+
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
