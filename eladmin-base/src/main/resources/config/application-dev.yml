@@ -48,6 +48,9 @@ spring:
         wall:
           config:
             multi-statement-allow: true
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
 
 # 登录相关配置
 login:

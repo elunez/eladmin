@@ -24,22 +24,17 @@
             <artifactId>sofa-serverless-base-starter</artifactId>
             <version>${sofa.serverless.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.alipay.sofa</groupId>
-            <artifactId>netty-ark-plugin</artifactId>
-            <version>${sofa.ark.version}</version>
-        </dependency>
 <!--        <dependency>-->
 <!--            <groupId>com.alipay.sofa</groupId>-->
-<!--            <artifactId>web-ark-plugin</artifactId>-->
+<!--            <artifactId>netty-ark-plugin</artifactId>-->
 <!--            <version>${sofa.ark.version}</version>-->
 <!--        </dependency>-->
-
         <dependency>
             <groupId>com.alipay.sofa</groupId>
-            <artifactId>netty-ark-plugin</artifactId>
+            <artifactId>web-ark-plugin</artifactId>
             <version>${sofa.ark.version}</version>
         </dependency>
+
         <!-- 代码生成模块 -->
         <dependency>
             <groupId>me.zhengjie</groupId>
