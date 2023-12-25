@@ -128,3 +128,6 @@ excludeGroupIds=io.jsonwebtoken*
 excludeGroupIds=net.java.dev.jna*
 excludeGroupIds=com.jcraft*
 excludeGroupIds=me.zhengjie*
+excludeGroupIds=org.jetbrains.kotlin*
+excludeGroupIds=com.mysql*
+excludeGroupIds=org.jetbrains*
