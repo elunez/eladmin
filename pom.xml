@@ -15,9 +15,9 @@
         <module>eladmin-logging</module>
         <module>eladmin-tools</module>
         <module>eladmin-generator</module>
-        <module>arkmodules/eladmin-biz-system</module>
-        <module>arkmodules/eladmin-biz-mng</module>
-        <module>arkmodules/eladmin-biz-quartz</module>
+        <module>modules/eladmin-biz-system</module>
+        <module>modules/eladmin-biz-mng</module>
+        <module>modules/eladmin-biz-quartz</module>
     </modules>
 
     <name>ELADMIN 后台管理</name>
