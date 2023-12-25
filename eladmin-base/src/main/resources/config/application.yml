@@ -5,6 +5,8 @@ server:
     mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json
 
 spring:
+  main:
+    allow-bean-definition-overriding: true
   freemarker:
     check-template-location: false
   profiles:

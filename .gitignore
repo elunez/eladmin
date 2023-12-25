@@ -6,4 +6,4 @@
 /.gradle/
 /application.pid
 .DS_Store
-modules/eladmin-system/target/*
+modules/*/target/*
