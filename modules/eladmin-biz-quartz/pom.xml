@@ -113,9 +113,9 @@
                 <configuration>
                     <skipArkExecutable>true</skipArkExecutable>
                     <outputDirectory>./target</outputDirectory>
-                    <bizName>eladmin-biz-quartz</bizName>
+                    <bizName>quartz</bizName>
                     <!-- 单host下需更换 web context path -->
-                    <webContextPath>eladmin-biz-quartz</webContextPath>
+                    <webContextPath>quartz</webContextPath>
                     <declaredMode>true</declaredMode>
                     <packExcludesConfig>rules.txt</packExcludesConfig>
                 </configuration>

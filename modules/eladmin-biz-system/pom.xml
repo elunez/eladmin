@@ -113,9 +113,9 @@
                 <configuration>
                     <skipArkExecutable>true</skipArkExecutable>
                     <outputDirectory>./target</outputDirectory>
-                    <bizName>eladmin-biz-system</bizName>
+                    <bizName>system</bizName>
                     <!-- 单host下需更换 web context path -->
-                    <webContextPath>eladmin-biz-system</webContextPath>
+                    <webContextPath>system</webContextPath>
                     <declaredMode>true</declaredMode>
                     <packExcludesConfig>rules.txt</packExcludesConfig>
                 </configuration>
