@@ -16,6 +16,7 @@
 package me.zhengjie.utils;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.context.ApplicationContext;
@@ -24,7 +25,10 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author Jie
@@ -33,9 +37,9 @@ import java.util.List;
 @Slf4j
 public class SpringContextHolder implements ApplicationContextAware, DisposableBean {
 
-    private static ApplicationContext applicationContext = null;
-    private static final List<CallBack> CALL_BACKS = new ArrayList<>();
-    private static boolean addCallback = true;
+    private static       Map<ClassLoader, ApplicationContext> applicationContextMap = new ConcurrentHashMap<>();
+    private static final Map<ClassLoader, List<CallBack>>                  CALL_BACKS_MAP         = new HashMap<>();
+    private static       Map<ClassLoader, Boolean>                         addCallbackMap        = new HashMap<>();
 
     /**
      * 针对 某些初始化方法，在SpringContextHolder 未初始化时 提交回调方法。
@@ -44,8 +48,12 @@ public class SpringContextHolder implements ApplicationContextAware, DisposableB
      * @param callBack 回调函数
      */
     public synchronized static void addCallBacks(CallBack callBack) {
-        if (addCallback) {
-            SpringContextHolder.CALL_BACKS.add(callBack);
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+
+        Boolean addCallback = addCallbackMap.get(classLoader);
+        if (addCallback == null || BooleanUtils.isNotTrue(addCallback)) {
+            CALL_BACKS_MAP.putIfAbsent(classLoader, new ArrayList<>());
+            CALL_BACKS_MAP.get(classLoader).add(callBack);
         } else {
             log.warn("CallBack：{} 已无法添加！立即执行", callBack.getCallBackName());
             callBack.executor();
@@ -58,7 +66,8 @@ public class SpringContextHolder implements ApplicationContextAware, DisposableB
     @SuppressWarnings("unchecked")
     public static <T> T getBean(String name) {
         assertContextInjected();
-        return (T) applicationContext.getBean(name);
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        return (T) applicationContextMap.get(classLoader).getBean(name);
     }
 
     /**
@@ -66,7 +75,8 @@ public class SpringContextHolder implements ApplicationContextAware, DisposableB
      */
     public static <T> T getBean(Class<T> requiredType) {
         assertContextInjected();
-        return applicationContext.getBean(requiredType);
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        return (T) applicationContextMap.get(classLoader).getBean(requiredType);
     }
 
     /**
@@ -110,6 +120,8 @@ public class SpringContextHolder implements ApplicationContextAware, DisposableB
      * 检查ApplicationContext不为空.
      */
     private static void assertContextInjected() {
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        ApplicationContext applicationContext = applicationContextMap.get(classLoader);
         if (applicationContext == null) {
             throw new IllegalStateException("applicaitonContext属性未注入, 请在applicationContext" +
                     ".xml中定义SpringContextHolder或在SpringBoot启动类中注册SpringContextHolder.");
@@ -120,9 +132,10 @@ public class SpringContextHolder implements ApplicationContextAware, DisposableB
      * 清除SpringContextHolder中的ApplicationContext为Null.
      */
     private static void clearHolder() {
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         log.debug("清除SpringContextHolder中的ApplicationContext:"
-                + applicationContext);
-        applicationContext = null;
+                + applicationContextMap.get(classLoader));
+        applicationContextMap.remove(classLoader);
     }
 
     @Override
@@ -132,17 +145,23 @@ public class SpringContextHolder implements ApplicationContextAware, DisposableB
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        if (SpringContextHolder.applicationContext != null) {
-            log.warn("SpringContextHolder中的ApplicationContext被覆盖, 原有ApplicationContext为:" + SpringContextHolder.applicationContext);
-        }
-        SpringContextHolder.applicationContext = applicationContext;
-        if (addCallback) {
-            for (CallBack callBack : SpringContextHolder.CALL_BACKS) {
-                callBack.executor();
+//        if (SpringContextHolder.applicationContext != null) {
+//            log.warn("SpringContextHolder中的ApplicationContext被覆盖, 原有ApplicationContext为:" + SpringContextHolder.applicationContext);
+//        }
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        applicationContextMap.putIfAbsent(classLoader, applicationContext);
+
+        Boolean addCallback = addCallbackMap.get(classLoader);
+        if (BooleanUtils.isNotTrue(addCallback)) {
+            List<CallBack> callBacks = CALL_BACKS_MAP.get(classLoader);
+            if (callBacks != null) {
+                for (CallBack callBack : callBacks) {
+                    callBack.executor();
+                }
+                callBacks.clear();
             }
-            CALL_BACKS.clear();
         }
-        SpringContextHolder.addCallback = false;
+        addCallbackMap.put(classLoader, true);
     }
 
     /**
@@ -150,6 +169,7 @@ public class SpringContextHolder implements ApplicationContextAware, DisposableB
      * @return /
      */
     public static List<String> getAllServiceBeanName() {
+        ApplicationContext applicationContext = applicationContextMap.get(Thread.currentThread().getContextClassLoader());
         return new ArrayList<>(Arrays.asList(applicationContext
                 .getBeanNamesForAnnotation(Service.class)));
     }
