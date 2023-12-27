@@ -5,3 +5,5 @@
 */*.iml
 /.gradle/
 /application.pid
+.DS_Store
+modules/*/target/*
