@@ -8,6 +8,7 @@
     <modelVersion>4.0.0</modelVersion>
     <properties>
         <hutool.version>5.8.35</hutool.version>
+        <commons-net.version>3.7</commons-net.version>
     </properties>
 
     <artifactId>eladmin-common</artifactId>
@@ -19,6 +20,12 @@
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
             <version>${hutool.version}</version>
+        </dependency>
+        <!-- 用于FTP -->
+        <dependency>
+            <groupId>commons-net</groupId>
+            <artifactId>commons-net</artifactId>
+            <version>${commons-net.version}</version> <!-- 版本号可能会有更新 -->
         </dependency>
     </dependencies>
 </project>
