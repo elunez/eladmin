@@ -1,6 +1,6 @@
 package me.zhengjie.config;
 
-import com.alipay.sofa.serverless.common.api.SpringBeanFinder;
+import com.alipay.sofa.koupleless.common.api.SpringBeanFinder;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

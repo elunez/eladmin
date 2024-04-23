@@ -11,6 +11,7 @@
 
     <artifactId>eladmin-base</artifactId>
     <name>核心模块</name>
+    <packaging>war</packaging>
 
     <properties>
         <jjwt.version>0.11.5</jjwt.version>
@@ -20,9 +21,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.alipay.sofa.serverless</groupId>
-            <artifactId>sofa-serverless-base-starter</artifactId>
-            <version>${sofa.serverless.version}</version>
+            <groupId>com.alipay.sofa.koupleless</groupId>
+            <artifactId>koupleless-base-starter</artifactId>
+            <version>${koupleless.runtime.version}</version>
         </dependency>
 <!--        <dependency>-->
 <!--            <groupId>com.alipay.sofa</groupId>-->
@@ -101,6 +102,12 @@
             <groupId>com.github.oshi</groupId>
             <artifactId>oshi-core</artifactId>
             <version>6.1.4</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-core</artifactId>
+            <version>9.0.85</version>
         </dependency>
     </dependencies>
 

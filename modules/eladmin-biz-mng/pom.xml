@@ -89,9 +89,9 @@
         </dependency>
 
         <dependency>
-            <groupId>com.alipay.sofa.serverless</groupId>
-            <artifactId>sofa-serverless-app-starter</artifactId>
-            <version>${sofa.serverless.version}</version>
+            <groupId>com.alipay.sofa.koupleless</groupId>
+            <artifactId>koupleless-app-starter</artifactId>
+            <version>${koupleless.runtime.version}</version>
         </dependency>
     </dependencies>
 

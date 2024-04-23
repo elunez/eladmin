@@ -41,8 +41,8 @@
         <druid.version>1.2.8</druid.version>
         <commons-pool2.version>2.11.1</commons-pool2.version>
         <mapstruct.version>1.4.2.Final</mapstruct.version>
-        <sofa.ark.version>2.2.5</sofa.ark.version>
-        <sofa.serverless.version>0.5.5</sofa.serverless.version>
+        <sofa.ark.version>2.2.9</sofa.ark.version>
+        <koupleless.runtime.version>1.2.0-SNAPSHOT</koupleless.runtime.version>
     </properties>
 
     <dependencies>
@@ -207,6 +207,33 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>default</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <repositories>
+                <repository>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                    <id>ark-snapshot</id>
+                    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+                </repository>
+            </repositories>
+            <pluginRepositories>
+                <pluginRepository>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                    <id>ark-snapshot</id>
+                    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+                </pluginRepository>
+            </pluginRepositories>
+        </profile>
+    </profiles>
 
     <repositories>
         <repository>

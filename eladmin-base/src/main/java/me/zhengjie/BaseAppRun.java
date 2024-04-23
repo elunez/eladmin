@@ -32,7 +32,9 @@ import org.springframework.boot.actuate.endpoint.web.annotation.ControllerEndpoi
 import org.springframework.boot.actuate.endpoint.web.annotation.ServletEndpointsSupplier;
 import org.springframework.boot.actuate.endpoint.web.servlet.WebMvcEndpointHandlerMapping;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.ApplicationPidFileWriter;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
@@ -58,7 +60,7 @@ import java.util.List;
 @SpringBootApplication
 @EnableTransactionManagement
 @EnableJpaAuditing(auditorAwareRef = "auditorAware")
-public class BaseAppRun {
+public class BaseAppRun extends SpringBootServletInitializer {
 
     public static void main(String[] args) {
         SpringApplication springApplication = new SpringApplication(BaseAppRun.class);
@@ -112,5 +114,10 @@ public class BaseAppRun {
         return webEndpointProperties.getDiscovery().isEnabled() &&
                 (StringUtils.hasText(basePath) ||
                         ManagementPortType.get(environment).equals(ManagementPortType.DIFFERENT));
+    }
+
+    @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
+        return builder.sources(BaseAppRun.class);
     }
 }
