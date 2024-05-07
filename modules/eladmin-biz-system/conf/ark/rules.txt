@@ -131,3 +131,5 @@ excludeGroupIds=me.zhengjie*
 excludeGroupIds=org.jetbrains.kotlin*
 excludeGroupIds=com.mysql*
 excludeGroupIds=org.jetbrains*
+excludeGroupIds=com.caucho*
+excludeGroupIds=org.javassist*
