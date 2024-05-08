@@ -41,8 +41,8 @@
         <druid.version>1.2.8</druid.version>
         <commons-pool2.version>2.11.1</commons-pool2.version>
         <mapstruct.version>1.4.2.Final</mapstruct.version>
-        <sofa.ark.version>2.2.9</sofa.ark.version>
-        <koupleless.runtime.version>1.2.0-SNAPSHOT</koupleless.runtime.version>
+        <sofa.ark.version>2.2.10</sofa.ark.version>
+        <koupleless.runtime.version>1.2.0</koupleless.runtime.version>
     </properties>
 
     <dependencies>
