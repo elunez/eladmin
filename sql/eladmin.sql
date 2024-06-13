@@ -615,7 +615,6 @@ INSERT INTO `sys_roles_menus` VALUES (112, 1);
 INSERT INTO `sys_roles_menus` VALUES (113, 1);
 INSERT INTO `sys_roles_menus` VALUES (114, 1);
 INSERT INTO `sys_roles_menus` VALUES (116, 1);
-INSERT INTO `sys_roles_menus` VALUES (120, 1);
 INSERT INTO `sys_roles_menus` VALUES (1, 2);
 INSERT INTO `sys_roles_menus` VALUES (2, 2);
 INSERT INTO `sys_roles_menus` VALUES (6, 2);
