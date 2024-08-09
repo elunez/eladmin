@@ -8,6 +8,7 @@ spring:
   freemarker:
     check-template-location: false
   profiles:
+    # 激活的环境，如果需要 quartz 分布式支持，需要修改 active: dev,quartz
     active: dev
   data:
     redis:

@@ -45,6 +45,12 @@
 			<artifactId>spring-boot-starter-websocket</artifactId>
 		</dependency>
 
+        <!-- quartz -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-quartz</artifactId>
+        </dependency>
+
         <!-- jwt -->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
@@ -60,12 +66,6 @@
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-jackson</artifactId>
             <version>${jjwt.version}</version>
-        </dependency>
-
-        <!-- quartz -->
-        <dependency>
-            <groupId>org.quartz-scheduler</groupId>
-            <artifactId>quartz</artifactId>
         </dependency>
 
         <!-- linux的管理 -->
