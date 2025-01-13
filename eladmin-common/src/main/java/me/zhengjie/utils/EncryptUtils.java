@@ -27,20 +27,15 @@ import java.nio.charset.StandardCharsets;
  * @author Zheng Jie
  * @date 2018-11-23
  */
-
 public class EncryptUtils {
 
     private static final String STR_PARAM = "Passw0rd";
-
-    private static Cipher cipher;
-
     private static final IvParameterSpec IV = new IvParameterSpec(STR_PARAM.getBytes(StandardCharsets.UTF_8));
 
     private static DESKeySpec getDesKeySpec(String source) throws Exception {
-        if (source == null || source.length() == 0){
+        if (source == null || source.isEmpty()) {
             return null;
         }
-        cipher = Cipher.getInstance("DES/CBC/PKCS5Padding");
         String strKey = "Passw0rd";
         return new DESKeySpec(strKey.getBytes(StandardCharsets.UTF_8));
     }
@@ -49,18 +44,19 @@ public class EncryptUtils {
      * 对称加密
      */
     public static String desEncrypt(String source) throws Exception {
+        Cipher cipher = Cipher.getInstance("DES/CBC/PKCS5Padding");
         DESKeySpec desKeySpec = getDesKeySpec(source);
         SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DES");
         SecretKey secretKey = keyFactory.generateSecret(desKeySpec);
         cipher.init(Cipher.ENCRYPT_MODE, secretKey, IV);
-        return byte2hex(
-                cipher.doFinal(source.getBytes(StandardCharsets.UTF_8))).toUpperCase();
+        return byte2hex(cipher.doFinal(source.getBytes(StandardCharsets.UTF_8))).toUpperCase();
     }
 
     /**
      * 对称解密
      */
     public static String desDecrypt(String source) throws Exception {
+        Cipher cipher = Cipher.getInstance("DES/CBC/PKCS5Padding");
         byte[] src = hex2byte(source.getBytes(StandardCharsets.UTF_8));
         DESKeySpec desKeySpec = getDesKeySpec(source);
         SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DES");
@@ -76,7 +72,6 @@ public class EncryptUtils {
         for (byte b : inStr) {
             stmp = Integer.toHexString(b & 0xFF);
             if (stmp.length() == 1) {
-                // 如果是0至F的单位字符串，则添加0
                 out.append("0").append(stmp);
             } else {
                 out.append(stmp);
@@ -87,7 +82,7 @@ public class EncryptUtils {
 
     private static byte[] hex2byte(byte[] b) {
         int size = 2;
-        if ((b.length % size) != 0){
+        if ((b.length % size) != 0) {
             throw new IllegalArgumentException("长度不是偶数");
         }
         byte[] b2 = new byte[b.length / 2];
