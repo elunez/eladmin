@@ -88,15 +88,15 @@ public class DatabaseServiceImpl implements DatabaseService {
         }
     }
 
-	@Override
-	public boolean testConnection(Database resources) {
-		try {
-			return SqlUtils.testConnection(resources.getJdbcUrl(), resources.getUserName(), resources.getPwd());
-		} catch (Exception e) {
-			log.error(e.getMessage());
-			return false;
-		}
-	}
+    @Override
+    public boolean testConnection(Database resources) {
+        try {
+            return SqlUtils.testConnection(resources.getJdbcUrl(), resources.getUserName(), resources.getPwd());
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return false;
+        }
+    }
 
     @Override
     public void download(List<DatabaseDto> queryAll, HttpServletResponse response) throws IOException {

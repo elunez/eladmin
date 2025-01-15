@@ -61,6 +61,8 @@ public class SqlUtils {
 			druidDataSource.setDriverClassName(className);
 		}
 
+		// 去掉不安全的参数
+		jdbcUrl = sanitizeJdbcUrl(jdbcUrl);
 
 		druidDataSource.setUrl(jdbcUrl);
 		druidDataSource.setUsername(userName);
@@ -196,6 +198,35 @@ public class SqlUtils {
 		}
 
 		return sqlList;
+	}
+
+	/**
+	 * 去除不安全的参数
+	 * @param jdbcUrl /
+	 * @return /
+	 */
+	private static String sanitizeJdbcUrl(String jdbcUrl) {
+		// 定义不安全参数和其安全替代值
+		String[][] unsafeParams = {
+				// allowLoadLocalInfile：允许使用 LOAD DATA LOCAL INFILE，可能导致文件泄露
+				{"allowLoadLocalInfile", "false"},
+				// allowUrlInLocalInfile：允许在 LOAD DATA LOCAL INFILE 中使用 URL，可能导致未经授权的文件访问
+				{"allowUrlInLocalInfile", "false"},
+				// autoDeserialize：允许自动反序列化对象，可能导致反序列化漏洞
+				{"autoDeserialize", "false"},
+				// allowNanAndInf：允许使用 NaN 和 Infinity 作为数字值，可能导致不一致的数据处理
+				{"allowNanAndInf", "false"},
+				// allowMultiQueries：允许在一个语句中执行多个查询，可能导致 SQL 注入攻击
+				{"allowMultiQueries", "false"},
+				// allowPublicKeyRetrieval：允许从服务器检索公钥，可能导致中间人攻击
+				{"allowPublicKeyRetrieval", "false"}
+		};
+
+		// 替换不安全的参数
+		for (String[] param : unsafeParams) {
+			jdbcUrl = jdbcUrl.replaceAll("(?i)" + param[0] + "=true", param[0] + "=" + param[1]);
+		}
+		return jdbcUrl;
 	}
 
 }
