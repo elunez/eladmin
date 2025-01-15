@@ -183,7 +183,7 @@ public class UserServiceImpl implements UserService {
     public UserLoginDto getLoginData(String userName) {
         User user = userRepository.findByUsername(userName);
         if (user == null) {
-            throw new EntityNotFoundException(User.class, "name", userName);
+            return null;
         } else {
             return userLoginMapper.toDto(user);
         }
