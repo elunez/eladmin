@@ -45,7 +45,7 @@ public class ColUtil {
      */
     public static PropertiesConfiguration getConfig() {
         try {
-            return new PropertiesConfiguration("generator.properties");
+            return new PropertiesConfiguration("gen.properties");
         } catch (ConfigurationException e) {
             log.error(e.getMessage(), e);
         }

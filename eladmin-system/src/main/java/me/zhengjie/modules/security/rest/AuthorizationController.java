@@ -25,7 +25,7 @@ import me.zhengjie.annotation.Log;
 import me.zhengjie.annotation.rest.AnonymousDeleteMapping;
 import me.zhengjie.annotation.rest.AnonymousGetMapping;
 import me.zhengjie.annotation.rest.AnonymousPostMapping;
-import me.zhengjie.config.RsaProperties;
+import me.zhengjie.config.properties.RsaProperties;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.modules.security.config.bean.LoginCodeEnum;
 import me.zhengjie.modules.security.config.bean.LoginProperties;

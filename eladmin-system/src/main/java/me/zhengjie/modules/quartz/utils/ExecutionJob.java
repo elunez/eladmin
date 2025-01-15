@@ -26,7 +26,7 @@ import me.zhengjie.modules.quartz.repository.QuartzLogRepository;
 import me.zhengjie.modules.quartz.service.QuartzJobService;
 import me.zhengjie.service.EmailService;
 import me.zhengjie.utils.RedisUtils;
-import me.zhengjie.utils.SpringContextHolder;
+import me.zhengjie.utils.SpringBeanHolder;
 import me.zhengjie.utils.StringUtils;
 import me.zhengjie.utils.ThrowableUtil;
 import org.quartz.JobExecutionContext;
@@ -49,16 +49,16 @@ public class ExecutionJob extends QuartzJobBean {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     // 此处仅供参考，可根据任务执行情况自定义线程池参数
-    private final ThreadPoolTaskExecutor executor = SpringContextHolder.getBean("elAsync");
+    private final ThreadPoolTaskExecutor executor = SpringBeanHolder.getBean("elAsync");
 
     @Override
     public void executeInternal(JobExecutionContext context) {
         // 获取任务
         QuartzJob quartzJob = (QuartzJob) context.getMergedJobDataMap().get(QuartzJob.JOB_KEY);
         // 获取spring bean
-        QuartzLogRepository quartzLogRepository = SpringContextHolder.getBean(QuartzLogRepository.class);
-        QuartzJobService quartzJobService = SpringContextHolder.getBean(QuartzJobService.class);
-        RedisUtils redisUtils = SpringContextHolder.getBean(RedisUtils.class);
+        QuartzLogRepository quartzLogRepository = SpringBeanHolder.getBean(QuartzLogRepository.class);
+        QuartzJobService quartzJobService = SpringBeanHolder.getBean(QuartzJobService.class);
+        RedisUtils redisUtils = SpringBeanHolder.getBean(RedisUtils.class);
 
         String uuid = quartzJob.getUuid();
 
@@ -105,7 +105,7 @@ public class ExecutionJob extends QuartzJobBean {
                 quartzJobService.updateIsPause(quartzJob);
             }
             if(quartzJob.getEmail() != null){
-                EmailService emailService = SpringContextHolder.getBean(EmailService.class);
+                EmailService emailService = SpringBeanHolder.getBean(EmailService.class);
                 // 邮箱报警
                 if(StringUtils.isNoneBlank(quartzJob.getEmail())){
                     EmailVo emailVo = taskAlarm(quartzJob, ThrowableUtil.getStackTrace(e));

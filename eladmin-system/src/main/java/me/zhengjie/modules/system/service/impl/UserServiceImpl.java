@@ -17,7 +17,7 @@ package me.zhengjie.modules.system.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import me.zhengjie.utils.PageResult;
-import me.zhengjie.config.FileProperties;
+import me.zhengjie.config.properties.FileProperties;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.modules.security.service.OnlineUserService;
 import me.zhengjie.modules.security.service.UserCacheManager;

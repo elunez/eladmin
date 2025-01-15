@@ -19,16 +19,17 @@ import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.poi.excel.BigExcelWriter;
 import cn.hutool.poi.excel.ExcelUtil;
+import lombok.extern.slf4j.Slf4j;
 import me.zhengjie.exception.BadRequestException;
 import org.apache.poi.util.IOUtils;
 import org.apache.poi.xssf.streaming.SXSSFSheet;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
+
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.nio.file.Files;
 import java.security.MessageDigest;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -44,9 +45,8 @@ import java.util.stream.Collectors;
  * @author Zheng Jie
  * @date 2018-12-27
  */
+@Slf4j
 public class FileUtil extends cn.hutool.core.io.FileUtil {
-
-    private static final Logger log = LoggerFactory.getLogger(FileUtil.class);
 
     /**
      * 系统临时目录
@@ -110,7 +110,7 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
      * 获取文件扩展名，不带 .
      */
     public static String getExtensionName(String filename) {
-        if ((filename != null) && (filename.length() > 0)) {
+        if ((filename != null) && (!filename.isEmpty())) {
             int dot = filename.lastIndexOf('.');
             if ((dot > -1) && (dot < (filename.length() - 1))) {
                 return filename.substring(dot + 1);
@@ -123,9 +123,9 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
      * Java文件操作 获取不带扩展名的文件名
      */
     public static String getFileNameNoEx(String filename) {
-        if ((filename != null) && (filename.length() > 0)) {
+        if ((filename != null) && (!filename.isEmpty())) {
             int dot = filename.lastIndexOf('.');
-            if ((dot > -1) && (dot < (filename.length()))) {
+            if (dot > -1) {
                 return filename.substring(0, dot);
             }
         }
@@ -162,7 +162,7 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
         }
         OutputStream os = null;
         try {
-            os = new FileOutputStream(file);
+            os = Files.newOutputStream(file.toPath());
             int bytesRead;
             int len = 8192;
             byte[] buffer = new byte[len];
@@ -170,7 +170,7 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
                 os.write(buffer, 0, bytesRead);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         } finally {
             CloseUtil.close(os);
             CloseUtil.close(ins);
@@ -301,7 +301,7 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
         byte[] b = new byte[(int) file.length()];
         InputStream in = null;
         try {
-            in = new FileInputStream(file);
+            in = Files.newInputStream(file.toPath());
             try {
                 System.out.println(in.read(b));
             } catch (IOException e) {
@@ -406,7 +406,6 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
 
         return fileName;
     }
-
 
     public static String getMd5(File file) {
         return getMd5(getByte(file));

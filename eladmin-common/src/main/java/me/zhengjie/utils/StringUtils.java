@@ -41,7 +41,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
     /**
      * 注入bean
      */
-    private final static Ip2regionSearcher IP_SEARCHER = SpringContextHolder.getBean(Ip2regionSearcher.class);
+    private final static Ip2regionSearcher IP_SEARCHER = SpringBeanHolder.getBean(Ip2regionSearcher.class);
 
     /**
      * 驼峰命名法工具

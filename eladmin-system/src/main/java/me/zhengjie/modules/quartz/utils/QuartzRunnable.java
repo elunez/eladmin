@@ -16,7 +16,7 @@
 package me.zhengjie.modules.quartz.utils;
 
 import lombok.extern.slf4j.Slf4j;
-import me.zhengjie.utils.SpringContextHolder;
+import me.zhengjie.utils.SpringBeanHolder;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.ReflectionUtils;
 import java.lang.reflect.Method;
@@ -35,7 +35,7 @@ public class QuartzRunnable implements Callable<Object> {
 
 	QuartzRunnable(String beanName, String methodName, String params)
 			throws NoSuchMethodException, SecurityException {
-		this.target = SpringContextHolder.getBean(beanName);
+		this.target = SpringBeanHolder.getBean(beanName);
 		this.params = params;
 		if (StringUtils.isNotBlank(params)) {
 			this.method = target.getClass().getDeclaredMethod(methodName, String.class);

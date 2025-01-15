@@ -15,7 +15,7 @@
  */
 package me.zhengjie.utils;
 
-import me.zhengjie.annotation.AnonymousAccess;
+import me.zhengjie.annotation.rest.AnonymousAccess;
 import me.zhengjie.utils.enums.RequestMethodEnum;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.bind.annotation.RequestMethod;

@@ -18,7 +18,7 @@ package me.zhengjie;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import me.zhengjie.annotation.rest.AnonymousGetMapping;
-import me.zhengjie.utils.SpringContextHolder;
+import me.zhengjie.utils.SpringBeanHolder;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.ApplicationPidFileWriter;
@@ -56,8 +56,8 @@ public class AppRun {
     }
 
     @Bean
-    public SpringContextHolder springContextHolder() {
-        return new SpringContextHolder();
+    public SpringBeanHolder springContextHolder() {
+        return new SpringBeanHolder();
     }
 
     /**
