@@ -20,7 +20,10 @@ import com.fasterxml.classmate.TypeResolver;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
+import me.zhengjie.utils.AnonTagUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
@@ -41,6 +44,9 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import static springfox.documentation.schema.AlternateTypeRules.newRule;
 
 /**
@@ -50,6 +56,7 @@ import static springfox.documentation.schema.AlternateTypeRules.newRule;
  */
 @Configuration
 @EnableSwagger2
+@RequiredArgsConstructor
 public class SwaggerConfig {
 
     @Value("${jwt.header}")
@@ -57,6 +64,11 @@ public class SwaggerConfig {
 
     @Value("${swagger.enabled}")
     private Boolean enabled;
+
+    @Value("${server.servlet.context-path:}")
+    private String apiPath;
+
+    private final ApplicationContext applicationContext;
 
     @Bean
     @SuppressWarnings("all")
@@ -98,10 +110,14 @@ public class SwaggerConfig {
     }
 
     private SecurityContext getContextByPath() {
+        Set<String> urls = AnonTagUtils.getAllAnonymousUrl(applicationContext);
+        urls = urls.stream().filter(url -> !url.equals("/")).collect(Collectors.toSet());
+        String regExp = "^(?!" + apiPath + String.join("|" + apiPath, urls) + ").*$";
         return SecurityContext.builder()
                 .securityReferences(defaultAuth())
-                // 表示 /auth/code、/auth/login 接口不需要使用securitySchemes即不需要带token
-                .operationSelector(o->o.requestMappingPattern().matches("^(?!/auth/code|/auth/login).*$"))
+                .operationSelector(o->o.requestMappingPattern()
+                        // 排除不需要认证的接口
+                        .matches(regExp))
                 .build();
     }
 
