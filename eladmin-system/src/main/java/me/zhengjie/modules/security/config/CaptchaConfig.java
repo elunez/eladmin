@@ -13,89 +13,100 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package me.zhengjie.modules.security.config.bean;
+package me.zhengjie.modules.security.config;
 
 import com.wf.captcha.*;
 import com.wf.captcha.base.Captcha;
 import lombok.Data;
-import me.zhengjie.exception.BadConfigurationException;
+import lombok.Getter;
+import me.zhengjie.exception.BadRequestException;
+import me.zhengjie.modules.security.config.enums.LoginCodeEnum;
 import me.zhengjie.utils.StringUtils;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
+
 import java.awt.*;
-import java.util.Objects;
 
 /**
- * 配置文件读取
- *
+ * 登录验证码配置信息
  * @author liaojinlong
- * @date loginCode.length0loginCode.length0/6/10 17:loginCode.length6
+ * @date 2025-01-13
  */
 @Data
-public class LoginProperties {
+@Configuration
+@ConfigurationProperties(prefix = "login.code")
+public class CaptchaConfig {
 
     /**
-     * 账号单用户 登录
+     * 验证码配置
      */
-    private boolean singleLogin = false;
-
-    private LoginCode loginCode;
-
-    public static final String cacheKey = "user-login-cache:";
-
-    public boolean isSingleLogin() {
-        return singleLogin;
-    }
+    @Getter
+    private LoginCodeEnum codeType;
 
     /**
-     * 获取验证码生产类
-     *
-     * @return /
+     * 验证码有效期 分钟
      */
-    public Captcha getCaptcha() {
-        if (Objects.isNull(loginCode)) {
-            loginCode = new LoginCode();
-            if (Objects.isNull(loginCode.getCodeType())) {
-                loginCode.setCodeType(LoginCodeEnum.ARITHMETIC);
-            }
-        }
-        return switchCaptcha(loginCode);
-    }
+    private Long expiration = 5L;
+
+    /**
+     * 验证码内容长度
+     */
+    private int length = 4;
+
+    /**
+     * 验证码宽度
+     */
+    private int width = 111;
+
+    /**
+     * 验证码高度
+     */
+    private int height = 36;
+
+    /**
+     * 验证码字体
+     */
+    private String fontName;
+
+    /**
+     * 字体大小
+     */
+    private int fontSize = 25;
 
     /**
      * 依据配置信息生产验证码
-     *
-     * @param loginCode 验证码配置信息
      * @return /
      */
-    private Captcha switchCaptcha(LoginCode loginCode) {
+    public Captcha getCaptcha() {
         Captcha captcha;
-        switch (loginCode.getCodeType()) {
+        switch (codeType) {
             case ARITHMETIC:
                 // 算术类型 https://gitee.com/whvse/EasyCaptcha
-                captcha = new FixedArithmeticCaptcha(loginCode.getWidth(), loginCode.getHeight());
+                captcha = new FixedArithmeticCaptcha(width, height);
                 // 几位数运算，默认是两位
-                captcha.setLen(loginCode.getLength());
+                captcha.setLen(length);
                 break;
             case CHINESE:
-                captcha = new ChineseCaptcha(loginCode.getWidth(), loginCode.getHeight());
-                captcha.setLen(loginCode.getLength());
+                captcha = new ChineseCaptcha(width, height);
+                captcha.setLen(length);
                 break;
             case CHINESE_GIF:
-                captcha = new ChineseGifCaptcha(loginCode.getWidth(), loginCode.getHeight());
-                captcha.setLen(loginCode.getLength());
+                captcha = new ChineseGifCaptcha(width, height);
+                captcha.setLen(length);
                 break;
             case GIF:
-                captcha = new GifCaptcha(loginCode.getWidth(), loginCode.getHeight());
-                captcha.setLen(loginCode.getLength());
+                captcha = new GifCaptcha(width, height);
+                captcha.setLen(length);
                 break;
             case SPEC:
-                captcha = new SpecCaptcha(loginCode.getWidth(), loginCode.getHeight());
-                captcha.setLen(loginCode.getLength());
+                captcha = new SpecCaptcha(width, height);
+                captcha.setLen(length);
                 break;
             default:
-                throw new BadConfigurationException("验证码配置信息错误！正确配置查看 LoginCodeEnum ");
+                throw new BadRequestException("验证码配置信息错误！正确配置查看 LoginCodeEnum ");
         }
-        if(StringUtils.isNotBlank(loginCode.getFontName())){
-            captcha.setFont(new Font(loginCode.getFontName(), Font.PLAIN, loginCode.getFontSize()));
+        if(StringUtils.isNotBlank(fontName)){
+            captcha.setFont(new Font(fontName, Font.PLAIN, fontSize));
         }
         return captcha;
     }

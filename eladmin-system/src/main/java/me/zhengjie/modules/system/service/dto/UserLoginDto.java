@@ -15,6 +15,8 @@
  */
 package me.zhengjie.modules.system.service.dto;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 /**
  * @author Zheng Jie
  * @description 用户缓存时使用
@@ -22,6 +24,7 @@ package me.zhengjie.modules.system.service.dto;
  **/
 public class UserLoginDto extends UserDto {
 
+    @JSONField(serialize = false)
     private String password;
 
     private Boolean isAdmin;

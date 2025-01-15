@@ -22,7 +22,7 @@ import lombok.Data;
  * @date 2018-11-23
  */
 @Data
-class ApiError {
+public class ApiError {
 
     private Integer status = 400;
     private Long timestamp;

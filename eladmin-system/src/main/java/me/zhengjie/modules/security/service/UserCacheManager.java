@@ -16,7 +16,7 @@
 package me.zhengjie.modules.security.service;
 
 import cn.hutool.core.util.RandomUtil;
-import me.zhengjie.modules.security.config.bean.LoginProperties;
+import me.zhengjie.modules.security.config.LoginProperties;
 import me.zhengjie.modules.security.service.dto.JwtUserDto;
 import me.zhengjie.utils.RedisUtils;
 import me.zhengjie.utils.StringUtils;

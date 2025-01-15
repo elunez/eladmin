@@ -120,7 +120,7 @@ public interface RoleService {
      * @param user 用户信息
      * @return 权限信息
      */
-    List<AuthorityDto> mapToGrantedAuthorities(UserDto user);
+    List<AuthorityDto> buildAuthorities(UserDto user);
 
     /**
      * 验证是否被用户关联

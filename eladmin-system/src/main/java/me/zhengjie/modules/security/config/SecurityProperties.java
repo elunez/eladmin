@@ -13,9 +13,11 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package me.zhengjie.modules.security.config.bean;
+package me.zhengjie.modules.security.config;
 
 import lombok.Data;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
 
 /**
  * Jwt参数配置
@@ -24,6 +26,8 @@ import lombok.Data;
  * @date 2019年11月28日
  */
 @Data
+@Configuration
+@ConfigurationProperties(prefix = "jwt")
 public class SecurityProperties {
 
     /**
