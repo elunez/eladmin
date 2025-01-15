@@ -67,22 +67,22 @@ public class ServerDeployServiceImpl implements ServerDeployService {
         return serverDeployMapper.toDto(deploy);
     }
 
-	@Override
-	public Boolean testConnect(ServerDeploy resources) {
-		ExecuteShellUtil executeShellUtil = null;
-		try {
-			executeShellUtil = new ExecuteShellUtil(resources.getIp(), resources.getAccount(), resources.getPassword(),resources.getPort());
-			return executeShellUtil.execute("ls")==0;
-		} catch (Exception e) {
-			return false;
-		}finally {
-			if (executeShellUtil != null) {
-				executeShellUtil.close();
-			}
-		}
-	}
+    @Override
+    public Boolean testConnect(ServerDeploy resources) {
+        ExecuteShellUtil executeShellUtil = null;
+        try {
+            executeShellUtil = new ExecuteShellUtil(resources.getIp(), resources.getAccount(), resources.getPassword(),resources.getPort());
+            return executeShellUtil.execute("ls")==0;
+        } catch (Exception e) {
+            return false;
+        }finally {
+            if (executeShellUtil != null) {
+                executeShellUtil.close();
+            }
+        }
+    }
 
-	@Override
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public void create(ServerDeploy resources) {
 		serverDeployRepository.save(resources);
@@ -93,7 +93,7 @@ public class ServerDeployServiceImpl implements ServerDeployService {
     public void update(ServerDeploy resources) {
         ServerDeploy serverDeploy = serverDeployRepository.findById(resources.getId()).orElseGet(ServerDeploy::new);
         ValidationUtil.isNull( serverDeploy.getId(),"ServerDeploy","id",resources.getId());
-		serverDeploy.copy(resources);
+        serverDeploy.copy(resources);
         serverDeployRepository.save(serverDeploy);
     }
 

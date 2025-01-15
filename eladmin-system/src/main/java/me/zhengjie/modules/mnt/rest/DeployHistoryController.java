@@ -53,14 +53,14 @@ public class DeployHistoryController {
 
     @ApiOperation(value = "查询部署历史")
     @GetMapping
-	@PreAuthorize("@el.check('deployHistory:list')")
+    @PreAuthorize("@el.check('deployHistory:list')")
     public ResponseEntity<PageResult<DeployHistoryDto>> queryDeployHistory(DeployHistoryQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity<>(deployhistoryService.queryAll(criteria,pageable),HttpStatus.OK);
     }
 
     @Log("删除DeployHistory")
     @ApiOperation(value = "删除部署历史")
-	@DeleteMapping
+    @DeleteMapping
     @PreAuthorize("@el.check('deployHistory:del')")
     public ResponseEntity<Object> deleteDeployHistory(@RequestBody Set<String> ids){
         deployhistoryService.delete(ids);
