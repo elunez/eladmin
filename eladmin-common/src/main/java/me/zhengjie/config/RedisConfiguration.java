@@ -15,47 +15,39 @@
  */
 package me.zhengjie.config;
 
-import cn.hutool.core.lang.Assert;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.parser.ParserConfig;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cache.Cache;
-import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.interceptor.CacheErrorHandler;
 import org.springframework.cache.interceptor.KeyGenerator;
+import org.springframework.cache.interceptor.SimpleCacheErrorHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
+import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.RedisSerializer;
-import reactor.util.annotation.Nullable;
-import java.nio.charset.Charset;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
+
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
-
 /**
  * @author Zheng Jie
- * @date 2018-11-24
+ * @date 2025-01-13
  */
 @Slf4j
 @Configuration
 @EnableCaching
-@ConditionalOnClass(RedisOperations.class)
-@EnableConfigurationProperties(RedisProperties.class)
-public class RedisConfig extends CachingConfigurerSupport {
+public class RedisConfiguration {
 
     /**
      *  设置 redis 数据默认过期时间，默认2小时
@@ -70,9 +62,7 @@ public class RedisConfig extends CachingConfigurerSupport {
         return configuration;
     }
 
-    @SuppressWarnings("all")
     @Bean(name = "redisTemplate")
-    @ConditionalOnMissingBean(name = "redisTemplate")
     public RedisTemplate<Object, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
         RedisTemplate<Object, Object> template = new RedisTemplate<>();
         //序列化
@@ -92,6 +82,8 @@ public class RedisConfig extends CachingConfigurerSupport {
         ParserConfig.getGlobalInstance().addAccept("me.zhengjie.modules.quartz.service.dto");
         ParserConfig.getGlobalInstance().addAccept("me.zhengjie.modules.security.service.dto");
         ParserConfig.getGlobalInstance().addAccept("me.zhengjie.modules.system.service.dto");
+        // 分页返回数据
+        ParserConfig.getGlobalInstance().addAccept("me.zhengjie.utils.PageResult");
         // key的序列化采用StringRedisSerializer
         template.setKeySerializer(new StringRedisSerializer());
         template.setHashKeySerializer(new StringRedisSerializer());
@@ -100,10 +92,24 @@ public class RedisConfig extends CachingConfigurerSupport {
     }
 
     /**
-     * 自定义缓存key生成策略，默认将使用该策略
+     * 缓存管理器，需要指定使用
+     * @param redisConnectionFactory /
+     * @return 缓存管理器
      */
     @Bean
-    @Override
+    public RedisCacheManager cacheManager(RedisConnectionFactory redisConnectionFactory) {
+        RedisCacheConfiguration config = redisCacheConfiguration();
+        return RedisCacheManager.builder(redisConnectionFactory)
+                .cacheDefaults(config)
+                .build();
+    }
+
+    /**
+     * 自定义缓存key生成策略，需要在缓存注解中使用keyGenerator才会生效
+     * 默认是使用SimpleKeyGenerator生成的key
+     * 继承 CachingConfigurerSupport 后，才会默认生效这个生成器，暂时没找到其他方式默认生效，如果有请PR，谢谢
+     */
+    @Bean
     public KeyGenerator keyGenerator() {
         return (target, method, params) -> {
             Map<String,Object> container = new HashMap<>(8);
@@ -126,100 +132,63 @@ public class RedisConfig extends CachingConfigurerSupport {
     }
 
     @Bean
-    @Override
-    @SuppressWarnings({"all"})
+    @SuppressWarnings("all")
     public CacheErrorHandler errorHandler() {
-        // 异常处理，当Redis发生异常时，打印日志，但是程序正常走
-        log.info("初始化 -> [{}]", "Redis CacheErrorHandler");
-        return new CacheErrorHandler() {
+        return new SimpleCacheErrorHandler() {
             @Override
-            public void handleCacheGetError(RuntimeException e, Cache cache, Object key) {
-                log.error("Redis occur handleCacheGetError：key -> [{}]", key, e);
+            public void handleCacheGetError(RuntimeException exception, Cache cache, Object key) {
+                // 处理缓存读取错误
+                log.error("Cache Get Error: {}",exception.getMessage());
             }
-
             @Override
-            public void handleCachePutError(RuntimeException e, Cache cache, Object key, Object value) {
-                log.error("Redis occur handleCachePutError：key -> [{}]；value -> [{}]", key, value, e);
+            public void handleCachePutError(RuntimeException exception, Cache cache, Object key, Object value) {
+                // 处理缓存写入错误
+                log.error("Cache Put Error: {}",exception.getMessage());
             }
-
             @Override
-            public void handleCacheEvictError(RuntimeException e, Cache cache, Object key) {
-                log.error("Redis occur handleCacheEvictError：key -> [{}]", key, e);
+            public void handleCacheEvictError(RuntimeException exception, Cache cache, Object key) {
+                // 处理缓存删除错误
+                log.error("Cache Evict Error: {}",exception.getMessage());
             }
-
             @Override
-            public void handleCacheClearError(RuntimeException e, Cache cache) {
-                log.error("Redis occur handleCacheClearError：", e);
+            public void handleCacheClearError(RuntimeException exception, Cache cache) {
+                // 处理缓存清除错误
+                log.error("Cache Clear Error: {}",exception.getMessage());
             }
         };
     }
-}
 
-/**
- * Value 序列化
- *
- * @author /
- * @param <T>
- */
-class FastJsonRedisSerializer<T> implements RedisSerializer<T> {
+    /**
+     * Value 序列化
+     *
+     * @param <T>
+     * @author /
+     */
+    static class FastJsonRedisSerializer<T> implements RedisSerializer<T> {
 
-    private final Class<T> clazz;
+        private final Class<T> clazz;
 
-    FastJsonRedisSerializer(Class<T> clazz) {
-        super();
-        this.clazz = clazz;
-    }
-
-    @Override
-    public byte[] serialize(T t) {
-        if (t == null) {
-            return new byte[0];
+        FastJsonRedisSerializer(Class<T> clazz) {
+            super();
+            this.clazz = clazz;
         }
-        return JSON.toJSONString(t, SerializerFeature.WriteClassName).getBytes(StandardCharsets.UTF_8);
-    }
 
-    @Override
-    public T deserialize(byte[] bytes) {
-        if (bytes == null || bytes.length == 0) {
-            return null;
+        @Override
+        public byte[] serialize(T t) {
+            if (t == null) {
+                return new byte[0];
+            }
+            return JSON.toJSONString(t, SerializerFeature.WriteClassName).getBytes(StandardCharsets.UTF_8);
         }
-        String str = new String(bytes, StandardCharsets.UTF_8);
-        return JSON.parseObject(str, clazz);
+
+        @Override
+        public T deserialize(byte[] bytes) {
+            if (bytes == null || bytes.length == 0) {
+                return null;
+            }
+            String str = new String(bytes, StandardCharsets.UTF_8);
+            return JSON.parseObject(str, clazz);
+        }
+
     }
-
-}
-
-/**
- * 重写序列化器
- *
- * @author /
- */
-class StringRedisSerializer implements RedisSerializer<Object> {
-
-    private final Charset charset;
-
-    StringRedisSerializer() {
-        this(StandardCharsets.UTF_8);
-    }
-
-    private StringRedisSerializer(Charset charset) {
-        Assert.notNull(charset, "Charset must not be null!");
-        this.charset = charset;
-    }
-
-    @Override
-    public String deserialize(byte[] bytes) {
-        return (bytes == null ? null : new String(bytes, charset));
-    }
-
-	@Override
-	public @Nullable byte[] serialize(Object object) {
-		String string = JSON.toJSONString(object);
-
-		if (org.apache.commons.lang3.StringUtils.isBlank(string)) {
-			return null;
-		}
-		string = string.replace("\"", "");
-		return string.getBytes(charset);
-	}
 }

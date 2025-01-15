@@ -15,23 +15,18 @@
  */
 package me.zhengjie.config.webConfig;
 
-import cn.hutool.core.collection.CollUtil;
-import com.fasterxml.classmate.TypeResolver;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import me.zhengjie.utils.AnonTagUtils;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.Ordered;
-import org.springframework.data.domain.Pageable;
+import org.springframework.util.ReflectionUtils;
+import org.springframework.web.servlet.mvc.method.RequestMappingInfoHandlerMapping;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
-import springfox.documentation.schema.AlternateTypeRule;
-import springfox.documentation.schema.AlternateTypeRuleConvention;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.ApiKey;
 import springfox.documentation.service.AuthorizationScope;
@@ -40,14 +35,15 @@ import springfox.documentation.service.SecurityScheme;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
+import springfox.documentation.spring.web.plugins.WebFluxRequestHandlerProvider;
+import springfox.documentation.spring.web.plugins.WebMvcRequestHandlerProvider;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
-
+import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import static springfox.documentation.schema.AlternateTypeRules.newRule;
 
 /**
  * api页面 /doc.html
@@ -129,39 +125,45 @@ public class SwaggerConfig {
         securityReferences.add(new SecurityReference(tokenHeader, authorizationScopes));
         return securityReferences;
     }
-}
 
-/**
- *  将Pageable转换展示在swagger中
- */
-@Configuration
-class SwaggerDataConfig {
-
+    /**
+     * 解决Springfox与SpringBoot集成后，WebMvcRequestHandlerProvider和WebFluxRequestHandlerProvider冲突问题
+     * @return /
+     */
     @Bean
-    public AlternateTypeRuleConvention pageableConvention(final TypeResolver resolver) {
-        return new AlternateTypeRuleConvention() {
+    @SuppressWarnings({"all"})
+    public static BeanPostProcessor springfoxHandlerProviderBeanPostProcessor() {
+        return new BeanPostProcessor() {
+
             @Override
-            public int getOrder() {
-                return Ordered.HIGHEST_PRECEDENCE;
+            public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+                if (bean instanceof WebMvcRequestHandlerProvider || bean instanceof WebFluxRequestHandlerProvider) {
+                    customizeSpringfoxHandlerMappings(getHandlerMappings(bean));
+                }
+                return bean;
             }
 
-            @Override
-            public List<AlternateTypeRule> rules() {
-                return CollUtil.newArrayList(newRule(resolver.resolve(Pageable.class), resolver.resolve(Page.class)));
+            private <T extends RequestMappingInfoHandlerMapping> void customizeSpringfoxHandlerMappings(List<T> mappings) {
+                List<T> filteredMappings = mappings.stream()
+                        .filter(mapping -> mapping.getPatternParser() == null)
+                        .collect(Collectors.toList());
+                mappings.clear();
+                mappings.addAll(filteredMappings);
+            }
+
+            private List<RequestMappingInfoHandlerMapping> getHandlerMappings(Object bean) {
+                Field field = ReflectionUtils.findField(bean.getClass(), "handlerMappings");
+                if (field != null) {
+                    field.setAccessible(true);
+                    try {
+                        return (List<RequestMappingInfoHandlerMapping>) field.get(bean);
+                    } catch (IllegalAccessException e) {
+                        throw new IllegalStateException("Failed to access handlerMappings field", e);
+                    }
+                }
+                return Collections.emptyList();
             }
         };
     }
-
-    @ApiModel
-    @Data
-    private static class Page {
-        @ApiModelProperty("页码 (0..N)")
-        private Integer page;
-
-        @ApiModelProperty("每页显示的数目")
-        private Integer size;
-
-        @ApiModelProperty("以下列格式排序标准：property[,asc | desc]。 默认排序顺序为升序。 支持多种排序条件：如：id,asc")
-        private List<String> sort;
-    }
 }
+

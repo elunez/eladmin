@@ -47,7 +47,7 @@ import java.util.stream.Collectors;
 */
 @Service
 @RequiredArgsConstructor
-@CacheConfig(cacheNames = "dept")
+@CacheConfig(cacheNames = "dept", keyGenerator = "keyGenerator")
 public class DeptServiceImpl implements DeptService {
 
     private final DeptRepository deptRepository;

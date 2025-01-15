@@ -51,7 +51,7 @@ import java.util.*;
  */
 @Service
 @RequiredArgsConstructor
-@CacheConfig(cacheNames = "qiNiu")
+@CacheConfig(cacheNames = "qiNiu", keyGenerator = "keyGenerator")
 public class QiNiuServiceImpl implements QiNiuService {
 
     private final QiNiuConfigRepository qiNiuConfigRepository;

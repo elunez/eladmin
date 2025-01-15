@@ -36,7 +36,7 @@ import java.util.*;
  **/
 @Service
 @RequiredArgsConstructor
-@CacheConfig(cacheNames = "data")
+@CacheConfig(cacheNames = "data", keyGenerator = "keyGenerator")
 public class DataServiceImpl implements DataService {
 
     private final RoleService roleService;

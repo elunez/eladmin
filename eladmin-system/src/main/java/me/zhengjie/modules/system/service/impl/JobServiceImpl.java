@@ -44,7 +44,7 @@ import java.util.*;
 */
 @Service
 @RequiredArgsConstructor
-@CacheConfig(cacheNames = "job")
+@CacheConfig(cacheNames = "job", keyGenerator = "keyGenerator")
 public class JobServiceImpl implements JobService {
 
     private final JobRepository jobRepository;

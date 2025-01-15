@@ -41,7 +41,7 @@ import java.util.*;
 */
 @Service
 @RequiredArgsConstructor
-@CacheConfig(cacheNames = "dict")
+@CacheConfig(cacheNames = "dict", keyGenerator = "keyGenerator")
 public class DictServiceImpl implements DictService {
 
     private final DictRepository dictRepository;

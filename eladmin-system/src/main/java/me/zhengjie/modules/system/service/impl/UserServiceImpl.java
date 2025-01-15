@@ -50,7 +50,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @RequiredArgsConstructor
-@CacheConfig(cacheNames = "user")
+@CacheConfig(cacheNames = "user", keyGenerator = "keyGenerator")
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;

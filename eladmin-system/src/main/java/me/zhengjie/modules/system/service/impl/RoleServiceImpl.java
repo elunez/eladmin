@@ -52,7 +52,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @RequiredArgsConstructor
-@CacheConfig(cacheNames = "role")
+@CacheConfig(cacheNames = "role", keyGenerator = "keyGenerator")
 public class RoleServiceImpl implements RoleService {
 
     private final RoleRepository roleRepository;

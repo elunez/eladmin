@@ -16,4 +16,11 @@
     <root level="info">
         <appender-ref ref="console" />
     </root>
+
+    <!-- DnsServerAddressStreamProviders调整为ERROR -->
+    <logger name="io.netty.resolver.dns.DnsServerAddressStreamProviders" level="ERROR"/>
+
+    <!-- 设置其他类的日志级别为 ERROR -->
+    <logger name="org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/]" level="ERROR"/>
+    <logger name="org.springframework.web.servlet.DispatcherServlet" level="ERROR"/>
 </configuration>

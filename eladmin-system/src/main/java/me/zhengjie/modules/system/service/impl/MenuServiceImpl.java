@@ -50,7 +50,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @RequiredArgsConstructor
-@CacheConfig(cacheNames = "menu")
+@CacheConfig(cacheNames = "menu", keyGenerator = "keyGenerator")
 public class MenuServiceImpl implements MenuService {
 
     private final MenuRepository menuRepository;
