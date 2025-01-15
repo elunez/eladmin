@@ -12,11 +12,8 @@
 
 请勿使用此分支开发
 
-#### 赞助商 | Sponsor
-
-<a href="https://www.mingdao.com/?s=utm_79&utm_source=eladmin&utm_medium=banner&utm_campaign=github&utm_content=IT赋能业务" target="_blank">
-<img src="https://eladmin.vip/images/banner/index.png" alt="明道云零代码构建平台" style="width: 400px;border-radius: 2px;">
-</a>
-
 #### 项目捐赠
-项目的发展离不开你的支持，请作者喝杯咖啡吧☕  [Donate](https://eladmin.vip/donation/)
+项目的发展离不开你的支持，请作者喝杯咖啡吧☕  [Donate](https://eladmin.vip/pages/030101/)
+
+#### 反馈交流
+- QQ交流群：891137268 、947578238、659622532

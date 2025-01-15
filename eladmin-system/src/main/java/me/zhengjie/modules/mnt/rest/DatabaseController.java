@@ -111,8 +111,8 @@ public class DatabaseController {
 		DatabaseDto database = databaseService.findById(id);
 		String fileName;
 		if(database != null){
-			fileName = file.getOriginalFilename();
-			File executeFile = new File(fileSavePath+fileName);
+			fileName = FileUtil.verifyFilename(file.getOriginalFilename());
+			File executeFile = new File(fileSavePath + fileName);
 			FileUtil.del(executeFile);
 			file.transferTo(executeFile);
 			String result = SqlUtils.executeFile(database.getJdbcUrl(), database.getUserName(), database.getPwd(), executeFile);

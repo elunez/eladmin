@@ -141,7 +141,6 @@ public class OnlineUserService {
      * 根据用户名强退用户
      * @param username /
      */
-    @Async
     public void kickOutForUsername(String username) {
         String loginKey = properties.getOnlineKey() + username + "*";
         redisUtils.scanDel(loginKey);
