@@ -32,7 +32,7 @@ import java.io.Serializable;
 @Setter
 @Entity
 @NoArgsConstructor
-@Table(name = "code_gen_config")
+@Table(name = "code_config")
 public class GenConfig implements Serializable {
 
     public GenConfig(String tableName) {
