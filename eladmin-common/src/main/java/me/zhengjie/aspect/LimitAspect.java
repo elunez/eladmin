@@ -15,6 +15,7 @@
  */
 package me.zhengjie.aspect;
 
+import cn.hutool.core.util.ObjUtil;
 import com.google.common.collect.ImmutableList;
 import me.zhengjie.annotation.Limit;
 import me.zhengjie.exception.BadRequestException;
@@ -73,7 +74,7 @@ public class LimitAspect {
         String luaScript = buildLuaScript();
         RedisScript<Long> redisScript = new DefaultRedisScript<>(luaScript, Long.class);
         Long count = redisTemplate.execute(redisScript, keys, limit.count(), limit.period());
-        if (null != count && count.intValue() <= limit.count()) {
+        if (ObjUtil.isNotNull(count) && count.intValue() <= limit.count()) {
             logger.info("第{}次访问key为 {}，描述为 [{}] 的接口", count, keys, limit.name());
             return joinPoint.proceed();
         } else {
