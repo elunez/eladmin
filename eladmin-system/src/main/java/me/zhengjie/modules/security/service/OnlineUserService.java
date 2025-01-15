@@ -92,7 +92,7 @@ public class OnlineUserService {
         Collections.reverse(keys);
         List<OnlineUserDto> onlineUserDtos = new ArrayList<>();
         for (String key : keys) {
-            onlineUserDtos.add((OnlineUserDto) redisUtils.get(key));
+            onlineUserDtos.add(redisUtils.get(key, OnlineUserDto.class));
         }
         onlineUserDtos.sort((o1, o2) -> o2.getLoginTime().compareTo(o1.getLoginTime()));
         return onlineUserDtos;
@@ -134,7 +134,7 @@ public class OnlineUserService {
      * @return /
      */
     public OnlineUserDto getOne(String key) {
-        return (OnlineUserDto)redisUtils.get(key);
+        return redisUtils.get(key, OnlineUserDto.class);
     }
 
     /**

@@ -46,10 +46,7 @@ public class UserCacheManager {
     public JwtUserDto getUserCache(String userName) {
         if (StringUtils.isNotEmpty(userName)) {
             // 获取数据
-            Object obj = redisUtils.get(LoginProperties.cacheKey + userName);
-            if(obj != null){
-                return (JwtUserDto)obj;
-            }
+            return redisUtils.get(LoginProperties.cacheKey + userName, JwtUserDto.class);
         }
         return null;
     }

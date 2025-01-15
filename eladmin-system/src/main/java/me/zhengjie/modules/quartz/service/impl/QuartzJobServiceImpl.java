@@ -145,11 +145,11 @@ public class QuartzJobServiceImpl implements QuartzJobService {
             // 执行任务
             execution(quartzJob);
             // 获取执行状态，如果执行失败则停止后面的子任务执行
-            Boolean result = (Boolean) redisUtils.get(uuid);
+            Boolean result = redisUtils.get(uuid, Boolean.class);
             while (result == null) {
                 // 休眠5秒，再次获取子任务执行情况
                 Thread.sleep(5000);
-                result = (Boolean) redisUtils.get(uuid);
+                result = redisUtils.get(uuid, Boolean.class);
             }
             if(!result){
                 redisUtils.del(uuid);
