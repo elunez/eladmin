@@ -33,8 +33,10 @@ import java.security.MessageDigest;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * File工具类，扩展 hutool 工具包
@@ -213,8 +215,25 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
         String tempPath = SYS_TEM_DIR + IdUtil.fastSimpleUUID() + ".xlsx";
         File file = new File(tempPath);
         BigExcelWriter writer = ExcelUtil.getBigWriter(file);
+        // 处理数据以防止CSV注入
+        List<Map<String, Object>> sanitizedList = list.parallelStream().map(map -> {
+            Map<String, Object> sanitizedMap = new HashMap<>();
+            map.forEach((key, value) -> {
+                if (value instanceof String) {
+                    String strValue = (String) value;
+                    // 检查并处理以特殊字符开头的值
+                    if (strValue.startsWith("=") || strValue.startsWith("+") || strValue.startsWith("-") || strValue.startsWith("@")) {
+                        strValue = "'" + strValue; // 添加单引号前缀
+                    }
+                    sanitizedMap.put(key, strValue);
+                } else {
+                    sanitizedMap.put(key, value);
+                }
+            });
+            return sanitizedMap;
+        }).collect(Collectors.toList());
         // 一次性写出内容，使用默认样式，强制输出标题
-        writer.write(list, true);
+        writer.write(sanitizedList, true);
         SXSSFSheet sheet = (SXSSFSheet)writer.getSheet();
         //上面需要强转SXSSFSheet  不然没有trackAllColumnsForAutoSizing方法
         sheet.trackAllColumnsForAutoSizing();
