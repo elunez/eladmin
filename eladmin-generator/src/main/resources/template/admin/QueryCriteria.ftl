@@ -28,6 +28,7 @@ import java.util.List;
 <#if queryColumns??>
 import me.zhengjie.annotation.Query;
 </#if>
+import io.swagger.annotations.ApiModelProperty;
 
 /**
 * @website https://eladmin.vip

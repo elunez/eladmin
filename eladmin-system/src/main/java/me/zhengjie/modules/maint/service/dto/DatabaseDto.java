@@ -15,6 +15,7 @@
  */
 package me.zhengjie.modules.maint.service.dto;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 import me.zhengjie.base.BaseDTO;
@@ -28,28 +29,18 @@ import java.io.Serializable;
 @Setter
 public class DatabaseDto extends BaseDTO implements Serializable {
 
-	/**
-	 * id
-	 */
+	@ApiModelProperty(value = "ID")
     private String id;
 
-	/**
-	 * 数据库名称
-	 */
+	@ApiModelProperty(value = "数据库名称")
     private String name;
 
-	/**
-	 * 数据库连接地址
-	 */
+	@ApiModelProperty(value = "数据库连接地址")
     private String jdbcUrl;
 
-	/**
-	 * 数据库密码
-	 */
+	@ApiModelProperty(value = "数据库密码")
     private String pwd;
 
-	/**
-	 * 用户名
-	 */
+	@ApiModelProperty(value = "用户名")
     private String userName;
 }

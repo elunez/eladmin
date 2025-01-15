@@ -15,6 +15,7 @@
  */
 package me.zhengjie.modules.system.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import lombok.RequiredArgsConstructor;
 import me.zhengjie.modules.system.domain.Dept;
 import me.zhengjie.modules.system.service.DataService;
@@ -82,7 +83,7 @@ public class DataServiceImpl implements DataService {
         for (Dept dept : depts) {
             deptIds.add(dept.getId());
             List<Dept> deptChildren = deptService.findByPid(dept.getId());
-            if (deptChildren != null && deptChildren.size() != 0) {
+            if (CollUtil.isNotEmpty(deptChildren)) {
                 deptIds.addAll(deptService.getDeptChildren(deptChildren));
             }
         }

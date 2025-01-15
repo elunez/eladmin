@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package me.zhengjie.config;
+package me.zhengjie.config.webConfig;
 
 import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.context.annotation.Bean;
@@ -23,7 +23,7 @@ import java.io.File;
 
 /**
  * @date 2018-12-28
- * @author https://blog.csdn.net/llibin1024530411/article/details/79474953
+ * @author <a href="https://blog.csdn.net/llibin1024530411/article/details/79474953">...</a>
  */
 @Configuration
 public class MultipartConfig {

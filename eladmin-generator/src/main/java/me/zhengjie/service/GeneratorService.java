@@ -20,7 +20,6 @@ import me.zhengjie.domain.ColumnInfo;
 import me.zhengjie.domain.vo.TableInfo;
 import me.zhengjie.utils.PageResult;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Async;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;

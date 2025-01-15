@@ -18,6 +18,7 @@ package me.zhengjie.modules.maint.util;
 import ch.ethz.ssh2.Connection;
 import ch.ethz.ssh2.SCPClient;
 import com.google.common.collect.Maps;
+import me.zhengjie.utils.StringUtils;
 
 import java.io.IOException;
 import java.util.Map;
@@ -26,17 +27,20 @@ import java.util.logging.Logger;
 
 /**
  * 远程执行linux命令
- * @author: ZhangHouYing
- * @date: 2019-08-10 10:06
+ * @author ZhangHouYing
+ * @date 2019-08-10 10:06
  */
 public class ScpClientUtil {
 
-	static private Map<String,ScpClientUtil> instance = Maps.newHashMap();
+	private final String ip;
+	private final int port;
+	private final String username;
+	private final String password;
+
+	static private final Map<String,ScpClientUtil> instance = Maps.newHashMap();
 
 	static synchronized public ScpClientUtil getInstance(String ip, int port, String username, String password) {
-		if (instance.get(ip) == null) {
-			instance.put(ip, new ScpClientUtil(ip, port, username, password));
-		}
+		instance.computeIfAbsent(ip, i -> new ScpClientUtil(i, port, username, password));
 		return instance.get(ip);
 	}
 
@@ -81,7 +85,7 @@ public class ScpClientUtil {
 				System.err.println("authentication failed");
 			}
 			SCPClient client = new SCPClient(conn);
-			if ((mode == null) || (mode.length() == 0)) {
+			if (StringUtils.isBlank(mode)) {
 				mode = "0600";
 			}
 			if (remoteFileName == null) {
@@ -95,11 +99,4 @@ public class ScpClientUtil {
 			conn.close();
 		}
 	}
-
-	private String ip;
-	private int port;
-	private String username;
-	private String password;
-
-
 }

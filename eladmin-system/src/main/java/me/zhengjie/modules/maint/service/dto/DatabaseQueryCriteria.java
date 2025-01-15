@@ -15,6 +15,7 @@
  */
 package me.zhengjie.modules.maint.service.dto;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import me.zhengjie.annotation.Query;
 import java.sql.Timestamp;
@@ -27,18 +28,15 @@ import java.util.List;
 @Data
 public class DatabaseQueryCriteria{
 
-	/**
-	 * 模糊
-	 */
+	@ApiModelProperty(value = "模糊")
     @Query(type = Query.Type.INNER_LIKE)
     private String name;
 
-	/**
-	 * 精确
-	 */
     @Query
+	@ApiModelProperty(value = "数据库连接地址")
     private String jdbcUrl;
 
+	@ApiModelProperty(value = "创建时间")
 	@Query(type = Query.Type.BETWEEN)
 	private List<Timestamp> createTime;
 }

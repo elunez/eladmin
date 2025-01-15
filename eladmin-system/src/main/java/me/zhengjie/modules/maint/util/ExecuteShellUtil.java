@@ -20,15 +20,14 @@ import com.jcraft.jsch.ChannelShell;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
 import lombok.extern.slf4j.Slf4j;
-
 import java.io.*;
 import java.util.Vector;
 
 /**
  * 执行shell命令
  *
- * @author: ZhangHouYing
- * @date: 2019/8/10
+ * @author ZhangHouYing
+ * @date 2019/8/10
  */
 @Slf4j
 public class ExecuteShellUtil {

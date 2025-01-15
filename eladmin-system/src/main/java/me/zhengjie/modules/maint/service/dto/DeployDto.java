@@ -16,6 +16,7 @@
 package me.zhengjie.modules.maint.service.dto;
 
 import cn.hutool.core.collection.CollectionUtil;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 import me.zhengjie.base.BaseDTO;
@@ -33,23 +34,19 @@ import java.util.stream.Collectors;
 @Setter
 public class DeployDto extends BaseDTO implements Serializable {
 
-	/**
-	 * 部署编号
-	 */
+	@ApiModelProperty(value = "ID")
     private String id;
 
+	@ApiModelProperty(value = "应用")
 	private AppDto app;
 
-	/**
-	 * 服务器
-	 */
+	@ApiModelProperty(value = "服务器")
 	private Set<ServerDeployDto> deploys;
 
+	@ApiModelProperty(value = "服务器名称")
 	private String servers;
 
-	/**
-	 * 服务状态
-	 */
+	@ApiModelProperty(value = "服务状态")
 	private String status;
 
 	public String getServers() {

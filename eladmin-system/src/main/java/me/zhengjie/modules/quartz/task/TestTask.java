@@ -32,7 +32,7 @@ public class TestTask {
     }
 
     public void run1(String str){
-        log.info("run1 执行成功，参数为： {}" + str);
+        log.info("run1 执行成功，参数为： {}", str);
     }
 
     public void run2(){

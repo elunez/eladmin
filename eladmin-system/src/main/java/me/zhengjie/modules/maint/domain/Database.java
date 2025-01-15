@@ -36,19 +36,19 @@ public class Database extends BaseEntity implements Serializable {
 
     @Id
     @Column(name = "db_id")
-	@ApiModelProperty(value = "ID", hidden = true)
+    @ApiModelProperty(value = "ID", hidden = true)
     private String id;
 
-	@ApiModelProperty(value = "数据库名称")
+    @ApiModelProperty(value = "数据库名称")
     private String name;
 
-	@ApiModelProperty(value = "数据库连接地址")
+    @ApiModelProperty(value = "数据库连接地址")
     private String jdbcUrl;
 
-	@ApiModelProperty(value = "数据库密码")
+    @ApiModelProperty(value = "数据库密码")
     private String pwd;
 
-	@ApiModelProperty(value = "用户名")
+    @ApiModelProperty(value = "用户名")
     private String userName;
 
     public void copy(Database source){

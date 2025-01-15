@@ -16,6 +16,7 @@
 package me.zhengjie.modules.system.service.dto;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * @author Zheng Jie
@@ -24,8 +25,10 @@ import com.alibaba.fastjson.annotation.JSONField;
  **/
 public class UserLoginDto extends UserDto {
 
+    @ApiModelProperty(value = "密码")
     @JSONField(serialize = false)
     private String password;
 
+    @ApiModelProperty(value = "是否为管理员")
     private Boolean isAdmin;
 }

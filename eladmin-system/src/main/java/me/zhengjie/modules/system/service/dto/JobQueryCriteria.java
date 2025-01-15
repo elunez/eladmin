@@ -15,6 +15,7 @@
  */
 package me.zhengjie.modules.system.service.dto;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import me.zhengjie.annotation.Query;
@@ -29,12 +30,15 @@ import java.util.List;
 @NoArgsConstructor
 public class JobQueryCriteria {
 
+    @ApiModelProperty(value = "岗位名称")
     @Query(type = Query.Type.INNER_LIKE)
     private String name;
 
     @Query
+    @ApiModelProperty(value = "岗位状态")
     private Boolean enabled;
 
+    @ApiModelProperty(value = "创建时间")
     @Query(type = Query.Type.BETWEEN)
     private List<Timestamp> createTime;
 }

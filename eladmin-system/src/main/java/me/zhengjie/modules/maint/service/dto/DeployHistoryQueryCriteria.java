@@ -15,6 +15,7 @@
  */
 package me.zhengjie.modules.maint.service.dto;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import me.zhengjie.annotation.Query;
 import java.sql.Timestamp;
@@ -27,15 +28,15 @@ import java.util.List;
 @Data
 public class DeployHistoryQueryCriteria{
 
-	/**
-	 * 精确
-	 */
+	@ApiModelProperty(value = "模糊查询")
 	@Query(blurry = "appName,ip,deployUser")
 	private String blurry;
 
 	@Query
+	@ApiModelProperty(value = "部署编号")
 	private Long deployId;
 
+	@ApiModelProperty(value = "部署时间")
 	@Query(type = Query.Type.BETWEEN)
 	private List<Timestamp> deployDate;
 }

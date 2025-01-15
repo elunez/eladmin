@@ -15,6 +15,7 @@
  */
 package me.zhengjie.modules.system.service.dto;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 import me.zhengjie.base.BaseDTO;
@@ -30,18 +31,25 @@ import java.util.Set;
 @Setter
 public class RoleDto extends BaseDTO implements Serializable {
 
+    @ApiModelProperty(value = "ID")
     private Long id;
 
+    @ApiModelProperty(value = "菜单")
     private Set<MenuDto> menus;
 
+    @ApiModelProperty(value = "部门")
     private Set<DeptDto> depts;
 
+    @ApiModelProperty(value = "名称")
     private String name;
 
+    @ApiModelProperty(value = "数据权限")
     private String dataScope;
 
+    @ApiModelProperty(value = "级别")
     private Integer level;
 
+    @ApiModelProperty(value = "描述")
     private String description;
 
     @Override

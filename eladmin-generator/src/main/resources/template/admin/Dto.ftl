@@ -27,6 +27,7 @@ import java.io.Serializable;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.alibaba.fastjson.serializer.ToStringSerializer;
 </#if>
+import io.swagger.annotations.ApiModelProperty;
 
 /**
 * @website https://eladmin.vip
@@ -40,7 +41,9 @@ public class ${className}Dto implements Serializable {
     <#list columns as column>
 
     <#if column.remark != ''>
-    /** ${column.remark} */
+    @ApiModelProperty(value = "${column.remark}")
+    <#else>
+    @ApiModelProperty(value = "${column.changeColumnName}")
     </#if>
     <#if column.columnKey = 'PRI'>
     <#if !auto && pkColumnType = 'Long'>

@@ -15,6 +15,7 @@
  */
 package me.zhengjie.modules.system.service.dto;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import java.io.Serializable;
 
@@ -25,11 +26,15 @@ import java.io.Serializable;
 @Data
 public class RoleSmallDto implements Serializable {
 
+    @ApiModelProperty(value = "ID")
     private Long id;
 
+    @ApiModelProperty(value = "名称")
     private String name;
 
+    @ApiModelProperty(value = "级别")
     private Integer level;
 
+    @ApiModelProperty(value = "数据权限")
     private String dataScope;
 }

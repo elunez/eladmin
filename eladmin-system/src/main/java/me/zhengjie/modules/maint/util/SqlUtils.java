@@ -17,16 +17,19 @@ package me.zhengjie.modules.maint.util;
 
 import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.util.StringUtils;
-import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
+import me.zhengjie.modules.maint.domain.enums.DataTypeEnum;
 import me.zhengjie.utils.CloseUtil;
 import javax.sql.DataSource;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.sql.*;
+import java.nio.file.Files;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -113,7 +116,6 @@ public class SqlUtils {
 				connection.close();
 			} catch (Exception e) {
 				log.error(e.getMessage(),e);
-				log.error("connection close error：" + e.getMessage());
 			}
 		}
 	}
@@ -126,7 +128,7 @@ public class SqlUtils {
 				return true;
 			}
 		} catch (Exception e) {
-			log.info("Get connection failed:" + e.getMessage());
+            log.error("Get connection failed:{}", e.getMessage());
 		} finally {
 			releaseConnection(connection);
 		}
@@ -146,27 +148,26 @@ public class SqlUtils {
 		return "success";
 	}
 
-
 	/**
 	 * 批量执行sql
 	 * @param connection /
 	 * @param sqlList /
 	 */
 	public static void batchExecute(Connection connection, List<String> sqlList) {
-		Statement st = null;
-		try {
-			st = connection.createStatement();
+		try (Statement st = connection.createStatement()) {
 			for (String sql : sqlList) {
+				// 去除末尾的分号
 				if (sql.endsWith(";")) {
 					sql = sql.substring(0, sql.length() - 1);
 				}
-				st.addBatch(sql);
+				// 检查 SQL 语句是否为空
+				if (!sql.trim().isEmpty()) {
+					st.addBatch(sql);
+				}
 			}
 			st.executeBatch();
-		} catch (SQLException throwables) {
-			throwables.printStackTrace();
-		} finally {
-			CloseUtil.close(st);
+		} catch (SQLException e) {
+			log.error("SQL脚本批量执行发生异常: {}，错误代码: {}", e.getMessage(), e.getErrorCode());
 		}
 	}
 
@@ -174,29 +175,31 @@ public class SqlUtils {
 	 * 将文件中的sql语句以；为单位读取到列表中
 	 * @param sqlFile /
 	 * @return /
-	 * @throws Exception e
-	 */
-	private static List<String> readSqlList(File sqlFile) throws Exception {
-		List<String> sqlList = Lists.newArrayList();
+     */
+	private static List<String> readSqlList(File sqlFile) {
+		List<String> sqlList = new ArrayList<>();
 		StringBuilder sb = new StringBuilder();
-		try (BufferedReader reader = new BufferedReader(new InputStreamReader(
-				new FileInputStream(sqlFile), StandardCharsets.UTF_8))) {
-			String tmp;
-			while ((tmp = reader.readLine()) != null) {
-				log.info("line:{}", tmp);
-				if (tmp.endsWith(";")) {
-					sb.append(tmp);
+		try (BufferedReader reader = Files.newBufferedReader(sqlFile.toPath(), StandardCharsets.UTF_8)) {
+			String line;
+			while ((line = reader.readLine()) != null) {
+				log.info("line: {}", line);
+				sb.append(line.trim());
+
+				if (line.trim().endsWith(";")) {
 					sqlList.add(sb.toString());
-					sb.delete(0, sb.length());
+					// 清空 StringBuilder
+					sb.setLength(0);
 				} else {
-					sb.append(tmp);
+					// 在行之间加一个空格
+					sb.append(" ");
 				}
 			}
-			if (!"".endsWith(sb.toString().trim())) {
-				sqlList.add(sb.toString());
+			if (sb.length() > 0) {
+				sqlList.add(sb.toString().trim());
 			}
+		} catch (Exception e) {
+			log.error("读取SQL文件时发生异常: {}", e.getMessage());
 		}
-
 		return sqlList;
 	}
 
@@ -228,5 +231,4 @@ public class SqlUtils {
 		}
 		return jdbcUrl;
 	}
-
 }

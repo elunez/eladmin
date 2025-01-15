@@ -15,6 +15,7 @@
  */
 package me.zhengjie.service.dto;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import me.zhengjie.annotation.Query;
 
@@ -28,9 +29,11 @@ import java.util.List;
 @Data
 public class QiniuQueryCriteria{
 
+    @ApiModelProperty(value = "名称查询")
     @Query(type = Query.Type.INNER_LIKE)
     private String key;
 
+    @ApiModelProperty(value = "创建时间")
     @Query(type = Query.Type.BETWEEN)
     private List<Timestamp> createTime;
 }

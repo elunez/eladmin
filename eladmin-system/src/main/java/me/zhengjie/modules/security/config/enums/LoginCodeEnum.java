@@ -18,8 +18,8 @@ package me.zhengjie.modules.security.config.enums;
 /**
  * 验证码配置枚举
  *
- * @author: liaojinlong
- * @date: 2020/6/10 17:40
+ * @author liaojinlong
+ * @date 2020/6/10 17:40
  */
 
 public enum LoginCodeEnum {
@@ -39,5 +39,8 @@ public enum LoginCodeEnum {
      * 闪图
      */
     GIF,
+    /**
+     * 静态
+     */
     SPEC
 }
