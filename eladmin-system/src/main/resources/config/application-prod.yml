@@ -3,8 +3,8 @@ spring:
   datasource:
     druid:
       db-type: com.alibaba.druid.pool.DruidDataSource
-      driverClassName: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
-      url: jdbc:log4jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:eladmin}?serverTimezone=Asia/Shanghai&characterEncoding=utf8&useSSL=false
+      driverClassName: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:eladmin}?serverTimezone=Asia/Shanghai&characterEncoding=utf8&useSSL=false
       username: ${DB_USER:root}
       password: ${DB_PWD:123456}
       # 初始连接数，建议设置为与最小空闲连接数相同
@@ -90,9 +90,9 @@ jwt:
   # 令牌过期时间 此处单位/毫秒 ，默认2小时，可在此网站生成 https://www.convertworld.com/zh-hans/time/milliseconds.html
   token-validity-in-seconds: 7200000
   # 在线用户key
-  online-key: "online-token:"
+  online-key: "online_token:"
   # 验证码
-  code-key: "captcha-code:"
+  code-key: "captcha_code:"
   # token 续期检查时间范围（默认30分钟，单位默认毫秒），在token即将过期的一段时间内用户操作了，则给用户的token续期
   detect: 1800000
   # 续期时间范围，默认 1小时，这里单位毫秒
