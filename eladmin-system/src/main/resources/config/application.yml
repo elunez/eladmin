@@ -1,8 +1,14 @@
 server:
   port: 8000
-  compression:
+  http2:
+    # 启用 HTTP/2 支持，提升传输效率
     enabled: true
-    mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json
+  compression:
+    # 启用 GZIP 压缩，减少传输数据量
+    enabled: true
+    # 需要压缩的 MIME 类型
+    mime-types: text/html, text/xml, text/plain, application/json
+    # 最小压缩响应大小（字节）
 
 spring:
   freemarker:
