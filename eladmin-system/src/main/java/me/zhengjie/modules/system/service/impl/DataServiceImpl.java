@@ -23,23 +23,23 @@ import me.zhengjie.modules.system.service.DeptService;
 import me.zhengjie.modules.system.service.RoleService;
 import me.zhengjie.modules.system.service.dto.RoleSmallDto;
 import me.zhengjie.modules.system.service.dto.UserDto;
+import me.zhengjie.utils.CacheKey;
+import me.zhengjie.utils.RedisUtils;
 import me.zhengjie.utils.enums.DataScopeEnum;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Zheng Jie
- * @website https://eladmin.vip
  * @description 数据权限服务实现
  * @date 2020-05-07
  **/
 @Service
 @RequiredArgsConstructor
-@CacheConfig(cacheNames = "data", keyGenerator = "keyGenerator")
 public class DataServiceImpl implements DataService {
 
+    private final RedisUtils redisUtils;
     private final RoleService roleService;
     private final DeptService deptService;
 
@@ -49,27 +49,32 @@ public class DataServiceImpl implements DataService {
      * @return /
      */
     @Override
-    @Cacheable(key = "'user:' + #p0.id")
     public List<Long> getDeptIds(UserDto user) {
-        // 用于存储部门id
-        Set<Long> deptIds = new HashSet<>();
-        // 查询用户角色
-        List<RoleSmallDto> roleSet = roleService.findByUsersId(user.getId());
-        // 获取对应的部门ID
-        for (RoleSmallDto role : roleSet) {
-            DataScopeEnum dataScopeEnum = DataScopeEnum.find(role.getDataScope());
-            switch (Objects.requireNonNull(dataScopeEnum)) {
-                case THIS_LEVEL:
-                    deptIds.add(user.getDept().getId());
-                    break;
-                case CUSTOMIZE:
-                    deptIds.addAll(getCustomize(deptIds, role));
-                    break;
-                default:
-                    return new ArrayList<>();
+        String key = CacheKey.DATA_USER + user.getId();
+        List<Long> ids = redisUtils.getList(key, Long.class);
+        if (CollUtil.isEmpty(ids)) {
+            // 用于存储部门id
+            Set<Long> deptIds = new HashSet<>();
+            // 查询用户角色
+            List<RoleSmallDto> roleSet = roleService.findByUsersId(user.getId());
+            // 获取对应的部门ID
+            for (RoleSmallDto role : roleSet) {
+                DataScopeEnum dataScopeEnum = DataScopeEnum.find(role.getDataScope());
+                switch (Objects.requireNonNull(dataScopeEnum)) {
+                    case THIS_LEVEL:
+                        deptIds.add(user.getDept().getId());
+                        break;
+                    case CUSTOMIZE:
+                        deptIds.addAll(getCustomize(deptIds, role));
+                        break;
+                    default:
+                        return new ArrayList<>();
+                }
             }
+            ids = new ArrayList<>(deptIds);
+            redisUtils.set(key, ids, 1, TimeUnit.DAYS);
         }
-        return new ArrayList<>(deptIds);
+        return new ArrayList<>(ids);
     }
 
     /**

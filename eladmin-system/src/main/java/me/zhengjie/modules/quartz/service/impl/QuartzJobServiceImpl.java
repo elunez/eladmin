@@ -103,6 +103,7 @@ public class QuartzJobServiceImpl implements QuartzJobService {
 
     @Override
     public void updateIsPause(QuartzJob quartzJob) {
+        // 置换暂停状态
         if (quartzJob.getIsPause()) {
             quartzManage.resumeJob(quartzJob);
             quartzJob.setIsPause(false);

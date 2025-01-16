@@ -30,8 +30,6 @@ import me.zhengjie.modules.system.service.dto.*;
 import me.zhengjie.modules.system.service.mapstruct.UserLoginMapper;
 import me.zhengjie.modules.system.service.mapstruct.UserMapper;
 import me.zhengjie.utils.*;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -42,6 +40,7 @@ import javax.validation.constraints.NotBlank;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -50,7 +49,6 @@ import java.util.stream.Collectors;
  */
 @Service
 @RequiredArgsConstructor
-@CacheConfig(cacheNames = "user", keyGenerator = "keyGenerator")
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
@@ -74,11 +72,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Cacheable(key = "'id:' + #p0")
     @Transactional(rollbackFor = Exception.class)
     public UserDto findById(long id) {
-        User user = userRepository.findById(id).orElseGet(User::new);
-        ValidationUtil.isNull(user.getId(), "User", "id", id);
+        String key = CacheKey.USER_ID + id;
+        User user = redisUtils.get(key, User.class);
+        if (user == null) {
+            user = userRepository.findById(id).orElseGet(User::new);
+            ValidationUtil.isNull(user.getId(), "User", "id", id);
+            redisUtils.set(key, user, 1, TimeUnit.DAYS);
+        }
         return userMapper.toDto(user);
     }
 
