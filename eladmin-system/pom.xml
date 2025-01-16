@@ -39,12 +39,6 @@
             <version>2.7</version>
         </dependency>
 
-        <!-- Spring boot websocket -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-websocket</artifactId>
-		</dependency>
-
         <!-- quartz -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

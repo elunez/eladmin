@@ -1,5 +1,5 @@
 /*
- *  Copyright 2019-2020 Zheng Jie
+ *  Copyright 2019-2025 Zheng Jie
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package me.zhengjie.modules.system.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
 import lombok.RequiredArgsConstructor;
@@ -30,8 +31,6 @@ import me.zhengjie.modules.system.repository.DeptRepository;
 import me.zhengjie.modules.system.service.DeptService;
 import me.zhengjie.modules.system.service.mapstruct.DeptMapper;
 import me.zhengjie.utils.enums.DataScopeEnum;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,6 +38,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -47,7 +47,6 @@ import java.util.stream.Collectors;
 */
 @Service
 @RequiredArgsConstructor
-@CacheConfig(cacheNames = "dept")
 public class DeptServiceImpl implements DeptService {
 
     private final DeptRepository deptRepository;
@@ -88,10 +87,14 @@ public class DeptServiceImpl implements DeptService {
     }
 
     @Override
-    @Cacheable(key = "'id:' + #p0")
     public DeptDto findById(Long id) {
-        Dept dept = deptRepository.findById(id).orElseGet(Dept::new);
-        ValidationUtil.isNull(dept.getId(),"Dept","id",id);
+        String key = CacheKey.DEPT_ID + id;
+        Dept dept = redisUtils.get(key, Dept.class);
+        if(dept == null){
+            dept = deptRepository.findById(id).orElseGet(Dept::new);
+            ValidationUtil.isNull(dept.getId(),"Dept","id",id);
+            redisUtils.set(key, dept, 1, TimeUnit.DAYS);
+        }
         return deptMapper.toDto(dept);
     }
 
@@ -166,7 +169,7 @@ public class DeptServiceImpl implements DeptService {
         for (Dept dept : menuList) {
             deptDtos.add(deptMapper.toDto(dept));
             List<Dept> depts = deptRepository.findByPid(dept.getId());
-            if(depts!=null && depts.size()!=0){
+            if(CollUtil.isNotEmpty(depts)){
                 getDeleteDepts(depts, deptDtos);
             }
         }
@@ -179,7 +182,7 @@ public class DeptServiceImpl implements DeptService {
         deptList.forEach(dept -> {
                     if (dept!=null && dept.getEnabled()) {
                         List<Dept> depts = deptRepository.findByPid(dept.getId());
-                        if (depts.size() != 0) {
+                        if (CollUtil.isNotEmpty(depts)) {
                             list.addAll(getDeptChildren(depts));
                         }
                         list.add(dept.getId());

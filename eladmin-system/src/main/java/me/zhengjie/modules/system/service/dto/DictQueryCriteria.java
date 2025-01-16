@@ -1,5 +1,5 @@
 /*
- *  Copyright 2019-2020 Zheng Jie
+ *  Copyright 2019-2025 Zheng Jie
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package me.zhengjie.modules.system.service.dto;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import me.zhengjie.annotation.Query;
 
@@ -25,6 +26,7 @@ import me.zhengjie.annotation.Query;
 @Data
 public class DictQueryCriteria {
 
+    @ApiModelProperty(value = "模糊查询")
     @Query(blurry = "name,description")
     private String blurry;
 }

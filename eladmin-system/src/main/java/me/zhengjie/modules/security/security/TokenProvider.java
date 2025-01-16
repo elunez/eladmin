@@ -1,5 +1,5 @@
 /*
- *  Copyright 2019-2020 Zheng Jie
+ *  Copyright 2019-2025 Zheng Jie
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -23,7 +23,8 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
-import me.zhengjie.modules.security.config.bean.SecurityProperties;
+import me.zhengjie.modules.security.config.SecurityProperties;
+import me.zhengjie.modules.security.service.dto.JwtUserDto;
 import me.zhengjie.utils.RedisUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -42,11 +43,12 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class TokenProvider implements InitializingBean {
 
-    private final SecurityProperties properties;
-    private final RedisUtils redisUtils;
-    public static final String AUTHORITIES_KEY = "user";
     private JwtParser jwtParser;
     private JwtBuilder jwtBuilder;
+    private final RedisUtils redisUtils;
+    private final SecurityProperties properties;
+    public static final String AUTHORITIES_UUID_KEY = "uuid";
+    public static final String AUTHORITIES_UID_KEY = "userId";
 
     public TokenProvider(SecurityProperties properties, RedisUtils redisUtils) {
         this.properties = properties;
@@ -68,15 +70,19 @@ public class TokenProvider implements InitializingBean {
      * 创建Token 设置永不过期，
      * Token 的时间有效性转到Redis 维护
      *
-     * @param authentication /
+     * @param user /
      * @return /
      */
-    public String createToken(Authentication authentication) {
+    public String createToken(JwtUserDto user) {
+        // 设置参数
+        Map<String, Object> claims = new HashMap<>(6);
+        // 设置用户ID
+        claims.put(AUTHORITIES_UID_KEY, user.getUser().getId());
+        // 设置UUID，确保每次Token不一样
+        claims.put(AUTHORITIES_UUID_KEY, IdUtil.simpleUUID());
         return jwtBuilder
-                // 加入ID确保生成的 Token 都不一致
-                .setId(IdUtil.simpleUUID())
-                .claim(AUTHORITIES_KEY, authentication.getName())
-                .setSubject(authentication.getName())
+                .setClaims(claims)
+                .setSubject(user.getUsername())
                 .compact();
     }
 

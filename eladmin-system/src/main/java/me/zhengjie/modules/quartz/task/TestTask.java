@@ -1,5 +1,5 @@
 /*
- *  Copyright 2019-2020 Zheng Jie
+ *  Copyright 2019-2025 Zheng Jie
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ public class TestTask {
     }
 
     public void run1(String str){
-        log.info("run1 执行成功，参数为： {}" + str);
+        log.info("run1 执行成功，参数为： {}", str);
     }
 
     public void run2(){

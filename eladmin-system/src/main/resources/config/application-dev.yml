@@ -3,25 +3,25 @@ spring:
   datasource:
     druid:
       db-type: com.alibaba.druid.pool.DruidDataSource
-      driverClassName: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
-      url: jdbc:log4jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:eladmin}?serverTimezone=Asia/Shanghai&characterEncoding=utf8&useSSL=false
-      username: ${DB_USER:root}
-      password: ${DB_PWD:123456}
-      # 初始连接数
-      initial-size: 5
-      # 最小连接数
-      min-idle: 15
-      # 最大连接数
-      max-active: 30
-      # 超时时间(以秒数为单位)
-      remove-abandoned-timeout: 180
-      # 获取连接超时时间
+      driverClassName: com.p6spy.engine.spy.P6SpyDriver
+      url: jdbc:p6spy:mysql://localhost:3306/eladmin?serverTimezone=Asia/Shanghai&characterEncoding=utf8&useSSL=false
+      username: root
+      password: 123456
+      # 初始连接数，建议设置为与最小空闲连接数相同
+      initial-size: 20
+      # 最小空闲连接数，保持足够的空闲连接以应对请求
+      min-idle: 20
+      # 最大连接数，根据并发需求适当增加
+      max-active: 50
+      # 获取连接超时时间（毫秒），调整以满足响应时间要求
       max-wait: 3000
-      # 连接有效性检测时间
+      # 启用KeepAlive机制，保持长连接
+      keep-alive: true
+      # 连接有效性检测间隔时间（毫秒），定期检查连接的健康状态
       time-between-eviction-runs-millis: 60000
-      # 连接在池中最小生存的时间
+      # 连接在池中最小生存时间（毫秒），确保连接在池中至少存在一段时间
       min-evictable-idle-time-millis: 300000
-      # 连接在池中最大生存的时间
+      # 连接在池中最大生存时间（毫秒），防止连接在池中停留过长
       max-evictable-idle-time-millis: 900000
       # 指明连接是否被空闲连接回收器(如果有)进行检验.如果检测失败,则连接将被从池中去除
       test-while-idle: true
@@ -29,8 +29,10 @@ spring:
       test-on-borrow: true
       # 是否在归还到池中前进行检验
       test-on-return: false
+      # 停用 com_ping 探活机制
+      use-ping-method: false
       # 检测连接是否有效
-      validation-query: select 1
+      validation-query: SELECT 1
       # 配置监控统计
       webStatFilter:
         enabled: true
@@ -43,7 +45,7 @@ spring:
           enabled: true
           # 记录慢SQL
           log-slow-sql: true
-          slow-sql-millis: 1000
+          slow-sql-millis: 2000
           merge-sql: true
         wall:
           config:
@@ -58,7 +60,7 @@ login:
     # 存活时间/秒
     idle-time: 21600
   #  验证码
-  login-code:
+  code:
     #  验证码类型配置 查看 LoginProperties 类
     code-type: arithmetic
     #  登录图形验证码有效时间/分钟
@@ -84,9 +86,9 @@ jwt:
   # 令牌过期时间 此处单位/毫秒 ，默认4小时，可在此网站生成 https://www.convertworld.com/zh-hans/time/milliseconds.html
   token-validity-in-seconds: 14400000
   # 在线用户key
-  online-key: "online-token:"
+  online-key: "online_token:"
   # 验证码
-  code-key: "captcha-code:"
+  code-key: "captcha_code:"
   # token 续期检查时间范围（默认30分钟，单位毫秒），在token即将过期的一段时间内用户操作了，则给用户的token续期
   detect: 1800000
   # 续期时间范围，默认1小时，单位毫秒

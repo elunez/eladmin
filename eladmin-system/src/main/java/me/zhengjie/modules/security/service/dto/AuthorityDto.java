@@ -1,5 +1,5 @@
 /*
- *  Copyright 2019-2020 Zheng Jie
+ *  Copyright 2019-2025 Zheng Jie
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package me.zhengjie.modules.security.service.dto;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,5 +31,6 @@ import org.springframework.security.core.GrantedAuthority;
 @AllArgsConstructor
 public class AuthorityDto implements GrantedAuthority {
 
+    @ApiModelProperty(value = "角色名")
     private String authority;
 }

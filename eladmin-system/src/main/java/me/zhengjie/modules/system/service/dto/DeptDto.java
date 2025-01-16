@@ -1,5 +1,5 @@
 /*
- *  Copyright 2019-2020 Zheng Jie
+ *  Copyright 2019-2025 Zheng Jie
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package me.zhengjie.modules.system.service.dto;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 import me.zhengjie.base.BaseDTO;
@@ -30,28 +31,38 @@ import java.util.Objects;
 @Setter
 public class DeptDto extends BaseDTO implements Serializable {
 
+    @ApiModelProperty(value = "ID")
     private Long id;
 
+    @ApiModelProperty(value = "名称")
     private String name;
 
+    @ApiModelProperty(value = "是否启用")
     private Boolean enabled;
 
+    @ApiModelProperty(value = "排序")
     private Integer deptSort;
 
+    @ApiModelProperty(value = "子部门")
     private List<DeptDto> children;
 
+    @ApiModelProperty(value = "上级部门")
     private Long pid;
 
+    @ApiModelProperty(value = "子部门数量", hidden = true)
     private Integer subCount;
 
+    @ApiModelProperty(value = "是否有子节点")
     public Boolean getHasChildren() {
         return subCount > 0;
     }
 
+    @ApiModelProperty(value = "是否为叶子")
     public Boolean getLeaf() {
         return subCount <= 0;
     }
 
+    @ApiModelProperty(value = "部门全名")
     public String getLabel() {
         return name;
     }

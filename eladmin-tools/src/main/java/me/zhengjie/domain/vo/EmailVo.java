@@ -1,5 +1,5 @@
 /*
- *  Copyright 2019-2020 Zheng Jie
+ *  Copyright 2019-2025 Zheng Jie
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package me.zhengjie.domain.vo;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -32,13 +33,15 @@ import java.util.List;
 @NoArgsConstructor
 public class EmailVo {
 
-    /** 收件人，支持多个收件人 */
     @NotEmpty
+    @ApiModelProperty(value = "收件人")
     private List<String> tos;
 
     @NotBlank
+    @ApiModelProperty(value = "主题")
     private String subject;
 
     @NotBlank
+    @ApiModelProperty(value = "内容")
     private String content;
 }

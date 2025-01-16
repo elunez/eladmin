@@ -1,5 +1,5 @@
 /*
- *  Copyright 2019-2020 Zheng Jie
+ *  Copyright 2019-2025 Zheng Jie
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package me.zhengjie.modules.system.service.dto;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import java.io.Serializable;
 
@@ -25,7 +26,9 @@ import java.io.Serializable;
 @Data
 public class DeptSmallDto implements Serializable {
 
+    @ApiModelProperty(value = "ID")
     private Long id;
 
+    @ApiModelProperty(value = "名称")
     private String name;
 }

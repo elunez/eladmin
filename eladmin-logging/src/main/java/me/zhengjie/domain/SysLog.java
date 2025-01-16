@@ -1,5 +1,5 @@
 /*
- *  Copyright 2019-2020 Zheng Jie
+ *  Copyright 2019-2025 Zheng Jie
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,6 +15,8 @@
  */
 package me.zhengjie.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -36,41 +38,44 @@ public class SysLog implements Serializable {
 
     @Id
     @Column(name = "log_id")
+    @ApiModelProperty(value = "ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    /** 操作用户 */
+    @ApiModelProperty(value = "操作用户")
     private String username;
 
-    /** 描述 */
+    @ApiModelProperty(value = "描述")
     private String description;
 
-    /** 方法名 */
+    @ApiModelProperty(value = "方法名")
     private String method;
 
-    /** 参数 */
+    @ApiModelProperty(value = "参数")
     private String params;
 
-    /** 日志类型 */
+    @ApiModelProperty(value = "日志类型")
     private String logType;
 
-    /** 请求ip */
+    @ApiModelProperty(value = "请求ip")
     private String requestIp;
 
-    /** 地址 */
+    @ApiModelProperty(value = "地址")
     private String address;
 
-    /** 浏览器  */
+    @ApiModelProperty(value = "浏览器")
     private String browser;
 
-    /** 请求耗时 */
+    @ApiModelProperty(value = "请求耗时")
     private Long time;
 
-    /** 异常详细  */
+    @ApiModelProperty(value = "异常详细")
     private byte[] exceptionDetail;
 
     /** 创建日期 */
     @CreationTimestamp
+    @ApiModelProperty(value = "创建日期：yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private Timestamp createTime;
 
     public SysLog(String logType, Long time) {

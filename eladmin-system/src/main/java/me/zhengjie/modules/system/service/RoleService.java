@@ -1,5 +1,5 @@
 /*
- *  Copyright 2019-2020 Zheng Jie
+ *  Copyright 2019-2025 Zheng Jie
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -120,7 +120,7 @@ public interface RoleService {
      * @param user 用户信息
      * @return 权限信息
      */
-    List<AuthorityDto> mapToGrantedAuthorities(UserDto user);
+    List<AuthorityDto> buildAuthorities(UserDto user);
 
     /**
      * 验证是否被用户关联

@@ -1,5 +1,5 @@
 /*
- *  Copyright 2019-2020 Zheng Jie
+ *  Copyright 2019-2025 Zheng Jie
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,6 +15,8 @@
  */
 package me.zhengjie.domain.vo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,20 +31,19 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class TableInfo {
 
-    /** 表名称 */
+    @ApiModelProperty(value = "表名称")
     private Object tableName;
 
-    /** 创建日期 */
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    @ApiModelProperty(value = "创建日期：yyyy-MM-dd HH:mm:ss")
     private Object createTime;
 
-    /** 数据库引擎 */
+    @ApiModelProperty(value = "数据库引擎")
     private Object engine;
 
-    /** 编码集 */
+    @ApiModelProperty(value = "编码集")
     private Object coding;
 
-    /** 备注 */
+    @ApiModelProperty(value = "备注")
     private Object remark;
-
-
 }

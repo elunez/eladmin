@@ -1,5 +1,5 @@
 /*
- *  Copyright 2019-2020 Zheng Jie
+ *  Copyright 2019-2025 Zheng Jie
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ public interface QiNiuConfigRepository extends JpaRepository<QiniuConfig,Long> {
 
     /**
      * 编辑类型
-     * @param type
+     * @param type /
      */
     @Modifying
     @Query(value = "update QiniuConfig set type = ?1")

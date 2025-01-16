@@ -1,5 +1,5 @@
 /*
-*  Copyright 2019-2020 Zheng Jie
+*  Copyright 2019-2025 Zheng Jie
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -39,13 +39,12 @@ import ${package}.service.dto.${className}Dto;
 **/
 @RestController
 @RequiredArgsConstructor
-@Api(tags = "${apiAlias}管理")
+@Api(tags = "${apiAlias}")
 @RequestMapping("/api/${changeClassName}")
 public class ${className}Controller {
 
     private final ${className}Service ${changeClassName}Service;
 
-    @Log("导出数据")
     @ApiOperation("导出数据")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('${changeClassName}:list')")
@@ -54,7 +53,6 @@ public class ${className}Controller {
     }
 
     @GetMapping
-    @Log("查询${apiAlias}")
     @ApiOperation("查询${apiAlias}")
     @PreAuthorize("@el.check('${changeClassName}:list')")
     public ResponseEntity<PageResult<${className}Dto>> query${className}(${className}QueryCriteria criteria, Pageable pageable){
@@ -83,7 +81,7 @@ public class ${className}Controller {
     @Log("删除${apiAlias}")
     @ApiOperation("删除${apiAlias}")
     @PreAuthorize("@el.check('${changeClassName}:del')")
-    public ResponseEntity<Object> delete${className}(@RequestBody ${pkColumnType}[] ids) {
+    public ResponseEntity<Object> delete${className}(@ApiParam(value = "传ID数组[]") @RequestBody ${pkColumnType}[] ids) {
         ${changeClassName}Service.deleteAll(ids);
         return new ResponseEntity<>(HttpStatus.OK);
     }

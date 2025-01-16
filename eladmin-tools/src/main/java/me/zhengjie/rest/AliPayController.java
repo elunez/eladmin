@@ -1,5 +1,5 @@
 /*
- *  Copyright 2019-2020 Zheng Jie
+ *  Copyright 2019-2025 Zheng Jie
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -19,12 +19,12 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import me.zhengjie.annotation.AnonymousAccess;
+import me.zhengjie.annotation.rest.AnonymousAccess;
 import me.zhengjie.annotation.Log;
 import me.zhengjie.annotation.rest.AnonymousGetMapping;
 import me.zhengjie.domain.vo.TradeVo;
 import me.zhengjie.domain.AlipayConfig;
-import me.zhengjie.utils.AliPayStatusEnum;
+import me.zhengjie.domain.enums.AliPayStatusEnum;
 import me.zhengjie.utils.AlipayUtils;
 import me.zhengjie.service.AliPayService;
 import org.springframework.http.HttpStatus;

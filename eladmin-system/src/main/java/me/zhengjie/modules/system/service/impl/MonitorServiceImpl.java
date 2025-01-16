@@ -1,5 +1,5 @@
 /*
- *  Copyright 2019-2020 Zheng Jie
+ *  Copyright 2019-2025 Zheng Jie
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package me.zhengjie.modules.system.service.impl;
 
 import cn.hutool.core.date.BetweenFormatter.Level;
 import cn.hutool.core.date.DateUtil;
+import lombok.extern.slf4j.Slf4j;
 import me.zhengjie.modules.system.service.MonitorService;
 import me.zhengjie.utils.ElConstant;
 import me.zhengjie.utils.FileUtil;
@@ -37,6 +38,7 @@ import java.util.*;
 * @author Zheng Jie
 * @date 2020-05-02
 */
+@Slf4j
 @Service
 public class MonitorServiceImpl implements MonitorService {
 
@@ -61,7 +63,7 @@ public class MonitorServiceImpl implements MonitorService {
             resultMap.put("disk", getDiskInfo(os));
             resultMap.put("time", DateUtil.format(new Date(), "HH:mm:ss"));
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         return resultMap;
     }

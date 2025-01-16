@@ -1,5 +1,5 @@
 /*
- *  Copyright 2019-2020 Zheng Jie
+ *  Copyright 2019-2025 Zheng Jie
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ import java.util.Optional;
  */
 @Service
 @RequiredArgsConstructor
-@CacheConfig(cacheNames = "aliPay")
+@CacheConfig(cacheNames = "aliPay", keyGenerator = "keyGenerator")
 public class AliPayServiceImpl implements AliPayService {
 
     private final AliPayRepository alipayRepository;

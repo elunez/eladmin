@@ -1,8 +1,14 @@
 server:
   port: 8000
-  compression:
+  http2:
+    # 启用 HTTP/2 支持，提升传输效率
     enabled: true
-    mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json
+  compression:
+    # 启用 GZIP 压缩，减少传输数据量
+    enabled: true
+    # 需要压缩的 MIME 类型
+    mime-types: text/html, text/xml, text/plain, application/json
+    # 最小压缩响应大小（字节）
 
 spring:
   freemarker:
@@ -34,6 +40,17 @@ spring:
     password: ${REDIS_PWD:}
     #连接超时时间
     timeout: 5000
+    # 连接池配置
+    lettuce:
+      pool:
+        # 连接池最大连接数
+        max-active: 30
+        # 连接池最大阻塞等待时间（毫秒），负值表示没有限制
+        max-wait: -1
+        # 连接池中的最大空闲连接数
+        max-idle: 20
+        # 连接池中的最小空闲连接数
+        min-idle: 1
 
 task:
   pool:

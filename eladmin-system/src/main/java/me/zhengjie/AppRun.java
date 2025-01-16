@@ -1,5 +1,5 @@
 /*
- *  Copyright 2019-2020 Zheng Jie
+ *  Copyright 2019-2025 Zheng Jie
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,8 +16,9 @@
 package me.zhengjie;
 
 import io.swagger.annotations.Api;
+import lombok.extern.slf4j.Slf4j;
 import me.zhengjie.annotation.rest.AnonymousGetMapping;
-import me.zhengjie.utils.SpringContextHolder;
+import me.zhengjie.utils.SpringBeanHolder;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.ApplicationPidFileWriter;
@@ -35,6 +36,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author Zheng Jie
  * @date 2018/11/15 9:20:19
  */
+@Slf4j
 @EnableAsync
 @RestController
 @Api(hidden = true)
@@ -49,11 +51,15 @@ public class AppRun {
         // 或者在 application.yml 添加文件路径，方便 kill，kill `cat /home/eladmin/app.pid`
         springApplication.addListeners(new ApplicationPidFileWriter());
         springApplication.run(args);
+        log.info("---------------------------------------------");
+        log.info("Local: {}", "http://localhost:8000");
+        log.info("Swagger: {}", "http://localhost:8000/doc.html");
+        log.info("---------------------------------------------");
     }
 
     @Bean
-    public SpringContextHolder springContextHolder() {
-        return new SpringContextHolder();
+    public SpringBeanHolder springContextHolder() {
+        return new SpringBeanHolder();
     }
 
     /**

@@ -1,5 +1,5 @@
 /*
- *  Copyright 2019-2020 Zheng Jie
+ *  Copyright 2019-2025 Zheng Jie
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -27,9 +27,6 @@ import me.zhengjie.modules.system.repository.JobRepository;
 import me.zhengjie.modules.system.service.JobService;
 import me.zhengjie.modules.system.service.dto.JobDto;
 import me.zhengjie.modules.system.service.mapstruct.JobMapper;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -37,6 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
 * @author Zheng Jie
@@ -44,7 +42,6 @@ import java.util.*;
 */
 @Service
 @RequiredArgsConstructor
-@CacheConfig(cacheNames = "job")
 public class JobServiceImpl implements JobService {
 
     private final JobRepository jobRepository;
@@ -65,10 +62,14 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    @Cacheable(key = "'id:' + #p0")
     public JobDto findById(Long id) {
-        Job job = jobRepository.findById(id).orElseGet(Job::new);
-        ValidationUtil.isNull(job.getId(),"Job","id",id);
+        String key = CacheKey.JOB_ID + id;
+        Job job = redisUtils.get(key, Job.class);
+        if(job == null){
+            job = jobRepository.findById(id).orElseGet(Job::new);
+            ValidationUtil.isNull(job.getId(),"Job","id",id);
+            redisUtils.set(key, job, 1, TimeUnit.DAYS);
+        }
         return jobMapper.toDto(job);
     }
 
@@ -83,7 +84,6 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    @CacheEvict(key = "'id:' + #p0.id")
     @Transactional(rollbackFor = Exception.class)
     public void update(Job resources) {
         Job job = jobRepository.findById(resources.getId()).orElseGet(Job::new);
@@ -94,6 +94,8 @@ public class JobServiceImpl implements JobService {
         ValidationUtil.isNull( job.getId(),"Job","id",resources.getId());
         resources.setId(job.getId());
         jobRepository.save(resources);
+        // 删除缓存
+        delCaches(resources.getId());
     }
 
     @Override
@@ -122,5 +124,13 @@ public class JobServiceImpl implements JobService {
         if(userRepository.countByJobs(ids) > 0){
             throw new BadRequestException("所选的岗位中存在用户关联，请解除关联再试！");
         }
+    }
+
+    /**
+     * 删除缓存
+     * @param id /
+     */
+    public void delCaches(Long id){
+        redisUtils.del(CacheKey.JOB_ID + id);
     }
 }

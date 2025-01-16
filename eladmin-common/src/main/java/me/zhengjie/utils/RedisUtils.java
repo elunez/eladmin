@@ -1,5 +1,5 @@
 /*
- *  Copyright 2019-2020 Zheng Jie
+ *  Copyright 2019-2025 Zheng Jie
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package me.zhengjie.utils;
 
+import cn.hutool.core.util.StrUtil;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import org.slf4j.Logger;
@@ -24,14 +25,16 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.*;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.stereotype.Component;
+
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * @author /
  */
 @Component
-@SuppressWarnings({"unchecked", "all"})
+@SuppressWarnings({"all"})
 public class RedisUtils {
     private static final Logger log = LoggerFactory.getLogger(RedisUtils.class);
 
@@ -39,9 +42,8 @@ public class RedisUtils {
 
     public RedisUtils(RedisTemplate<Object, Object> redisTemplate) {
         this.redisTemplate = redisTemplate;
-        this.redisTemplate.setHashKeySerializer(new StringRedisSerializer());
         this.redisTemplate.setKeySerializer(new StringRedisSerializer());
-        this.redisTemplate.setStringSerializer(new StringRedisSerializer());
+        this.redisTemplate.setHashKeySerializer(new StringRedisSerializer());
     }
 
     /**
@@ -222,6 +224,65 @@ public class RedisUtils {
     }
 
     /**
+     * 普通缓存获取
+     *
+     * @param key 键
+     * @return 值
+     */
+    public <T> T get(String key, Class<T> clazz) {
+        Object value = key == null ? null : redisTemplate.opsForValue().get(key);
+        if (value == null) {
+            return null;
+        }
+        if (clazz.isInstance(value)) {
+            return clazz.cast(value);
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * 普通缓存获取
+     *
+     * @param key 键
+     * @param clazz 列表中元素的类型
+     * @return 值
+     */
+    public <T> List<T> getList(String key, Class<T> clazz) {
+        Object value = key == null ? null : redisTemplate.opsForValue().get(key);
+        if (value == null) {
+            return null;
+        }
+        if (value instanceof List<?>) {
+            List<?> list = (List<?>) value;
+            // 检查每个元素是否为指定类型
+            if (list.stream().allMatch(clazz::isInstance)) {
+                return list.stream().map(clazz::cast).collect(Collectors.toList());
+            }
+        }
+        return null;
+    }
+
+
+    /**
+     * 普通缓存获取
+     *
+     * @param key 键
+     * @return 值
+     */
+    public String getStr(String key) {
+        if(StrUtil.isBlank(key)){
+            return null;
+        }
+        Object value = redisTemplate.opsForValue().get(key);
+        if (value == null) {
+            return null;
+        } else {
+            return String.valueOf(value);
+        }
+    }
+
+    /**
      * 批量获取
      *
      * @param keys
@@ -242,13 +303,17 @@ public class RedisUtils {
      * @return true成功 false失败
      */
     public boolean set(String key, Object value) {
-        try {
-            redisTemplate.opsForValue().set(key, value);
-            return true;
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            return false;
+        int attempt = 0;
+        while (attempt < 3) {
+            try {
+                redisTemplate.opsForValue().set(key, value);
+                return true;
+            } catch (Exception e) {
+                attempt++;
+                log.error("Attempt {} failed: {}", attempt, e.getMessage(), e);
+            }
         }
+        return false;
     }
 
     /**
@@ -716,10 +781,25 @@ public class RedisUtils {
             keys.addAll(redisTemplate.keys(new StringBuffer(prefix).append(id).toString()));
         }
         long count = redisTemplate.delete(keys);
-        // 此处提示可自行删除
-        log.debug("--------------------------------------------");
-        log.debug("成功删除缓存：" + keys.toString());
-        log.debug("缓存删除数量：" + count + "个");
-        log.debug("--------------------------------------------");
+    }
+
+    // ============================incr=============================
+
+    /**
+     * 递增
+     * @param key
+     * @return
+     */
+    public Long increment(String key) {
+        return redisTemplate.opsForValue().increment(key);
+    }
+
+    /**
+     * 递减
+     * @param key
+     * @return
+     */
+    public Long decrement(String key) {
+        return redisTemplate.opsForValue().decrement(key);
     }
 }

@@ -1,5 +1,5 @@
 /*
- *  Copyright 2019-2020 Zheng Jie
+ *  Copyright 2019-2025 Zheng Jie
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@ import lombok.RequiredArgsConstructor;
 import me.zhengjie.domain.GenConfig;
 import me.zhengjie.repository.GenConfigRepository;
 import me.zhengjie.service.GenConfigService;
-import me.zhengjie.utils.StringUtils;
 import org.springframework.stereotype.Service;
 import java.io.File;
 
@@ -29,6 +28,7 @@ import java.io.File;
  */
 @Service
 @RequiredArgsConstructor
+@SuppressWarnings({"unchecked","all"})
 public class GenConfigServiceImpl implements GenConfigService {
 
     private final GenConfigRepository genConfigRepository;

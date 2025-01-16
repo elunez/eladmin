@@ -1,5 +1,5 @@
 /*
- *  Copyright 2019-2020 Zheng Jie
+ *  Copyright 2019-2025 Zheng Jie
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package me.zhengjie.service.dto;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import java.sql.Timestamp;
 import java.util.List;
@@ -28,9 +29,11 @@ import me.zhengjie.annotation.Query;
 @Data
 public class LocalStorageQueryCriteria{
 
+    @ApiModelProperty(value = "模糊查询")
     @Query(blurry = "name,suffix,type,createBy,size")
     private String blurry;
 
+    @ApiModelProperty(value = "创建时间")
     @Query(type = Query.Type.BETWEEN)
     private List<Timestamp> createTime;
 }

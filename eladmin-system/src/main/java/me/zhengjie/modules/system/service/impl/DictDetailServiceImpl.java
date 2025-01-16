@@ -1,5 +1,5 @@
 /*
- *  Copyright 2019-2020 Zheng Jie
+ *  Copyright 2019-2025 Zheng Jie
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package me.zhengjie.modules.system.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import lombok.RequiredArgsConstructor;
 import me.zhengjie.utils.PageResult;
 import me.zhengjie.modules.system.domain.Dict;
@@ -26,13 +27,12 @@ import me.zhengjie.modules.system.repository.DictDetailRepository;
 import me.zhengjie.modules.system.service.DictDetailService;
 import me.zhengjie.modules.system.service.dto.DictDetailDto;
 import me.zhengjie.modules.system.service.mapstruct.DictDetailMapper;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
 * @author Zheng Jie
@@ -40,7 +40,6 @@ import java.util.List;
 */
 @Service
 @RequiredArgsConstructor
-@CacheConfig(cacheNames = "dict")
 public class DictDetailServiceImpl implements DictDetailService {
 
     private final DictRepository dictRepository;
@@ -74,9 +73,14 @@ public class DictDetailServiceImpl implements DictDetailService {
     }
 
     @Override
-    @Cacheable(key = "'name:' + #p0")
     public List<DictDetailDto> getDictByName(String name) {
-        return dictDetailMapper.toDto(dictDetailRepository.findByDictName(name));
+        String key = CacheKey.DICT_NAME + name;
+        List<DictDetail> dictDetails = redisUtils.getList(key, DictDetail.class);
+        if(CollUtil.isEmpty(dictDetails)){
+            dictDetails = dictDetailRepository.findByDictName(name);
+            redisUtils.set(key, dictDetails, 1 , TimeUnit.DAYS);
+        }
+        return dictDetailMapper.toDto(dictDetails);
     }
 
     @Override

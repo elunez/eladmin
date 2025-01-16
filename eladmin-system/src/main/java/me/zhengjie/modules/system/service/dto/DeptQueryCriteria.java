@@ -1,5 +1,5 @@
 /*
- *  Copyright 2019-2020 Zheng Jie
+ *  Copyright 2019-2025 Zheng Jie
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package me.zhengjie.modules.system.service.dto;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import me.zhengjie.annotation.DataPermission;
 import me.zhengjie.annotation.Query;
@@ -29,18 +30,23 @@ import java.util.List;
 @DataPermission(fieldName = "id")
 public class DeptQueryCriteria{
 
+    @ApiModelProperty(value = "名称")
     @Query(type = Query.Type.INNER_LIKE)
     private String name;
 
     @Query
+    @ApiModelProperty(value = "是否启用")
     private Boolean enabled;
 
     @Query
+    @ApiModelProperty(value = "上级部门")
     private Long pid;
 
+    @ApiModelProperty(value = "PID空查询", hidden = true)
     @Query(type = Query.Type.IS_NULL, propName = "pid")
     private Boolean pidIsNull;
 
+    @ApiModelProperty(value = "创建时间")
     @Query(type = Query.Type.BETWEEN)
     private List<Timestamp> createTime;
 }

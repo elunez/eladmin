@@ -1,5 +1,5 @@
 /*
- *  Copyright 2019-2020 Zheng Jie
+ *  Copyright 2019-2025 Zheng Jie
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package me.zhengjie.modules.system.domain.vo;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 /**
@@ -25,7 +26,9 @@ import lombok.Data;
 @Data
 public class UserPassVo {
 
+    @ApiModelProperty(value = "旧密码")
     private String oldPass;
 
+    @ApiModelProperty(value = "新密码")
     private String newPass;
 }

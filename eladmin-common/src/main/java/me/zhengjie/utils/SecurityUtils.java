@@ -1,5 +1,5 @@
 /*
- *  Copyright 2019-2020 Zheng Jie
+ *  Copyright 2019-2025 Zheng Jie
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,18 +15,24 @@
  */
 package me.zhengjie.utils;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.jwt.JWT;
+import cn.hutool.jwt.JWTUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
-import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.utils.enums.DataScopeEnum;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 获取当前登录的用户
@@ -34,43 +40,30 @@ import java.util.List;
  * @date 2019-01-17
  */
 @Slf4j
+@Component
 public class SecurityUtils {
+
+    public static String header;
+
+    public static String tokenStartWith;
+
+    @Value("${jwt.header}")
+    public void setHeader(String header) {
+        SecurityUtils.header = header;
+    }
+
+    @Value("${jwt.token-start-with}")
+    public void setTokenStartWith(String tokenStartWith) {
+        SecurityUtils.tokenStartWith = tokenStartWith;
+    }
 
     /**
      * 获取当前登录的用户
      * @return UserDetails
      */
     public static UserDetails getCurrentUser() {
-        UserDetailsService userDetailsService = SpringContextHolder.getBean(UserDetailsService.class);
+        UserDetailsService userDetailsService = SpringBeanHolder.getBean(UserDetailsService.class);
         return userDetailsService.loadUserByUsername(getCurrentUsername());
-    }
-
-    /**
-     * 获取系统用户名称
-     *
-     * @return 系统用户名称
-     */
-    public static String getCurrentUsername() {
-        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null) {
-            throw new BadRequestException(HttpStatus.UNAUTHORIZED, "当前登录状态过期");
-        }
-        if (authentication.getPrincipal() instanceof UserDetails) {
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            return userDetails.getUsername();
-        }
-        throw new BadRequestException(HttpStatus.UNAUTHORIZED, "找不到当前登录的信息");
-    }
-
-    /**
-     * 获取系统用户ID
-     * @return 系统用户ID
-     */
-    public static Long getCurrentUserId() {
-        UserDetails userDetails = getCurrentUser();
-        // 将 Java 对象转换为 JSONObject 对象
-        JSONObject jsonObject = (JSONObject) JSON.toJSON(userDetails);
-        return jsonObject.getJSONObject("user").getLong("id");
     }
 
     /**
@@ -91,9 +84,62 @@ public class SecurityUtils {
      */
     public static String getDataScopeType() {
         List<Long> dataScopes = getCurrentUserDataScope();
-        if(dataScopes.size() != 0){
+        if(CollUtil.isEmpty(dataScopes)){
             return "";
         }
         return DataScopeEnum.ALL.getValue();
+    }
+
+    /**
+     * 获取用户ID
+     * @return 系统用户ID
+     */
+    public static Long getCurrentUserId() {
+        return getCurrentUserId(getToken());
+    }
+
+    /**
+     * 获取用户ID
+     * @return 系统用户ID
+     */
+    public static Long getCurrentUserId(String token) {
+        JWT jwt = JWTUtil.parseToken(token);
+        return Long.valueOf(jwt.getPayload("userId").toString());
+    }
+
+    /**
+     * 获取系统用户名称
+     *
+     * @return 系统用户名称
+     */
+    public static String getCurrentUsername() {
+        return getCurrentUsername(getToken());
+    }
+
+    /**
+     * 获取系统用户名称
+     *
+     * @return 系统用户名称
+     */
+    public static String getCurrentUsername(String token) {
+        JWT jwt = JWTUtil.parseToken(token);
+        return jwt.getPayload("sub").toString();
+    }
+
+    /**
+     * 获取Token
+     * @return /
+     */
+    public static String getToken() {
+        HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder
+                .getRequestAttributes())).getRequest();
+        String bearerToken = request.getHeader(header);
+        if (bearerToken != null && bearerToken.startsWith(tokenStartWith)) {
+            // 去掉令牌前缀
+            return bearerToken.replace(tokenStartWith, "");
+        } else {
+            log.debug("非法Token：{}", bearerToken);
+        }
+        return null;
     }
 }

@@ -1,5 +1,5 @@
 /*
- *  Copyright 2019-2020 Zheng Jie
+ *  Copyright 2019-2025 Zheng Jie
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,8 +16,10 @@
 package me.zhengjie.modules.security.service.dto;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 import me.zhengjie.modules.system.service.dto.UserLoginDto;
 import org.springframework.security.core.userdetails.UserDetails;
 import java.util.List;
@@ -32,11 +34,18 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class JwtUserDto implements UserDetails {
 
+    @ApiModelProperty(value = "用户")
     private final UserLoginDto user;
 
+    @ApiModelProperty(value = "数据权限")
     private final List<Long> dataScopes;
 
+    @ApiModelProperty(value = "角色权限")
     private final List<AuthorityDto> authorities;
+
+    @Setter
+    @ApiModelProperty(value = "密码")
+    private String password;
 
     public Set<String> getRoles() {
         return authorities.stream().map(AuthorityDto::getAuthority).collect(Collectors.toSet());

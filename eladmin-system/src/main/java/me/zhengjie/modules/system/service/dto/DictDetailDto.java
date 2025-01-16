@@ -1,5 +1,5 @@
 /*
- *  Copyright 2019-2020 Zheng Jie
+ *  Copyright 2019-2025 Zheng Jie
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package me.zhengjie.modules.system.service.dto;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 import me.zhengjie.base.BaseDTO;
@@ -28,13 +29,18 @@ import java.io.Serializable;
 @Setter
 public class DictDetailDto extends BaseDTO implements Serializable {
 
+    @ApiModelProperty(value = "ID")
     private Long id;
 
+    @ApiModelProperty(value = "字典ID")
     private DictSmallDto dict;
 
+    @ApiModelProperty(value = "字典标签")
     private String label;
 
+    @ApiModelProperty(value = "字典值")
     private String value;
 
+    @ApiModelProperty(value = "排序")
     private Integer dictSort;
 }

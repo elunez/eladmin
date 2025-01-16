@@ -1,5 +1,5 @@
 /*
- *  Copyright 2019-2020 Zheng Jie
+ *  Copyright 2019-2025 Zheng Jie
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -52,7 +52,7 @@ public class VerifyServiceImpl implements VerifyService {
         // 如果不存在有效的验证码，就创建一个新的
         TemplateEngine engine = TemplateUtil.createEngine(new TemplateConfig("template", TemplateConfig.ResourceMode.CLASSPATH));
         Template template = engine.getTemplate("email.ftl");
-        Object oldCode =  redisUtils.get(redisKey);
+        String oldCode =  redisUtils.get(redisKey, String.class);
         if(oldCode == null){
             String code = RandomUtil.randomNumbers (6);
             // 存入缓存
@@ -60,19 +60,18 @@ public class VerifyServiceImpl implements VerifyService {
                 throw new BadRequestException("服务异常，请联系网站负责人");
             }
             content = template.render(Dict.create().set("code",code));
-            emailVo = new EmailVo(Collections.singletonList(email),"ELADMIN后台管理系统",content);
-        // 存在就再次发送原来的验证码
+            // 存在就再次发送原来的验证码
         } else {
             content = template.render(Dict.create().set("code",oldCode));
-            emailVo = new EmailVo(Collections.singletonList(email),"ELADMIN后台管理系统",content);
         }
+        emailVo = new EmailVo(Collections.singletonList(email),"ELADMIN后台管理系统",content);
         return emailVo;
     }
 
     @Override
     public void validated(String key, String code) {
-        Object value = redisUtils.get(key);
-        if(value == null || !value.toString().equals(code)){
+        String value = redisUtils.get(key, String.class);
+        if(!code.equals(value)){
             throw new BadRequestException("无效验证码");
         } else {
             redisUtils.del(key);

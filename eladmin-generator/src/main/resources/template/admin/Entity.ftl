@@ -1,5 +1,5 @@
 /*
-*  Copyright 2019-2020 Zheng Jie
+*  Copyright 2019-2025 Zheng Jie
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -33,6 +33,25 @@ import java.sql.Timestamp;
 </#if>
 <#if hasBigDecimal>
 import java.math.BigDecimal;
+</#if>
+<#assign notBlankUsed = false>
+<#assign notNullUsed = false>
+<#if columns??>
+    <#list columns as column>
+        <#if column.istNotNull && column.columnKey != 'PRI'>
+            <#if column.columnType = 'String'>
+                <#assign notBlankUsed = true>
+            <#else>
+                <#assign notNullUsed = true>
+            </#if>
+        </#if>
+    </#list>
+</#if>
+<#if notBlankUsed>
+import javax.validation.constraints.NotBlank;
+</#if>
+<#if notNullUsed>
+import javax.validation.constraints.NotNull;
 </#if>
 import java.io.Serializable;
 

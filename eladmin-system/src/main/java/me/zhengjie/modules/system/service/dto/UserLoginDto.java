@@ -1,5 +1,5 @@
 /*
- *  Copyright 2019-2020 Zheng Jie
+ *  Copyright 2019-2025 Zheng Jie
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,6 +15,9 @@
  */
 package me.zhengjie.modules.system.service.dto;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * @author Zheng Jie
  * @description 用户缓存时使用
@@ -22,7 +25,10 @@ package me.zhengjie.modules.system.service.dto;
  **/
 public class UserLoginDto extends UserDto {
 
+    @ApiModelProperty(value = "密码")
+    @JSONField(serialize = false)
     private String password;
 
+    @ApiModelProperty(value = "是否为管理员")
     private Boolean isAdmin;
 }

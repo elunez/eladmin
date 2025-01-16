@@ -1,5 +1,5 @@
 /*
- *  Copyright 2019-2020 Zheng Jie
+ *  Copyright 2019-2025 Zheng Jie
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package me.zhengjie.modules.system.domain.vo;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import java.io.Serializable;
@@ -27,9 +28,12 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class MenuMetaVo implements Serializable {
 
+    @ApiModelProperty(value = "菜单标题")
     private String title;
 
+    @ApiModelProperty(value = "菜单图标")
     private String icon;
 
+    @ApiModelProperty(value = "缓存")
     private Boolean noCache;
 }

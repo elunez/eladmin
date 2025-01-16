@@ -1,5 +1,5 @@
 /*
- *  Copyright 2019-2020 Zheng Jie
+ *  Copyright 2019-2025 Zheng Jie
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package me.zhengjie.modules.system.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import lombok.RequiredArgsConstructor;
 import me.zhengjie.exception.BadRequestException;
@@ -34,8 +35,6 @@ import me.zhengjie.modules.system.service.dto.UserDto;
 import me.zhengjie.modules.system.service.mapstruct.RoleMapper;
 import me.zhengjie.modules.system.service.mapstruct.RoleSmallMapper;
 import me.zhengjie.utils.*;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -44,6 +43,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -52,7 +52,6 @@ import java.util.stream.Collectors;
  */
 @Service
 @RequiredArgsConstructor
-@CacheConfig(cacheNames = "role")
 public class RoleServiceImpl implements RoleService {
 
     private final RoleRepository roleRepository;
@@ -80,11 +79,14 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    @Cacheable(key = "'id:' + #p0")
-    @Transactional(rollbackFor = Exception.class)
     public RoleDto findById(long id) {
-        Role role = roleRepository.findById(id).orElseGet(Role::new);
-        ValidationUtil.isNull(role.getId(), "Role", "id", id);
+        String key = CacheKey.ROLE_ID + id;
+        Role role = redisUtils.get(key, Role.class);
+        if (role == null) {
+            role = roleRepository.findById(id).orElseGet(Role::new);
+            ValidationUtil.isNull(role.getId(), "Role", "id", id);
+            redisUtils.set(key, role, 1, TimeUnit.DAYS);
+        }
         return roleMapper.toDto(role);
     }
 
@@ -152,7 +154,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public Integer findByRoles(Set<Role> roles) {
-        if (roles.size() == 0) {
+        if (roles.isEmpty()) {
             return Integer.MAX_VALUE;
         }
         Set<RoleDto> roleDtos = new HashSet<>();
@@ -163,21 +165,26 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    @Cacheable(key = "'auth:' + #p0.id")
-    public List<AuthorityDto> mapToGrantedAuthorities(UserDto user) {
-        Set<String> permissions = new HashSet<>();
-        // 如果是管理员直接返回
-        if (user.getIsAdmin()) {
-            permissions.add("admin");
-            return permissions.stream().map(AuthorityDto::new)
+    public List<AuthorityDto> buildAuthorities(UserDto user) {
+        String key = CacheKey.ROLE_AUTH + user.getId();
+        List<AuthorityDto> authorityDtos = redisUtils.getList(key, AuthorityDto.class);
+        if (CollUtil.isEmpty(authorityDtos)) {
+            Set<String> permissions = new HashSet<>();
+            // 如果是管理员直接返回
+            if (user.getIsAdmin()) {
+                permissions.add("admin");
+                return permissions.stream().map(AuthorityDto::new)
+                        .collect(Collectors.toList());
+            }
+            Set<Role> roles = roleRepository.findByUserId(user.getId());
+            permissions = roles.stream().flatMap(role -> role.getMenus().stream())
+                    .map(Menu::getPermission)
+                    .filter(StringUtils::isNotBlank).collect(Collectors.toSet());
+            authorityDtos = permissions.stream().map(AuthorityDto::new)
                     .collect(Collectors.toList());
+            redisUtils.set(key, authorityDtos, 1, TimeUnit.HOURS);
         }
-        Set<Role> roles = roleRepository.findByUserId(user.getId());
-        permissions = roles.stream().flatMap(role -> role.getMenus().stream())
-                .map(Menu::getPermission)
-                .filter(StringUtils::isNotBlank).collect(Collectors.toSet());
-        return permissions.stream().map(AuthorityDto::new)
-                .collect(Collectors.toList());
+        return authorityDtos;
     }
 
     @Override

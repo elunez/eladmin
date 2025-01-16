@@ -1,5 +1,5 @@
 /*
-*  Copyright 2019-2020 Zheng Jie
+*  Copyright 2019-2025 Zheng Jie
 *
 *  Licensed under the Apache License, Version 2.0 (the "License");
 *  you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ import java.util.List;
 <#if queryColumns??>
 import me.zhengjie.annotation.Query;
 </#if>
+import io.swagger.annotations.ApiModelProperty;
 
 /**
 * @website https://eladmin.vip
@@ -42,31 +43,61 @@ public class ${className}QueryCriteria{
 <#if column.queryType = '='>
     /** 精确 */
     @Query
+    <#if column.remark != ''>
+    @ApiModelProperty(value = "${column.remark}")
+    <#else>
+    @ApiModelProperty(value = "${column.changeColumnName}")
+    </#if>
     private ${column.columnType} ${column.changeColumnName};
 </#if>
 <#if column.queryType = 'Like'>
     /** 模糊 */
     @Query(type = Query.Type.INNER_LIKE)
+    <#if column.remark != ''>
+    @ApiModelProperty(value = "${column.remark}")
+    <#else>
+    @ApiModelProperty(value = "${column.changeColumnName}")
+    </#if>
     private ${column.columnType} ${column.changeColumnName};
 </#if>
 <#if column.queryType = '!='>
     /** 不等于 */
     @Query(type = Query.Type.NOT_EQUAL)
+    <#if column.remark != ''>
+    @ApiModelProperty(value = "${column.remark}")
+    <#else>
+    @ApiModelProperty(value = "${column.changeColumnName}")
+    </#if>
     private ${column.columnType} ${column.changeColumnName};
 </#if>
 <#if column.queryType = 'NotNull'>
     /** 不为空 */
     @Query(type = Query.Type.NOT_NULL)
+    <#if column.remark != ''>
+    @ApiModelProperty(value = "${column.remark}")
+    <#else>
+    @ApiModelProperty(value = "${column.changeColumnName}")
+    </#if>
     private ${column.columnType} ${column.changeColumnName};
 </#if>
 <#if column.queryType = '>='>
     /** 大于等于 */
     @Query(type = Query.Type.GREATER_THAN)
+    <#if column.remark != ''>
+    @ApiModelProperty(value = "${column.remark}")
+    <#else>
+    @ApiModelProperty(value = "${column.changeColumnName}")
+    </#if>
     private ${column.columnType} ${column.changeColumnName};
 </#if>
 <#if column.queryType = '<='>
     /** 小于等于 */
     @Query(type = Query.Type.LESS_THAN)
+    <#if column.remark != ''>
+    @ApiModelProperty(value = "${column.remark}")
+    <#else>
+    @ApiModelProperty(value = "${column.changeColumnName}")
+    </#if>
     private ${column.columnType} ${column.changeColumnName};
 </#if>
     </#list>
