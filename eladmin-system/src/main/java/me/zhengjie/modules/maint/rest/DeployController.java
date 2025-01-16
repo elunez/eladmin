@@ -20,6 +20,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.zhengjie.annotation.Log;
+import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.modules.maint.domain.Deploy;
 import me.zhengjie.modules.maint.domain.DeployHistory;
 import me.zhengjie.modules.maint.service.DeployService;
