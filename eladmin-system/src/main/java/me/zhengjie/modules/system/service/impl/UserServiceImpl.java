@@ -27,7 +27,6 @@ import me.zhengjie.exception.EntityNotFoundException;
 import me.zhengjie.modules.system.repository.UserRepository;
 import me.zhengjie.modules.system.service.UserService;
 import me.zhengjie.modules.system.service.dto.*;
-import me.zhengjie.modules.system.service.mapstruct.UserLoginMapper;
 import me.zhengjie.modules.system.service.mapstruct.UserMapper;
 import me.zhengjie.utils.*;
 import org.springframework.data.domain.Page;
@@ -57,7 +56,6 @@ public class UserServiceImpl implements UserService {
     private final RedisUtils redisUtils;
     private final UserCacheManager userCacheManager;
     private final OnlineUserService onlineUserService;
-    private final UserLoginMapper userLoginMapper;
 
     @Override
     public PageResult<UserDto> queryAll(UserQueryCriteria criteria, Pageable pageable) {
@@ -182,12 +180,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserLoginDto getLoginData(String userName) {
+    public UserDto getLoginData(String userName) {
         User user = userRepository.findByUsername(userName);
         if (user == null) {
             return null;
         } else {
-            return userLoginMapper.toDto(user);
+            return userMapper.toDto(user);
         }
     }
 
