@@ -68,8 +68,8 @@ public class UserDto extends BaseDTO implements Serializable {
     @ApiModelProperty(value = "头像路径")
     private String avatarPath;
 
-    @ApiModelProperty(value = "密码")
     @JSONField(serialize = false)
+    @ApiModelProperty(value = "密码")
     private String password;
 
     @ApiModelProperty(value = "是否启用")
