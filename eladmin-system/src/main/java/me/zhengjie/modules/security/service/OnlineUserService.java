@@ -53,11 +53,12 @@ public class OnlineUserService {
     public void save(JwtUserDto jwtUserDto, String token, HttpServletRequest request){
         String dept = jwtUserDto.getUser().getDept().getName();
         String ip = StringUtils.getIp(request);
+        String id = tokenProvider.getId(token);
         String browser = StringUtils.getBrowser(request);
         String address = StringUtils.getCityInfo(ip);
         OnlineUserDto onlineUserDto = null;
         try {
-            onlineUserDto = new OnlineUserDto(jwtUserDto.getUsername(), jwtUserDto.getUser().getNickName(), dept, browser , ip, address, EncryptUtils.desEncrypt(token), new Date());
+            onlineUserDto = new OnlineUserDto(id, jwtUserDto.getUsername(), jwtUserDto.getUser().getNickName(), dept, browser , ip, address, EncryptUtils.desEncrypt(token), new Date());
         } catch (Exception e) {
             log.error(e.getMessage(),e);
         }

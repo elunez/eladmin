@@ -30,6 +30,9 @@ import java.util.Date;
 @NoArgsConstructor
 public class OnlineUserDto {
 
+    @ApiModelProperty(value = "Token编号")
+    private String uid;
+
     @ApiModelProperty(value = "用户名")
     private String userName;
 

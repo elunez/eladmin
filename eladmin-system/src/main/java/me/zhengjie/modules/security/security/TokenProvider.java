@@ -18,7 +18,6 @@ package me.zhengjie.modules.security.security;
 import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
-import cn.hutool.crypto.digest.DigestUtil;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -47,7 +46,7 @@ public class TokenProvider implements InitializingBean {
     private JwtBuilder jwtBuilder;
     private final RedisUtils redisUtils;
     private final SecurityProperties properties;
-    public static final String AUTHORITIES_UUID_KEY = "uuid";
+    public static final String AUTHORITIES_UUID_KEY = "uid";
     public static final String AUTHORITIES_UID_KEY = "userId";
 
     public TokenProvider(SecurityProperties properties, RedisUtils redisUtils) {
@@ -79,7 +78,7 @@ public class TokenProvider implements InitializingBean {
         // 设置用户ID
         claims.put(AUTHORITIES_UID_KEY, user.getUser().getId());
         // 设置UUID，确保每次Token不一样
-        claims.put(AUTHORITIES_UUID_KEY, IdUtil.simpleUUID());
+        claims.put(AUTHORITIES_UUID_KEY, IdUtil.objectId());
         return jwtBuilder
                 .setClaims(claims)
                 .setSubject(user.getUsername())
@@ -136,7 +135,16 @@ public class TokenProvider implements InitializingBean {
      */
     public String loginKey(String token) {
         Claims claims = getClaims(token);
-        String md5Token = DigestUtil.md5Hex(token);
-        return properties.getOnlineKey() + claims.getSubject() + "-" + md5Token;
+        return properties.getOnlineKey() + claims.getSubject() + ":" + getId(token);
+    }
+
+    /**
+     * 获取登录用户TokenKey
+     * @param token /
+     * @return /
+     */
+    public String getId(String token) {
+        Claims claims = getClaims(token);
+        return claims.get(AUTHORITIES_UUID_KEY).toString();
     }
 }

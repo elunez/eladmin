@@ -35,8 +35,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -50,9 +50,12 @@ import java.util.*;
 @Service
 @RequiredArgsConstructor
 public class SysLogServiceImpl implements SysLogService {
+
     private final LogRepository logRepository;
     private final LogErrorMapper logErrorMapper;
     private final LogSmallMapper logSmallMapper;
+    // 定义敏感字段常量数组
+    private static final String[] SENSITIVE_KEYS = {"password"};
 
     @Override
     public Object queryAll(SysLogQueryCriteria criteria, Pageable pageable) {
@@ -81,6 +84,8 @@ public class SysLogServiceImpl implements SysLogService {
         if (sysLog == null) {
             throw new IllegalArgumentException("Log 不能为 null!");
         }
+
+        // 获取方法签名
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
         me.zhengjie.annotation.Log aopLog = method.getAnnotation(me.zhengjie.annotation.Log.class);
@@ -88,56 +93,64 @@ public class SysLogServiceImpl implements SysLogService {
         // 方法路径
         String methodName = joinPoint.getTarget().getClass().getName() + "." + signature.getName() + "()";
 
-        // 描述
-        sysLog.setDescription(aopLog.value());
-        
+        // 获取参数
+        JSONObject params = getParameter(method, joinPoint.getArgs());
+
+        // 填充基本信息
         sysLog.setRequestIp(ip);
         sysLog.setAddress(StringUtils.getCityInfo(sysLog.getRequestIp()));
         sysLog.setMethod(methodName);
         sysLog.setUsername(username);
-        sysLog.setParams(getParameter(method, joinPoint.getArgs()));
-        // 记录登录用户，隐藏密码信息
-        if(signature.getName().equals("login") && StringUtils.isNotEmpty(sysLog.getParams())){
-            JSONObject obj = JSON.parseObject(sysLog.getParams());
-            sysLog.setUsername(obj.getString("username"));
-            sysLog.setParams(JSON.toJSONString(Dict.create().set("username", sysLog.getUsername())));
-        }
+        sysLog.setParams(JSON.toJSONString(params));
         sysLog.setBrowser(browser);
+        sysLog.setDescription(aopLog.value());
+
+        // 如果没有获取到用户名，尝试从参数中获取
+        if(StringUtils.isBlank(sysLog.getUsername())){
+            sysLog.setUsername(params.getString("username"));
+        }
+
+        // 保存
         logRepository.save(sysLog);
     }
 
     /**
      * 根据方法和传入的参数获取请求参数
      */
-    private String getParameter(Method method, Object[] args) {
-        List<Object> argList = new ArrayList<>();
+    private JSONObject getParameter(Method method, Object[] args) {
+        JSONObject params = new JSONObject();
         Parameter[] parameters = method.getParameters();
         for (int i = 0; i < parameters.length; i++) {
-            // 过滤掉不能序列化的类型: MultiPartFile
+            // 过滤掉 MultiPartFile
             if (args[i] instanceof MultipartFile) {
                 continue;
             }
-            //将RequestBody注解修饰的参数作为请求参数
+            // 过滤掉 HttpServletResponse
+            if (args[i] instanceof HttpServletResponse) {
+                continue;
+            }
+            // 过滤掉 HttpServletRequest
+            if (args[i] instanceof HttpServletRequest) {
+                continue;
+            }
+            // 将RequestBody注解修饰的参数作为请求参数
             RequestBody requestBody = parameters[i].getAnnotation(RequestBody.class);
             if (requestBody != null) {
-                argList.add(args[i]);
-            }
-            //将RequestParam注解修饰的参数作为请求参数
-            RequestParam requestParam = parameters[i].getAnnotation(RequestParam.class);
-            if (requestParam != null) {
-                Map<String, Object> map = new HashMap<>(2);
+                params.putAll((JSONObject) JSON.toJSON(args[i]));
+            } else {
                 String key = parameters[i].getName();
-                if (!StringUtils.isEmpty(requestParam.value())) {
-                    key = requestParam.value();
-                }
-                map.put(key, args[i]);
-                argList.add(map);
+                params.put(key, args[i]);
             }
         }
-        if (argList.isEmpty()) {
-            return "";
+        // 遍历敏感字段数组并替换值
+        Set<String> keys = params.keySet();
+        for (String key : SENSITIVE_KEYS) {
+            if (keys.contains(key)) {
+                params.put(key, "******");
+            }
         }
-        return argList.size() == 1 ? JSON.toJSONString(argList.get(0)) : JSON.toJSONString(argList);
+        // 返回参数
+        return params;
     }
 
     @Override
