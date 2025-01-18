@@ -78,7 +78,7 @@ public class TokenProvider implements InitializingBean {
         // 设置用户ID
         claims.put(AUTHORITIES_UID_KEY, user.getUser().getId());
         // 设置UUID，确保每次Token不一样
-        claims.put(AUTHORITIES_UUID_KEY, IdUtil.objectId());
+        claims.put(AUTHORITIES_UUID_KEY, IdUtil.simpleUUID());
         return jwtBuilder
                 .setClaims(claims)
                 .setSubject(user.getUsername())
