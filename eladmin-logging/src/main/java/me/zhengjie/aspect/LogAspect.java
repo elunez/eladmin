@@ -88,6 +88,10 @@ public class LogAspect {
         sysLogService.save(getUsername(), StringUtils.getBrowser(request), StringUtils.getIp(request), (ProceedingJoinPoint)joinPoint, sysLog);
     }
 
+    /**
+     * 获取用户名
+     * @return /
+     */
     public String getUsername() {
         try {
             return SecurityUtils.getCurrentUsername();
