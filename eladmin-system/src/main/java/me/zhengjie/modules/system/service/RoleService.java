@@ -67,10 +67,10 @@ public interface RoleService {
 
     /**
      * 根据用户ID查询
-     * @param id 用户ID
+     * @param userId 用户ID
      * @return /
      */
-    List<RoleSmallDto> findByUsersId(Long id);
+    List<RoleSmallDto> findByUsersId(Long userId);
 
     /**
      * 根据角色查询角色级别
@@ -120,7 +120,7 @@ public interface RoleService {
      * @param user 用户信息
      * @return 权限信息
      */
-    List<AuthorityDto> buildAuthorities(UserDto user);
+    List<AuthorityDto> buildPermissions(UserDto user);
 
     /**
      * 验证是否被用户关联

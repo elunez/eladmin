@@ -148,8 +148,14 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public List<RoleSmallDto> findByUsersId(Long id) {
-        return roleSmallMapper.toDto(new ArrayList<>(roleRepository.findByUserId(id)));
+    public List<RoleSmallDto> findByUsersId(Long userId) {
+        String key = CacheKey.ROLE_USER + userId;
+        List<RoleSmallDto> roles = redisUtils.getList(key, RoleSmallDto.class);
+        if (CollUtil.isEmpty(roles)) {
+            roles = roleSmallMapper.toDto(new ArrayList<>(roleRepository.findByUserId(userId)));
+            redisUtils.set(key, roles, 1, TimeUnit.DAYS);
+        }
+        return roles;
     }
 
     @Override
@@ -165,7 +171,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public List<AuthorityDto> buildAuthorities(UserDto user) {
+    public List<AuthorityDto> buildPermissions(UserDto user) {
         String key = CacheKey.ROLE_AUTH + user.getId();
         List<AuthorityDto> authorityDtos = redisUtils.getList(key, AuthorityDto.class);
         if (CollUtil.isEmpty(authorityDtos)) {
@@ -225,6 +231,7 @@ public class RoleServiceImpl implements RoleService {
             redisUtils.delByKeys(CacheKey.DATA_USER, userIds);
             redisUtils.delByKeys(CacheKey.MENU_USER, userIds);
             redisUtils.delByKeys(CacheKey.ROLE_AUTH, userIds);
+            redisUtils.delByKeys(CacheKey.ROLE_USER, userIds);
         }
         redisUtils.del(CacheKey.ROLE_ID + id);
     }
