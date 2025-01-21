@@ -200,6 +200,15 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void resetPwd(Set<Long> ids, String pwd) {
+        List<User> users = userRepository.findAllById(ids);
+        // 清除缓存
+        users.forEach(user -> {
+            // 清除缓存
+            flushCache(user.getUsername());
+            // 强制退出
+            onlineUserService.kickOutForUsername(user.getUsername());
+        });
+        // 重置密码
         userRepository.resetPwd(ids, pwd);
     }
 
