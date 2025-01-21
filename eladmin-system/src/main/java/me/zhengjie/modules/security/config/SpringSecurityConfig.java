@@ -18,7 +18,6 @@ package me.zhengjie.modules.security.config;
 import lombok.RequiredArgsConstructor;
 import me.zhengjie.modules.security.security.*;
 import me.zhengjie.modules.security.service.OnlineUserService;
-import me.zhengjie.modules.security.service.UserCacheManager;
 import me.zhengjie.utils.AnonTagUtils;
 import me.zhengjie.utils.enums.RequestMethodEnum;
 import org.springframework.context.ApplicationContext;
@@ -27,12 +26,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.core.GrantedAuthorityDefaults;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.filter.CorsFilter;
 import java.util.*;
 
@@ -40,10 +38,9 @@ import java.util.*;
  * @author Zheng Jie
  */
 @Configuration
-@EnableWebSecurity
 @RequiredArgsConstructor
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
-public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
+public class SpringSecurityConfig {
 
     private final TokenProvider tokenProvider;
     private final CorsFilter corsFilter;
@@ -65,11 +62,11 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
-    @Override
-    protected void configure(HttpSecurity httpSecurity) throws Exception {
+    @Bean
+    protected SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         // 获取匿名标记
         Map<String, Set<String>> anonymousUrls = AnonTagUtils.getAnonymousUrl(applicationContext);
-        httpSecurity
+        return httpSecurity
                 // 禁用 CSRF
                 .csrf().disable()
                 .addFilter(corsFilter)
@@ -124,7 +121,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(anonymousUrls.get(RequestMethodEnum.ALL.getType()).toArray(new String[0])).permitAll()
                 // 所有请求都需要认证
                 .anyRequest().authenticated()
-                .and().apply(securityConfigurerAdapter());
+                .and().apply(securityConfigurerAdapter())
+                .and().build();
     }
 
     private TokenConfigurer securityConfigurerAdapter() {
