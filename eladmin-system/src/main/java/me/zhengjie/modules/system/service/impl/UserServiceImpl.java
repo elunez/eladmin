@@ -119,6 +119,7 @@ public class UserServiceImpl implements UserService {
             redisUtils.del(CacheKey.DATA_USER + resources.getId());
             redisUtils.del(CacheKey.MENU_USER + resources.getId());
             redisUtils.del(CacheKey.ROLE_AUTH + resources.getId());
+            redisUtils.del(CacheKey.ROLE_USER + resources.getId());
         }
         // 修改部门会影响 数据权限
         if (!Objects.equals(resources.getDept(),user.getDept())) {
