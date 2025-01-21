@@ -82,15 +82,29 @@
     - annotation 为系统自定义注解
     - aspect 自定义注解的切面
     - base 提供了Entity、DTO基类和mapstruct的通用mapper
-    - config 自定义权限实现、redis配置、swagger配置、Rsa配置等
+    - config 项目通用配置
+        - Web配置跨域与静态资源映射、Swagger配置，文件上传临时路径配置
+        - Redis配置，Redission配置, 异步线程池配置
+        - 权限拦截配置、AuthorityConfig、Druid 删除广告配置
     - exception 项目统一异常的处理
-    - utils 系统通用工具类
+    - utils 系统通用工具类，列举一些常用的工具类
+        - BigDecimaUtils 金额计算工具类
+        - RequestHolder 请求工具类
+        - SecurityUtils 安全工具类
+        - StringUtils 字符串工具类
+        - SpringBeanHolder Spring Bean工具类
+        - RedisUtils Redis工具类
+        - EncryptUtils 加密工具类
+        - FileUtil 文件工具类
 - eladmin-system 系统核心模块（系统启动入口）
-	- config 配置跨域与静态资源，与数据权限
-	    - thread 线程池相关
-	- modules 系统相关模块(登录授权、系统监控、定时任务、运维管理等)
+    - sysrunner 程序启动后处理数据
+	- modules 系统相关模块(登录授权、系统监控、定时任务、系统模块、运维模块)
 - eladmin-logging 系统日志模块
 - eladmin-tools 系统第三方工具模块
+    - email 邮件工具
+    - qiniu 七牛云存储工具
+    - alipay 支付宝支付工具
+    - local-storage 本地存储工具
 - eladmin-generator 系统代码生成模块
 ```
 
