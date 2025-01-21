@@ -44,6 +44,8 @@ public class UserCacheManager {
      * @return JwtUserDto
      */
     public JwtUserDto getUserCache(String userName) {
+        // 转小写
+        userName = StringUtils.lowerCase(userName);
         if (StringUtils.isNotEmpty(userName)) {
             // 获取数据
             return redisUtils.get(LoginProperties.cacheKey + userName, JwtUserDto.class);
@@ -57,6 +59,8 @@ public class UserCacheManager {
      */
     @Async
     public void addUserCache(String userName, JwtUserDto user) {
+        // 转小写
+        userName = StringUtils.lowerCase(userName);
         if (StringUtils.isNotEmpty(userName)) {
             // 添加数据, 避免数据同时过期
             long time = idleTime + RandomUtil.randomInt(900, 1800);
@@ -71,6 +75,8 @@ public class UserCacheManager {
      */
     @Async
     public void cleanUserCache(String userName) {
+        // 转小写
+        userName = StringUtils.lowerCase(userName);
         if (StringUtils.isNotEmpty(userName)) {
             // 清除数据
             redisUtils.del(LoginProperties.cacheKey + userName);
