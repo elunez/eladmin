@@ -17,8 +17,8 @@ package me.zhengjie.service.impl;
 
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.util.ObjectUtil;
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import lombok.RequiredArgsConstructor;
 import me.zhengjie.domain.SysLog;
 import me.zhengjie.repository.LogRepository;

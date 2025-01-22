@@ -21,7 +21,7 @@ import java.io.IOException;
  * @date 2025-01-11
  **/
 @Configuration
-@SuppressWarnings("all")
+@SuppressWarnings({"unchecked","all"})
 @ConditionalOnWebApplication
 @AutoConfigureAfter(DruidDataSourceAutoConfigure.class)
 @ConditionalOnProperty(name = "spring.datasource.druid.stat-view-servlet.enabled",

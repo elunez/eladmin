@@ -25,13 +25,11 @@
     </parent>
 
     <properties>
-        <log4j2.version>2.17.0</log4j2.version>
         <logback.version>1.2.9</logback.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
-        <swagger.version>2.9.2</swagger.version>
-        <fastjson.version>1.2.83</fastjson.version>
+        <fastjson2.version>2.0.54</fastjson2.version>
         <druid.version>1.2.19</druid.version>
         <commons-pool2.version>2.11.1</commons-pool2.version>
         <mapstruct.version>1.4.2.Final</mapstruct.version>
@@ -54,6 +52,13 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+            <exclusions>
+                <!-- 去掉Jackson依赖，用fastjson -->
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-json</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!--Spring boot 测试-->
@@ -108,11 +113,24 @@
         </dependency>
 
         <!-- Swagger UI 相关 -->
-        <!-- https://mvnrepository.com/artifact/com.github.xiaoymin/knife4j-spring-boot-starter -->
         <dependency>
             <groupId>com.github.xiaoymin</groupId>
             <artifactId>knife4j-spring-boot-starter</artifactId>
             <version>3.0.3</version>
+            <exclusions>
+                <!-- 去掉 swagger-annotations 依赖，避免冲突 -->
+                <exclusion>
+                    <groupId>io.swagger</groupId>
+                    <artifactId>swagger-annotations</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!-- 添加swagger-annotations依赖 -->
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-annotations</artifactId>
+            <version>1.5.22</version>
         </dependency>
 
 
@@ -131,11 +149,11 @@
             <version>${druid.version}</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/net.dreamlu/mica-ip2region -->
+        <!-- IP地址解析库 -->
         <dependency>
             <groupId>net.dreamlu</groupId>
             <artifactId>mica-ip2region</artifactId>
-            <version>2.7.12</version>
+            <version>2.7.18.9</version>
         </dependency>
 
         <!--lombok插件-->
@@ -149,12 +167,12 @@
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi</artifactId>
-            <version>5.2.0</version>
+            <version>5.4.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
-            <version>5.2.0</version>
+            <version>5.4.0</version>
         </dependency>
         <dependency>
             <groupId>xerces</groupId>
@@ -162,11 +180,30 @@
             <version>2.12.2</version>
         </dependency>
 
-        <!-- fastjson -->
+        <!-- fastjson2 -->
         <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>fastjson</artifactId>
-            <version>${fastjson.version}</version>
+            <groupId>com.alibaba.fastjson2</groupId>
+            <artifactId>fastjson2</artifactId>
+            <version>${fastjson2.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alibaba.fastjson2</groupId>
+            <artifactId>fastjson2-extension-spring5</artifactId>
+            <version>${fastjson2.version}</version>
+        </dependency>
+
+        <!-- Java图形验证码 -->
+        <dependency>
+            <groupId>com.github.whvcse</groupId>
+            <artifactId>easy-captcha</artifactId>
+            <version>1.6.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-text</artifactId>
+            <version>1.13.0</version>
         </dependency>
 
         <!--mapStruct依赖-->
@@ -185,19 +222,6 @@
             <groupId>javax.inject</groupId>
             <artifactId>javax.inject</artifactId>
             <version>1</version>
-        </dependency>
-
-        <!-- Java图形验证码 -->
-        <dependency>
-            <groupId>com.github.whvcse</groupId>
-            <artifactId>easy-captcha</artifactId>
-            <version>1.6.2</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-text</artifactId>
-            <version>1.10.0</version>
         </dependency>
     </dependencies>
 

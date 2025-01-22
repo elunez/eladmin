@@ -24,8 +24,8 @@ import java.math.BigDecimal;
 </#if>
 import java.io.Serializable;
 <#if !auto && pkColumnType = 'Long'>
-import com.alibaba.fastjson.annotation.JSONField;
-import com.alibaba.fastjson.serializer.ToStringSerializer;
+import com.alibaba.fastjson2.annotation.JSONField;
+import com.alibaba.fastjson2.serializer.ToStringSerializer;
 </#if>
 import io.swagger.annotations.ApiModelProperty;
 

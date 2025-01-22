@@ -15,9 +15,9 @@
  */
 package me.zhengjie.config;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.parser.ParserConfig;
-import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONFactory;
+import com.alibaba.fastjson2.JSONWriter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.cache.Cache;
@@ -33,8 +33,8 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.RedisSerializer;
+import org.springframework.data.redis.serializer.SerializationException;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
-
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.HashMap;
@@ -65,25 +65,13 @@ public class RedisConfiguration {
     @Bean(name = "redisTemplate")
     public RedisTemplate<Object, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
         RedisTemplate<Object, Object> template = new RedisTemplate<>();
-        //序列化
+        // 指定 key 和 value 的序列化方案
         FastJsonRedisSerializer<Object> fastJsonRedisSerializer = new FastJsonRedisSerializer<>(Object.class);
         // value值的序列化采用fastJsonRedisSerializer
         template.setValueSerializer(fastJsonRedisSerializer);
         template.setHashValueSerializer(fastJsonRedisSerializer);
-        // fastjson 升级到 1.2.83 后需要指定序列化白名单
-        ParserConfig.getGlobalInstance().addAccept("me.zhengjie.domain");
-        ParserConfig.getGlobalInstance().addAccept("me.zhengjie.service.dto");
-        // 模块内的实体类
-        ParserConfig.getGlobalInstance().addAccept("me.zhengjie.modules.mnt.domain");
-        ParserConfig.getGlobalInstance().addAccept("me.zhengjie.modules.quartz.domain");
-        ParserConfig.getGlobalInstance().addAccept("me.zhengjie.modules.system.domain");
-        // 模块内的 Dto
-        ParserConfig.getGlobalInstance().addAccept("me.zhengjie.modules.mnt.service.dto");
-        ParserConfig.getGlobalInstance().addAccept("me.zhengjie.modules.quartz.service.dto");
-        ParserConfig.getGlobalInstance().addAccept("me.zhengjie.modules.security.service.dto");
-        ParserConfig.getGlobalInstance().addAccept("me.zhengjie.modules.system.service.dto");
-        // 分页返回数据
-        ParserConfig.getGlobalInstance().addAccept("me.zhengjie.utils.PageResult");
+        // 设置fastJson的序列化白名单
+        JSONFactory.getDefaultObjectReaderProvider().addAutoTypeAccept("me.zhengjie");
         // key的序列化采用StringRedisSerializer
         template.setKeySerializer(new StringRedisSerializer());
         template.setHashKeySerializer(new StringRedisSerializer());
@@ -92,7 +80,7 @@ public class RedisConfiguration {
     }
 
     /**
-     * 缓存管理器，需要指定使用
+     * 缓存管理器
      * @param redisConnectionFactory /
      * @return 缓存管理器
      */
@@ -132,7 +120,7 @@ public class RedisConfiguration {
     }
 
     @Bean
-    @SuppressWarnings("all")
+    @SuppressWarnings({"unchecked","all"})
     public CacheErrorHandler errorHandler() {
         return new SimpleCacheErrorHandler() {
             @Override
@@ -174,15 +162,17 @@ public class RedisConfiguration {
         }
 
         @Override
-        public byte[] serialize(T t) {
+        public byte[] serialize(T t) throws SerializationException
+        {
             if (t == null) {
                 return new byte[0];
             }
-            return JSON.toJSONString(t, SerializerFeature.WriteClassName).getBytes(StandardCharsets.UTF_8);
+            return JSON.toJSONString(t, JSONWriter.Feature.WriteClassName).getBytes(StandardCharsets.UTF_8);
         }
 
         @Override
-        public T deserialize(byte[] bytes) {
+        public T deserialize(byte[] bytes) throws SerializationException
+        {
             if (bytes == null || bytes.length == 0) {
                 return null;
             }
