@@ -17,6 +17,9 @@
         <appender-ref ref="console" />
     </root>
 
+    <!-- Spring 日志级别控制 -->
+    <logger name="org.springframework" level="warn" />
+
     <!-- DnsServerAddressStreamProviders调整为ERROR -->
     <logger name="io.netty.resolver.dns.DnsServerAddressStreamProviders" level="ERROR"/>
 

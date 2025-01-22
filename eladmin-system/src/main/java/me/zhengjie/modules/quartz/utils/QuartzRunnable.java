@@ -45,7 +45,7 @@ public class QuartzRunnable implements Callable<Object> {
 	}
 
 	@Override
-	@SuppressWarnings("all")
+	@SuppressWarnings({"unchecked","all"})
 	public Object call() throws Exception {
 		ReflectionUtils.makeAccessible(method);
 		if (StringUtils.isNotBlank(params)) {

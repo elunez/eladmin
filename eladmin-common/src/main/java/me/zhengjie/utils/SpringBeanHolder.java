@@ -31,7 +31,7 @@ import java.util.List;
  * @date 2019-01-07
  */
 @Slf4j
-@SuppressWarnings("all")
+@SuppressWarnings({"unchecked","all"})
 public class SpringBeanHolder implements ApplicationContextAware, DisposableBean {
 
     private static ApplicationContext applicationContext = null;

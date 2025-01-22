@@ -67,7 +67,7 @@ public class SwaggerConfig {
     private final ApplicationContext applicationContext;
 
     @Bean
-    @SuppressWarnings("all")
+    @SuppressWarnings({"unchecked","all"})
     public Docket createRestApi() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .enable(enabled)

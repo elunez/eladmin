@@ -15,9 +15,9 @@
  */
 package me.zhengjie.config.webConfig;
 
-import com.alibaba.fastjson.serializer.SerializerFeature;
-import com.alibaba.fastjson.support.config.FastJsonConfig;
-import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
+import com.alibaba.fastjson2.JSONWriter;
+import com.alibaba.fastjson2.support.config.FastJsonConfig;
+import com.alibaba.fastjson2.support.spring.http.converter.FastJsonHttpMessageConverter;
 import me.zhengjie.config.properties.FileProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -74,13 +74,14 @@ public class ConfigurerAdapter implements WebMvcConfigurer {
 
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-        // 使用 fastjson 序列化，会导致 @JsonIgnore 失效，可以使用 @JSONField(serialize = false) 替换
+        // 配置 FastJsonHttpMessageConverter
         FastJsonHttpMessageConverter converter = new FastJsonHttpMessageConverter();
         List<MediaType> supportMediaTypeList = new ArrayList<>();
         supportMediaTypeList.add(MediaType.APPLICATION_JSON);
         FastJsonConfig config = new FastJsonConfig();
         config.setDateFormat("yyyy-MM-dd HH:mm:ss");
-        config.setSerializerFeatures(SerializerFeature.DisableCircularReferenceDetect);
+        // 开启引用检测
+        config.setWriterFeatures(JSONWriter.Feature.ReferenceDetection);
         converter.setFastJsonConfig(config);
         converter.setSupportedMediaTypes(supportMediaTypeList);
         converter.setDefaultCharset(StandardCharsets.UTF_8);
