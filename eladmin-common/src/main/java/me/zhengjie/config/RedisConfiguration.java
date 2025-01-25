@@ -20,6 +20,8 @@ import com.alibaba.fastjson2.JSONFactory;
 import com.alibaba.fastjson2.JSONWriter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.MurmurHash3;
+import org.springframework.boot.autoconfigure.AutoConfigureBefore;
+import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
 import org.springframework.cache.Cache;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.cache.annotation.EnableCaching;
@@ -48,6 +50,7 @@ import java.util.Map;
 @Slf4j
 @Configuration
 @EnableCaching
+@AutoConfigureBefore(RedisAutoConfiguration.class)
 public class RedisConfiguration extends CachingConfigurerSupport {
 
     // 自动识别json对象白名单配置（仅允许解析的包名，范围越小越安全）
