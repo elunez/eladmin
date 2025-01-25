@@ -37,7 +37,7 @@ import java.util.Optional;
  */
 @Service
 @RequiredArgsConstructor
-@CacheConfig(cacheNames = "email", keyGenerator = "keyGenerator")
+@CacheConfig(cacheNames = "email")
 public class EmailServiceImpl implements EmailService {
 
     private final EmailRepository emailRepository;

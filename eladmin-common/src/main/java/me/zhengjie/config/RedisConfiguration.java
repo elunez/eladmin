@@ -19,8 +19,9 @@ import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONFactory;
 import com.alibaba.fastjson2.JSONWriter;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.codec.digest.MurmurHash3;
 import org.springframework.cache.Cache;
+import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.interceptor.CacheErrorHandler;
 import org.springframework.cache.interceptor.KeyGenerator;
@@ -47,7 +48,10 @@ import java.util.Map;
 @Slf4j
 @Configuration
 @EnableCaching
-public class RedisConfiguration {
+public class RedisConfiguration extends CachingConfigurerSupport {
+
+    // 自动识别json对象白名单配置（仅允许解析的包名，范围越小越安全）
+    private static final String[] WHITELIST_STR = {"me.zhengjie" };
 
     /**
      *  设置 redis 数据默认过期时间，默认2小时
@@ -71,7 +75,9 @@ public class RedisConfiguration {
         template.setValueSerializer(fastJsonRedisSerializer);
         template.setHashValueSerializer(fastJsonRedisSerializer);
         // 设置fastJson的序列化白名单
-        JSONFactory.getDefaultObjectReaderProvider().addAutoTypeAccept("me.zhengjie");
+        for (String pack : WHITELIST_STR) {
+            JSONFactory.getDefaultObjectReaderProvider().addAutoTypeAccept(pack);
+        }
         // key的序列化采用StringRedisSerializer
         template.setKeySerializer(new StringRedisSerializer());
         template.setHashKeySerializer(new StringRedisSerializer());
@@ -93,9 +99,7 @@ public class RedisConfiguration {
     }
 
     /**
-     * 自定义缓存key生成策略，需要在缓存注解中使用keyGenerator才会生效
-     * 默认是使用SimpleKeyGenerator生成的key
-     * 继承 CachingConfigurerSupport 后，才会默认生效这个生成器，暂时没找到其他方式默认生效，如果有请PR，谢谢
+     * 自定义缓存key生成策略
      */
     @Bean
     public KeyGenerator keyGenerator() {
@@ -114,8 +118,8 @@ public class RedisConfiguration {
             }
             // 转为JSON字符串
             String jsonString = JSON.toJSONString(container);
-            // 做SHA256 Hash计算，得到一个SHA256摘要作为Key
-            return DigestUtils.sha256Hex(jsonString);
+            // 使用 MurmurHash 生成 hash
+            return Integer.toHexString(MurmurHash3.hash32x86(jsonString.getBytes()));
         };
     }
 
