@@ -38,7 +38,7 @@ import java.util.Optional;
  */
 @Service
 @RequiredArgsConstructor
-@CacheConfig(cacheNames = "aliPay", keyGenerator = "keyGenerator")
+@CacheConfig(cacheNames = "aliPay")
 public class AliPayServiceImpl implements AliPayService {
 
     private final AliPayRepository alipayRepository;

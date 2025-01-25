@@ -36,7 +36,7 @@ public class WebSocketServer {
 	/**
 	 * concurrent包的线程安全Set，用来存放每个客户端对应的MyWebSocket对象。
 	 */
-	private static final CopyOnWriteArraySet<WebSocketServer> webSocketSet = new CopyOnWriteArraySet<WebSocketServer>();
+	private static final CopyOnWriteArraySet<WebSocketServer> webSocketSet = new CopyOnWriteArraySet<>();
 
 	/**
 	 * 与某个客户端的连接会话，需要通过它来给客户端发送数据
@@ -85,8 +85,7 @@ public class WebSocketServer {
 
 	@OnError
 	public void onError(Session session, Throwable error) {
-		log.error("发生错误");
-		error.printStackTrace();
+		log.error("发生错误", error);
 	}
 	/**
 	 * 实现服务器主动推送
