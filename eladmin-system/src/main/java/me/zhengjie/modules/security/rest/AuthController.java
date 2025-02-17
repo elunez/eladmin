@@ -102,6 +102,9 @@ public class AuthController {
         JwtUserDto jwtUser = userDetailsService.loadUserByUsername(authUser.getUsername());
         // 验证用户密码
         if (!passwordEncoder.matches(password, jwtUser.getPassword())) {
+            // todo 验证下数据
+            log.info("jwtUser pwd: {}", jwtUser.getPassword());
+            log.info("authUser pwd: {}", password);
             throw new BadRequestException("登录密码错误");
         }
         Authentication authentication = new UsernamePasswordAuthenticationToken(jwtUser, null, jwtUser.getAuthorities());
