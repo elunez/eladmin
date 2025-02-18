@@ -55,7 +55,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 // 获取用户的权限
                 List<AuthorityDto> authorities = roleService.buildPermissions(user);
                 // 初始化JwtUserDto
-                jwtUserDto = new JwtUserDto(user, dataService.getDeptIds(user), authorities, user.getPassword());
+                jwtUserDto = new JwtUserDto(user, dataService.getDeptIds(user), authorities);
                 // 添加缓存数据
                 userCacheManager.addUserCache(username, jwtUserDto);
             }

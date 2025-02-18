@@ -100,8 +100,6 @@ public class AuthController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         // 生成令牌
         String token = tokenProvider.createToken(jwtUser);
-        // 将密码设置为空
-        jwtUser.setPassword(null);
         // 返回 token 与 用户信息
         Map<String, Object> authInfo = new HashMap<String, Object>(2) {{
             put("token", properties.getTokenStartWith() + token);
@@ -121,8 +119,6 @@ public class AuthController {
     @GetMapping(value = "/info")
     public ResponseEntity<UserDetails> getUserInfo() {
         JwtUserDto jwtUser = (JwtUserDto) SecurityUtils.getCurrentUser();
-        // 将密码设置为空
-        jwtUser.setPassword(null);
         return ResponseEntity.ok(jwtUser);
     }
 
