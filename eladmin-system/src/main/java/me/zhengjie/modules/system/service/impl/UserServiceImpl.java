@@ -138,6 +138,7 @@ public class UserServiceImpl implements UserService {
         user.setPhone(resources.getPhone());
         user.setNickName(resources.getNickName());
         user.setGender(resources.getGender());
+        user.setAge(resources.getAge());
         userRepository.save(user);
         // 清除缓存
         delCaches(user.getId(), user.getUsername());
@@ -154,6 +155,7 @@ public class UserServiceImpl implements UserService {
         user.setNickName(resources.getNickName());
         user.setPhone(resources.getPhone());
         user.setGender(resources.getGender());
+        user.setAge(resources.getAge());
         userRepository.save(user);
         // 清理缓存
         delCaches(user.getId(), user.getUsername());
@@ -259,6 +261,7 @@ public class UserServiceImpl implements UserService {
             map.put("邮箱", userDTO.getEmail());
             map.put("状态", userDTO.getEnabled() ? "启用" : "禁用");
             map.put("手机号码", userDTO.getPhone());
+            map.put("年龄", userDTO.getAge());
             map.put("修改密码的时间", userDTO.getPwdResetTime());
             map.put("创建日期", userDTO.getCreateTime());
             list.add(map);
