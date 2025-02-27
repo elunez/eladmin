@@ -91,6 +91,9 @@ public class User extends BaseEntity implements Serializable {
     @ApiModelProperty(value = "头像存储的路径", hidden = true)
     private String avatarPath;
 
+    @ApiModelProperty(value = "年龄")
+    private Integer age;
+
     @ApiModelProperty(value = "密码")
     private String password;
 

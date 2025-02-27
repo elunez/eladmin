@@ -53,4 +53,8 @@ public class UserQueryCriteria implements Serializable {
     @ApiModelProperty(value = "创建时间")
     @Query(type = Query.Type.BETWEEN)
     private List<Timestamp> createTime;
+    
+    @Query
+    @ApiModelProperty(value = "年龄")
+    private Integer age;
 }
