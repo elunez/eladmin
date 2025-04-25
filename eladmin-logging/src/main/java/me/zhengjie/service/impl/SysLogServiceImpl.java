@@ -18,6 +18,7 @@ package me.zhengjie.service.impl;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import lombok.RequiredArgsConstructor;
 import me.zhengjie.domain.SysLog;
@@ -136,7 +137,14 @@ public class SysLogServiceImpl implements SysLogService {
             // 将RequestBody注解修饰的参数作为请求参数
             RequestBody requestBody = parameters[i].getAnnotation(RequestBody.class);
             if (requestBody != null) {
-                params.putAll((JSONObject) JSON.toJSON(args[i]));
+                // [el-async-1] ERROR o.s.a.i.SimpleAsyncUncaughtExceptionHandler - Unexpected exception occurred invoking async method: public void me.zhengjie.service.impl.SysLogServiceImpl.save(java.lang.String,java.lang.String,java.lang.String,org.aspectj.lang.ProceedingJoinPoint,me.zhengjie.domain.SysLog)
+                // java.lang.ClassCastException: com.alibaba.fastjson2.JSONArray cannot be cast to com.alibaba.fastjson2.JSONObject
+                Object json = JSON.toJSON(args[i]);
+                if (json instanceof JSONArray) {
+                    params.put("reqBodyList", json);
+                } else {
+                    params.putAll((JSONObject) json);
+                }
             } else {
                 String key = parameters[i].getName();
                 params.put(key, args[i]);
