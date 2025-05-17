@@ -46,10 +46,16 @@ spring:
           # 记录慢SQL
           log-slow-sql: true
           slow-sql-millis: 2000
-          merge-sql: true
+          merge-sql: false
         wall:
           config:
             multi-statement-allow: true
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+    validate-on-migrate: false
+    encoding: UTF-8
 
 # 登录相关配置
 login:
