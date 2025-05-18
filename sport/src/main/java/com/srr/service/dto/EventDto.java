@@ -70,6 +70,9 @@ public class EventDto implements Serializable {
     @ApiModelProperty(value = "clubId")
     private Long clubId;
 
+    @ApiModelProperty(value = "sportId")
+    private Long sportId;
+
     @ApiModelProperty(value = "createBy")
     private Long createBy;
 }

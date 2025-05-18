@@ -50,6 +50,10 @@ public class EventQueryCriteria{
     @ApiModelProperty(value = "clubId")
     private Long clubId;
 
+    @Query
+    @ApiModelProperty(value = "sportId")
+    private Long sportId;
+
     /** 精确 */
     @Query
     @ApiModelProperty(value = "createBy")

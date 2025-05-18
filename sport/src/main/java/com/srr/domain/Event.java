@@ -101,6 +101,11 @@ public class Event implements Serializable {
     @ApiModelProperty(value = "clubId")
     private Long clubId;
 
+    @NotNull
+    @Column(name = "`sport_id`",nullable = false)
+    @ApiModelProperty(value = "sportId")
+    private Long sportId;
+
     @Column(name = "`create_by`")
     @ApiModelProperty(value = "createBy")
     private Long createBy;
