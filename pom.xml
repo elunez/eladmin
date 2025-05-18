@@ -13,6 +13,7 @@
         <module>eladmin-system</module>
         <module>eladmin-tools</module>
         <module>eladmin-generator</module>
+        <module>sport</module>
     </modules>
 
     <name>ELADMIN 后台管理</name>
