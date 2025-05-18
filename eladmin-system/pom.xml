@@ -36,6 +36,11 @@
             <artifactId>eladmin-tools</artifactId>
             <version>2.7</version>
         </dependency>
+        <dependency>
+            <groupId>me.zhengjie</groupId>
+            <artifactId>sport</artifactId>
+            <version>2.7</version>
+        </dependency>
 
         <!-- quartz -->
         <dependency>
