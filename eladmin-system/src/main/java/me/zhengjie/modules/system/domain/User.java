@@ -52,13 +52,6 @@ public class User extends BaseEntity implements Serializable {
             inverseJoinColumns = {@JoinColumn(name = "role_id",referencedColumnName = "role_id")})
     private Set<Role> roles;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @ApiModelProperty(value = "用户岗位")
-    @JoinTable(name = "sys_users_jobs",
-            joinColumns = {@JoinColumn(name = "user_id",referencedColumnName = "user_id")},
-            inverseJoinColumns = {@JoinColumn(name = "job_id",referencedColumnName = "job_id")})
-    private Set<Job> jobs;
-
     @OneToOne
     @JoinColumn(name = "dept_id")
     @ApiModelProperty(value = "用户部门")
