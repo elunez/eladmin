@@ -39,7 +39,7 @@ import com.srr.service.dto.PlayerDto;
 **/
 @RestController
 @RequiredArgsConstructor
-@Api(tags = "sport")
+@Api(tags = "player")
 @RequestMapping("/api/player")
 public class PlayerController {
 

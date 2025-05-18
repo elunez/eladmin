@@ -41,7 +41,7 @@ public class Club implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "`id`")
-    @ApiModelProperty(value = "id")
+    @ApiModelProperty(value = "id", hidden = true)
     private Long id;
 
     @Column(name = "`name`",nullable = false)
@@ -55,12 +55,12 @@ public class Club implements Serializable {
 
     @Column(name = "`create_time`")
     @CreationTimestamp
-    @ApiModelProperty(value = "创建时间")
+    @ApiModelProperty(value = "创建时间", hidden = true)
     private Timestamp createTime;
 
     @Column(name = "`update_time`")
     @UpdateTimestamp
-    @ApiModelProperty(value = "更新时间")
+    @ApiModelProperty(value = "更新时间", hidden = true)
     private Timestamp updateTime;
 
     @Column(name = "`icon`")
