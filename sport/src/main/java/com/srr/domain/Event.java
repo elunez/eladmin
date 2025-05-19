@@ -101,6 +101,10 @@ public class Event implements Serializable {
     @ApiModelProperty(value = "clubId")
     private Long clubId;
 
+    @Column(name = "`public_link`")
+    @ApiModelProperty(value = "publicLink", accessMode = ApiModelProperty.AccessMode.READ_ONLY)
+    private String publicLink;
+
     @NotNull
     @Column(name = "`sport_id`",nullable = false)
     @ApiModelProperty(value = "sportId")
