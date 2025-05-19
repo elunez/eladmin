@@ -87,10 +87,6 @@ public class DataServiceImpl implements DataService {
         Set<Dept> depts = deptService.findByRoleId(role.getId());
         for (Dept dept : depts) {
             deptIds.add(dept.getId());
-            List<Dept> deptChildren = deptService.findByPid(dept.getId());
-            if (CollUtil.isNotEmpty(deptChildren)) {
-                deptIds.addAll(deptService.getDeptChildren(deptChildren));
-            }
         }
         return deptIds;
     }

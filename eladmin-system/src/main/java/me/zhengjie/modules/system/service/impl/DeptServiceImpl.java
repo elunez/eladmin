@@ -60,11 +60,8 @@ public class DeptServiceImpl implements DeptService {
         Sort sort = Sort.by(Sort.Direction.ASC, "deptSort");
         String dataScopeType = SecurityUtils.getDataScopeType();
         if (isQuery) {
-            if(dataScopeType.equals(DataScopeEnum.ALL.getValue())){
-                criteria.setPidIsNull(true);
-            }
             List<Field> fields = QueryHelp.getAllFields(criteria.getClass(), new ArrayList<>());
-            List<String> fieldNames = new ArrayList<String>(){{ add("pidIsNull");add("enabled");}};
+            List<String> fieldNames = new ArrayList<String>(){{ add("enabled");}};
             for (Field field : fields) {
                 //设置对象的访问权限，保证对private的属性的访问
                 field.setAccessible(true);
@@ -73,7 +70,6 @@ public class DeptServiceImpl implements DeptService {
                     continue;
                 }
                 if (ObjectUtil.isNotNull(val)) {
-                    criteria.setPidIsNull(null);
                     break;
                 }
             }
@@ -99,11 +95,6 @@ public class DeptServiceImpl implements DeptService {
     }
 
     @Override
-    public List<Dept> findByPid(long pid) {
-        return deptRepository.findByPid(pid);
-    }
-
-    @Override
     public Set<Dept> findByRoleId(Long id) {
         return deptRepository.findByRoleId(id);
     }
@@ -112,30 +103,17 @@ public class DeptServiceImpl implements DeptService {
     @Transactional(rollbackFor = Exception.class)
     public void create(Dept resources) {
         deptRepository.save(resources);
-        // 计算子节点数目
-        resources.setSubCount(0);
         // 清理缓存
-        updateSubCnt(resources.getPid());
-        // 清理自定义角色权限的datascope缓存
-        delCaches(resources.getPid());
+        delCaches(resources.getId());
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void update(Dept resources) {
-        // 旧的部门
-        Long oldPid = findById(resources.getId()).getPid();
-        Long newPid = resources.getPid();
-        if(resources.getPid() != null && resources.getId().equals(resources.getPid())) {
-            throw new BadRequestException("上级不能为自己");
-        }
         Dept dept = deptRepository.findById(resources.getId()).orElseGet(Dept::new);
         ValidationUtil.isNull( dept.getId(),"Dept","id",resources.getId());
         resources.setId(dept.getId());
         deptRepository.save(resources);
-        // 更新父节点中子节点数目
-        updateSubCnt(oldPid);
-        updateSubCnt(newPid);
         // 清理缓存
         delCaches(resources.getId());
     }
@@ -147,7 +125,6 @@ public class DeptServiceImpl implements DeptService {
             // 清理缓存
             delCaches(deptDto.getId());
             deptRepository.deleteById(deptDto.getId());
-            updateSubCnt(deptDto.getPid());
         }
     }
 
@@ -168,10 +145,6 @@ public class DeptServiceImpl implements DeptService {
     public Set<DeptDto> getDeleteDepts(List<Dept> menuList, Set<DeptDto> deptDtos) {
         for (Dept dept : menuList) {
             deptDtos.add(deptMapper.toDto(dept));
-            List<Dept> depts = deptRepository.findByPid(dept.getId());
-            if(CollUtil.isNotEmpty(depts)){
-                getDeleteDepts(depts, deptDtos);
-            }
         }
         return deptDtos;
     }
@@ -181,10 +154,6 @@ public class DeptServiceImpl implements DeptService {
         List<Long> list = new ArrayList<>();
         deptList.forEach(dept -> {
                     if (dept!=null && dept.getEnabled()) {
-                        List<Dept> depts = deptRepository.findByPid(dept.getId());
-                        if (CollUtil.isNotEmpty(depts)) {
-                            list.addAll(getDeptChildren(depts));
-                        }
                         list.add(dept.getId());
                     }
                 }
@@ -194,12 +163,7 @@ public class DeptServiceImpl implements DeptService {
 
     @Override
     public List<DeptDto> getSuperior(DeptDto deptDto, List<Dept> depts) {
-        if(deptDto.getPid() == null){
-            depts.addAll(deptRepository.findByPidIsNull());
-            return deptMapper.toDto(depts);
-        }
-        depts.addAll(deptRepository.findByPid(deptDto.getPid()));
-        return getSuperior(findById(deptDto.getPid()), depts);
+        return deptMapper.toDto(depts);
     }
 
     @Override
@@ -210,21 +174,11 @@ public class DeptServiceImpl implements DeptService {
         boolean isChild;
         for (DeptDto deptDTO : deptDtos) {
             isChild = false;
-            if (deptDTO.getPid() == null) {
-                trees.add(deptDTO);
-            }
+            trees.add(deptDTO);
             for (DeptDto it : deptDtos) {
-                if (it.getPid() != null && deptDTO.getId().equals(it.getPid())) {
-                    isChild = true;
-                    if (deptDTO.getChildren() == null) {
-                        deptDTO.setChildren(new ArrayList<>());
-                    }
-                    deptDTO.getChildren().add(it);
-                }
+                isChild = true;
             }
             if(isChild) {
-                depts.add(deptDTO);
-            } else if(deptDTO.getPid() != null &&  !deptNames.contains(findById(deptDTO.getPid()).getName())) {
                 depts.add(deptDTO);
             }
         }
@@ -249,19 +203,12 @@ public class DeptServiceImpl implements DeptService {
         }
     }
 
-    private void updateSubCnt(Long deptId){
-        if(deptId != null){
-            int count = deptRepository.countByPid(deptId);
-            deptRepository.updateSubCntById(count, deptId);
-        }
-    }
-
     private List<DeptDto> deduplication(List<DeptDto> list) {
         List<DeptDto> deptDtos = new ArrayList<>();
         for (DeptDto deptDto : list) {
             boolean flag = true;
             for (DeptDto dto : list) {
-                if (dto.getId().equals(deptDto.getPid())) {
+                if (dto.getId().equals(deptDto.getId())) {
                     flag = false;
                     break;
                 }

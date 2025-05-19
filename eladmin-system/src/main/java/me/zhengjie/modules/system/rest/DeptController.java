@@ -74,11 +74,6 @@ public class DeptController {
             DeptDto deptDto = deptService.findById(id);
             List<DeptDto> depts = deptService.getSuperior(deptDto, new ArrayList<>());
             if(exclude){
-                for (DeptDto dept : depts) {
-                    if(dept.getId().equals(deptDto.getPid())) {
-                        dept.setSubCount(dept.getSubCount() - 1);
-                    }
-                }
                 // 编辑部门时不显示自己以及自己下级的数据，避免出现PID数据环形问题
                 depts = depts.stream().filter(i -> !ids.contains(i.getId())).collect(Collectors.toList());
             }
@@ -114,13 +109,6 @@ public class DeptController {
     @PreAuthorize("@el.check('dept:del')")
     public ResponseEntity<Object> deleteDept(@RequestBody Set<Long> ids){
         Set<DeptDto> deptDtos = new HashSet<>();
-        for (Long id : ids) {
-            List<Dept> deptList = deptService.findByPid(id);
-            deptDtos.add(deptService.findById(id));
-            if(CollectionUtil.isNotEmpty(deptList)){
-                deptDtos = deptService.getDeleteDepts(deptList, deptDtos);
-            }
-        }
         // 验证是否被角色或用户关联
         deptService.verification(deptDtos);
         deptService.delete(deptDtos);
