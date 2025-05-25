@@ -1,64 +1,64 @@
 <template>
   <div class="app-container">
-    <!--工具栏-->
+    <!-- Toolbar -->
     <div class="head-container">
       <div v-if="crud.props.searchToggle">
-        <!-- 搜索 -->
-        <label class="el-form-item-label">名称</label>
-        <el-input v-model="query.name" clearable placeholder="名称" style="width: 185px;" class="filter-item" @keyup.enter.native="crud.toQuery" />
-        <label class="el-form-item-label">创建时间</label>
-        <el-input v-model="query.createTime" clearable placeholder="创建时间" style="width: 185px;" class="filter-item" @keyup.enter.native="crud.toQuery" />
-        <label class="el-form-item-label">是否启用</label>
-        <el-input v-model="query.enabled" clearable placeholder="是否启用" style="width: 185px;" class="filter-item" @keyup.enter.native="crud.toQuery" />
+        <!-- Search -->
+        <label class="el-form-item-label">Name</label>
+        <el-input v-model="query.name" clearable placeholder="Name" style="width: 185px;" class="filter-item" @keyup.enter.native="crud.toQuery" />
+        <label class="el-form-item-label">Creation Time</label>
+        <el-input v-model="query.createTime" clearable placeholder="Creation Time" style="width: 185px;" class="filter-item" @keyup.enter.native="crud.toQuery" />
+        <label class="el-form-item-label">Enabled</label>
+        <el-input v-model="query.enabled" clearable placeholder="Enabled" style="width: 185px;" class="filter-item" @keyup.enter.native="crud.toQuery" />
         <rrOperation :crud="crud" />
       </div>
-      <!--如果想在工具栏加入更多按钮，可以使用插槽方式， slot = 'left' or 'right'-->
+      <!-- If you want to add more buttons to the toolbar, you can use slots. slot = 'left' or 'right' -->
       <crudOperation :permission="permission" />
-      <!--表单组件-->
+      <!-- Form component -->
       <el-dialog :close-on-click-modal="false" :before-close="crud.cancelCU" :visible.sync="crud.status.cu > 0" :title="crud.status.title" width="500px">
         <el-form ref="form" :model="form" :rules="rules" size="small" label-width="80px">
           <el-form-item label="id">
             <el-input v-model="form.id" style="width: 370px;" />
           </el-form-item>
-          <el-form-item label="名称" prop="name">
+          <el-form-item label="Name" prop="name">
             <el-input v-model="form.name" style="width: 370px;" />
           </el-form-item>
-          <el-form-item label="描述">
+          <el-form-item label="Description">
             <el-input v-model="form.description" :rows="3" type="textarea" style="width: 370px;" />
           </el-form-item>
-          <el-form-item label="创建时间">
+          <el-form-item label="Creation Time">
             <el-date-picker v-model="form.createTime" type="datetime" style="width: 370px;" />
           </el-form-item>
-          <el-form-item label="更新时间">
+          <el-form-item label="Update Time">
             <el-date-picker v-model="form.updateTime" type="datetime" style="width: 370px;" />
           </el-form-item>
-          <el-form-item label="图标">
+          <el-form-item label="Icon">
             <el-input v-model="form.icon" style="width: 370px;" />
           </el-form-item>
-          <el-form-item label="排序">
+          <el-form-item label="Sort">
             <el-input v-model="form.sort" style="width: 370px;" />
           </el-form-item>
-          <el-form-item label="是否启用">
-                未设置字典，请手动设置 Radio
+          <el-form-item label="Enabled">
+                Dictionary not set, please manually set Radio
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button type="text" @click="crud.cancelCU">取消</el-button>
-          <el-button :loading="crud.status.cu === 2" type="primary" @click="crud.submitCU">确认</el-button>
+          <el-button type="text" @click="crud.cancelCU">Cancel</el-button>
+          <el-button :loading="crud.status.cu === 2" type="primary" @click="crud.submitCU">Confirm</el-button>
         </div>
       </el-dialog>
-      <!--表格渲染-->
+      <!-- Table rendering -->
       <el-table ref="table" v-loading="crud.loading" :data="crud.data" size="small" style="width: 100%;" @selection-change="crud.selectionChangeHandler">
         <el-table-column type="selection" width="55" />
         <el-table-column prop="id" label="id" />
-        <el-table-column prop="name" label="名称" />
-        <el-table-column prop="description" label="描述" />
-        <el-table-column prop="createTime" label="创建时间" />
-        <el-table-column prop="updateTime" label="更新时间" />
-        <el-table-column prop="icon" label="图标" />
-        <el-table-column prop="sort" label="排序" />
-        <el-table-column prop="enabled" label="是否启用" />
-        <el-table-column v-if="checkPer(['admin','sport:edit','sport:del'])" label="操作" width="150px" align="center">
+        <el-table-column prop="name" label="Name" />
+        <el-table-column prop="description" label="Description" />
+        <el-table-column prop="createTime" label="Creation Time" />
+        <el-table-column prop="updateTime" label="Update Time" />
+        <el-table-column prop="icon" label="Icon" />
+        <el-table-column prop="sort" label="Sort" />
+        <el-table-column prop="enabled" label="Enabled" />
+        <el-table-column v-if="checkPer(['admin','sport:edit','sport:del'])" label="Operation" width="150px" align="center">
           <template slot-scope="scope">
             <udOperation
               :data="scope.row"
@@ -67,7 +67,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <!--分页组件-->
+      <!-- Pagination component -->
       <pagination />
     </div>
   </div>
@@ -87,7 +87,7 @@ export default {
   components: { pagination, crudOperation, rrOperation, udOperation },
   mixins: [presenter(), header(), form(defaultForm), crud()],
   cruds() {
-    return CRUD({ title: 'sport', url: 'api/sport', idField: 'id', sort: 'id,desc', crudMethod: { ...crudSport }})
+    return CRUD({ title: 'Sport', url: 'api/sport', idField: 'id', sort: 'id,desc', crudMethod: { ...crudSport }})
   },
   data() {
     return {
@@ -98,18 +98,18 @@ export default {
       },
       rules: {
         name: [
-          { required: true, message: '名称不能为空', trigger: 'blur' }
+          { required: true, message: 'Name cannot be empty', trigger: 'blur' }
         ]
       },
       queryTypeOptions: [
-        { key: 'name', display_name: '名称' },
-        { key: 'createTime', display_name: '创建时间' },
-        { key: 'enabled', display_name: '是否启用' }
+        { key: 'name', display_name: 'Name' },
+        { key: 'createTime', display_name: 'Creation Time' },
+        { key: 'enabled', display_name: 'Enabled' }
       ]
     }
   },
   methods: {
-    // 钩子：在获取表格数据之前执行，false 则代表不获取数据
+    // Hook: executed before getting table data, return false to prevent data from being retrieved
     [CRUD.HOOK.beforeRefresh]() {
       return true
     }

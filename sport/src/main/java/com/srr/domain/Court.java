@@ -54,17 +54,17 @@ public class Court implements Serializable {
 
     @Column(name = "`create_time`")
     @CreationTimestamp
-    @ApiModelProperty(value = "创建时间", hidden = true)
+    @ApiModelProperty(value = "Creation time", hidden = true)
     private Timestamp createTime;
 
     @Column(name = "`update_time`")
     @UpdateTimestamp
-    @ApiModelProperty(value = "更新时间", hidden = true)
+    @ApiModelProperty(value = "Update time", hidden = true)
     private Timestamp updateTime;
 
     @Column(name = "`amount`",nullable = false)
     @NotNull
-    @ApiModelProperty(value = "数量")
+    @ApiModelProperty(value = "Amount")
     private Integer amount;
 
     public void copy(Court source){

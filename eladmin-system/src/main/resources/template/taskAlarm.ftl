@@ -18,15 +18,15 @@
 			padding: 20px;
             border: 1px solid #eee;">
         <div>
-            <p style="margin-bottom: 10px;">任务信息：</p>
+            <p style="margin-bottom: 10px;">Task Information:</p>
             <table style="border-collapse: collapse;">
                 <tr>
-                    <th style="padding: .65em;background: #666;border: 1px solid #777;color: #fff;">任务名称</th>
-                    <th style="padding: .65em;background: #666;border: 1px solid #777;color: #fff;">Bean名称</th>
-                    <th style="padding: .65em;background: #666;border: 1px solid #777;color: #fff;">执行方法</th>
-                    <th style="padding: .65em;background: #666;border: 1px solid #777;color: #fff;">参数内容</th>
-                    <th style="padding: .65em;background: #666;border: 1px solid #777;color: #fff;">Cron表达式</th>
-                    <th style="padding: .65em;background: #666;border: 1px solid #777;color: #fff;">描述内容</th>
+                    <th style="padding: .65em;background: #666;border: 1px solid #777;color: #fff;">Task Name</th>
+                    <th style="padding: .65em;background: #666;border: 1px solid #777;color: #fff;">Bean Name</th>
+                    <th style="padding: .65em;background: #666;border: 1px solid #777;color: #fff;">Execution Method</th>
+                    <th style="padding: .65em;background: #666;border: 1px solid #777;color: #fff;">Parameter Content</th>
+                    <th style="padding: .65em;background: #666;border: 1px solid #777;color: #fff;">Cron Expression</th>
+                    <th style="padding: .65em;background: #666;border: 1px solid #777;color: #fff;">Description</th>
                 </tr>
                 <tr>
                     <td style="padding: .65em;border: 1px solid#777;">${task.jobName}</td>
@@ -39,7 +39,7 @@
             </table>
         </div>
         <div>
-            <p style="margin-bottom: 10px;">异常信息：</p>
+            <p style="margin-bottom: 10px;">Exception Information:</p>
             <pre style="position: relative;
   padding: 15px;
   line-height: 20px;
@@ -60,7 +60,7 @@
 			font-size: 12px;
 			padding: 20px 0px;
 			font-family: Microsoft YaHei;">
-            Copyright &copy;${.now?string("yyyy")} <a hover="color: #DA251D;" style="color: #999;" href="https://github.com/elunez/eladmin" target="_blank">ELADMIN</a> 后台管理系统 All Rights Reserved.
+            Copyright &copy;${.now?string("yyyy")} <a hover="color: #DA251D;" style="color: #999;" href="https://github.com/elunez/eladmin" target="_blank">ELADMIN</a> Backend Management System All Rights Reserved.
         </div>
 
     </div>

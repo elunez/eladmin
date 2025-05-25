@@ -31,7 +31,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * 开启审计功能 -> @EnableJpaAuditing
+ * Enable auditing functionality -> @EnableJpaAuditing
  *
  * @author Zheng Jie
  * @date 2018/11/15 9:20:19
@@ -49,8 +49,8 @@ public class AppRun {
 
     public static void main(String[] args) {
         SpringApplication springApplication = new SpringApplication(AppRun.class);
-        // 监控应用的PID，启动时可指定PID路径：--spring.pid.file=/home/eladmin/app.pid
-        // 或者在 application.yml 添加文件路径，方便 kill，kill `cat /home/eladmin/app.pid`
+        // Monitor the application's PID. You can specify the PID path at startup: --spring.pid.file=/home/eladmin/app.pid
+        // Or add the file path in application.yml for easy kill: kill `cat /home/eladmin/app.pid`
         springApplication.addListeners(new ApplicationPidFileWriter());
         springApplication.run(args);
         log.info("---------------------------------------------");
@@ -65,7 +65,7 @@ public class AppRun {
     }
 
     /**
-     * 访问首页提示
+     * Homepage access prompt
      *
      * @return /
      */

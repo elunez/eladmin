@@ -39,13 +39,13 @@ import java.io.IOException;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/logs")
-@Api(tags = "系统：日志管理")
+@Api(tags = "System: Log Management")
 public class SysLogController {
 
     private final SysLogService sysLogService;
 
-    @Log("导出数据")
-    @ApiOperation("导出数据")
+    @Log("Export Data")
+    @ApiOperation("Export Data")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check()")
     public void exportLog(HttpServletResponse response, SysLogQueryCriteria criteria) throws IOException {
@@ -53,8 +53,8 @@ public class SysLogController {
         sysLogService.download(sysLogService.queryAll(criteria), response);
     }
 
-    @Log("导出错误数据")
-    @ApiOperation("导出错误数据")
+    @Log("Export Error Data")
+    @ApiOperation("Export Error Data")
     @GetMapping(value = "/error/download")
     @PreAuthorize("@el.check()")
     public void exportErrorLog(HttpServletResponse response, SysLogQueryCriteria criteria) throws IOException {
@@ -62,7 +62,7 @@ public class SysLogController {
         sysLogService.download(sysLogService.queryAll(criteria), response);
     }
     @GetMapping
-    @ApiOperation("日志查询")
+    @ApiOperation("Log Query")
     @PreAuthorize("@el.check()")
     public ResponseEntity<Object> queryLog(SysLogQueryCriteria criteria, Pageable pageable){
         criteria.setLogType("INFO");
@@ -70,7 +70,7 @@ public class SysLogController {
     }
 
     @GetMapping(value = "/user")
-    @ApiOperation("用户日志查询")
+    @ApiOperation("User Log Query")
     public ResponseEntity<PageResult<SysLogSmallDto>> queryUserLog(SysLogQueryCriteria criteria, Pageable pageable){
         criteria.setLogType("INFO");
         criteria.setUsername(SecurityUtils.getCurrentUsername());
@@ -78,7 +78,7 @@ public class SysLogController {
     }
 
     @GetMapping(value = "/error")
-    @ApiOperation("错误日志查询")
+    @ApiOperation("Error Log Query")
     @PreAuthorize("@el.check()")
     public ResponseEntity<Object> queryErrorLog(SysLogQueryCriteria criteria, Pageable pageable){
         criteria.setLogType("ERROR");
@@ -86,14 +86,14 @@ public class SysLogController {
     }
 
     @GetMapping(value = "/error/{id}")
-    @ApiOperation("日志异常详情查询")
+    @ApiOperation("Log Exception Detail Query")
     @PreAuthorize("@el.check()")
     public ResponseEntity<Object> queryErrorLogDetail(@PathVariable Long id){
         return new ResponseEntity<>(sysLogService.findByErrDetail(id), HttpStatus.OK);
     }
     @DeleteMapping(value = "/del/error")
-    @Log("删除所有ERROR日志")
-    @ApiOperation("删除所有ERROR日志")
+    @Log("Delete All ERROR Logs")
+    @ApiOperation("Delete All ERROR Logs")
     @PreAuthorize("@el.check()")
     public ResponseEntity<Object> delAllErrorLog(){
         sysLogService.delAllByError();
@@ -101,8 +101,8 @@ public class SysLogController {
     }
 
     @DeleteMapping(value = "/del/info")
-    @Log("删除所有INFO日志")
-    @ApiOperation("删除所有INFO日志")
+    @Log("Delete All INFO Logs")
+    @ApiOperation("Delete All INFO Logs")
     @PreAuthorize("@el.check()")
     public ResponseEntity<Object> delAllInfoLog(){
         sysLogService.delAllByInfo();

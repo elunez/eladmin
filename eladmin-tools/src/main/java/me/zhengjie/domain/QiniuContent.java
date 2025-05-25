@@ -23,7 +23,7 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 
 /**
- * 上传成功后，存储结果
+ * Storage result after successful upload
  * @author Zheng Jie
  * @date 2018-12-31
  */
@@ -39,26 +39,26 @@ public class QiniuContent implements Serializable {
     private Long id;
 
     @Column(name = "name")
-    @ApiModelProperty(value = "文件名")
+    @ApiModelProperty(value = "File name")
     private String key;
 
-    @ApiModelProperty(value = "空间名")
+    @ApiModelProperty(value = "Bucket name")
     private String bucket;
 
-    @ApiModelProperty(value = "大小")
+    @ApiModelProperty(value = "Size")
     private String size;
 
-    @ApiModelProperty(value = "文件地址")
+    @ApiModelProperty(value = "File address")
     private String url;
 
-    @ApiModelProperty(value = "文件类型")
+    @ApiModelProperty(value = "File type")
     private String suffix;
 
-    @ApiModelProperty(value = "空间类型：公开/私有")
-    private String type = "公开";
+    @ApiModelProperty(value = "Space type: public/private")
+    private String type = "public";
 
     @UpdateTimestamp
-    @ApiModelProperty(value = "创建或更新时间")
+    @ApiModelProperty(value = "Creation or update time")
     @Column(name = "update_time")
     private Timestamp updateTime;
 }

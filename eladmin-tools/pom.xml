@@ -8,7 +8,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>eladmin-tools</artifactId>
-    <name>工具模块</name>
+    <name>Tools Module</name>
 
     <properties>
         <mail.version>1.4.7</mail.version>
@@ -17,28 +17,28 @@
     </properties>
 
     <dependencies>
-        <!-- 同时需要common模块和logging模块只需要引入logging模块即可 -->
+        <!-- If you need both the common module and the logging module at the same time, just import the logging module. -->
         <dependency>
             <groupId>me.zhengjie</groupId>
             <artifactId>eladmin-logging</artifactId>
             <version>2.7</version>
         </dependency>
 
-        <!--邮件依赖-->
+        <!-- Email dependency -->
         <dependency>
             <groupId>javax.mail</groupId>
             <artifactId>mail</artifactId>
             <version>${mail.version}</version>
         </dependency>
 
-        <!--七牛云存储-->
+        <!-- Qiniu Cloud Storage -->
         <dependency>
             <groupId>com.qiniu</groupId>
             <artifactId>qiniu-java-sdk</artifactId>
             <version>${qiniu.version}</version>
         </dependency>
 
-        <!--支付宝依赖-->
+        <!-- Alipay dependency -->
         <dependency>
             <groupId>com.alipay.sdk</groupId>
             <artifactId>alipay-sdk-java</artifactId>

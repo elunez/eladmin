@@ -42,39 +42,39 @@ public class SysLog implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ApiModelProperty(value = "操作用户")
+    @ApiModelProperty(value = "Operator User")
     private String username;
 
-    @ApiModelProperty(value = "描述")
+    @ApiModelProperty(value = "Description")
     private String description;
 
-    @ApiModelProperty(value = "方法名")
+    @ApiModelProperty(value = "Method Name")
     private String method;
 
-    @ApiModelProperty(value = "参数")
+    @ApiModelProperty(value = "Parameters")
     private String params;
 
-    @ApiModelProperty(value = "日志类型")
+    @ApiModelProperty(value = "Log Type")
     private String logType;
 
-    @ApiModelProperty(value = "请求ip")
+    @ApiModelProperty(value = "Request IP")
     private String requestIp;
 
-    @ApiModelProperty(value = "地址")
+    @ApiModelProperty(value = "Address")
     private String address;
 
-    @ApiModelProperty(value = "浏览器")
+    @ApiModelProperty(value = "Browser")
     private String browser;
 
-    @ApiModelProperty(value = "请求耗时")
+    @ApiModelProperty(value = "Request Duration")
     private Long time;
 
-    @ApiModelProperty(value = "异常详细")
+    @ApiModelProperty(value = "Exception Details")
     private byte[] exceptionDetail;
 
-    /** 创建日期 */
+    /** Creation Date */
     @CreationTimestamp
-    @ApiModelProperty(value = "创建日期：yyyy-MM-dd HH:mm:ss")
+    @ApiModelProperty(value = "Creation Date: yyyy-MM-dd HH:mm:ss")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private Timestamp createTime;
 

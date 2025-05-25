@@ -29,23 +29,23 @@ import java.io.IOException;
 public class RemoveDruidAdConfig {
 
     /**
-     * 方法名: removeDruidAdFilterRegistrationBean
-     * 方法描述 除去页面底部的广告
+     * Method name: removeDruidAdFilterRegistrationBean
+     * Method description: Remove the advertisement at the bottom of the page
      * @param properties com.alibaba.druid.spring.boot.autoconfigure.properties.DruidStatProperties
      * @return org.springframework.boot.web.servlet.FilterRegistrationBean
      */
     @Bean
     public FilterRegistrationBean removeDruidAdFilterRegistrationBean(DruidStatProperties properties) {
 
-        // 获取web监控页面的参数
+        // Get the parameters of the web monitoring page
         DruidStatProperties.StatViewServlet config = properties.getStatViewServlet();
-        // 提取common.js的配置路径
+        // Extract the configuration path of common.js
         String pattern = config.getUrlPattern() != null ? config.getUrlPattern() : "/druid/*";
         String commonJsPattern = pattern.replaceAll("\\*", "js/common.js");
 
         final String filePath = "support/http/resources/js/common.js";
 
-        //创建filter进行过滤
+        // Create filter for filtering
         Filter filter = new Filter() {
             @Override
             public void init(FilterConfig filterConfig) throws ServletException {}
@@ -55,9 +55,9 @@ public class RemoveDruidAdConfig {
                 HttpServletRequest httpRequest = (HttpServletRequest) request;
                 HttpServletResponse httpResponse = (HttpServletResponse) response;
                 if (httpRequest.getRequestURI().endsWith("js/common.js")) {
-                    // 获取common.js
+                    // Get common.js
                     String text = Utils.readFromResource(filePath);
-                    // 正则替换banner, 除去底部的广告信息
+                    // Use regex to replace banner, remove advertisement information at the bottom
                     text = text.replaceAll("<a.*?druid_banner\"></a><br/>", "");
                     text = text.replaceAll("powered by.*?shrek.wang</a>", "");
                     httpResponse.setContentType("application/javascript");

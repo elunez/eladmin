@@ -23,7 +23,7 @@ import javax.crypto.spec.IvParameterSpec;
 import java.nio.charset.StandardCharsets;
 
 /**
- * 加密
+ * Encryption
  * @author Zheng Jie
  * @date 2018-11-23
  */
@@ -41,7 +41,7 @@ public class EncryptUtils {
     }
 
     /**
-     * 对称加密
+     * Symmetric encryption
      */
     public static String desEncrypt(String source) throws Exception {
         Cipher cipher = Cipher.getInstance("DES/CBC/PKCS5Padding");
@@ -53,7 +53,7 @@ public class EncryptUtils {
     }
 
     /**
-     * 对称解密
+     * Symmetric decryption
      */
     public static String desDecrypt(String source) throws Exception {
         Cipher cipher = Cipher.getInstance("DES/CBC/PKCS5Padding");
@@ -83,7 +83,7 @@ public class EncryptUtils {
     private static byte[] hex2byte(byte[] b) {
         int size = 2;
         if ((b.length % size) != 0) {
-            throw new IllegalArgumentException("长度不是偶数");
+            throw new IllegalArgumentException("Length is not even");
         }
         byte[] b2 = new byte[b.length / 2];
         for (int n = 0; n < b.length; n += size) {

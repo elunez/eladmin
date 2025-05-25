@@ -28,60 +28,60 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Query {
 
-    // Dong ZhaoYang 2017/8/7 基本对象的属性名
+    // Dong ZhaoYang 2017/8/7 Property name of the basic object
     String propName() default "";
-    // Dong ZhaoYang 2017/8/7 查询方式
+    // Dong ZhaoYang 2017/8/7 Query type
     Type type() default Type.EQUAL;
 
     /**
-     * 连接查询的属性名，如User类中的dept
+     * Property name for join query, e.g., dept in User class
      */
     String joinName() default "";
 
     /**
-     * 默认左连接
+     * Default left join
      */
     Join join() default Join.LEFT;
 
     /**
-     * 多字段模糊搜索，仅支持String类型字段，多个用逗号隔开, 如@Query(blurry = "email,username")
+     * Multi-field fuzzy search, only supports String type fields, separated by commas, e.g., @Query(blurry = "email,username")
      */
     String blurry() default "";
 
     enum Type {
-        // jie 2019/6/4 相等
+        // jie 2019/6/4 Equal
         EQUAL
-        // Dong ZhaoYang 2017/8/7 大于等于
+        // Dong ZhaoYang 2017/8/7 Greater than or equal to
         , GREATER_THAN
-        // Dong ZhaoYang 2017/8/7 小于等于
+        // Dong ZhaoYang 2017/8/7 Less than or equal to
         , LESS_THAN
-        // Dong ZhaoYang 2017/8/7 中模糊查询
+        // Dong ZhaoYang 2017/8/7 Inner fuzzy query
         , INNER_LIKE
-        // Dong ZhaoYang 2017/8/7 左模糊查询
+        // Dong ZhaoYang 2017/8/7 Left fuzzy query
         , LEFT_LIKE
-        // Dong ZhaoYang 2017/8/7 右模糊查询
+        // Dong ZhaoYang 2017/8/7 Right fuzzy query
         , RIGHT_LIKE
-        // Dong ZhaoYang 2017/8/7 小于
+        // Dong ZhaoYang 2017/8/7 Less than
         , LESS_THAN_NQ
-        // jie 2019/6/4 包含
+        // jie 2019/6/4 Contains
         , IN
-        // 不包含
+        // Not contains
         , NOT_IN
-        // 不等于
+        // Not equal
         ,NOT_EQUAL
         // between
         ,BETWEEN
-        // 不为空
+        // Not null
         ,NOT_NULL
-        // 为空
+        // Is null
         ,IS_NULL,
-        // Aborn Jiang 2022/06/01, 对应SQL: SELECT * FROM table WHERE FIND_IN_SET('querytag', table.tags);
+        // Aborn Jiang 2022/06/01, Corresponds to SQL: SELECT * FROM table WHERE FIND_IN_SET('querytag', table.tags);
         FIND_IN_SET
     }
 
     /**
      * @author Zheng Jie
-     * 适用于简单连接查询，复杂的请自定义该注解，或者使用sql查询
+     * Suitable for simple join queries. For complex cases, please customize this annotation or use SQL queries.
      */
     enum Join {
         /** jie 2019-6-4 13:18:30 */
@@ -89,4 +89,3 @@ public @interface Query {
     }
 
 }
-
