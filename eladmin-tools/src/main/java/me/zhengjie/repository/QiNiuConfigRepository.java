@@ -27,7 +27,7 @@ import org.springframework.data.jpa.repository.Query;
 public interface QiNiuConfigRepository extends JpaRepository<QiniuConfig,Long> {
 
     /**
-     * 编辑类型
+     * Edit type
      * @param type /
      */
     @Modifying

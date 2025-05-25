@@ -20,15 +20,15 @@ import java.math.RoundingMode;
 
 /**
  * @author Zheng Jie
- * @description 计算类
+ * @description Calculation class
  * @date 2024-12-27
  **/
 public class BigDecimalUtils {
 
     /**
-     * 将对象转换为 BigDecimal
-     * @param obj 输入对象
-     * @return 转换后的 BigDecimal
+     * Convert object to BigDecimal
+     * @param obj Input object
+     * @return Converted BigDecimal
      */
     private static BigDecimal toBigDecimal(Object obj) {
         if (obj instanceof BigDecimal) {
@@ -45,10 +45,10 @@ public class BigDecimalUtils {
     }
 
     /**
-     * 加法
-     * @param a 加数
-     * @param b 加数
-     * @return 两个加数的和，保留两位小数
+     * Addition
+     * @param a Addend
+     * @param b Addend
+     * @return Sum of two addends, rounded to two decimal places
      */
     public static BigDecimal add(Object a, Object b) {
         BigDecimal bdA = toBigDecimal(a);
@@ -57,10 +57,10 @@ public class BigDecimalUtils {
     }
 
     /**
-     * 减法
-     * @param a 被减数
-     * @param b 减数
-     * @return 两数的差，保留两位小数
+     * Subtraction
+     * @param a Minuend
+     * @param b Subtrahend
+     * @return Difference of two numbers, rounded to two decimal places
      */
     public static BigDecimal subtract(Object a, Object b) {
         BigDecimal bdA = toBigDecimal(a);
@@ -69,10 +69,10 @@ public class BigDecimalUtils {
     }
 
     /**
-     * 乘法
-     * @param a 乘数
-     * @param b 乘数
-     * @return 两个乘数的积，保留两位小数
+     * Multiplication
+     * @param a Multiplier
+     * @param b Multiplier
+     * @return Product of two multipliers, rounded to two decimal places
      */
     public static BigDecimal multiply(Object a, Object b) {
         BigDecimal bdA = toBigDecimal(a);
@@ -81,10 +81,10 @@ public class BigDecimalUtils {
     }
 
     /**
-     * 除法
-     * @param a 被除数
-     * @param b 除数
-     * @return 两数的商，保留两位小数
+     * Division
+     * @param a Dividend
+     * @param b Divisor
+     * @return Quotient of two numbers, rounded to two decimal places
      */
     public static BigDecimal divide(Object a, Object b) {
         BigDecimal bdA = toBigDecimal(a);
@@ -93,11 +93,11 @@ public class BigDecimalUtils {
     }
 
     /**
-     * 除法
-     * @param a 被除数
-     * @param b 除数
-     * @param scale 保留小数位数
-     * @return 两数的商，保留两位小数
+     * Division
+     * @param a Dividend
+     * @param b Divisor
+     * @param scale Number of decimal places to keep
+     * @return Quotient of two numbers, rounded to two decimal places
      */
     public static BigDecimal divide(Object a, Object b, int scale) {
         BigDecimal bdA = toBigDecimal(a);
@@ -106,9 +106,9 @@ public class BigDecimalUtils {
     }
 
     /**
-     * 分转元
-     * @param obj 分的金额
-     * @return 转换后的元，保留两位小数
+     * Cents to Yuan
+     * @param obj Amount in cents
+     * @return Converted yuan, rounded to two decimal places
      */
     public static BigDecimal centsToYuan(Object obj) {
         BigDecimal cents = toBigDecimal(obj);
@@ -116,9 +116,9 @@ public class BigDecimalUtils {
     }
 
     /**
-     * 元转分
-     * @param obj 元的金额
-     * @return 转换后的分
+     * Yuan to Cents
+     * @param obj Amount in yuan
+     * @return Converted cents
      */
     public static Long yuanToCents(Object obj) {
         BigDecimal yuan = toBigDecimal(obj);
@@ -129,15 +129,15 @@ public class BigDecimalUtils {
         BigDecimal num1 = new BigDecimal("10.123");
         BigDecimal num2 = new BigDecimal("2.456");
 
-        System.out.println("加法结果: " + add(num1, num2));
-        System.out.println("减法结果: " + subtract(num1, num2));
-        System.out.println("乘法结果: " + multiply(num1, num2));
-        System.out.println("除法结果: " + divide(num1, num2));
+        System.out.println("Addition result: " + add(num1, num2));
+        System.out.println("Subtraction result: " + subtract(num1, num2));
+        System.out.println("Multiplication result: " + multiply(num1, num2));
+        System.out.println("Division result: " + divide(num1, num2));
 
         Long cents = 12345L;
-        System.out.println("分转元结果: " + centsToYuan(cents));
+        System.out.println("Cents to Yuan result: " + centsToYuan(cents));
 
         BigDecimal yuan = new BigDecimal("123.45");
-        System.out.println("元转分结果: " + yuanToCents(yuan));
+        System.out.println("Yuan to Cents result: " + yuanToCents(yuan));
     }
 }

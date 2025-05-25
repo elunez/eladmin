@@ -1,11 +1,11 @@
 <#--noinspection ALL-->
 <template>
   <div class="app-container">
-    <!--工具栏-->
+    <!--Toolbar-->
     <div class="head-container">
     <#if hasQuery>
       <div v-if="crud.props.searchToggle">
-        <!-- 搜索 -->
+        <!-- Search -->
         <#if queryColumns??>
           <#list queryColumns as column>
             <#if column.queryType != 'BetWeen'>
@@ -29,9 +29,9 @@
         <rrOperation :crud="crud" />
       </div>
     </#if>
-      <!--如果想在工具栏加入更多按钮，可以使用插槽方式， slot = 'left' or 'right'-->
+      <!--To add more buttons to the toolbar, you can use the slot method, slot = 'left' or 'right'-->
       <crudOperation :permission="permission" />
-      <!--表单组件-->
+      <!--Form Component-->
       <el-dialog :close-on-click-modal="false" :before-close="crud.cancelCU" :visible.sync="crud.status.cu > 0" :title="crud.status.title" width="500px">
         <el-form ref="form" :model="form" <#if isNotNullColumns??>:rules="rules"</#if> size="small" label-width="80px">
     <#if columns??>
@@ -46,11 +46,11 @@
               <#if (column.dictName)?? && (column.dictName)!="">
             <el-radio v-model="form.${column.changeColumnName}" v-for="item in dict.${column.dictName}" :key="item.id" :label="item.value">{{ item.label }}</el-radio>
               <#else>
-                未设置字典，请手动设置 Radio
+                Dictionary not set, please set Radio manually
               </#if>
             <#elseif column.formType = 'Select'>
               <#if (column.dictName)?? && (column.dictName)!="">
-            <el-select v-model="form.${column.changeColumnName}" filterable placeholder="请选择">
+            <el-select v-model="form.${column.changeColumnName}" filterable placeholder="Please select">
               <el-option
                 v-for="item in dict.${column.dictName}"
                 :key="item.id"
@@ -58,7 +58,7 @@
                 :value="item.value" />
             </el-select>
               <#else>
-            未设置字典，请手动设置 Select
+                Dictionary not set, please set Select manually
               </#if>
             <#else>
             <el-date-picker v-model="form.${column.changeColumnName}" type="datetime" style="width: 370px;" />
@@ -69,11 +69,11 @@
     </#if>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button type="text" @click="crud.cancelCU">取消</el-button>
-          <el-button :loading="crud.status.cu === 2" type="primary" @click="crud.submitCU">确认</el-button>
+          <el-button type="text" @click="crud.cancelCU">Cancel</el-button>
+          <el-button :loading="crud.status.cu === 2" type="primary" @click="crud.submitCU">Confirm</el-button>
         </div>
       </el-dialog>
-      <!--表格渲染-->
+      <!--Table Rendering-->
       <el-table ref="table" v-loading="crud.loading" :data="crud.data" size="small" style="width: 100%;" @selection-change="crud.selectionChangeHandler">
         <el-table-column type="selection" width="55" />
         <#if columns??>
@@ -91,7 +91,7 @@
             </#if>
             </#list>
         </#if>
-        <el-table-column v-if="checkPer(['admin','${changeClassName}:edit','${changeClassName}:del'])" label="操作" width="150px" align="center">
+        <el-table-column v-if="checkPer(['admin','${changeClassName}:edit','${changeClassName}:del'])" label="Operations" width="150px" align="center">
           <template slot-scope="scope">
             <udOperation
               :data="scope.row"
@@ -100,7 +100,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <!--分页组件-->
+      <!--Pagination Component-->
       <pagination />
     </div>
   </div>
@@ -137,7 +137,7 @@ export default {
         <#list isNotNullColumns as column>
         <#if column.istNotNull>
         ${column.changeColumnName}: [
-          { required: true, message: '<#if column.remark != ''>${column.remark}</#if>不能为空', trigger: 'blur' }
+          { required: true, message: '<#if column.remark != ''>${column.remark}</#if> cannot be empty', trigger: 'blur' }
         ]<#if column_has_next>,</#if>
         </#if>
         </#list>
@@ -156,7 +156,7 @@ export default {
     }
   },
   methods: {
-    // 钩子：在获取表格数据之前执行，false 则代表不获取数据
+    // Hook: executed before getting table data, false means no data will be fetched
     [CRUD.HOOK.beforeRefresh]() {
       return true
     }

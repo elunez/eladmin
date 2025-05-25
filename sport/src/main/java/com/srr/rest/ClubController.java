@@ -45,7 +45,7 @@ public class ClubController {
 
     private final ClubService clubService;
 
-    @ApiOperation("导出数据")
+    @ApiOperation("Export Data")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('club:list')")
     public void exportClub(HttpServletResponse response, ClubQueryCriteria criteria) throws IOException {
@@ -53,15 +53,15 @@ public class ClubController {
     }
 
     @GetMapping
-    @ApiOperation("查询clubs")
+    @ApiOperation("Query clubs")
     @PreAuthorize("@el.check('club:list')")
     public ResponseEntity<PageResult<ClubDto>> queryClub(ClubQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity<>(clubService.queryAll(criteria,pageable),HttpStatus.OK);
     }
 
     @PostMapping
-    @Log("新增clubs")
-    @ApiOperation("新增clubs")
+    @Log("Add clubs")
+    @ApiOperation("Add clubs")
     @PreAuthorize("@el.check('club:add')")
     public ResponseEntity<Object> createClub(@Validated @RequestBody Club resources){
         clubService.create(resources);
@@ -69,8 +69,8 @@ public class ClubController {
     }
 
     @PutMapping
-    @Log("修改clubs")
-    @ApiOperation("修改clubs")
+    @Log("Edit clubs")
+    @ApiOperation("Edit clubs")
     @PreAuthorize("@el.check('club:edit')")
     public ResponseEntity<Object> updateClub(@Validated @RequestBody Club resources){
         clubService.update(resources);
@@ -78,10 +78,10 @@ public class ClubController {
     }
 
     @DeleteMapping
-    @Log("删除clubs")
-    @ApiOperation("删除clubs")
+    @Log("Delete clubs")
+    @ApiOperation("Delete clubs")
     @PreAuthorize("@el.check('club:del')")
-    public ResponseEntity<Object> deleteClub(@ApiParam(value = "传ID数组[]") @RequestBody Long[] ids) {
+    public ResponseEntity<Object> deleteClub(@ApiParam(value = "Pass ID array []") @RequestBody Long[] ids) {
         clubService.deleteAll(ids);
         return new ResponseEntity<>(HttpStatus.OK);
     }

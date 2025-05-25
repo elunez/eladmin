@@ -11,10 +11,10 @@
     </properties>
 
     <artifactId>eladmin-common</artifactId>
-    <name>公共模块</name>
+    <name>Common Module</name>
 
     <dependencies>
-        <!--工具包-->
+        <!-- Toolkit -->
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>

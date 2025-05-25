@@ -27,55 +27,55 @@ import me.zhengjie.utils.PageResult;
 
 /**
 * @website https://eladmin.vip
-* @description 服务接口
+* @description Service Interface
 * @author Chanheng
 * @date 2025-05-18
 **/
 public interface CourtService {
 
     /**
-    * 查询数据分页
-    * @param criteria 条件
-    * @param pageable 分页参数
+    * Query data with pagination
+    * @param criteria criteria
+    * @param pageable pagination parameters
     * @return Map<String,Object>
     */
     PageResult<CourtDto> queryAll(CourtQueryCriteria criteria, Pageable pageable);
 
     /**
-    * 查询所有数据不分页
-    * @param criteria 条件参数
+    * Query all data without pagination
+    * @param criteria criteria parameters
     * @return List<CourtDto>
     */
     List<CourtDto> queryAll(CourtQueryCriteria criteria);
 
     /**
-     * 根据ID查询
+     * Query by ID
      * @param id ID
      * @return CourtDto
      */
     CourtDto findById(Long id);
 
     /**
-    * 创建
+    * Create
     * @param resources /
     */
     void create(Court resources);
 
     /**
-    * 编辑
+    * Edit
     * @param resources /
     */
     void update(Court resources);
 
     /**
-    * 多选删除
+    * Multi-select delete
     * @param ids /
     */
     void deleteAll(Long[] ids);
 
     /**
-    * 导出数据
-    * @param all 待导出的数据
+    * Export data
+    * @param all data to be exported
     * @param response /
     * @throws IOException /
     */

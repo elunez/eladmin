@@ -41,20 +41,20 @@ import java.io.IOException;
 */
 @RestController
 @RequiredArgsConstructor
-@Api(tags = "工具：本地存储管理")
+@Api(tags = "Tools: Local Storage Management")
 @RequestMapping("/api/localStorage")
 public class LocalStorageController {
 
     private final LocalStorageService localStorageService;
 
     @GetMapping
-    @ApiOperation("查询文件")
+    @ApiOperation("Query files")
     @PreAuthorize("@el.check('storage:list')")
     public ResponseEntity<PageResult<LocalStorageDto>> queryFile(LocalStorageQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity<>(localStorageService.queryAll(criteria,pageable),HttpStatus.OK);
     }
 
-    @ApiOperation("导出数据")
+    @ApiOperation("Export data")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('storage:list')")
     public void exportFile(HttpServletResponse response, LocalStorageQueryCriteria criteria) throws IOException {
@@ -62,37 +62,37 @@ public class LocalStorageController {
     }
 
     @PostMapping
-    @ApiOperation("上传文件")
+    @ApiOperation("Upload file")
     @PreAuthorize("@el.check('storage:add')")
     public ResponseEntity<Object> createFile(@RequestParam String name, @RequestParam("file") MultipartFile file){
         localStorageService.create(name, file);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @ApiOperation("上传图片")
+    @ApiOperation("Upload image")
     @PostMapping("/pictures")
     public ResponseEntity<LocalStorage> uploadPicture(@RequestParam MultipartFile file){
-        // 判断文件是否为图片
+        // Determine whether the file is an image
         String suffix = FileUtil.getExtensionName(file.getOriginalFilename());
         if(!FileUtil.IMAGE.equals(FileUtil.getFileType(suffix))){
-            throw new BadRequestException("只能上传图片");
+            throw new BadRequestException("Only images can be uploaded");
         }
         LocalStorage localStorage = localStorageService.create(null, file);
         return new ResponseEntity<>(localStorage, HttpStatus.OK);
     }
 
     @PutMapping
-    @Log("修改文件")
-    @ApiOperation("修改文件")
+    @Log("Update file")
+    @ApiOperation("Update file")
     @PreAuthorize("@el.check('storage:edit')")
     public ResponseEntity<Object> updateFile(@Validated @RequestBody LocalStorage resources){
         localStorageService.update(resources);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @Log("删除文件")
+    @Log("Delete file")
     @DeleteMapping
-    @ApiOperation("多选删除")
+    @ApiOperation("Batch delete")
     public ResponseEntity<Object> deleteFile(@RequestBody Long[] ids) {
         localStorageService.deleteAll(ids);
         return new ResponseEntity<>(HttpStatus.OK);

@@ -133,9 +133,9 @@ public class DeptServiceImpl implements DeptService {
         List<Map<String, Object>> list = new ArrayList<>();
         for (DeptDto deptDTO : deptDtos) {
             Map<String,Object> map = new LinkedHashMap<>();
-            map.put("部门名称", deptDTO.getName());
-            map.put("部门状态", deptDTO.getEnabled() ? "启用" : "停用");
-            map.put("创建日期", deptDTO.getCreateTime());
+            map.put("Department name", deptDTO.getName());
+            map.put("Department status", deptDTO.getEnabled() ? "Enabled" : "Disabled");
+            map.put("Creation date", deptDTO.getCreateTime());
             list.add(map);
         }
         FileUtil.downloadExcel(list, response);

@@ -75,15 +75,15 @@ public class LimitAspect {
         RedisScript<Long> redisScript = new DefaultRedisScript<>(luaScript, Long.class);
         Long count = redisTemplate.execute(redisScript, keys, limit.count(), limit.period());
         if (ObjUtil.isNotNull(count) && count.intValue() <= limit.count()) {
-            logger.info("第{}次访问key为 {}，描述为 [{}] 的接口", count, keys, limit.name());
+            logger.info("The {}th access to the key {}, description [{}] interface", count, keys, limit.name());
             return joinPoint.proceed();
         } else {
-            throw new BadRequestException("访问次数受限制");
+            throw new BadRequestException("Access count is restricted");
         }
     }
 
     /**
-     * 限流脚本
+     * Rate limiting script
      */
     private String buildLuaScript() {
         return "local c" +

@@ -16,7 +16,7 @@
         <module>sport</module>
     </modules>
 
-    <name>ELADMIN 后台管理</name>
+    <name>ELADMIN Admin Backend</name>
     <url>https://eladmin.vip</url>
 
     <parent>
@@ -37,7 +37,7 @@
     </properties>
 
     <dependencies>
-        <!--Spring boot 核心-->
+        <!--Spring boot core-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -49,12 +49,12 @@
             <artifactId>spring-boot-starter-websocket</artifactId>
         </dependency>
 
-        <!--Spring boot Web容器-->
+        <!--Spring boot Web container-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
             <exclusions>
-                <!-- 去掉Jackson依赖，用fastjson -->
+                <!-- Remove Jackson dependency, use fastjson -->
                 <exclusion>
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-starter-json</artifactId>
@@ -62,20 +62,20 @@
             </exclusions>
         </dependency>
 
-        <!--Spring boot 测试-->
+        <!--Spring boot test-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
 
-        <!--Spring boot 安全框架-->
+        <!--Spring boot security framework-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
 
-        <!-- spring boot 缓存 -->
+        <!-- spring boot cache -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-cache</artifactId>
@@ -94,7 +94,7 @@
             <version>3.17.1</version>
         </dependency>
 
-        <!--spring boot 集成redis所需common-pool2-->
+        <!--spring boot integration with redis requires common-pool2-->
         <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-pool2 -->
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -106,20 +106,20 @@
             <artifactId>commons-lang3</artifactId>
         </dependency>
 
-        <!--监控sql日志-->
+        <!--SQL log monitoring-->
         <dependency>
             <groupId>p6spy</groupId>
             <artifactId>p6spy</artifactId>
             <version>3.9.1</version>
         </dependency>
 
-        <!-- Swagger UI 相关 -->
+        <!-- Swagger UI related -->
         <dependency>
             <groupId>com.github.xiaoymin</groupId>
             <artifactId>knife4j-spring-boot-starter</artifactId>
             <version>3.0.3</version>
             <exclusions>
-                <!-- 去掉 swagger-annotations 依赖，避免冲突 -->
+                <!-- Remove swagger-annotations dependency to avoid conflicts -->
                 <exclusion>
                     <groupId>io.swagger</groupId>
                     <artifactId>swagger-annotations</artifactId>
@@ -127,14 +127,14 @@
             </exclusions>
         </dependency>
 
-        <!-- 添加swagger-annotations依赖 -->
+        <!-- Add swagger-annotations dependency -->
         <dependency>
             <groupId>io.swagger</groupId>
             <artifactId>swagger-annotations</artifactId>
             <version>1.5.22</version>
         </dependency>
 
-        <!--Mysql依赖包-->
+        <!--Mysql dependency package-->
         <dependency>
             <groupId>com.mysql</groupId>
             <artifactId>mysql-connector-j</artifactId>
@@ -142,28 +142,28 @@
             <scope>runtime</scope>
         </dependency>
 
-        <!-- druid数据源驱动 -->
+        <!-- druid data source driver -->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>druid-spring-boot-starter</artifactId>
             <version>${druid.version}</version>
         </dependency>
 
-        <!-- IP地址解析库 -->
+        <!-- IP address parsing library -->
         <dependency>
             <groupId>net.dreamlu</groupId>
             <artifactId>mica-ip2region</artifactId>
             <version>2.7.18.9</version>
         </dependency>
 
-        <!--lombok插件-->
+        <!--lombok plugin-->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
 
-        <!-- excel工具 -->
+        <!-- excel tool -->
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi</artifactId>
@@ -193,7 +193,7 @@
             <version>${fastjson2.version}</version>
         </dependency>
 
-        <!-- Java图形验证码 -->
+        <!-- Java graphical captcha -->
         <dependency>
             <groupId>com.github.whvcse</groupId>
             <artifactId>easy-captcha</artifactId>
@@ -206,7 +206,7 @@
             <version>1.13.0</version>
         </dependency>
 
-        <!--mapStruct依赖-->
+        <!--mapStruct dependency-->
         <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
@@ -233,7 +233,7 @@
 
     <build>
         <plugins>
-            <!-- 打包时跳过测试 -->
+            <!-- Skip tests during packaging -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>

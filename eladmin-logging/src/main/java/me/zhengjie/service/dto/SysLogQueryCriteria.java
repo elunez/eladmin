@@ -22,26 +22,26 @@ import java.sql.Timestamp;
 import java.util.List;
 
 /**
- * 日志查询类
+ * Log query class
  * @author Zheng Jie
  * @date 2019-6-4 09:23:07
  */
 @Data
 public class SysLogQueryCriteria {
 
-    @ApiModelProperty(value = "模糊查询")
+    @ApiModelProperty(value = "Fuzzy search")
     @Query(blurry = "username,description,address,requestIp,method,params")
     private String blurry;
 
     @Query
-    @ApiModelProperty(value = "用户名")
+    @ApiModelProperty(value = "Username")
     private String username;
 
     @Query
-    @ApiModelProperty(value = "日志类型")
+    @ApiModelProperty(value = "Log type")
     private String logType;
 
-    @ApiModelProperty(value = "创建时间")
+    @ApiModelProperty(value = "Creation time")
     @Query(type = Query.Type.BETWEEN)
     private List<Timestamp> createTime;
 }

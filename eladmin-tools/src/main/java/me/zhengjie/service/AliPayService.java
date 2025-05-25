@@ -25,33 +25,33 @@ import me.zhengjie.domain.AlipayConfig;
 public interface AliPayService {
 
     /**
-     * 查询配置
+     * Query configuration
      * @return AlipayConfig
      */
     AlipayConfig find();
 
     /**
-     * 更新配置
-     * @param alipayConfig 支付宝配置
+     * Update configuration
+     * @param alipayConfig Alipay configuration
      * @return AlipayConfig
      */
     AlipayConfig config(AlipayConfig alipayConfig);
 
     /**
-     * 处理来自PC的交易请求
-     * @param alipay 支付宝配置
-     * @param trade 交易详情
+     * Handle transaction requests from PC
+     * @param alipay Alipay configuration
+     * @param trade transaction details
      * @return String
-     * @throws Exception 异常
+     * @throws Exception exception
      */
     String toPayAsPc(AlipayConfig alipay, TradeVo trade) throws Exception;
 
     /**
-     * 处理来自手机网页的交易请求
-     * @param alipay 支付宝配置
-     * @param trade 交易详情
+     * Handle transaction requests from mobile web
+     * @param alipay Alipay configuration
+     * @param trade transaction details
      * @return String
-     * @throws Exception 异常
+     * @throws Exception exception
      */
     String toPayAsWeb(AlipayConfig alipay, TradeVo trade) throws Exception;
 }

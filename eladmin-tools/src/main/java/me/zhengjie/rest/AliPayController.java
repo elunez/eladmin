@@ -46,7 +46,7 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/aliPay")
-@Api(tags = "工具：支付宝管理")
+@Api(tags = "Tools: Alipay Management")
 public class AliPayController {
 
     private final AlipayUtils alipayUtils;
@@ -57,16 +57,16 @@ public class AliPayController {
         return new ResponseEntity<>(alipayService.find(), HttpStatus.OK);
     }
 
-    @Log("配置支付宝")
-    @ApiOperation("配置支付宝")
+    @Log("Configure Alipay")
+    @ApiOperation("Configure Alipay")
     @PutMapping
     public ResponseEntity<Object> updateAliPayConfig(@Validated @RequestBody AlipayConfig alipayConfig) {
         alipayService.config(alipayConfig);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @Log("支付宝PC网页支付")
-    @ApiOperation("PC网页支付")
+    @Log("Alipay PC Web Payment")
+    @ApiOperation("PC Web Payment")
     @PostMapping(value = "/toPayAsPC")
     public ResponseEntity<String> toPayAsPc(@Validated @RequestBody TradeVo trade) throws Exception {
         AlipayConfig aliPay = alipayService.find();
@@ -75,8 +75,8 @@ public class AliPayController {
         return ResponseEntity.ok(payUrl);
     }
 
-    @Log("支付宝手机网页支付")
-    @ApiOperation("手机网页支付")
+    @Log("Alipay Mobile Web Payment")
+    @ApiOperation("Mobile Web Payment")
     @PostMapping(value = "/toPayAsWeb")
     public ResponseEntity<String> toPayAsWeb(@Validated @RequestBody TradeVo trade) throws Exception {
         AlipayConfig alipay = alipayService.find();
@@ -87,22 +87,22 @@ public class AliPayController {
 
     @ApiIgnore
     @AnonymousGetMapping("/return")
-    @ApiOperation("支付之后跳转的链接")
+    @ApiOperation("Redirect link after payment")
     public ResponseEntity<String> returnPage(HttpServletRequest request, HttpServletResponse response) {
         AlipayConfig alipay = alipayService.find();
         response.setContentType("text/html;charset=" + alipay.getCharset());
-        //内容验签，防止黑客篡改参数
+        // Content signature verification to prevent hackers from tampering with parameters
         if (alipayUtils.rsaCheck(request, alipay)) {
-            //商户订单号
+            // Merchant order number
             String outTradeNo = new String(request.getParameter("out_trade_no").getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
-            //支付宝交易号
+            // Alipay transaction number
             String tradeNo = new String(request.getParameter("trade_no").getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
-            System.out.println("商户订单号" + outTradeNo + "  " + "第三方交易号" + tradeNo);
+            System.out.println("Merchant order number" + outTradeNo + "  " + "Third-party transaction number" + tradeNo);
 
-            // 根据业务需要返回数据，这里统一返回OK
+            // Return data as needed by business, here always return OK
             return new ResponseEntity<>("payment successful", HttpStatus.OK);
         } else {
-            // 根据业务需要返回数据
+            // Return data as needed by business
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
@@ -110,23 +110,23 @@ public class AliPayController {
     @ApiIgnore
     @RequestMapping("/notify")
     @AnonymousAccess
-    @ApiOperation("支付异步通知(要公网访问)，接收异步通知，检查通知内容app_id、out_trade_no、total_amount是否与请求中的一致，根据trade_status进行后续业务处理")
+    @ApiOperation("Alipay async notification (requires public network access), receive async notification, check if app_id, out_trade_no, and total_amount in the notification match the request, handle business logic according to trade_status")
     public ResponseEntity<Object> notify(HttpServletRequest request) {
         AlipayConfig alipay = alipayService.find();
         Map<String, String[]> parameterMap = request.getParameterMap();
-        //内容验签，防止黑客篡改参数
+        // Content signature verification to prevent hackers from tampering with parameters
         if (alipayUtils.rsaCheck(request, alipay)) {
-            //交易状态
+            // Transaction status
             String tradeStatus = new String(request.getParameter("trade_status").getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
-            // 商户订单号
+            // Merchant order number
             String outTradeNo = new String(request.getParameter("out_trade_no").getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
-            //支付宝交易号
+            // Alipay transaction number
             String tradeNo = new String(request.getParameter("trade_no").getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
-            //付款金额
+            // Payment amount
             String totalAmount = new String(request.getParameter("total_amount").getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
-            //验证
+            // Verification
             if (tradeStatus.equals(AliPayStatusEnum.SUCCESS.getValue()) || tradeStatus.equals(AliPayStatusEnum.FINISHED.getValue())) {
-                // 验证通过后应该根据业务需要处理订单
+                // After verification, handle order as needed by business
             }
             return new ResponseEntity<>(HttpStatus.OK);
         }

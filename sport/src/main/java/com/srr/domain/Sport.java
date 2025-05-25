@@ -47,33 +47,33 @@ public class Sport implements Serializable {
 
     @Column(name = "`name`",nullable = false)
     @NotBlank
-    @ApiModelProperty(value = "名称")
+    @ApiModelProperty(value = "Name")
     private String name;
 
     @Column(name = "`description`")
-    @ApiModelProperty(value = "描述")
+    @ApiModelProperty(value = "Description")
     private String description;
 
     @Column(name = "`create_time`")
     @CreationTimestamp
-    @ApiModelProperty(value = "创建时间", hidden = true)
+    @ApiModelProperty(value = "Creation time", hidden = true)
     private Timestamp createTime;
 
     @Column(name = "`update_time`")
     @UpdateTimestamp
-    @ApiModelProperty(value = "更新时间", hidden = true)
+    @ApiModelProperty(value = "Update time", hidden = true)
     private Timestamp updateTime;
 
     @Column(name = "`icon`")
-    @ApiModelProperty(value = "图标")
+    @ApiModelProperty(value = "Icon")
     private String icon;
 
     @Column(name = "`sort`")
-    @ApiModelProperty(value = "排序")
+    @ApiModelProperty(value = "Sort")
     private Integer sort;
 
     @Column(name = "`enabled`")
-    @ApiModelProperty(value = "是否启用")
+    @ApiModelProperty(value = "Enabled")
     private Boolean enabled;
 
     public void copy(Sport source){

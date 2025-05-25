@@ -20,23 +20,23 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * 七牛云存储工具类
+ * Qiniu cloud storage utility class
  * @author Zheng Jie
  * @date 2018-12-31
  */
 public class QiNiuUtil {
 
-    private static final String HUAD = "华东";
+    private static final String HUAD = "East China";
 
-    private static final String HUAB = "华北";
+    private static final String HUAB = "North China";
 
-    private static final String HUAN = "华南";
+    private static final String HUAN = "South China";
 
-    private static final String BEIM = "北美";
+    private static final String BEIM = "North America";
 
     /**
-     * 得到机房的对应关系
-     * @param zone 机房名称
+     * Get the corresponding relationship of the machine room
+     * @param zone machine room name
      * @return Region
      */
     public static Region getRegion(String zone){
@@ -49,15 +49,15 @@ public class QiNiuUtil {
             return Region.huanan();
         } else if (BEIM.equals(zone)){
             return Region.beimei();
-            // 否则就是东南亚
+            // Otherwise, it is Southeast Asia
         } else {
             return Region.qvmHuadong();
         }
     }
 
     /**
-     * 默认不指定key的情况下，以文件内容的hash值作为文件名
-     * @param file 文件名
+     * By default, if no key is specified, the hash value of the file content is used as the file name
+     * @param file file name
      * @return String
      */
     public static String getKey(String file){

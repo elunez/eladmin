@@ -34,61 +34,61 @@ import java.util.List;
 public interface SysLogService {
 
     /**
-     * 分页查询
-     * @param criteria 查询条件
-     * @param pageable 分页参数
+     * Paginated query
+     * @param criteria Query criteria
+     * @param pageable Pagination parameters
      * @return /
      */
     Object queryAll(SysLogQueryCriteria criteria, Pageable pageable);
 
     /**
-     * 查询全部数据
-     * @param criteria 查询条件
+     * Query all data
+     * @param criteria Query criteria
      * @return /
      */
     List<SysLog> queryAll(SysLogQueryCriteria criteria);
 
     /**
-     * 查询用户日志
-     * @param criteria 查询条件
-     * @param pageable 分页参数
-     * @return -
+     * Query user logs
+     * @param criteria Query criteria
+     * @param pageable Pagination parameters
+     * @return /
      */
     PageResult<SysLogSmallDto> queryAllByUser(SysLogQueryCriteria criteria, Pageable pageable);
 
     /**
-     * 保存日志数据
-     * @param username 用户
-     * @param browser 浏览器
-     * @param ip 请求IP
+     * Save log data
+     * @param username User
+     * @param browser Browser
+     * @param ip Request IP
      * @param joinPoint /
-     * @param sysLog 日志实体
+     * @param sysLog Log entity
      */
     @Async
     void save(String username, String browser, String ip, ProceedingJoinPoint joinPoint, SysLog sysLog);
 
     /**
-     * 查询异常详情
-     * @param id 日志ID
+     * Query exception details
+     * @param id Log ID
      * @return Object
      */
     Object findByErrDetail(Long id);
 
     /**
-     * 导出日志
-     * @param sysLogs 待导出的数据
+     * Export logs
+     * @param sysLogs Data to export
      * @param response /
      * @throws IOException /
      */
     void download(List<SysLog> sysLogs, HttpServletResponse response) throws IOException;
 
     /**
-     * 删除所有错误日志
+     * Delete all error logs
      */
     void delAllByError();
 
     /**
-     * 删除所有INFO日志
+     * Delete all INFO logs
      */
     void delAllByInfo();
 }

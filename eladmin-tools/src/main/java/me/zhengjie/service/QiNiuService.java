@@ -33,84 +33,84 @@ import java.util.List;
 public interface QiNiuService {
 
     /**
-     * 查配置
+     * Query configuration
      * @return QiniuConfig
      */
     QiniuConfig find();
 
     /**
-     * 修改配置
-     * @param qiniuConfig 配置
+     * Update configuration
+     * @param qiniuConfig configuration
      * @return QiniuConfig
      */
     QiniuConfig config(QiniuConfig qiniuConfig);
 
     /**
-     * 分页查询
-     * @param criteria 条件
-     * @param pageable 分页参数
+     * Paginated query
+     * @param criteria criteria
+     * @param pageable pagination parameters
      * @return /
      */
     PageResult<QiniuContent> queryAll(QiniuQueryCriteria criteria, Pageable pageable);
 
     /**
-     * 查询全部
-     * @param criteria 条件
+     * Query all
+     * @param criteria criteria
      * @return /
      */
     List<QiniuContent> queryAll(QiniuQueryCriteria criteria);
 
     /**
-     * 上传文件
-     * @param file 文件
-     * @param qiniuConfig 配置
+     * Upload file
+     * @param file file
+     * @param qiniuConfig configuration
      * @return QiniuContent
      */
     QiniuContent upload(MultipartFile file, QiniuConfig qiniuConfig);
 
     /**
-     * 查询文件
-     * @param id 文件ID
+     * Query file
+     * @param id file ID
      * @return QiniuContent
      */
     QiniuContent findByContentId(Long id);
 
     /**
-     * 下载文件
-     * @param content 文件信息
-     * @param config 配置
+     * Download file
+     * @param content file information
+     * @param config configuration
      * @return String
      */
     String download(QiniuContent content, QiniuConfig config);
 
     /**
-     * 删除文件
-     * @param content 文件
-     * @param config 配置
+     * Delete file
+     * @param content file
+     * @param config configuration
      */
     void delete(QiniuContent content, QiniuConfig config);
 
     /**
-     * 同步数据
-     * @param config 配置
+     * Sync data
+     * @param config configuration
      */
     void synchronize(QiniuConfig config);
 
     /**
-     * 删除文件
-     * @param ids 文件ID数组
-     * @param config 配置
+     * Delete file
+     * @param ids file ID array
+     * @param config configuration
      */
     void deleteAll(Long[] ids, QiniuConfig config);
 
     /**
-     * 更新数据
-     * @param type 类型
+     * Update data
+     * @param type type
      */
     void update(String type);
 
     /**
-     * 导出数据
+     * Export data
      * @param queryAll /
      * @param response /
      * @throws IOException /

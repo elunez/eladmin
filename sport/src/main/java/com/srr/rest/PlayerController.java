@@ -45,7 +45,7 @@ public class PlayerController {
 
     private final PlayerService playerService;
 
-    @ApiOperation("导出数据")
+    @ApiOperation("Export Data")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('player:list')")
     public void exportPlayer(HttpServletResponse response, PlayerQueryCriteria criteria) throws IOException {
@@ -53,15 +53,15 @@ public class PlayerController {
     }
 
     @GetMapping
-    @ApiOperation("查询sport")
+    @ApiOperation("Query sport")
     @PreAuthorize("@el.check('player:list')")
     public ResponseEntity<PageResult<PlayerDto>> queryPlayer(PlayerQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity<>(playerService.queryAll(criteria,pageable),HttpStatus.OK);
     }
 
     @PostMapping
-    @Log("新增sport")
-    @ApiOperation("新增sport")
+    @Log("Add sport")
+    @ApiOperation("Add sport")
     @PreAuthorize("@el.check('player:add')")
     public ResponseEntity<Object> createPlayer(@Validated @RequestBody Player resources){
         playerService.create(resources);
@@ -69,8 +69,8 @@ public class PlayerController {
     }
 
     @PutMapping
-    @Log("修改sport")
-    @ApiOperation("修改sport")
+    @Log("Edit sport")
+    @ApiOperation("Edit sport")
     @PreAuthorize("@el.check('player:edit')")
     public ResponseEntity<Object> updatePlayer(@Validated @RequestBody Player resources){
         playerService.update(resources);
@@ -78,10 +78,10 @@ public class PlayerController {
     }
 
     @DeleteMapping
-    @Log("删除sport")
-    @ApiOperation("删除sport")
+    @Log("Delete sport")
+    @ApiOperation("Delete sport")
     @PreAuthorize("@el.check('player:del')")
-    public ResponseEntity<Object> deletePlayer(@ApiParam(value = "传ID数组[]") @RequestBody Long[] ids) {
+    public ResponseEntity<Object> deletePlayer(@ApiParam(value = "Pass ID array []") @RequestBody Long[] ids) {
         playerService.deleteAll(ids);
         return new ResponseEntity<>(HttpStatus.OK);
     }

@@ -49,15 +49,15 @@ public class LogAspect {
     }
 
     /**
-     * 配置切入点
+     * Configure pointcut
      */
     @Pointcut("@annotation(me.zhengjie.annotation.Log)")
     public void logPointcut() {
-        // 该方法无方法体,主要为了让同类中其他方法使用此切入点
+        // This method has no method body. It mainly allows other methods in the same class to use this pointcut.
     }
 
     /**
-     * 配置环绕通知,使用在方法logPointcut()上注册的切入点
+     * Configure around advice, used on the pointcut registered on method logPointcut()
      *
      * @param joinPoint join point for advice
      */
@@ -74,7 +74,7 @@ public class LogAspect {
     }
 
     /**
-     * 配置异常通知
+     * Configure exception advice
      *
      * @param joinPoint join point for advice
      * @param e exception
@@ -89,7 +89,7 @@ public class LogAspect {
     }
 
     /**
-     * 获取用户名
+     * Get the current username
      * @return /
      */
     public String getUsername() {
