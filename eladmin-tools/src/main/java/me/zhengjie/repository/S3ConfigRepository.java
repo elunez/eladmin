@@ -15,12 +15,23 @@
  */
 package me.zhengjie.repository;
 
-import me.zhengjie.domain.AlipayConfig;
+import me.zhengjie.domain.S3Config;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 
 /**
  * @author Zheng Jie
  * @date 2018-12-31
  */
-public interface AliPayRepository extends JpaRepository<AlipayConfig,Long> {
+public interface S3ConfigRepository extends JpaRepository<S3Config,Long>, JpaSpecificationExecutor<S3Config> {
+
+    /**
+     * Edit type
+     * @param type /
+     */
+    @Modifying
+    @Query(value = "update S3Config set type = ?1")
+    void update(String type);
 }

@@ -20,10 +20,10 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.zhengjie.annotation.Log;
-import me.zhengjie.domain.QiniuConfig;
-import me.zhengjie.domain.QiniuContent;
-import me.zhengjie.service.dto.QiniuQueryCriteria;
-import me.zhengjie.service.QiNiuService;
+import me.zhengjie.domain.S3Config;
+import me.zhengjie.domain.S3Content;
+import me.zhengjie.service.dto.S3QueryCriteria;
+import me.zhengjie.service.S3Service;
 import me.zhengjie.utils.PageResult;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -44,79 +44,79 @@ import java.util.Map;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/qiNiuContent")
-@Api(tags = "Tools: Qiniu Cloud Storage Management")
-public class QiniuController {
+@RequestMapping("/api/s3Content")
+@Api(tags = "Tools: S3 Cloud Storage Management")
+public class S3Controller {
 
-    private final QiNiuService qiNiuService;
+    private final S3Service s3Service;
 
     @GetMapping(value = "/config")
-    public ResponseEntity<QiniuConfig> queryQiNiuConfig(){
-        return new ResponseEntity<>(qiNiuService.find(), HttpStatus.OK);
+    public ResponseEntity<S3Config> queryS3Config(){
+        return new ResponseEntity<>(s3Service.find(), HttpStatus.OK);
     }
 
-    @Log("Configure Qiniu Cloud Storage")
-    @ApiOperation("Configure Qiniu Cloud Storage")
+    @Log("Configure S3 Cloud Storage")
+    @ApiOperation("Configure S3 Cloud Storage")
     @PutMapping(value = "/config")
-    public ResponseEntity<Object> updateQiNiuConfig(@Validated @RequestBody QiniuConfig qiniuConfig){
-        qiNiuService.config(qiniuConfig);
-        qiNiuService.update(qiniuConfig.getType());
+    public ResponseEntity<Object> updateS3Config(@Validated @RequestBody S3Config s3Config){
+        s3Service.config(s3Config);
+        s3Service.update(s3Config.getType());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @ApiOperation("Export Data")
     @GetMapping(value = "/download")
-    public void exportQiNiu(HttpServletResponse response, QiniuQueryCriteria criteria) throws IOException {
-        qiNiuService.downloadList(qiNiuService.queryAll(criteria), response);
+    public void exportS3(HttpServletResponse response, S3QueryCriteria criteria) throws IOException {
+        s3Service.downloadList(s3Service.queryAll(criteria), response);
     }
 
     @ApiOperation("Query File")
     @GetMapping
-    public ResponseEntity<PageResult<QiniuContent>> queryQiNiu(QiniuQueryCriteria criteria, Pageable pageable){
-        return new ResponseEntity<>(qiNiuService.queryAll(criteria,pageable),HttpStatus.OK);
+    public ResponseEntity<PageResult<S3Content>> queryS3(S3QueryCriteria criteria, Pageable pageable){
+        return new ResponseEntity<>(s3Service.queryAll(criteria,pageable),HttpStatus.OK);
     }
 
     @ApiOperation("Upload File")
     @PostMapping
-    public ResponseEntity<Object> uploadQiNiu(@RequestParam MultipartFile file){
-        QiniuContent qiniuContent = qiNiuService.upload(file,qiNiuService.find());
+    public ResponseEntity<Object> uploadS3(@RequestParam MultipartFile file){
+        S3Content s3Content = s3Service.upload(file,s3Service.find());
         Map<String,Object> map = new HashMap<>(3);
-        map.put("id",qiniuContent.getId());
+        map.put("id",s3Content.getId());
         map.put("errno",0);
-        map.put("data",new String[]{qiniuContent.getUrl()});
+        map.put("data",new String[]{s3Content.getUrl()});
         return new ResponseEntity<>(map,HttpStatus.OK);
     }
 
-    @Log("Synchronize Qiniu Cloud Data")
-    @ApiOperation("Synchronize Qiniu Cloud Data")
+    @Log("Synchronize S3 Cloud Data")
+    @ApiOperation("Synchronize S3 Cloud Data")
     @PostMapping(value = "/synchronize")
-    public ResponseEntity<Object> synchronizeQiNiu(){
-        qiNiuService.synchronize(qiNiuService.find());
+    public ResponseEntity<Object> synchronizeS3(){
+        s3Service.synchronize(s3Service.find());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Log("Download File")
     @ApiOperation("Download File")
     @GetMapping(value = "/download/{id}")
-    public ResponseEntity<Object> downloadQiNiu(@PathVariable Long id){
+    public ResponseEntity<Object> downloadS3(@PathVariable Long id){
         Map<String,Object> map = new HashMap<>(1);
-        map.put("url", qiNiuService.download(qiNiuService.findByContentId(id),qiNiuService.find()));
+        map.put("url", s3Service.download(s3Service.findByContentId(id),s3Service.find()));
         return new ResponseEntity<>(map,HttpStatus.OK);
     }
 
     @Log("Delete File")
     @ApiOperation("Delete File")
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Object> deleteQiNiu(@PathVariable Long id){
-        qiNiuService.delete(qiNiuService.findByContentId(id),qiNiuService.find());
+    public ResponseEntity<Object> deleteS3(@PathVariable Long id){
+        s3Service.delete(s3Service.findByContentId(id),s3Service.find());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Log("Delete Multiple Images")
     @ApiOperation("Delete Multiple Images")
     @DeleteMapping
-    public ResponseEntity<Object> deleteAllQiNiu(@RequestBody Long[] ids) {
-        qiNiuService.deleteAll(ids, qiNiuService.find());
+    public ResponseEntity<Object> deleteAllS3(@RequestBody Long[] ids) {
+        s3Service.deleteAll(ids, s3Service.find());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

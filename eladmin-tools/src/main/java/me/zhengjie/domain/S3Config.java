@@ -22,14 +22,14 @@ import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 /**
- * Qiniu Cloud Object Storage Configuration Class
+ * S3 Cloud Object Storage Configuration Class
  * @author Zheng Jie
  * @date 2018-12-31
  */
 @Data
 @Entity
-@Table(name = "tool_qiniu_config")
-public class QiniuConfig implements Serializable {
+@Table(name = "tool_s3_config")
+public class S3Config implements Serializable {
 
     @Id
     @Column(name = "config_id")
@@ -61,7 +61,7 @@ public class QiniuConfig implements Serializable {
     private String zone;
 
     @NotBlank
-    @ApiModelProperty(value = "External domain, customizable, needs to be bound in Qiniu Cloud")
+    @ApiModelProperty(value = "External domain, customizable, needs to be bound in S3 Cloud")
     private String host;
 
     @ApiModelProperty(value = "Space type: public/private")

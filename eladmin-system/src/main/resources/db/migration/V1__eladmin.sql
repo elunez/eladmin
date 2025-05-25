@@ -391,8 +391,7 @@ INSERT INTO `sys_menu` (`menu_id`, `pid`, `sub_count`, `type`, `title`, `name`, 
 INSERT INTO `sys_menu` (`menu_id`, `pid`, `sub_count`, `type`, `title`, `name`, `component`, `menu_sort`, `icon`, `path`, `i_frame`, `cache`, `hidden`, `permission`, `create_by`, `update_by`, `create_time`, `update_time`) VALUES (11, 10, 0, 1, '图标库', 'Icons', 'components/icons/index', 51, 'icon', 'icon', b'0', b'0', b'0', NULL, NULL, NULL, '2018-12-19 13:38:49', NULL);
 INSERT INTO `sys_menu` (`menu_id`, `pid`, `sub_count`, `type`, `title`, `name`, `component`, `menu_sort`, `icon`, `path`, `i_frame`, `cache`, `hidden`, `permission`, `create_by`, `update_by`, `create_time`, `update_time`) VALUES (14, 36, 0, 1, '邮件工具', 'Email', 'tools/email/index', 35, 'email', 'email', b'0', b'0', b'0', NULL, NULL, NULL, '2018-12-27 10:13:09', NULL);
 INSERT INTO `sys_menu` (`menu_id`, `pid`, `sub_count`, `type`, `title`, `name`, `component`, `menu_sort`, `icon`, `path`, `i_frame`, `cache`, `hidden`, `permission`, `create_by`, `update_by`, `create_time`, `update_time`) VALUES (15, 10, 0, 1, '富文本', 'Editor', 'components/Editor', 52, 'fwb', 'tinymce', b'0', b'0', b'0', NULL, NULL, NULL, '2018-12-27 11:58:25', NULL);
-INSERT INTO `sys_menu` (`menu_id`, `pid`, `sub_count`, `type`, `title`, `name`, `component`, `menu_sort`, `icon`, `path`, `i_frame`, `cache`, `hidden`, `permission`, `create_by`, `update_by`, `create_time`, `update_time`) VALUES (18, 36, 3, 1, '存储管理', 'Storage', 'tools/storage/index', 34, 'qiniu', 'storage', b'0', b'0', b'0', 'storage:list', NULL, NULL, '2018-12-31 11:12:15', NULL);
-INSERT INTO `sys_menu` (`menu_id`, `pid`, `sub_count`, `type`, `title`, `name`, `component`, `menu_sort`, `icon`, `path`, `i_frame`, `cache`, `hidden`, `permission`, `create_by`, `update_by`, `create_time`, `update_time`) VALUES (19, 36, 0, 1, '支付宝工具', 'AliPay', 'tools/aliPay/index', 37, 'alipay', 'aliPay', b'0', b'0', b'0', NULL, NULL, NULL, '2018-12-31 14:52:38', NULL);
+INSERT INTO `sys_menu` (`menu_id`, `pid`, `sub_count`, `type`, `title`, `name`, `component`, `menu_sort`, `icon`, `path`, `i_frame`, `cache`, `hidden`, `permission`, `create_by`, `update_by`, `create_time`, `update_time`) VALUES (18, 36, 3, 1, '存储管理', 'Storage', 'tools/storage/index', 34, 's3', 'storage', b'0', b'0', b'0', 'storage:list', NULL, NULL, '2018-12-31 11:12:15', NULL);
 INSERT INTO `sys_menu` (`menu_id`, `pid`, `sub_count`, `type`, `title`, `name`, `component`, `menu_sort`, `icon`, `path`, `i_frame`, `cache`, `hidden`, `permission`, `create_by`, `update_by`, `create_time`, `update_time`) VALUES (21, NULL, 2, 0, '多级菜单', NULL, '', 900, 'menu', 'nested', b'0', b'0', b'0', NULL, NULL, 'admin', '2019-01-04 16:22:03', '2020-06-21 17:27:35');
 INSERT INTO `sys_menu` (`menu_id`, `pid`, `sub_count`, `type`, `title`, `name`, `component`, `menu_sort`, `icon`, `path`, `i_frame`, `cache`, `hidden`, `permission`, `create_by`, `update_by`, `create_time`, `update_time`) VALUES (22, 21, 2, 0, '二级菜单1', NULL, '', 999, 'menu', 'menu1', b'0', b'0', b'0', NULL, NULL, 'admin', '2019-01-04 16:23:29', '2020-06-21 17:27:20');
 INSERT INTO `sys_menu` (`menu_id`, `pid`, `sub_count`, `type`, `title`, `name`, `component`, `menu_sort`, `icon`, `path`, `i_frame`, `cache`, `hidden`, `permission`, `create_by`, `update_by`, `create_time`, `update_time`) VALUES (23, 21, 0, 1, '二级菜单2', NULL, 'nested/menu2/index', 999, 'menu', 'menu2', b'0', b'0', b'0', NULL, NULL, NULL, '2019-01-04 16:23:57', NULL);
@@ -820,45 +819,45 @@ BEGIN;
 COMMIT;
 
 -- ----------------------------
--- Table structure for tool_qiniu_config
+-- Table structure for tool_s3_config
 -- ----------------------------
-DROP TABLE IF EXISTS `tool_qiniu_config`;
-CREATE TABLE `tool_qiniu_config` (
-                                     `config_id` bigint(20) NOT NULL COMMENT 'ID',
-                                     `access_key` text DEFAULT NULL COMMENT 'accessKey',
-                                     `bucket` varchar(255) DEFAULT NULL COMMENT 'Bucket 识别符',
-                                     `host` varchar(255) NOT NULL COMMENT '外链域名',
-                                     `secret_key` text DEFAULT NULL COMMENT 'secretKey',
-                                     `type` varchar(255) DEFAULT NULL COMMENT '空间类型',
-                                     `zone` varchar(255) DEFAULT NULL COMMENT '机房',
-                                     PRIMARY KEY (`config_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=COMPACT COMMENT='七牛云配置';
+DROP TABLE IF EXISTS `tool_s3_config`;
+CREATE TABLE `tool_s3_config` (
+                                  `config_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'ID',
+                                  `access_key` text DEFAULT NULL COMMENT 'accessKey',
+                                  `bucket` varchar(255) DEFAULT NULL COMMENT 'Bucket 识别符',
+                                  `host` varchar(255) NOT NULL COMMENT '外链域名',
+                                  `secret_key` text DEFAULT NULL COMMENT 'secretKey',
+                                  `type` varchar(255) DEFAULT NULL COMMENT '空间类型',
+                                  `zone` varchar(255) DEFAULT NULL COMMENT '机房',
+                                  PRIMARY KEY (`config_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=COMPACT COMMENT='S3配置';
 
 -- ----------------------------
--- Records of tool_qiniu_config
+-- Records of tool_s3_config
 -- ----------------------------
 BEGIN;
 COMMIT;
 
 -- ----------------------------
--- Table structure for tool_qiniu_content
+-- Table structure for tool_s3_content
 -- ----------------------------
-DROP TABLE IF EXISTS `tool_qiniu_content`;
-CREATE TABLE `tool_qiniu_content` (
-                                      `content_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'ID',
-                                      `bucket` varchar(255) DEFAULT NULL COMMENT 'Bucket 识别符',
-                                      `name` varchar(180) DEFAULT NULL COMMENT '文件名称',
-                                      `size` varchar(255) DEFAULT NULL COMMENT '文件大小',
-                                      `type` varchar(255) DEFAULT NULL COMMENT '文件类型：私有或公开',
-                                      `url` varchar(255) DEFAULT NULL COMMENT '文件url',
-                                      `suffix` varchar(255) DEFAULT NULL COMMENT '文件后缀',
-                                      `update_time` datetime DEFAULT NULL COMMENT '上传或同步的时间',
-                                      PRIMARY KEY (`content_id`) USING BTREE,
-                                      UNIQUE KEY `uniq_name` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=COMPACT COMMENT='七牛云文件存储';
+DROP TABLE IF EXISTS `tool_s3_content`;
+CREATE TABLE `tool_s3_content` (
+                                   `content_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'ID',
+                                   `bucket` varchar(255) DEFAULT NULL COMMENT 'Bucket 识别符',
+                                   `name` varchar(180) DEFAULT NULL COMMENT '文件名称',
+                                   `size` varchar(255) DEFAULT NULL COMMENT '文件大小',
+                                   `type` varchar(255) DEFAULT NULL COMMENT '文件类型：私有或公开',
+                                   `url` varchar(255) DEFAULT NULL COMMENT '文件url',
+                                   `suffix` varchar(255) DEFAULT NULL COMMENT '文件后缀',
+                                   `update_time` datetime DEFAULT NULL COMMENT '上传或同步的时间',
+                                   PRIMARY KEY (`content_id`) USING BTREE,
+                                   UNIQUE KEY `uniq_name` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=COMPACT COMMENT='S3文件存储';
 
 -- ----------------------------
--- Records of tool_qiniu_content
+-- Records of tool_s3_content
 -- ----------------------------
 BEGIN;
 COMMIT;

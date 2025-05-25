@@ -13,24 +13,27 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package me.zhengjie.repository;
+package me.zhengjie.service.dto;
 
-import me.zhengjie.domain.QiniuConfig;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+import me.zhengjie.annotation.Query;
+
+import java.sql.Timestamp;
+import java.util.List;
 
 /**
  * @author Zheng Jie
- * @date 2018-12-31
+ * @date 2019-6-4 09:54:37
  */
-public interface QiNiuConfigRepository extends JpaRepository<QiniuConfig,Long> {
+@Data
+public class S3QueryCriteria{
 
-    /**
-     * Edit type
-     * @param type /
-     */
-    @Modifying
-    @Query(value = "update QiniuConfig set type = ?1")
-    void update(String type);
+    @ApiModelProperty(value = "Name search")
+    @Query(type = Query.Type.INNER_LIKE)
+    private String key;
+
+    @ApiModelProperty(value = "Creation time")
+    @Query(type = Query.Type.BETWEEN)
+    private List<Timestamp> createTime;
 }

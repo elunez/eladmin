@@ -13,27 +13,22 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package me.zhengjie.service.dto;
+package me.zhengjie.repository;
 
-import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
-import me.zhengjie.annotation.Query;
-
-import java.sql.Timestamp;
-import java.util.List;
+import me.zhengjie.domain.S3Content;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 /**
  * @author Zheng Jie
- * @date 2019-6-4 09:54:37
+ * @date 2018-12-31
  */
-@Data
-public class QiniuQueryCriteria{
+public interface S3ContentRepository extends JpaRepository<S3Content,Long>, JpaSpecificationExecutor<S3Content> {
 
-    @ApiModelProperty(value = "Name search")
-    @Query(type = Query.Type.INNER_LIKE)
-    private String key;
-
-    @ApiModelProperty(value = "Creation time")
-    @Query(type = Query.Type.BETWEEN)
-    private List<Timestamp> createTime;
+    /**
+     * Query by key
+     * @param key file name
+     * @return S3Content
+     */
+    S3Content findByKey(String key);
 }
