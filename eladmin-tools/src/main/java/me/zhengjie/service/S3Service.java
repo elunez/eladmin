@@ -15,9 +15,9 @@
  */
 package me.zhengjie.service;
 
-import me.zhengjie.domain.QiniuConfig;
-import me.zhengjie.domain.QiniuContent;
-import me.zhengjie.service.dto.QiniuQueryCriteria;
+import me.zhengjie.domain.S3Content;
+import me.zhengjie.domain.S3Config;
+import me.zhengjie.service.dto.S3QueryCriteria;
 import me.zhengjie.utils.PageResult;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,20 +30,20 @@ import java.util.List;
  * @author Zheng Jie
  * @date 2018-12-31
  */
-public interface QiNiuService {
+public interface S3Service {
 
     /**
      * Query configuration
-     * @return QiniuConfig
+     * @return S3Config
      */
-    QiniuConfig find();
+    S3Config find();
 
     /**
      * Update configuration
-     * @param qiniuConfig configuration
-     * @return QiniuConfig
+     * @param s3Config configuration
+     * @return S3Config
      */
-    QiniuConfig config(QiniuConfig qiniuConfig);
+    S3Config config(S3Config s3Config);
 
     /**
      * Paginated query
@@ -51,29 +51,29 @@ public interface QiNiuService {
      * @param pageable pagination parameters
      * @return /
      */
-    PageResult<QiniuContent> queryAll(QiniuQueryCriteria criteria, Pageable pageable);
+    PageResult<S3Content> queryAll(S3QueryCriteria criteria, Pageable pageable);
 
     /**
      * Query all
      * @param criteria criteria
      * @return /
      */
-    List<QiniuContent> queryAll(QiniuQueryCriteria criteria);
+    List<S3Content> queryAll(S3QueryCriteria criteria);
 
     /**
      * Upload file
      * @param file file
-     * @param qiniuConfig configuration
-     * @return QiniuContent
+     * @param s3Config configuration
+     * @return S3Content
      */
-    QiniuContent upload(MultipartFile file, QiniuConfig qiniuConfig);
+    S3Content upload(MultipartFile file, S3Config s3Config);
 
     /**
      * Query file
      * @param id file ID
-     * @return QiniuContent
+     * @return S3Content
      */
-    QiniuContent findByContentId(Long id);
+    S3Content findByContentId(Long id);
 
     /**
      * Download file
@@ -81,27 +81,27 @@ public interface QiNiuService {
      * @param config configuration
      * @return String
      */
-    String download(QiniuContent content, QiniuConfig config);
+    String download(S3Content content, S3Config config);
 
     /**
      * Delete file
      * @param content file
      * @param config configuration
      */
-    void delete(QiniuContent content, QiniuConfig config);
+    void delete(S3Content content, S3Config config);
 
     /**
      * Sync data
      * @param config configuration
      */
-    void synchronize(QiniuConfig config);
+    void synchronize(S3Config config);
 
     /**
      * Delete file
      * @param ids file ID array
      * @param config configuration
      */
-    void deleteAll(Long[] ids, QiniuConfig config);
+    void deleteAll(Long[] ids, S3Config config);
 
     /**
      * Update data
@@ -115,5 +115,5 @@ public interface QiNiuService {
      * @param response /
      * @throws IOException /
      */
-    void downloadList(List<QiniuContent> queryAll, HttpServletResponse response) throws IOException;
+    void downloadList(List<S3Content> queryAll, HttpServletResponse response) throws IOException;
 }

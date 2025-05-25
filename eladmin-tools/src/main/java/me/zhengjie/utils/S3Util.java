@@ -20,11 +20,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * Qiniu cloud storage utility class
+ * S3 cloud storage utility class
  * @author Zheng Jie
  * @date 2018-12-31
  */
-public class QiNiuUtil {
+public class S3Util {
 
     private static final String HUAD = "East China";
 

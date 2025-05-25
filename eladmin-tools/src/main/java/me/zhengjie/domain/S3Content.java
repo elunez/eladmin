@@ -29,8 +29,8 @@ import java.sql.Timestamp;
  */
 @Data
 @Entity
-@Table(name = "tool_qiniu_content")
-public class QiniuContent implements Serializable {
+@Table(name = "tool_s3_content")
+public class S3Content implements Serializable {
 
     @Id
     @Column(name = "content_id")
