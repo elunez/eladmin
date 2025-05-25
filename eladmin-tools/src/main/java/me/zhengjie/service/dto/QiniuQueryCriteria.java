@@ -29,11 +29,11 @@ import java.util.List;
 @Data
 public class QiniuQueryCriteria{
 
-    @ApiModelProperty(value = "名称查询")
+    @ApiModelProperty(value = "Name search")
     @Query(type = Query.Type.INNER_LIKE)
     private String key;
 
-    @ApiModelProperty(value = "创建时间")
+    @ApiModelProperty(value = "Creation time")
     @Query(type = Query.Type.BETWEEN)
     private List<Timestamp> createTime;
 }

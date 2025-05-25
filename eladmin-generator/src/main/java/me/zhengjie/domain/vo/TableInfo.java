@@ -22,7 +22,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 表的数据信息
+ * Table data information
  * @author Zheng Jie
  * @date 2019-01-02
  */
@@ -31,19 +31,19 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class TableInfo {
 
-    @ApiModelProperty(value = "表名称")
+    @ApiModelProperty(value = "Table name")
     private Object tableName;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    @ApiModelProperty(value = "创建日期：yyyy-MM-dd HH:mm:ss")
+    @ApiModelProperty(value = "Creation date: yyyy-MM-dd HH:mm:ss")
     private Object createTime;
 
-    @ApiModelProperty(value = "数据库引擎")
+    @ApiModelProperty(value = "Database engine")
     private Object engine;
 
-    @ApiModelProperty(value = "编码集")
+    @ApiModelProperty(value = "Character set")
     private Object coding;
 
-    @ApiModelProperty(value = "备注")
+    @ApiModelProperty(value = "Remarks")
     private Object remark;
 }

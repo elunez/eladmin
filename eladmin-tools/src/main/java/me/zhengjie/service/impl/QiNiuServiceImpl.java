@@ -74,7 +74,7 @@ public class QiNiuServiceImpl implements QiNiuService {
         qiniuConfig.setId(1L);
         String http = "http://", https = "https://";
         if (!(qiniuConfig.getHost().toLowerCase().startsWith(http)||qiniuConfig.getHost().toLowerCase().startsWith(https))) {
-            throw new BadRequestException("外链域名必须以http://或者https://开头");
+            throw new BadRequestException("External link domain must start with http:// or https://");
         }
         return qiNiuConfigRepository.save(qiniuConfig);
     }
@@ -94,9 +94,9 @@ public class QiNiuServiceImpl implements QiNiuService {
     public QiniuContent upload(MultipartFile file, QiniuConfig qiniuConfig) {
         FileUtil.checkSize(maxSize, file.getSize());
         if(qiniuConfig.getId() == null){
-            throw new BadRequestException("请先添加相应配置，再操作");
+            throw new BadRequestException("Please add the corresponding configuration first, then operate");
         }
-        // 构造一个带指定Zone对象的配置类
+        // Construct a configuration class with the specified Zone object
         Configuration cfg = new Configuration(QiNiuUtil.getRegion(qiniuConfig.getZone()));
         UploadManager uploadManager = new UploadManager(cfg);
         Auth auth = Auth.create(qiniuConfig.getAccessKey(), qiniuConfig.getSecretKey());
@@ -107,12 +107,11 @@ public class QiNiuServiceImpl implements QiNiuService {
                 key = QiNiuUtil.getKey(key);
             }
             Response response = uploadManager.put(file.getBytes(), key, upToken);
-            //解析上传成功的结果
-
+            // Parse the result of successful upload
             DefaultPutRet putRet = JSON.parseObject(response.bodyString(), DefaultPutRet.class);
             QiniuContent content = qiniuContentRepository.findByKey(FileUtil.getFileNameNoEx(putRet.key));
             if(content == null){
-                //存入数据库
+                // Store in database
                 QiniuContent qiniuContent = new QiniuContent();
                 qiniuContent.setSuffix(FileUtil.getExtensionName(putRet.key));
                 qiniuContent.setBucket(qiniuConfig.getBucket());
@@ -138,12 +137,12 @@ public class QiNiuServiceImpl implements QiNiuService {
     @Override
     public String download(QiniuContent content,QiniuConfig config){
         String finalUrl;
-        String type = "公开";
+        String type = "Public";
         if(type.equals(content.getType())){
             finalUrl  = content.getUrl();
         } else {
             Auth auth = Auth.create(config.getAccessKey(), config.getSecretKey());
-            // 1小时，可以自定义链接过期时间
+            // 1 hour, can customize link expiration time
             long expireInSeconds = 3600;
             finalUrl = auth.privateDownloadUrl(content.getUrl(), expireInSeconds);
         }
@@ -153,7 +152,7 @@ public class QiNiuServiceImpl implements QiNiuService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void delete(QiniuContent content, QiniuConfig config) {
-        //构造一个带指定Zone对象的配置类
+        // Construct a configuration class with the specified Zone object
         Configuration cfg = new Configuration(QiNiuUtil.getRegion(config.getZone()));
         Auth auth = Auth.create(config.getAccessKey(), config.getSecretKey());
         BucketManager bucketManager = new BucketManager(auth, cfg);
@@ -169,22 +168,22 @@ public class QiNiuServiceImpl implements QiNiuService {
     @Transactional(rollbackFor = Exception.class)
     public void synchronize(QiniuConfig config) {
         if(config.getId() == null){
-            throw new BadRequestException("请先添加相应配置，再操作");
+            throw new BadRequestException("Please add the corresponding configuration first, then operate");
         }
-        //构造一个带指定Zone对象的配置类
+        // Construct a configuration class with the specified Zone object
         Configuration cfg = new Configuration(QiNiuUtil.getRegion(config.getZone()));
         Auth auth = Auth.create(config.getAccessKey(), config.getSecretKey());
         BucketManager bucketManager = new BucketManager(auth, cfg);
-        //文件名前缀
+        // File name prefix
         String prefix = "";
-        //每次迭代的长度限制，最大1000，推荐值 1000
+        // Length limit for each iteration, maximum 1000, recommended value 1000
         int limit = 1000;
-        //指定目录分隔符，列出所有公共前缀（模拟列出目录效果）。缺省值为空字符串
+        // Specify directory separator, list all common prefixes (simulate directory listing effect). Default value is empty string
         String delimiter = "";
-        //列举空间文件列表
+        // List space file list
         BucketManager.FileListIterator fileListIterator = bucketManager.createFileListIterator(config.getBucket(), prefix, limit, delimiter);
         while (fileListIterator.hasNext()) {
-            //处理获取的file list结果
+            // Process the obtained file list result
             QiniuContent qiniuContent;
             FileInfo[] items = fileListIterator.next();
             for (FileInfo item : items) {
@@ -221,12 +220,12 @@ public class QiNiuServiceImpl implements QiNiuService {
         List<Map<String, Object>> list = new ArrayList<>();
         for (QiniuContent content : queryAll) {
             Map<String,Object> map = new LinkedHashMap<>();
-            map.put("文件名", content.getKey());
-            map.put("文件类型", content.getSuffix());
-            map.put("空间名称", content.getBucket());
-            map.put("文件大小", content.getSize());
-            map.put("空间类型", content.getType());
-            map.put("创建日期", content.getUpdateTime());
+            map.put("File name", content.getKey());
+            map.put("File type", content.getSuffix());
+            map.put("Space name", content.getBucket());
+            map.put("File size", content.getSize());
+            map.put("Space type", content.getType());
+            map.put("Creation date", content.getUpdateTime());
             list.add(map);
         }
         FileUtil.downloadExcel(list, response);

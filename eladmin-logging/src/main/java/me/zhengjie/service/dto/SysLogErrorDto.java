@@ -30,27 +30,27 @@ public class SysLogErrorDto implements Serializable {
     @ApiModelProperty(value = "ID")
     private Long id;
 
-    @ApiModelProperty(value = "用户名")
+    @ApiModelProperty(value = "Username")
     private String username;
 
-    @ApiModelProperty(value = "描述")
+    @ApiModelProperty(value = "Description")
     private String description;
 
-    @ApiModelProperty(value = "方法")
+    @ApiModelProperty(value = "Method")
     private String method;
 
-    @ApiModelProperty(value = "参数")
+    @ApiModelProperty(value = "Parameters")
     private String params;
 
-    @ApiModelProperty(value = "浏览器")
+    @ApiModelProperty(value = "Browser")
     private String browser;
 
-    @ApiModelProperty(value = "请求ip")
+    @ApiModelProperty(value = "Request IP")
     private String requestIp;
 
-    @ApiModelProperty(value = "地址")
+    @ApiModelProperty(value = "Address")
     private String address;
 
-    @ApiModelProperty(value = "创建时间")
+    @ApiModelProperty(value = "Creation time")
     private Timestamp createTime;
 }

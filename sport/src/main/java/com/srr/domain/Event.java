@@ -48,11 +48,11 @@ public class Event implements Serializable {
 
     @Column(name = "`name`",nullable = false)
     @NotBlank
-    @ApiModelProperty(value = "名称")
+    @ApiModelProperty(value = "Name")
     private String name;
 
     @Column(name = "`description`")
-    @ApiModelProperty(value = "描述")
+    @ApiModelProperty(value = "Description")
     private String description;
 
     @Column(name = "`format`",nullable = false)
@@ -62,38 +62,38 @@ public class Event implements Serializable {
     private Format format;
 
     @Column(name = "`max_player`")
-    @ApiModelProperty(value = "最大人数")
+    @ApiModelProperty(value = "Maximum number of people")
     private Integer maxPlayer;
 
     @Column(name = "`location`")
-    @ApiModelProperty(value = "位置")
+    @ApiModelProperty(value = "Location")
     private String location;
 
     @Column(name = "`image`")
-    @ApiModelProperty(value = "图片")
+    @ApiModelProperty(value = "Image")
     private String image;
 
     @Column(name = "`create_time`")
     @CreationTimestamp
-    @ApiModelProperty(value = "创建时间", hidden = true)
+    @ApiModelProperty(value = "Creation time", hidden = true)
     private Timestamp createTime;
 
     @Column(name = "`update_time`")
     @UpdateTimestamp
-    @ApiModelProperty(value = "更新时间", hidden = true)
+    @ApiModelProperty(value = "Update time", hidden = true)
     private Timestamp updateTime;
 
     @Column(name = "`sort`")
-    @ApiModelProperty(value = "排序")
+    @ApiModelProperty(value = "Sort")
     private Integer sort;
 
     @Column(name = "`enabled`")
-    @ApiModelProperty(value = "是否启用")
+    @ApiModelProperty(value = "Enabled")
     private Boolean enabled;
 
     @Column(name = "`event_time`",nullable = false)
     @NotNull
-    @ApiModelProperty(value = "时间")
+    @ApiModelProperty(value = "Time")
     private Timestamp eventTime;
 
     @Column(name = "`club_id`",nullable = false)

@@ -32,18 +32,18 @@ public class LocalStorageDto extends BaseDTO implements Serializable {
     @ApiModelProperty(value = "ID")
     private Long id;
 
-    @ApiModelProperty(value = "真实文件名")
+    @ApiModelProperty(value = "Real file name")
     private String realName;
 
-    @ApiModelProperty(value = "文件名")
+    @ApiModelProperty(value = "File name")
     private String name;
 
-    @ApiModelProperty(value = "后缀")
+    @ApiModelProperty(value = "Suffix")
     private String suffix;
 
-    @ApiModelProperty(value = "文件类型")
+    @ApiModelProperty(value = "File type")
     private String type;
 
-    @ApiModelProperty(value = "文件大小")
+    @ApiModelProperty(value = "File size")
     private String size;
 }

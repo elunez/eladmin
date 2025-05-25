@@ -26,7 +26,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 支付宝工具类
+ * Alipay utility class
  * @author zhengjie
  * @date 2018/09/30 14:04:35
  */
@@ -34,7 +34,7 @@ import java.util.Map;
 public class AlipayUtils {
 
     /**
-     * 生成订单号
+     * Generate order number
      * @return String
      */
     public String getOrderCode() {
@@ -52,14 +52,14 @@ public class AlipayUtils {
     }
 
     /**
-     * 校验签名
+     * Verify signature
      * @param request HttpServletRequest
-     * @param alipay 阿里云配置
+     * @param alipay Aliyun config
      * @return boolean
      */
     public boolean rsaCheck(HttpServletRequest request, AlipayConfig alipay){
 
-        // 获取支付宝POST过来反馈信息
+        // Get feedback information POSTed by Alipay
         Map<String,String> params = new HashMap<>(1);
         Map<String, String[]> requestParams = request.getParameterMap();
         for (Object o : requestParams.keySet()) {

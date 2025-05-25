@@ -45,7 +45,7 @@ public class CourtController {
 
     private final CourtService courtService;
 
-    @ApiOperation("导出数据")
+    @ApiOperation("Export Data")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('court:list')")
     public void exportCourt(HttpServletResponse response, CourtQueryCriteria criteria) throws IOException {
@@ -53,15 +53,15 @@ public class CourtController {
     }
 
     @GetMapping
-    @ApiOperation("查询court")
+    @ApiOperation("Query court")
     @PreAuthorize("@el.check('court:list')")
     public ResponseEntity<PageResult<CourtDto>> queryCourt(CourtQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity<>(courtService.queryAll(criteria,pageable),HttpStatus.OK);
     }
 
     @PostMapping
-    @Log("新增court")
-    @ApiOperation("新增court")
+    @Log("Add court")
+    @ApiOperation("Add court")
     @PreAuthorize("@el.check('court:add')")
     public ResponseEntity<Object> createCourt(@Validated @RequestBody Court resources){
         courtService.create(resources);
@@ -69,8 +69,8 @@ public class CourtController {
     }
 
     @PutMapping
-    @Log("修改court")
-    @ApiOperation("修改court")
+    @Log("Modify court")
+    @ApiOperation("Modify court")
     @PreAuthorize("@el.check('court:edit')")
     public ResponseEntity<Object> updateCourt(@Validated @RequestBody Court resources){
         courtService.update(resources);
@@ -78,10 +78,10 @@ public class CourtController {
     }
 
     @DeleteMapping
-    @Log("删除court")
-    @ApiOperation("删除court")
+    @Log("Delete court")
+    @ApiOperation("Delete court")
     @PreAuthorize("@el.check('court:del')")
-    public ResponseEntity<Object> deleteCourt(@ApiParam(value = "传ID数组[]") @RequestBody Long[] ids) {
+    public ResponseEntity<Object> deleteCourt(@ApiParam(value = "Pass ID array[]") @RequestBody Long[] ids) {
         courtService.deleteAll(ids);
         return new ResponseEntity<>(HttpStatus.OK);
     }

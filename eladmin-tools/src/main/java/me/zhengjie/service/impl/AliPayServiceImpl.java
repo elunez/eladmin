@@ -62,7 +62,7 @@ public class AliPayServiceImpl implements AliPayService {
     public String toPayAsPc(AlipayConfig alipay, TradeVo trade) throws Exception {
 
         if(alipay.getId() == null){
-            throw new BadRequestException("请先添加相应配置，再操作");
+            throw new BadRequestException("Please add the corresponding configuration first, then operate");
         }
         AlipayClient alipayClient = new DefaultAlipayClient(alipay.getGatewayUrl(), alipay.getAppId(), alipay.getPrivateKey(), alipay.getFormat(), alipay.getCharset(), alipay.getPublicKey(), alipay.getSignType());
 
@@ -91,7 +91,7 @@ public class AliPayServiceImpl implements AliPayService {
     @Override
     public String toPayAsWeb(AlipayConfig alipay, TradeVo trade) throws Exception {
         if(alipay.getId() == null){
-            throw new BadRequestException("请先添加相应配置，再操作");
+            throw new BadRequestException("Please add the corresponding configuration first, then operate");
         }
         AlipayClient alipayClient = new DefaultAlipayClient(alipay.getGatewayUrl(), alipay.getAppId(), alipay.getPrivateKey(), alipay.getFormat(), alipay.getCharset(), alipay.getPublicKey(), alipay.getSignType());
 

@@ -22,7 +22,7 @@ import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 /**
- * 支付宝配置类
+ * Alipay configuration class
  * @author Zheng Jie
  * @date 2018-12-31
  */
@@ -37,40 +37,40 @@ public class AlipayConfig implements Serializable {
     private Long id;
 
     @NotBlank
-    @ApiModelProperty(value = "应用ID")
+    @ApiModelProperty(value = "App ID")
     private String appId;
 
     @NotBlank
-    @ApiModelProperty(value = "商户私钥")
+    @ApiModelProperty(value = "Merchant Private Key")
     private String privateKey;
 
     @NotBlank
-    @ApiModelProperty(value = "支付宝公钥")
+    @ApiModelProperty(value = "Alipay Public Key")
     private String publicKey;
 
-    @ApiModelProperty(value = "签名方式")
+    @ApiModelProperty(value = "Signature Method")
     private String signType="RSA2";
 
     @Column(name = "gateway_url")
-    @ApiModelProperty(value = "支付宝开放安全地址", hidden = true)
+    @ApiModelProperty(value = "Alipay Open Security Address", hidden = true)
     private String gatewayUrl = "https://openapi.alipaydev.com/gateway.do";
 
-    @ApiModelProperty(value = "编码", hidden = true)
+    @ApiModelProperty(value = "Encoding", hidden = true)
     private String charset= "utf-8";
 
     @NotBlank
-    @ApiModelProperty(value = "异步通知地址")
+    @ApiModelProperty(value = "Asynchronous notification address")
     private String notifyUrl;
 
     @NotBlank
-    @ApiModelProperty(value = "订单完成后返回的页面")
+    @ApiModelProperty(value = "Page returned after order completion")
     private String returnUrl;
 
-    @ApiModelProperty(value = "类型")
+    @ApiModelProperty(value = "Type")
     private String format="JSON";
 
     @NotBlank
-    @ApiModelProperty(value = "商户号")
+    @ApiModelProperty(value = "Merchant number")
     private String sysServiceProviderId;
 
 }

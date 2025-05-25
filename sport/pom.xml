@@ -14,7 +14,7 @@
     <name>sport</name>
 
     <dependencies>
-        <!--工具包-->
+        <!-- Utility package -->
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>

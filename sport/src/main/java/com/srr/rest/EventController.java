@@ -45,7 +45,7 @@ public class EventController {
 
     private final EventService eventService;
 
-    @ApiOperation("导出数据")
+    @ApiOperation("Export Data")
     @GetMapping(value = "/download")
     @PreAuthorize("@el.check('event:list')")
     public void exportEvent(HttpServletResponse response, EventQueryCriteria criteria) throws IOException {
@@ -53,15 +53,15 @@ public class EventController {
     }
 
     @GetMapping
-    @ApiOperation("查询event")
+    @ApiOperation("Query event")
     @PreAuthorize("@el.check('event:list')")
     public ResponseEntity<PageResult<EventDto>> queryEvent(EventQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity<>(eventService.queryAll(criteria,pageable),HttpStatus.OK);
     }
 
     @PostMapping
-    @Log("新增event")
-    @ApiOperation("新增event")
+    @Log("Add event")
+    @ApiOperation("Add event")
     @PreAuthorize("@el.check('event:add')")
     public ResponseEntity<Object> createEvent(@Validated @RequestBody Event resources){
         eventService.create(resources);
@@ -69,8 +69,8 @@ public class EventController {
     }
 
     @PutMapping
-    @Log("修改event")
-    @ApiOperation("修改event")
+    @Log("Modify event")
+    @ApiOperation("Modify event")
     @PreAuthorize("@el.check('event:edit')")
     public ResponseEntity<Object> updateEvent(@Validated @RequestBody Event resources){
         eventService.update(resources);
@@ -78,10 +78,10 @@ public class EventController {
     }
 
     @DeleteMapping
-    @Log("删除event")
-    @ApiOperation("删除event")
+    @Log("Delete event")
+    @ApiOperation("Delete event")
     @PreAuthorize("@el.check('event:del')")
-    public ResponseEntity<Object> deleteEvent(@ApiParam(value = "传ID数组[]") @RequestBody Long[] ids) {
+    public ResponseEntity<Object> deleteEvent(@ApiParam(value = "Pass ID array[]") @RequestBody Long[] ids) {
         eventService.deleteAll(ids);
         return new ResponseEntity<>(HttpStatus.OK);
     }

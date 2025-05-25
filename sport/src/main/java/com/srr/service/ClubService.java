@@ -27,15 +27,15 @@ import me.zhengjie.utils.PageResult;
 
 /**
 * @website https://eladmin.vip
-* @description 服务接口
+* @description Service Interface
 * @author Chanheng
 * @date 2025-05-18
 **/
 public interface ClubService {
 
     /**
-    * 查询数据分页
-    * @param criteria 条件
+    * Query data with pagination
+    * @param criteria criteria
     * @param pageable 分页参数
     * @return Map<String,Object>
     */

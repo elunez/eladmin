@@ -33,9 +33,9 @@ import java.lang.reflect.Field;
 import java.sql.Timestamp;
 
 /**
- * 通用字段， is_del 根据需求自行添加
+ * Common fields, add is_del as needed
  * @author Zheng Jie
- * @date 2019年10月24日20:46:32
+ * @date 2019-10-24 20:46:32
  */
 @Getter
 @Setter
@@ -45,30 +45,30 @@ public class BaseEntity implements Serializable {
 
     @CreatedBy
     @Column(name = "create_by", updatable = false)
-    @ApiModelProperty(value = "创建人", hidden = true)
+    @ApiModelProperty(value = "Creator", hidden = true)
     private String createBy;
 
     @LastModifiedBy
     @Column(name = "update_by")
-    @ApiModelProperty(value = "更新人", hidden = true)
+    @ApiModelProperty(value = "Updater", hidden = true)
     private String updateBy;
 
     @CreationTimestamp
     @Column(name = "create_time", updatable = false)
-    @ApiModelProperty(value = "创建时间: yyyy-MM-dd HH:mm:ss", hidden = true)
+    @ApiModelProperty(value = "Creation time: yyyy-MM-dd HH:mm:ss", hidden = true)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private Timestamp createTime;
 
     @UpdateTimestamp
     @Column(name = "update_time")
-    @ApiModelProperty(value = "更新时间: yyyy-MM-dd HH:mm:ss", hidden = true)
+    @ApiModelProperty(value = "Update time: yyyy-MM-dd HH:mm:ss", hidden = true)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private Timestamp updateTime;
 
-    /* 分组校验 */
+    /* Group validation */
     public @interface Create {}
 
-    /* 分组校验 */
+    /* Group validation */
     public @interface Update {}
 
     @Override
