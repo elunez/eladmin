@@ -36,46 +36,46 @@ public interface ClubService {
     /**
     * Query data with pagination
     * @param criteria criteria
-    * @param pageable 分页参数
+    * @param pageable pagination parameters
     * @return Map<String,Object>
     */
     PageResult<ClubDto> queryAll(ClubQueryCriteria criteria, Pageable pageable);
 
     /**
-    * 查询所有数据不分页
-    * @param criteria 条件参数
+    * Query all data without pagination
+    * @param criteria criteria parameters
     * @return List<ClubDto>
     */
     List<ClubDto> queryAll(ClubQueryCriteria criteria);
 
     /**
-     * 根据ID查询
+     * Query by ID
      * @param id ID
      * @return ClubDto
      */
     ClubDto findById(Long id);
 
     /**
-    * 创建
+    * Create
     * @param resources /
     */
     void create(Club resources);
 
     /**
-    * 编辑
+    * Edit
     * @param resources /
     */
     void update(Club resources);
 
     /**
-    * 多选删除
+    * Multiple selection delete
     * @param ids /
     */
     void deleteAll(Long[] ids);
 
     /**
-    * 导出数据
-    * @param all 待导出的数据
+    * Export data
+    * @param all data to be exported
     * @param response /
     * @throws IOException /
     */
