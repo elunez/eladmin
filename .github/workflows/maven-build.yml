@@ -25,11 +25,3 @@ jobs:
     
     - name: Build with Maven
       run: ./mvnw clean package -DskipTests
-    
-    - name: Archive production artifacts
-      uses: actions/upload-artifact@v2
-      with:
-        name: jar-files
-        path: |
-          eladmin-system/target/*.jar
-          **/target/*.jar
