@@ -23,8 +23,8 @@ public class Match implements Serializable {
     private MatchGroup matchGroup;
 
     @ManyToOne
-    @JoinColumn(name = "team_player_a_id")
-    private TeamPlayer teamPlayerA;
+    @JoinColumn(name = "team_a_id")
+    private TeamPlayer teamA;
 
     @Column(name = "`score_a`")
     @ApiModelProperty(value = "Score A")
@@ -41,8 +41,8 @@ public class Match implements Serializable {
     private boolean teamBWin;
 
     @ManyToOne
-    @JoinColumn(name = "team_player_b_id")
-    private TeamPlayer teamPlayerB;
+    @JoinColumn(name = "team_b_id")
+    private Team teamB;
 
     @Column(name = "`score_verified`")
     private boolean scoreVerified;

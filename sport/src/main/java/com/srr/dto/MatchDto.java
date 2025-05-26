@@ -35,15 +35,24 @@ public class MatchDto implements Serializable {
     @ApiModelProperty(value = "Match Group id")
     private Long matchGroupId;
     
-    @ApiModelProperty(value = "Team 1 id")
-    private Long team1Id;
+    @ApiModelProperty(value = "Team A id")
+    private Long teamA;
     
-    @ApiModelProperty(value = "Team 2 id")
-    private Long team2Id;
+    @ApiModelProperty(value = "Team B id")
+    private Long teamB;
     
-    @ApiModelProperty(value = "Score Team 1")
-    private Integer scoreTeam1;
+    @ApiModelProperty(value = "Score A")
+    private Integer scoreA;
     
-    @ApiModelProperty(value = "Score Team 2")
-    private Integer scoreTeam2;
+    @ApiModelProperty(value = "Score B")
+    private Integer scoreB;
+    
+    @ApiModelProperty(value = "Team A Win")
+    private Boolean teamAWin;
+    
+    @ApiModelProperty(value = "Team B Win")
+    private Boolean teamBWin;
+    
+    @ApiModelProperty(value = "Score Verified")
+    private Boolean scoreVerified;
 }

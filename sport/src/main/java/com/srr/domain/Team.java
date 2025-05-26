@@ -17,6 +17,10 @@ public class Team implements Serializable {
     private Long id;
 
     @ManyToOne
+    @JoinColumn(name = "match_group_id")
+    private MatchGroup matchGroup;
+
+    @ManyToOne
     @JoinColumn(name = "event_id")
     private Event event;
 
