@@ -13,7 +13,7 @@
 *  See the License for the specific language governing permissions and
 *  limitations under the License.
 */
-package com.srr.converter;
+package com.srr.domain.converter;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;

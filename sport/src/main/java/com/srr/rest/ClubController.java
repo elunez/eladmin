@@ -15,6 +15,7 @@
 */
 package com.srr.rest;
 
+import lombok.extern.slf4j.Slf4j;
 import me.zhengjie.annotation.Log;
 import com.srr.domain.Club;
 import com.srr.service.ClubService;
@@ -40,6 +41,7 @@ import com.srr.dto.ClubDto;
 @RestController
 @RequiredArgsConstructor
 @Api(tags = "clubs")
+@Slf4j
 @RequestMapping("/api/club")
 public class ClubController {
 
@@ -64,6 +66,7 @@ public class ClubController {
     @ApiOperation("Add clubs")
     @PreAuthorize("@el.check('club:add')")
     public ResponseEntity<Object> createClub(@Validated @RequestBody Club resources){
+        log.info("createClub");
         clubService.create(resources);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }

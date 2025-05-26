@@ -3,7 +3,6 @@ package me.zhengjie.base;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
-import lombok.Setter;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import java.io.Serializable;
 import java.lang.reflect.Field;
@@ -14,8 +13,7 @@ import java.sql.Timestamp;
  * @date 2019-10-24 20:48:53
  */
 @Getter
-@Setter
-public class BaseDTO  implements Serializable {
+public class BaseDTO implements Serializable {
 
     @ApiModelProperty(value = "Creator")
     private String createBy;
@@ -30,7 +28,6 @@ public class BaseDTO  implements Serializable {
     @ApiModelProperty(value = "Update Time: yyyy-MM-dd HH:mm:ss", hidden = true)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private Timestamp updateTime;
-
 
     @Override
     public String toString() {
