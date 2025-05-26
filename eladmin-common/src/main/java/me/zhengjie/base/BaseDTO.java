@@ -29,46 +29,6 @@ public class BaseDTO implements Serializable {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private Timestamp updateTime;
 
-    /**
-     * Method chaining setter for createBy
-     * @param createBy creator
-     * @return this instance
-     */
-    public BaseDTO setCreateBy(String createBy) {
-        this.createBy = createBy;
-        return this;
-    }
-
-    /**
-     * Method chaining setter for updateBy
-     * @param updateBy updater
-     * @return this instance
-     */
-    public BaseDTO setUpdateBy(String updateBy) {
-        this.updateBy = updateBy;
-        return this;
-    }
-
-    /**
-     * Method chaining setter for createTime
-     * @param createTime creation time
-     * @return this instance
-     */
-    public BaseDTO setCreateTime(Timestamp createTime) {
-        this.createTime = createTime;
-        return this;
-    }
-
-    /**
-     * Method chaining setter for updateTime
-     * @param updateTime update time
-     * @return this instance
-     */
-    public BaseDTO setUpdateTime(Timestamp updateTime) {
-        this.updateTime = updateTime;
-        return this;
-    }
-
     @Override
     public String toString() {
         ToStringBuilder builder = new ToStringBuilder(this);
