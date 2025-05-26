@@ -2,7 +2,9 @@ name: Maven Build
 
 on:
   push:
-    branches: [ '*' ]
+    branches: 
+      - '*'         # This runs on all branches for the build job
+      - 'master'    # Explicitly include master
 
 jobs:
   build:
@@ -30,21 +32,21 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-
-    - name: Setup SSH
-      uses: webfactory/ssh-agent@v0.7.0
-      with:
-        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-        
+    
+    - name: Install sshpass
+      run: sudo apt-get install -y sshpass
+    
     - name: Add server to known hosts
       run: |
         mkdir -p ~/.ssh
         ssh-keyscan -H 172.235.32.135 >> ~/.ssh/known_hosts
         
     - name: Deploy to server
+      env:
+        SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
       run: |
-        ssh ubuntu@172.235.32.135 "cd backend && \
+        sshpass -p "$SSH_PASSWORD" ssh root@172.235.32.135 "cd backend && \
         pkill -f 'java -jar' || true && \
         git pull && \
         ./mvnw clean package && \
-        nohup java -jar target/*.jar > app.log 2>&1 &"
+        nohup java -jar eladmin-system/target/eladmin-system-2.7.jar > app.log 2>&1 &"
