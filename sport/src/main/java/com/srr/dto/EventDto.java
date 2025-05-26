@@ -15,6 +15,7 @@
 */
 package com.srr.dto;
 
+import com.srr.enumeration.EventStatus;
 import com.srr.enumeration.Format;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -78,4 +79,10 @@ public class EventDto implements Serializable {
 
     @ApiModelProperty(value = "createBy")
     private Long createBy;
+
+    private EventStatus status;
+
+    private boolean isPublic;
+
+    private boolean allowWaitList;
 }
