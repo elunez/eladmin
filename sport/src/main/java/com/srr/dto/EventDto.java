@@ -87,6 +87,12 @@ public class EventDto implements Serializable {
 
     private boolean allowWaitList;
     
+    @ApiModelProperty(value = "Check-in time")
+    private Timestamp checkInAt;
+    
+    @ApiModelProperty(value = "Number of groups")
+    private Integer groupCount;
+    
     @ApiModelProperty(value = "Co-host players")
     private List<PlayerDto> coHostPlayers;
 }

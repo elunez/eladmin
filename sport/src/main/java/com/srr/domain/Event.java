@@ -41,6 +41,8 @@ import java.util.List;
 @Entity
 @Data
 @Table(name="event")
+@SQLDelete(sql = "update event set status = 'DELETED' where id = ?", check = ResultCheckStyle.COUNT)
+@Where(clause = "status != 'DELETED'")
 public class Event implements Serializable {
 
     @Id
@@ -85,6 +87,14 @@ public class Event implements Serializable {
     @UpdateTimestamp
     @ApiModelProperty(value = "Update time", hidden = true)
     private Timestamp updateTime;
+
+    @Column(name = "`check_in_at`")
+    @ApiModelProperty(value = "Check in time", hidden = true)
+    private Timestamp checkInAt;
+
+    @Column(name = "`group_count`")
+    @ApiModelProperty(value = "Number of groups")
+    private Integer groupCount;
 
     @Column(name = "`sort`")
     @ApiModelProperty(value = "Sort")
