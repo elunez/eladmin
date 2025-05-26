@@ -129,7 +129,7 @@ public class Event implements Serializable {
     private boolean allowWaitList;
 
     @ManyToMany
-    @JoinTable(name = "event_player",
+    @JoinTable(name = "event_co_host_player",
             joinColumns = {@JoinColumn(name = "event_id",referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "player_id",referencedColumnName = "id")})
     private List<Player> coHostPlayers = new ArrayList<>();

@@ -19,67 +19,23 @@ CREATE TABLE match_group
 );
 
 -- Create match table
-CREATE TABLE ` match `
+CREATE TABLE `match`
 (
-    id
-    BIGINT
-    PRIMARY
-    KEY
-    AUTO_INCREMENT,
-    match_group_id
-    BIGINT,
-    team_a_id
-    BIGINT,
-    team_b_id
-    BIGINT,
-    score_a
-    INT
-    DEFAULT
-    0,
-    score_b
-    INT
-    DEFAULT
-    0,
-    team_a_win
-    BIT
-    DEFAULT
-    0,
-    team_b_win
-    BIT
-    DEFAULT
-    0,
-    score_verified
-    BIT
-    DEFAULT
-    0,
-    CONSTRAINT
-    fk_match_group
-    FOREIGN
-    KEY
-(
-    match_group_id
-) REFERENCES match_group
-(
-    id
-),
-    CONSTRAINT fk_team_a FOREIGN KEY
-(
-    team_a_id
-) REFERENCES team
-(
-    id
-),
-    CONSTRAINT fk_team_b FOREIGN KEY
-(
-    team_b_id
-) REFERENCES team
-(
-    id
-)
-    );
+    id              BIGINT PRIMARY KEY AUTO_INCREMENT,
+    match_group_id  BIGINT,
+    team_a_id       BIGINT,
+    team_b_id       BIGINT,
+    score_a         INT DEFAULT 0,
+    score_b         INT DEFAULT 0,
+    team_a_win      BIT DEFAULT 0,
+    team_b_win      BIT DEFAULT 0,
+    score_verified  BIT DEFAULT 0,
+    CONSTRAINT fk_match_group FOREIGN KEY (match_group_id) REFERENCES match_group (id),
+    CONSTRAINT fk_team_a FOREIGN KEY (team_a_id) REFERENCES team (id),
+    CONSTRAINT fk_team_b FOREIGN KEY (team_b_id) REFERENCES team (id)
+);
 
 -- Add match_group_id column to team table
 ALTER TABLE team
     ADD COLUMN match_group_id BIGINT,
     ADD CONSTRAINT fk_team_match_group FOREIGN KEY (match_group_id) REFERENCES match_group (id);
-
