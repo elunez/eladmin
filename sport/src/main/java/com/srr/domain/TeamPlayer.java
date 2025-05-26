@@ -10,11 +10,11 @@ import java.io.Serializable;
 @Getter
 @Setter
 @Entity
-@Table(name = "`team_player`")
+@Table(name = "team_player")
 public class TeamPlayer implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "`id`")
+    @Column(name = "id")
     @ApiModelProperty(value = "id", hidden = true)
     private Long id;
 
@@ -22,13 +22,13 @@ public class TeamPlayer implements Serializable {
     @JoinColumn(name = "team_id")
     private Team team;
 
-    @Column(name = "`score`")
+    @Column(name = "score")
     private Double score;
 
     @ManyToOne
     @JoinColumn(name = "player_id")
     private Player player;
 
-    @Column(name = "`is_checked_in`")
+    @Column(name = "is_checked_in")
     private boolean isCheckedIn;
 }

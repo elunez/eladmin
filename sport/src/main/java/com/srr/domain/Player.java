@@ -15,18 +15,19 @@
 */
 package com.srr.domain;
 
-import lombok.Data;
 import cn.hutool.core.bean.BeanUtil;
-import io.swagger.annotations.ApiModelProperty;
 import cn.hutool.core.bean.copier.CopyOptions;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import javax.persistence.*;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import org.hibernate.annotations.*;
-import java.sql.Timestamp;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 /**
 * @website https://eladmin.vip
@@ -35,52 +36,53 @@ import java.io.Serializable;
 * @date 2025-05-18
 **/
 @Entity
-@Data
+@Getter
+@Setter
 @Table(name="player")
 public class Player implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "`id`")
+    @Column(name = "id")
     @ApiModelProperty(value = "id", hidden = true)
     private Long id;
 
-    @Column(name = "`name`",nullable = false)
+    @Column(name = "name", nullable = false)
     @NotBlank
     @ApiModelProperty(value = "Name")
     private String name;
 
-    @Column(name = "`description`")
+    @Column(name = "description")
     @ApiModelProperty(value = "Description")
     private String description;
 
-    @Column(name = "`latitude`")
+    @Column(name = "latitude")
     @ApiModelProperty(value = "Latitude")
     private Double latitude;
 
-    @Column(name = "`longitude`")
+    @Column(name = "longitude")
     @ApiModelProperty(value = "Longitude")
     private Double longitude;
 
-    @Column(name = "`profile_image`")
+    @Column(name = "profile_image")
     @ApiModelProperty(value = "Image")
     private String profileImage;
 
-    @Column(name = "`create_time`")
+    @Column(name = "create_time")
     @CreationTimestamp
     @ApiModelProperty(value = "Creation time", hidden = true)
     private Timestamp createTime;
 
-    @Column(name = "`update_time`")
+    @Column(name = "update_time")
     @UpdateTimestamp
     @ApiModelProperty(value = "Update time", hidden = true)
     private Timestamp updateTime;
 
-    @Column(name = "`rate_score`")
+    @Column(name = "rate_score")
     @ApiModelProperty(value = "Score")
     private Double rateScore;
 
-    @Column(name = "`user_id`",nullable = false)
+    @Column(name = "user_id", nullable = false)
     @NotNull
     @ApiModelProperty(value = "userId")
     private Long userId;

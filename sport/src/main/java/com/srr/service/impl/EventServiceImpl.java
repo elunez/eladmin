@@ -16,7 +16,11 @@
 package com.srr.service.impl;
 
 import com.srr.domain.Event;
+import com.srr.domain.Player;
+import com.srr.domain.Team;
+import com.srr.domain.TeamPlayer;
 import com.srr.enumeration.EventStatus;
+import com.srr.enumeration.Format;
 import me.zhengjie.exception.EntityNotFoundException;
 import me.zhengjie.utils.ValidationUtil;
 import me.zhengjie.utils.FileUtil;
@@ -104,7 +108,7 @@ public class EventServiceImpl implements EventService {
     @Transactional(rollbackFor = Exception.class)
     public EventDto updateStatus(Long id, EventStatus status) {
         Event event = eventRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(Event.class, "id", id));
+                .orElseThrow(() -> new EntityNotFoundException(Event.class, "id", Long.valueOf(id)));
 
         // Only update the status field
         event.setStatus(status);
@@ -121,7 +125,7 @@ public class EventServiceImpl implements EventService {
     public EventDto joinEvent(JoinEventDto joinEventDto) {
         // Find the event
         Event event = eventRepository.findById(joinEventDto.getEventId())
-                .orElseThrow(() -> new EntityNotFoundException(Event.class, "id", joinEventDto.getEventId()));
+                .orElseThrow(() -> new EntityNotFoundException(Event.class, "id", Long.valueOf(joinEventDto.getEventId())));
         
         // Check if event allows joining
         if (event.getStatus() != EventStatus.OPEN) {
@@ -143,11 +147,75 @@ public class EventServiceImpl implements EventService {
         // Handle team-related logic
         if (joinEventDto.getTeamId() != null) {
             // Add player to existing team
-            // For implementation, you'd use teamRepository and teamPlayerRepository
-            // to check if team exists and add the player
+            Team team = teamRepository.findById(joinEventDto.getTeamId())
+                    .orElseThrow(() -> new EntityNotFoundException(Team.class, "id", Long.valueOf(joinEventDto.getTeamId())));
+            
+            // Verify team belongs to this event
+            if (!team.getEvent().getId().equals(event.getId())) {
+                throw new BadRequestException("Team does not belong to this event");
+            }
+            
+            // Check if player is already in the team
+            if (teamPlayerRepository.existsByTeamIdAndPlayerId(team.getId(), joinEventDto.getPlayerId())) {
+                throw new BadRequestException("Player is already in this team");
+            }
+            
+            // Check if team is full
+            if (team.getTeamSize() == team.getTeamPlayers().size()) {
+                throw new BadRequestException("Team is already full");
+            }
+            
+            // Add player to team
+            TeamPlayer teamPlayer = new TeamPlayer();
+            teamPlayer.setTeam(team);
+            Player player = new Player();
+            player.setId(joinEventDto.getPlayerId());
+            teamPlayer.setPlayer(player);
+            teamPlayer.setCheckedIn(false);
+            teamPlayerRepository.save(teamPlayer);
         } else {
-            // Create new team for the player if needed
-            // or add as individual participant depending on event format
+            // Create new team for the player if needed or add as individual participant
+            if (event.getFormat() == Format.SINGLE) {
+                // For single format, create a "virtual" team with just one player
+                Team team = new Team();
+                team.setEvent(event);
+                team.setName("Player " + joinEventDto.getPlayerId());
+                team.setTeamSize(1);
+                Team savedTeam = teamRepository.save(team);
+                
+                // Add player to the team
+                TeamPlayer teamPlayer = new TeamPlayer();
+                teamPlayer.setTeam(savedTeam);
+                Player player = new Player();
+                player.setId(joinEventDto.getPlayerId());
+                teamPlayer.setPlayer(player);
+                teamPlayer.setCheckedIn(false);
+                teamPlayerRepository.save(teamPlayer);
+            } else if (event.getFormat() == Format.DOUBLE || event.getFormat() == Format.TEAM) {
+                // For doubles/team format, create a new team
+                Team team = new Team();
+                team.setEvent(event);
+                team.setName("New Team");
+                
+                // Set team size based on format
+                if (event.getFormat() == Format.DOUBLE) {
+                    team.setTeamSize(2);
+                } else {
+                    // Default team size of 4 for TEAM format, can be adjusted as needed
+                    team.setTeamSize(4);
+                }
+                
+                Team savedTeam = teamRepository.save(team);
+                
+                // Add player as the first member of the team
+                TeamPlayer teamPlayer = new TeamPlayer();
+                teamPlayer.setTeam(savedTeam);
+                Player player = new Player();
+                player.setId(joinEventDto.getPlayerId());
+                teamPlayer.setPlayer(player);
+                teamPlayer.setCheckedIn(false);
+                teamPlayerRepository.save(teamPlayer);
+            }
         }
         
         // Update participant count if not joining waitlist
