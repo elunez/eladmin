@@ -29,6 +29,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master'
+    needs: build
 
     steps:
     - uses: actions/checkout@v3
@@ -45,7 +46,9 @@ jobs:
       env:
         SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
       run: |
-        sshpass -p "$SSH_PASSWORD" ssh root@172.235.32.135 "cd backend && \
+        # Using -o options to handle first-time connection and avoid strict host checking
+        export SSHPASS="$SSH_PASSWORD"
+        sshpass -e ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@172.235.32.135 "cd backend && \
         pkill -f 'java -jar' || true && \
         git pull && \
         ./mvnw clean package && \
