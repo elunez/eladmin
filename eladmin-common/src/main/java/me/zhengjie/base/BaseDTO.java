@@ -3,7 +3,6 @@ package me.zhengjie.base;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
-import lombok.Setter;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import java.io.Serializable;
 import java.lang.reflect.Field;
@@ -14,8 +13,7 @@ import java.sql.Timestamp;
  * @date 2019-10-24 20:48:53
  */
 @Getter
-@Setter
-public class BaseDTO  implements Serializable {
+public class BaseDTO implements Serializable {
 
     @ApiModelProperty(value = "Creator")
     private String createBy;
@@ -31,6 +29,45 @@ public class BaseDTO  implements Serializable {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private Timestamp updateTime;
 
+    /**
+     * Method chaining setter for createBy
+     * @param createBy creator
+     * @return this instance
+     */
+    public BaseDTO setCreateBy(String createBy) {
+        this.createBy = createBy;
+        return this;
+    }
+
+    /**
+     * Method chaining setter for updateBy
+     * @param updateBy updater
+     * @return this instance
+     */
+    public BaseDTO setUpdateBy(String updateBy) {
+        this.updateBy = updateBy;
+        return this;
+    }
+
+    /**
+     * Method chaining setter for createTime
+     * @param createTime creation time
+     * @return this instance
+     */
+    public BaseDTO setCreateTime(Timestamp createTime) {
+        this.createTime = createTime;
+        return this;
+    }
+
+    /**
+     * Method chaining setter for updateTime
+     * @param updateTime update time
+     * @return this instance
+     */
+    public BaseDTO setUpdateTime(Timestamp updateTime) {
+        this.updateTime = updateTime;
+        return this;
+    }
 
     @Override
     public String toString() {

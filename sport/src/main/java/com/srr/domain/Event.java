@@ -15,7 +15,7 @@
 */
 package com.srr.domain;
 
-import com.srr.converter.StringListConverter;
+import com.srr.domain.converter.StringListConverter;
 import com.srr.enumeration.EventStatus;
 import com.srr.enumeration.Format;
 import lombok.Getter;
