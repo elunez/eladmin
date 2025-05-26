@@ -40,50 +40,50 @@ public class Club implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "`id`")
+    @Column(name = "id")
     @ApiModelProperty(value = "id", hidden = true)
     private Long id;
 
-    @Column(name = "`name`",nullable = false)
+    @Column(name = "name",nullable = false)
     @NotBlank
     @ApiModelProperty(value = "Name")
     private String name;
 
-    @Column(name = "`description`")
+    @Column(name = "description")
     @ApiModelProperty(value = "Description")
     private String description;
 
-    @Column(name = "`create_time`")
+    @Column(name = "create_time")
     @CreationTimestamp
     @ApiModelProperty(value = "Creation time", hidden = true)
     private Timestamp createTime;
 
-    @Column(name = "`update_time`")
+    @Column(name = "update_time")
     @UpdateTimestamp
     @ApiModelProperty(value = "Update time", hidden = true)
     private Timestamp updateTime;
 
-    @Column(name = "`icon`")
+    @Column(name = "icon")
     @ApiModelProperty(value = "Icon")
     private String icon;
 
-    @Column(name = "`sort`")
+    @Column(name = "sort")
     @ApiModelProperty(value = "Sort")
     private Integer sort;
 
-    @Column(name = "`enabled`")
+    @Column(name = "enabled")
     @ApiModelProperty(value = "Enabled")
     private Boolean enabled;
 
-    @Column(name = "`location`")
+    @Column(name = "location")
     @ApiModelProperty(value = "Location")
     private String location;
 
-    @Column(name = "`longitude`")
+    @Column(name = "longitude")
     @ApiModelProperty(value = "Longitude")
     private Double longitude;
 
-    @Column(name = "`latitude`")
+    @Column(name = "latitude")
     @ApiModelProperty(value = "Latitude")
     private Double latitude;
 

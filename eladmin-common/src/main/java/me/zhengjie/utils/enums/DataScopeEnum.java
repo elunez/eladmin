@@ -49,5 +49,4 @@ public enum DataScopeEnum {
         }
         return null;
     }
-
 }

@@ -40,29 +40,29 @@ public class Court implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "`id`")
+    @Column(name = "id")
     @ApiModelProperty(value = "id", hidden = true)
     private Long id;
 
-    @Column(name = "`club_id`")
+    @Column(name = "club_id")
     @ApiModelProperty(value = "clubId")
     private Long clubId;
 
-    @Column(name = "`sport_id`")
+    @Column(name = "sport_id")
     @ApiModelProperty(value = "sportId")
     private Long sportId;
 
-    @Column(name = "`create_time`")
+    @Column(name = "create_time")
     @CreationTimestamp
     @ApiModelProperty(value = "Creation time", hidden = true)
     private Timestamp createTime;
 
-    @Column(name = "`update_time`")
+    @Column(name = "update_time")
     @UpdateTimestamp
     @ApiModelProperty(value = "Update time", hidden = true)
     private Timestamp updateTime;
 
-    @Column(name = "`amount`",nullable = false)
+    @Column(name = "amount",nullable = false)
     @NotNull
     @ApiModelProperty(value = "Amount")
     private Integer amount;

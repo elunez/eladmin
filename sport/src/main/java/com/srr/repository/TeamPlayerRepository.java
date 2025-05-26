@@ -25,4 +25,5 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 * @date 2025-05-25
 **/
 public interface TeamPlayerRepository extends JpaRepository<TeamPlayer, Long>, JpaSpecificationExecutor<TeamPlayer> {
+    boolean existsByTeamIdAndPlayerId(Long teamId, Long playerId);
 }

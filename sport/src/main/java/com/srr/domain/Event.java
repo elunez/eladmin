@@ -18,7 +18,8 @@ package com.srr.domain;
 import com.srr.converter.StringListConverter;
 import com.srr.enumeration.EventStatus;
 import com.srr.enumeration.Format;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import cn.hutool.core.bean.BeanUtil;
 import io.swagger.annotations.ApiModelProperty;
 import cn.hutool.core.bean.copier.CopyOptions;
@@ -41,7 +42,8 @@ import java.util.List;
 * @date 2025-05-18
 **/
 @Entity
-@Data
+@Getter
+@Setter
 @Table(name="event")
 @SQLDelete(sql = "update event set status = 'DELETED' where id = ?", check = ResultCheckStyle.COUNT)
 @Where(clause = "status != 'DELETED'")
@@ -49,105 +51,105 @@ public class Event implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "`id`")
+    @Column(name = "id")
     @ApiModelProperty(value = "id", hidden = true)
     private Long id;
 
-    @Column(name = "`name`",nullable = false)
+    @Column(name = "name", nullable = false)
     @NotBlank
     @ApiModelProperty(value = "Name")
     private String name;
 
-    @Column(name = "`description`")
+    @Column(name = "description")
     @ApiModelProperty(value = "Description")
     private String description;
 
-    @Column(name = "`format`",nullable = false)
+    @Column(name = "format", nullable = false)
     @NotNull
     @Enumerated(EnumType.STRING)
     @ApiModelProperty(value = "SINGLE, DOUBLE")
     private Format format;
 
-    @Column(name = "`location`")
+    @Column(name = "location")
     @ApiModelProperty(value = "Location")
     private String location;
 
-    @Column(name = "`image`")
+    @Column(name = "image")
     @ApiModelProperty(value = "Image")
     private String image;
 
-    @Column(name = "`create_time`")
+    @Column(name = "create_time")
     @CreationTimestamp
     @ApiModelProperty(value = "Creation time", hidden = true)
     private Timestamp createTime;
 
-    @Column(name = "`update_time`")
+    @Column(name = "update_time")
     @UpdateTimestamp
     @ApiModelProperty(value = "Update time", hidden = true)
     private Timestamp updateTime;
 
-    @Column(name = "`check_in_at`")
+    @Column(name = "check_in_at")
     @ApiModelProperty(value = "Check in time", hidden = true)
     private Timestamp checkInAt;
 
-    @Column(name = "`group_count`")
+    @Column(name = "group_count")
     @ApiModelProperty(value = "Number of groups")
     private Integer groupCount;
 
-    @Column(name = "`sort`")
+    @Column(name = "sort")
     @ApiModelProperty(value = "Sort")
     private Integer sort;
 
-    @Column(name = "`enabled`")
+    @Column(name = "enabled")
     @ApiModelProperty(value = "Enabled")
     private Boolean enabled;
 
-    @Column(name = "`event_time`",nullable = false)
+    @Column(name = "event_time", nullable = false)
     @NotNull
     @ApiModelProperty(value = "Time")
     private Timestamp eventTime;
 
-    @Column(name = "`club_id`",nullable = false)
+    @Column(name = "club_id", nullable = false)
     @NotNull
     @ApiModelProperty(value = "clubId")
     private Long clubId;
 
-    @Column(name = "`public_link`")
+    @Column(name = "public_link")
     @ApiModelProperty(value = "publicLink", accessMode = ApiModelProperty.AccessMode.READ_ONLY)
     private String publicLink;
 
     @NotNull
-    @Column(name = "`sport_id`",nullable = false)
+    @Column(name = "sport_id", nullable = false)
     @ApiModelProperty(value = "sportId")
     private Long sportId;
 
-    @Column(name = "`create_by`")
+    @Column(name = "create_by")
     @ApiModelProperty(value = "createBy")
     private Long createBy;
 
-    @Column(name = "`status`")
+    @Column(name = "status")
     @Enumerated(EnumType.STRING)
     @ApiModelProperty(value = "status")
     private EventStatus status;
 
-    @Column(name = "`is_public`")
+    @Column(name = "is_public")
     private boolean isPublic;
 
-    @Column(name = "`allow_wait_list`")
+    @Column(name = "allow_wait_list")
     private boolean allowWaitList;
 
-    @Column(name = "`current_participants`")
+    @Column(name = "current_participants")
     @ApiModelProperty(value = "Current number of participants")
     private Integer currentParticipants = 0;
 
-    @Column(name = "`max_participants`")
+    @Column(name = "max_participants")
     @ApiModelProperty(value = "Maximum number of participants")
     private Integer maxParticipants;
 
-    @Column(name = "`poster_image`")
+    @Column(name = "poster_image")
     private String posterImage;
 
-    @Column(name = "`tags`")
+    @Column(name = "tags")
     @Convert(converter = StringListConverter.class)
     private List<String> tags = new ArrayList<>();
 
