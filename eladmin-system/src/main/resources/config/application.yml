@@ -63,7 +63,7 @@ task:
     # Queue capacity
     queue-capacity: 50
 
-# Qiniu Cloud
+# S3 Cloud
 s3:
   # File size /M
   max-size: 15

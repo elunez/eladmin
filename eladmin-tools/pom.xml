@@ -12,7 +12,6 @@
 
     <properties>
         <mail.version>1.4.7</mail.version>
-        <qiniu.version>7.9.3</qiniu.version>
         <alipay.version>4.22.57.ALL</alipay.version>
     </properties>
 
@@ -31,18 +30,11 @@
             <version>${mail.version}</version>
         </dependency>
 
-        <!-- Qiniu Cloud Storage -->
         <dependency>
-            <groupId>com.qiniu</groupId>
-            <artifactId>qiniu-java-sdk</artifactId>
-            <version>${qiniu.version}</version>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>s3</artifactId>
+            <version>2.25.22</version>
         </dependency>
 
-        <!-- Alipay dependency -->
-        <dependency>
-            <groupId>com.alipay.sdk</groupId>
-            <artifactId>alipay-sdk-java</artifactId>
-            <version>${alipay.version}</version>
-        </dependency>
     </dependencies>
 </project>
