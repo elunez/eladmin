@@ -64,6 +64,10 @@ public class EventOrganizer implements Serializable {
     @ApiModelProperty(value = "userId")
     private Long userId;
 
+    @ManyToOne
+    @JoinColumn(name = "club_id")
+    private Club club;
+
     public void copy(EventOrganizer source){
         BeanUtil.copyProperties(source, this, CopyOptions.create().setIgnoreNullValue(true));
     }

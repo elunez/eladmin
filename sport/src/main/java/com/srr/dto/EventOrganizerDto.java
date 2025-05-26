@@ -33,6 +33,9 @@ public class EventOrganizerDto implements Serializable {
     @ApiModelProperty(value = "id")
     private Long id;
 
+    @ApiModelProperty(value = "Club")
+    private ClubDto club;
+
     @ApiModelProperty(value = "Description")
     private String description;
 
