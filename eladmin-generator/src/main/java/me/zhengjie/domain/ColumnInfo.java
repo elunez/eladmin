@@ -24,7 +24,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 /**
- * 列的数据信息
+ * Column Data Information
  * @author Zheng Jie
  * @date 2019-01-02
  */
@@ -41,43 +41,43 @@ public class ColumnInfo implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ApiModelProperty(value = "表名")
+    @ApiModelProperty(value = "Table Name")
     private String tableName;
 
-    @ApiModelProperty(value = "数据库字段名称")
+    @ApiModelProperty(value = "Database Column Name")
     private String columnName;
 
-    @ApiModelProperty(value = "数据库字段类型")
+    @ApiModelProperty(value = "Database Column Type")
     private String columnType;
 
-    @ApiModelProperty(value = "数据库字段键类型")
+    @ApiModelProperty(value = "Database Column Key Type")
     private String keyType;
 
-    @ApiModelProperty(value = "字段额外的参数")
+    @ApiModelProperty(value = "Extra Parameters for Column")
     private String extra;
 
-    @ApiModelProperty(value = "数据库字段描述")
+    @ApiModelProperty(value = "Database Column Description")
     private String remark;
 
-    @ApiModelProperty(value = "是否必填")
+    @ApiModelProperty(value = "Required")
     private Boolean notNull;
 
-    @ApiModelProperty(value = "是否在列表显示")
+    @ApiModelProperty(value = "Show in List")
     private Boolean listShow;
 
-    @ApiModelProperty(value = "是否表单显示")
+    @ApiModelProperty(value = "Show in Form")
     private Boolean formShow;
 
-    @ApiModelProperty(value = "表单类型")
+    @ApiModelProperty(value = "Form Type")
     private String formType;
 
-    @ApiModelProperty(value = "查询 1:模糊 2：精确")
+    @ApiModelProperty(value = "Query Type 1:Fuzzy 2:Exact")
     private String queryType;
 
-    @ApiModelProperty(value = "字典名称")
+    @ApiModelProperty(value = "Dictionary Name")
     private String dictName;
 
-    @ApiModelProperty(value = "日期注解")
+    @ApiModelProperty(value = "Date Annotation")
     private String dateAnnotation;
 
     public ColumnInfo(String tableName, String columnName, Boolean notNull, String columnType, String remark, String keyType, String extra) {

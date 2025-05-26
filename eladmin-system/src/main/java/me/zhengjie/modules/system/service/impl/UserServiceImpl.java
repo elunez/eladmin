@@ -114,18 +114,18 @@ public class UserServiceImpl implements UserService {
         if (user3 != null && !user.getId().equals(user3.getId())) {
             throw new EntityExistException(User.class, "phone", resources.getPhone());
         }
-        // 如果用户的角色改变
+        // If the user's role changes
         if (!resources.getRoles().equals(user.getRoles())) {
             redisUtils.del(CacheKey.DATA_USER + resources.getId());
             redisUtils.del(CacheKey.MENU_USER + resources.getId());
             redisUtils.del(CacheKey.ROLE_AUTH + resources.getId());
             redisUtils.del(CacheKey.ROLE_USER + resources.getId());
         }
-        // 修改部门会影响 数据权限
+        // Modifying the department will affect data permissions
         if (!Objects.equals(resources.getDept(),user.getDept())) {
             redisUtils.del(CacheKey.DATA_USER + resources.getId());
         }
-        // 如果用户被禁用，则清除用户登录信息
+        // If the user is disabled, clear the user's login information
         if(!resources.getEnabled()){
             onlineUserService.kickOutForUsername(resources.getUsername());
         }
@@ -134,12 +134,11 @@ public class UserServiceImpl implements UserService {
         user.setEnabled(resources.getEnabled());
         user.setRoles(resources.getRoles());
         user.setDept(resources.getDept());
-        user.setJobs(resources.getJobs());
         user.setPhone(resources.getPhone());
         user.setNickName(resources.getNickName());
         user.setGender(resources.getGender());
         userRepository.save(user);
-        // 清除缓存
+        // Clear cache
         delCaches(user.getId(), user.getUsername());
     }
 
@@ -155,7 +154,7 @@ public class UserServiceImpl implements UserService {
         user.setPhone(resources.getPhone());
         user.setGender(resources.getGender());
         userRepository.save(user);
-        // 清理缓存
+        // Clear cache
         delCaches(user.getId(), user.getUsername());
     }
 
@@ -163,7 +162,7 @@ public class UserServiceImpl implements UserService {
     @Transactional(rollbackFor = Exception.class)
     public void delete(Set<Long> ids) {
         for (Long id : ids) {
-            // 清理缓存
+            // Clear cache
             UserDto user = findById(id);
             delCaches(user.getId(), user.getUsername());
         }
@@ -201,27 +200,27 @@ public class UserServiceImpl implements UserService {
     @Transactional(rollbackFor = Exception.class)
     public void resetPwd(Set<Long> ids, String pwd) {
         List<User> users = userRepository.findAllById(ids);
-        // 清除缓存
+        // Clear cache
         users.forEach(user -> {
-            // 清除缓存
+            // Clear cache
             flushCache(user.getUsername());
-            // 强制退出
+            // Force logout
             onlineUserService.kickOutForUsername(user.getUsername());
         });
-        // 重置密码
+        // Reset password
         userRepository.resetPwd(ids, pwd);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Map<String, String> updateAvatar(MultipartFile multipartFile) {
-        // 文件大小验证
+        // File size validation
         FileUtil.checkSize(properties.getAvatarMaxSize(), multipartFile.getSize());
-        // 验证文件上传的格式
+        // Validate file upload format
         String image = "gif jpg png jpeg";
         String fileType = FileUtil.getExtensionName(multipartFile.getOriginalFilename());
         if(fileType != null && !image.contains(fileType)){
-            throw new BadRequestException("文件格式错误！, 仅支持 " + image +" 格式");
+            throw new BadRequestException("File format error! Only supports " + image + " format");
         }
         User user = userRepository.findByUsername(SecurityUtils.getCurrentUsername());
         String oldPath = user.getAvatarPath();
@@ -252,22 +251,20 @@ public class UserServiceImpl implements UserService {
         for (UserDto userDTO : queryAll) {
             List<String> roles = userDTO.getRoles().stream().map(RoleSmallDto::getName).collect(Collectors.toList());
             Map<String, Object> map = new LinkedHashMap<>();
-            map.put("用户名", userDTO.getUsername());
-            map.put("角色", roles);
-            map.put("部门", userDTO.getDept().getName());
-            map.put("岗位", userDTO.getJobs().stream().map(JobSmallDto::getName).collect(Collectors.toList()));
-            map.put("邮箱", userDTO.getEmail());
-            map.put("状态", userDTO.getEnabled() ? "启用" : "禁用");
-            map.put("手机号码", userDTO.getPhone());
-            map.put("修改密码的时间", userDTO.getPwdResetTime());
-            map.put("创建日期", userDTO.getCreateTime());
+            map.put("Username", userDTO.getUsername());
+            map.put("Nickname", userDTO.getNickName());
+            map.put("Department", userDTO.getDept().getName());
+            map.put("Phone", userDTO.getPhone());
+            map.put("Email", userDTO.getEmail());
+            map.put("Status", userDTO.getEnabled() ? "Enabled" : "Disabled");
+            map.put("Creation date", userDTO.getCreateTime());
             list.add(map);
         }
         FileUtil.downloadExcel(list, response);
     }
 
     /**
-     * 清理缓存
+     * Clear cache
      *
      * @param id /
      */
@@ -277,7 +274,7 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * 清理 登陆时 用户缓存信息
+     * Clear user cache information at login
      *
      * @param username /
      */

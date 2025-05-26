@@ -1,29 +1,29 @@
 server:
   port: 8000
   http2:
-    # 启用 HTTP/2 支持，提升传输效率
+    # Enable HTTP/2 support to improve transmission efficiency
     enabled: true
   compression:
-    # 启用 GZIP 压缩，减少传输数据量
+    # Enable GZIP compression to reduce data transmission
     enabled: true
-    # 需要压缩的 MIME 类型
+    # MIME types to compress
     mime-types: text/html, text/xml, text/plain, application/json
-    # 最小压缩响应大小（字节）
+    # Minimum response size for compression (bytes)
 
 spring:
   freemarker:
     check-template-location: false
   profiles:
-    # 激活的环境，如果需要 quartz 分布式支持，需要修改 active: dev,quartz
+    # Active environment. If you need quartz distributed support, change active: dev,quartz
     active: dev
   data:
     redis:
       repositories:
         enabled: false
 #  pid:
-#    file: /自行指定位置/eladmin.pid
+#    file: /specify/location/eladmin.pid
 
-  #配置 Jpa
+  # JPA configuration
   jpa:
     hibernate:
       ddl-auto: none
@@ -33,45 +33,48 @@ spring:
         dialect: org.hibernate.dialect.MySQL8Dialect
 
   redis:
-    #数据库索引
+    # Database index
     database: ${REDIS_DB:0}
     host: ${REDIS_HOST:127.0.0.1}
     port: ${REDIS_PORT:6379}
     password: ${REDIS_PWD:}
-    #连接超时时间
+    # Connection timeout
     timeout: 5000
-    # 连接池配置
+    # Connection pool configuration
     lettuce:
       pool:
-        # 连接池最大连接数
+        # Maximum number of connections in the pool
         max-active: 30
-        # 连接池最大阻塞等待时间（毫秒），负值表示没有限制
+        # Maximum blocking wait time in the pool (ms), negative means no limit
         max-wait: -1
-        # 连接池中的最大空闲连接数
+        # Maximum idle connections in the pool
         max-idle: 20
-        # 连接池中的最小空闲连接数
+        # Minimum idle connections in the pool
         min-idle: 1
 
 task:
   pool:
-    # 核心线程池大小
+    # Core thread pool size
     core-pool-size: 10
-    # 最大线程数
+    # Maximum number of threads
     max-pool-size: 30
-    # 活跃时间
+    # Keep alive time
     keep-alive-seconds: 60
-    # 队列容量
+    # Queue capacity
     queue-capacity: 50
 
-#七牛云
-qiniu:
-  # 文件大小 /M
+# S3 Cloud
+s3:
+  # File size /M
   max-size: 15
 
-#邮箱验证码有效时间/秒
+qiniu:
+  max-size: 15
+
+# Email verification code validity time/seconds
 code:
   expiration: 300
 
-#密码加密传输，前端公钥加密，后端私钥解密
+# Password encrypted transmission, frontend public key encryption, backend private key decryption
 rsa:
   private_key: MIIBUwIBADANBgkqhkiG9w0BAQEFAASCAT0wggE5AgEAAkEA0vfvyTdGJkdbHkB8mp0f3FE0GYP3AYPaJF7jUd1M0XxFSE2ceK3k2kw20YvQ09NJKk+OMjWQl9WitG9pB6tSCQIDAQABAkA2SimBrWC2/wvauBuYqjCFwLvYiRYqZKThUS3MZlebXJiLB+Ue/gUifAAKIg1avttUZsHBHrop4qfJCwAI0+YRAiEA+W3NK/RaXtnRqmoUUkb59zsZUBLpvZgQPfj1MhyHDz0CIQDYhsAhPJ3mgS64NbUZmGWuuNKp5coY2GIj/zYDMJp6vQIgUueLFXv/eZ1ekgz2Oi67MNCk5jeTF2BurZqNLR3MSmUCIFT3Q6uHMtsB9Eha4u7hS31tj1UWE+D+ADzp59MGnoftAiBeHT7gDMuqeJHPL4b+kC+gzV4FGTfhR9q3tTbklZkD2A==

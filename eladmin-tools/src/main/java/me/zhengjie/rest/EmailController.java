@@ -28,14 +28,14 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * 发送邮件
- * @author 郑杰
+ * Send Email
+ * @author Zheng Jie
  * @date 2018/09/28 6:55:53
  */
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api/email")
-@Api(tags = "工具：邮件管理")
+@Api(tags = "Tools: Email Management")
 public class EmailController {
 
     private final EmailService emailService;
@@ -45,17 +45,17 @@ public class EmailController {
         return new ResponseEntity<>(emailService.find(),HttpStatus.OK);
     }
 
-    @Log("配置邮件")
+    @Log("Configure email")
     @PutMapping
-    @ApiOperation("配置邮件")
+    @ApiOperation("Configure email")
     public ResponseEntity<Object> updateEmailConfig(@Validated @RequestBody EmailConfig emailConfig) throws Exception {
         emailService.config(emailConfig,emailService.find());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @Log("发送邮件")
+    @Log("Send email")
     @PostMapping
-    @ApiOperation("发送邮件")
+    @ApiOperation("Send email")
     public ResponseEntity<Object> sendEmail(@Validated @RequestBody EmailVo emailVo){
         emailService.send(emailVo,emailService.find());
         return new ResponseEntity<>(HttpStatus.OK);

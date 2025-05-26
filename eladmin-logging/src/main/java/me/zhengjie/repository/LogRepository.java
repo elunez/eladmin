@@ -30,8 +30,8 @@ import org.springframework.stereotype.Repository;
 public interface LogRepository extends JpaRepository<SysLog,Long>, JpaSpecificationExecutor<SysLog> {
 
     /**
-     * 根据日志类型删除信息
-     * @param logType 日志类型
+     * Delete information by log type
+     * @param logType Log type
      */
     @Modifying
     @Query(value = "delete from sys_log where log_type = ?1", nativeQuery = true)

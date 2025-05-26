@@ -40,7 +40,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/generator")
-@Api(tags = "系统：代码生成管理")
+@Api(tags = "System: Code Generation Management")
 public class GeneratorController {
 
     private final GeneratorService generatorService;
@@ -49,13 +49,13 @@ public class GeneratorController {
     @Value("${generator.enabled}")
     private Boolean generatorEnabled;
 
-    @ApiOperation("查询数据库数据")
+    @ApiOperation("Query database data")
     @GetMapping(value = "/tables/all")
     public ResponseEntity<Object> queryAllTables(){
         return new ResponseEntity<>(generatorService.getTables(), HttpStatus.OK);
     }
 
-    @ApiOperation("查询数据库数据")
+    @ApiOperation("Query database data")
     @GetMapping(value = "/tables")
     public ResponseEntity<PageResult<TableInfo>> queryTables(@RequestParam(defaultValue = "") String name,
                                                              @RequestParam(defaultValue = "0")Integer page,
@@ -64,21 +64,21 @@ public class GeneratorController {
         return new ResponseEntity<>(generatorService.getTables(name,startEnd), HttpStatus.OK);
     }
 
-    @ApiOperation("查询字段数据")
+    @ApiOperation("Query column data")
     @GetMapping(value = "/columns")
     public ResponseEntity<PageResult<ColumnInfo>> queryColumns(@RequestParam String tableName){
         List<ColumnInfo> columnInfos = generatorService.getColumns(tableName);
         return new ResponseEntity<>(PageUtil.toPage(columnInfos,columnInfos.size()), HttpStatus.OK);
     }
 
-    @ApiOperation("保存字段数据")
+    @ApiOperation("Save column data")
     @PutMapping
     public ResponseEntity<HttpStatus> saveColumn(@RequestBody List<ColumnInfo> columnInfos){
         generatorService.save(columnInfos);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @ApiOperation("同步字段数据")
+    @ApiOperation("Sync column data")
     @PostMapping(value = "sync")
     public ResponseEntity<HttpStatus> syncColumn(@RequestBody List<String> tables){
         for (String table : tables) {
@@ -87,22 +87,22 @@ public class GeneratorController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @ApiOperation("生成代码")
+    @ApiOperation("Generate code")
     @PostMapping(value = "/{tableName}/{type}")
     public ResponseEntity<Object> generatorCode(@PathVariable String tableName, @PathVariable Integer type, HttpServletRequest request, HttpServletResponse response){
         if(!generatorEnabled && type == 0){
-            throw new BadRequestException("此环境不允许生成代码，请选择预览或者下载查看！");
+            throw new BadRequestException("Code generation is not allowed in this environment, please choose preview or download to view!");
         }
         switch (type){
-            // 生成代码
+            // Generate code
             case 0: generatorService.generator(genConfigService.find(tableName), generatorService.getColumns(tableName));
                     break;
-            // 预览
+            // Preview
             case 1: return generatorService.preview(genConfigService.find(tableName), generatorService.getColumns(tableName));
-            // 打包
+            // Package
             case 2: generatorService.download(genConfigService.find(tableName), generatorService.getColumns(tableName), request, response);
                     break;
-            default: throw new BadRequestException("没有这个选项");
+            default: throw new BadRequestException("No such option");
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }

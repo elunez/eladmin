@@ -4,7 +4,7 @@ spring:
     druid:
       db-type: com.alibaba.druid.pool.DruidDataSource
       driverClassName: com.p6spy.engine.spy.P6SpyDriver
-      url: jdbc:p6spy:mysql://localhost:3306/eladmin?serverTimezone=Asia/Shanghai&characterEncoding=utf8&useSSL=false
+      url: jdbc:p6spy:mysql://localhost:3306/eladmin?serverTimezone=Asia/Shanghai&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
       username: root
       password: root
       # 初始连接数，建议设置为与最小空闲连接数相同
@@ -46,10 +46,16 @@ spring:
           # 记录慢SQL
           log-slow-sql: true
           slow-sql-millis: 2000
-          merge-sql: true
+          merge-sql: false
         wall:
           config:
             multi-statement-allow: true
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+    validate-on-migrate: false
+    encoding: UTF-8
 
 # 登录相关配置
 login:

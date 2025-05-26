@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * @author Zheng Jie
- * @description 程序启动后处理数据
+ * @description Process data after program startup
  * @date 2025-01-13
  **/
 @Slf4j

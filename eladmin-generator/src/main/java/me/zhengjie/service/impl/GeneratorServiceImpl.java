@@ -58,10 +58,10 @@ public class GeneratorServiceImpl implements GeneratorService {
 
     private final ColumnInfoRepository columnInfoRepository;
 
-    private final String CONFIG_MESSAGE = "请先配置生成器";
+    private final String CONFIG_MESSAGE = "Please configure the generator first";
     @Override
     public Object getTables() {
-        // 使用预编译防止sql注入
+        // Use precompilation to prevent SQL injection
         String sql = "select table_name ,create_time , engine, table_collation, table_comment from information_schema.tables " +
                 "where table_schema = (select database()) " +
                 "order by create_time desc";
@@ -71,7 +71,7 @@ public class GeneratorServiceImpl implements GeneratorService {
 
     @Override
     public PageResult<TableInfo> getTables(String name, int[] startEnd) {
-        // 使用预编译防止sql注入
+        // Use precompilation to prevent SQL injection
         String sql = "select table_name ,create_time , engine, table_collation, table_comment from information_schema.tables " +
                 "where table_schema = (select database()) " +
                 "and table_name like :table order by create_time desc";
@@ -106,7 +106,7 @@ public class GeneratorServiceImpl implements GeneratorService {
 
     @Override
     public List<ColumnInfo> query(String tableName) {
-        // 使用预编译防止sql注入
+        // Use precompilation to prevent SQL injection
         String sql = "select column_name, is_nullable, data_type, column_comment, column_key, extra from information_schema.columns " +
                 "where table_name = ? and table_schema = (select database()) order by ordinal_position";
         Query query = em.createNativeQuery(sql);
@@ -131,11 +131,11 @@ public class GeneratorServiceImpl implements GeneratorService {
 
     @Override
     public void sync(List<ColumnInfo> columnInfos, List<ColumnInfo> columnInfoList) {
-        // 第一种情况，数据库类字段改变或者新增字段
+        // First case: database class field changes or new fields
         for (ColumnInfo columnInfo : columnInfoList) {
-            // 根据字段名称查找
+            // Find by field name
             List<ColumnInfo> columns = columnInfos.stream().filter(c -> c.getColumnName().equals(columnInfo.getColumnName())).collect(Collectors.toList());
-            // 如果能找到，就修改部分可能被字段
+            // If found, modify fields that may have been changed
             if (CollectionUtil.isNotEmpty(columns)) {
                 ColumnInfo column = columns.get(0);
                 column.setColumnType(columnInfo.getColumnType());
@@ -146,15 +146,15 @@ public class GeneratorServiceImpl implements GeneratorService {
                 }
                 columnInfoRepository.save(column);
             } else {
-                // 如果找不到，则保存新字段信息
+                // If not found, save new field information
                 columnInfoRepository.save(columnInfo);
             }
         }
-        // 第二种情况，数据库字段删除了
+        // Second case: database fields have been deleted
         for (ColumnInfo columnInfo : columnInfos) {
-            // 根据字段名称查找
+            // Find by field name
             List<ColumnInfo> columns = columnInfoList.stream().filter(c -> c.getColumnName().equals(columnInfo.getColumnName())).collect(Collectors.toList());
-            // 如果找不到，就代表字段被删除了，则需要删除该字段
+            // If not found, it means the field has been deleted, so the field needs to be deleted
             if (CollectionUtil.isEmpty(columns)) {
                 columnInfoRepository.delete(columnInfo);
             }
@@ -175,7 +175,7 @@ public class GeneratorServiceImpl implements GeneratorService {
             GenUtil.generatorCode(columns, genConfig);
         } catch (IOException e) {
             log.error(e.getMessage(), e);
-            throw new BadRequestException("生成失败，请手动处理已生成的文件");
+            throw new BadRequestException("Generation failed, please manually process the generated files");
         }
     }
 
@@ -199,7 +199,7 @@ public class GeneratorServiceImpl implements GeneratorService {
             ZipUtil.zip(file.getPath(), zipPath);
             FileUtil.downloadFile(request, response, new File(zipPath), true);
         } catch (IOException e) {
-            throw new BadRequestException("打包失败");
+            throw new BadRequestException("Package failed");
         }
     }
 }

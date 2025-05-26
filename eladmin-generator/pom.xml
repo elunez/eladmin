@@ -8,7 +8,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>eladmin-generator</artifactId>
-    <name>代码生成模块</name>
+    <name>Code Generation Module</name>
 
     <properties>
         <configuration.version>1.10</configuration.version>
@@ -21,7 +21,7 @@
             <version>2.7</version>
         </dependency>
 
-        <!--模板引擎-->
+        <!-- Template Engine -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-freemarker</artifactId>

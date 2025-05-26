@@ -15,7 +15,6 @@
  */
 package me.zhengjie.modules.system.domain;
 
-import com.alibaba.fastjson2.annotation.JSONField;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,7 +24,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Objects;
-import java.util.Set;
 
 /**
 * @author Zheng Jie
@@ -44,11 +42,6 @@ public class Dept extends BaseEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JSONField(serialize = false)
-    @ManyToMany(mappedBy = "depts")
-    @ApiModelProperty(value = "角色")
-    private Set<Role> roles;
-
     @ApiModelProperty(value = "排序")
     private Integer deptSort;
 
@@ -59,9 +52,6 @@ public class Dept extends BaseEntity implements Serializable {
     @NotNull
     @ApiModelProperty(value = "是否启用")
     private Boolean enabled;
-
-    @ApiModelProperty(value = "上级部门")
-    private Long pid;
 
     @ApiModelProperty(value = "子节点数目", hidden = true)
     private Integer subCount = 0;

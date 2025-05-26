@@ -82,9 +82,7 @@ public class UserController {
         if (!ObjectUtils.isEmpty(criteria.getDeptId())) {
             criteria.getDeptIds().add(criteria.getDeptId());
             // 先查找是否存在子节点
-            List<Dept> data = deptService.findByPid(criteria.getDeptId());
             // 然后把子节点的ID都加入到集合中
-            criteria.getDeptIds().addAll(deptService.getDeptChildren(data));
         }
         // 数据权限
         List<Long> dataScopes = dataService.getDeptIds(userService.findByName(SecurityUtils.getCurrentUsername()));

@@ -1,0 +1,1 @@
+alter table event add column sport_id bigint not null references sport (id);

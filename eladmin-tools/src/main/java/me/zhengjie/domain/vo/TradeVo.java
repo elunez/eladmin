@@ -22,7 +22,7 @@ import java.sql.Date;
 import java.sql.Timestamp;
 
 /**
- * 交易详情，按需应该存入数据库，这里存入数据库，仅供临时测试
+ * Transaction details, should be stored in the database as needed. Here it is stored in the database for temporary testing only
  * @author Zheng Jie
  * @date 2018-12-31
  */
@@ -30,29 +30,29 @@ import java.sql.Timestamp;
 public class TradeVo {
 
     @NotBlank
-    @ApiModelProperty(value = "商品描述")
+    @ApiModelProperty(value = "Product description")
     private String body;
 
     @NotBlank
-    @ApiModelProperty(value = "商品名称")
+    @ApiModelProperty(value = "Product name")
     private String subject;
 
-    @ApiModelProperty(value = "商户订单号", hidden = true)
+    @ApiModelProperty(value = "Merchant order number", hidden = true)
     private String outTradeNo;
 
-    @ApiModelProperty(value = "第三方订单号", hidden = true)
+    @ApiModelProperty(value = "Third-party order number", hidden = true)
     private String tradeNo;
 
     @NotBlank
-    @ApiModelProperty(value = "价格")
+    @ApiModelProperty(value = "Price")
     private String totalAmount;
 
-    @ApiModelProperty(value = "订单状态,已支付，未支付，作废", hidden = true)
+    @ApiModelProperty(value = "Order status, paid, unpaid, invalid", hidden = true)
     private String state;
 
-    @ApiModelProperty(value = "创建时间", hidden = true)
+    @ApiModelProperty(value = "Creation time", hidden = true)
     private Timestamp createTime;
 
-    @ApiModelProperty(value = "作废时间", hidden = true)
+    @ApiModelProperty(value = "Invalid time", hidden = true)
     private Date cancelTime;
 }

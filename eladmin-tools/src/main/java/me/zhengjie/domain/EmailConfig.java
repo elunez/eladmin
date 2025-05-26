@@ -22,7 +22,7 @@ import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 /**
- * 邮件配置类，数据存覆盖式存入数据存
+ * Email configuration class, data is stored in an overwrite manner
  * @author Zheng Jie
  * @date 2018-12-26
  */
@@ -37,22 +37,22 @@ public class EmailConfig implements Serializable {
     private Long id;
 
     @NotBlank
-    @ApiModelProperty(value = "邮件服务器SMTP地址")
+    @ApiModelProperty(value = "Email server SMTP address")
     private String host;
 
     @NotBlank
-    @ApiModelProperty(value = "邮件服务器 SMTP 端口")
+    @ApiModelProperty(value = "Email server SMTP port")
     private String port;
 
     @NotBlank
-    @ApiModelProperty(value = "发件者用户名")
+    @ApiModelProperty(value = "Sender username")
     private String user;
 
     @NotBlank
-    @ApiModelProperty(value = "密码")
+    @ApiModelProperty(value = "Password")
     private String pass;
 
     @NotBlank
-    @ApiModelProperty(value = "收件人")
+    @ApiModelProperty(value = "Recipient")
     private String fromUser;
 }

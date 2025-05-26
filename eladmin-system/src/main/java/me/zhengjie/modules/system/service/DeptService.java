@@ -65,13 +65,6 @@ public interface DeptService {
     void delete(Set<DeptDto> deptDtos);
 
     /**
-     * 根据PID查询
-     * @param pid /
-     * @return /
-     */
-    List<Dept> findByPid(long pid);
-
-    /**
      * 根据角色ID查询
      * @param id /
      * @return /

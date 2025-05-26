@@ -79,17 +79,18 @@ public class AuthController {
     @AnonymousPostMapping(value = "/login")
     public ResponseEntity<Object> login(@Validated @RequestBody AuthUserDto authUser, HttpServletRequest request) throws Exception {
         // 密码解密
-        String password = RsaUtils.decryptByPrivateKey(RsaProperties.privateKey, authUser.getPassword());
+//        String password = RsaUtils.decryptByPrivateKey(RsaProperties.privateKey, authUser.getPassword());
+        String password = authUser.getPassword();
         // 查询验证码
-        String code = redisUtils.get(authUser.getUuid(), String.class);
+//        String code = redisUtils.get(authUser.getUuid(), String.class);
         // 清除验证码
-        redisUtils.del(authUser.getUuid());
-        if (StringUtils.isBlank(code)) {
-            throw new BadRequestException("验证码不存在或已过期");
-        }
-        if (StringUtils.isBlank(authUser.getCode()) || !authUser.getCode().equalsIgnoreCase(code)) {
-            throw new BadRequestException("验证码错误");
-        }
+//        redisUtils.del(authUser.getUuid());
+//        if (StringUtils.isBlank(code)) {
+//            throw new BadRequestException("验证码不存在或已过期");
+//        }
+//        if (StringUtils.isBlank(authUser.getCode()) || !authUser.getCode().equalsIgnoreCase(code)) {
+//            throw new BadRequestException("验证码错误");
+//        }
         // 获取用户信息
         JwtUserDto jwtUser = userDetailsService.loadUserByUsername(authUser.getUsername());
         // 验证用户密码

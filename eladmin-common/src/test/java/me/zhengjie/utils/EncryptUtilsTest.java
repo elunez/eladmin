@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class EncryptUtilsTest {
 
     /**
-     * 对称加密
+     * Symmetric encryption
      */
     @Test
     public void testDesEncrypt() {
@@ -20,7 +20,7 @@ public class EncryptUtilsTest {
     }
 
     /**
-     * 对称解密
+     * Symmetric decryption
      */
     @Test
     public void testDesDecrypt() {

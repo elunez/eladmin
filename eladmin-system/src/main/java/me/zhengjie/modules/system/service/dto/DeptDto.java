@@ -46,9 +46,6 @@ public class DeptDto extends BaseDTO implements Serializable {
     @ApiModelProperty(value = "子部门")
     private List<DeptDto> children;
 
-    @ApiModelProperty(value = "上级部门")
-    private Long pid;
-
     @ApiModelProperty(value = "子部门数量", hidden = true)
     private Integer subCount;
 

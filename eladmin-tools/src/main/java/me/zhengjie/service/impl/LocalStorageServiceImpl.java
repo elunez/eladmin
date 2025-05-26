@@ -77,7 +77,7 @@ public class LocalStorageServiceImpl implements LocalStorageService {
         String type = FileUtil.getFileType(suffix);
         File file = FileUtil.upload(multipartFile, properties.getPath().getPath() + type +  File.separator);
         if(ObjectUtil.isNull(file)){
-            throw new BadRequestException("上传失败");
+            throw new BadRequestException("Upload failed");
         }
         try {
             name = StringUtils.isBlank(name) ? FileUtil.getFileNameNoEx(multipartFile.getOriginalFilename()) : name;
@@ -120,12 +120,12 @@ public class LocalStorageServiceImpl implements LocalStorageService {
         List<Map<String, Object>> list = new ArrayList<>();
         for (LocalStorageDto localStorageDTO : queryAll) {
             Map<String,Object> map = new LinkedHashMap<>();
-            map.put("文件名", localStorageDTO.getRealName());
-            map.put("备注名", localStorageDTO.getName());
-            map.put("文件类型", localStorageDTO.getType());
-            map.put("文件大小", localStorageDTO.getSize());
-            map.put("创建者", localStorageDTO.getCreateBy());
-            map.put("创建日期", localStorageDTO.getCreateTime());
+            map.put("File name", localStorageDTO.getRealName());
+            map.put("Remark name", localStorageDTO.getName());
+            map.put("File type", localStorageDTO.getType());
+            map.put("File size", localStorageDTO.getSize());
+            map.put("Creator", localStorageDTO.getCreateBy());
+            map.put("Creation date", localStorageDTO.getCreateTime());
             list.add(map);
         }
         FileUtil.downloadExcel(list, response);

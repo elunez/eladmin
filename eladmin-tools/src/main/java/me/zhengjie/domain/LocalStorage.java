@@ -40,22 +40,22 @@ public class LocalStorage extends BaseEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ApiModelProperty(value = "真实文件名")
+    @ApiModelProperty(value = "Real file name")
     private String realName;
 
-    @ApiModelProperty(value = "文件名")
+    @ApiModelProperty(value = "File name")
     private String name;
 
-    @ApiModelProperty(value = "后缀")
+    @ApiModelProperty(value = "Suffix")
     private String suffix;
 
-    @ApiModelProperty(value = "路径")
+    @ApiModelProperty(value = "Path")
     private String path;
 
-    @ApiModelProperty(value = "类型")
+    @ApiModelProperty(value = "Type")
     private String type;
 
-    @ApiModelProperty(value = "大小")
+    @ApiModelProperty(value = "Size")
     private String size;
 
     public LocalStorage(String realName,String name, String suffix, String path, String type, String size) {

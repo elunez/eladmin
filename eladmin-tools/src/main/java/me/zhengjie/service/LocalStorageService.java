@@ -32,50 +32,50 @@ import java.util.List;
 public interface LocalStorageService {
 
     /**
-     * 分页查询
-     * @param criteria 条件
-     * @param pageable 分页参数
+     * Paginated query
+     * @param criteria criteria
+     * @param pageable pagination parameters
      * @return /
      */
     PageResult<LocalStorageDto> queryAll(LocalStorageQueryCriteria criteria, Pageable pageable);
 
     /**
-     * 查询全部数据
-     * @param criteria 条件
+     * Query all data
+     * @param criteria criteria
      * @return /
      */
     List<LocalStorageDto> queryAll(LocalStorageQueryCriteria criteria);
 
     /**
-     * 根据ID查询
+     * Query by ID
      * @param id /
      * @return /
      */
     LocalStorageDto findById(Long id);
 
     /**
-     * 上传
-     * @param name 文件名称
-     * @param file 文件
+     * Upload
+     * @param name file name
+     * @param file file
      * @return /
      */
     LocalStorage create(String name, MultipartFile file);
 
     /**
-     * 编辑
-     * @param resources 文件信息
+     * Edit
+     * @param resources file information
      */
     void update(LocalStorage resources);
 
     /**
-     * 多选删除
+     * Multi-select delete
      * @param ids /
      */
     void deleteAll(Long[] ids);
 
     /**
-     * 导出数据
-     * @param localStorageDtos 待导出的数据
+     * Export data
+     * @param localStorageDtos data to be exported
      * @param response /
      * @throws IOException /
      */
