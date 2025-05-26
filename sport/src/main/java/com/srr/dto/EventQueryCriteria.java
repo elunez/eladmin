@@ -13,52 +13,52 @@
 *  See the License for the specific language governing permissions and
 *  limitations under the License.
 */
-package com.srr.service.dto;
+package com.srr.dto;
 
+import com.srr.enumeration.Format;
 import lombok.Data;
 import java.sql.Timestamp;
-import java.io.Serializable;
+import java.util.List;
+import me.zhengjie.annotation.Query;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
 * @website https://eladmin.vip
-* @description /
 * @author Chanheng
 * @date 2025-05-18
 **/
 @Data
-public class ClubDto implements Serializable {
+public class EventQueryCriteria{
 
+    /** 精确 */
+    @Query
     @ApiModelProperty(value = "id")
     private Long id;
 
+    /** 模糊 */
+    @Query(type = Query.Type.INNER_LIKE)
     @ApiModelProperty(value = "名称")
     private String name;
 
-    @ApiModelProperty(value = "描述")
-    private String description;
+    /** 精确 */
+    @Query
+    @ApiModelProperty(value = "SINGLE, DOUBLE")
+    private Format format;
 
-    @ApiModelProperty(value = "创建时间")
-    private Timestamp createTime;
+    /** 精确 */
+    @Query
+    @ApiModelProperty(value = "clubId")
+    private Long clubId;
 
-    @ApiModelProperty(value = "更新时间")
-    private Timestamp updateTime;
+    @Query
+    @ApiModelProperty(value = "sportId")
+    private Long sportId;
 
-    @ApiModelProperty(value = "图标")
-    private String icon;
-
-    @ApiModelProperty(value = "排序")
-    private Integer sort;
-
-    @ApiModelProperty(value = "是否启用")
-    private Boolean enabled;
-
-    @ApiModelProperty(value = "位置")
-    private String location;
-
-    @ApiModelProperty(value = "经度")
-    private Double longitude;
-
-    @ApiModelProperty(value = "纬度")
-    private Double latitude;
+    /** 精确 */
+    @Query
+    @ApiModelProperty(value = "createBy")
+    private Long createBy;
+    /** BETWEEN */
+    @Query(type = Query.Type.BETWEEN)
+    private List<Timestamp> eventTime;
 }

@@ -18,7 +18,7 @@ package com.srr.rest;
 import me.zhengjie.annotation.Log;
 import com.srr.domain.Player;
 import com.srr.service.PlayerService;
-import com.srr.service.dto.PlayerQueryCriteria;
+import com.srr.dto.PlayerQueryCriteria;
 import org.springframework.data.domain.Pageable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -30,7 +30,7 @@ import io.swagger.annotations.*;
 import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
 import me.zhengjie.utils.PageResult;
-import com.srr.service.dto.PlayerDto;
+import com.srr.dto.PlayerDto;
 
 /**
 * @website https://eladmin.vip

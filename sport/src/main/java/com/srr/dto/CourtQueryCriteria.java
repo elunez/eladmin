@@ -13,43 +13,32 @@
 *  See the License for the specific language governing permissions and
 *  limitations under the License.
 */
-package com.srr.service.dto;
+package com.srr.dto;
 
 import lombok.Data;
-import java.sql.Timestamp;
-import java.io.Serializable;
+import me.zhengjie.annotation.Query;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
 * @website https://eladmin.vip
-* @description /
 * @author Chanheng
-* @date 2025-05-17
+* @date 2025-05-18
 **/
 @Data
-public class SportDto implements Serializable {
+public class CourtQueryCriteria{
 
+    /** 精确 */
+    @Query
     @ApiModelProperty(value = "id")
     private Long id;
 
-    @ApiModelProperty(value = "名称")
-    private String name;
+    /** 精确 */
+    @Query
+    @ApiModelProperty(value = "clubId")
+    private Long clubId;
 
-    @ApiModelProperty(value = "描述")
-    private String description;
-
-    @ApiModelProperty(value = "创建时间")
-    private Timestamp createTime;
-
-    @ApiModelProperty(value = "更新时间")
-    private Timestamp updateTime;
-
-    @ApiModelProperty(value = "图标")
-    private String icon;
-
-    @ApiModelProperty(value = "排序")
-    private Integer sort;
-
-    @ApiModelProperty(value = "是否启用")
-    private Boolean enabled;
+    /** 精确 */
+    @Query
+    @ApiModelProperty(value = "sportId")
+    private Long sportId;
 }

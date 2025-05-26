@@ -16,8 +16,8 @@
 package com.srr.service;
 
 import com.srr.domain.Player;
-import com.srr.service.dto.PlayerDto;
-import com.srr.service.dto.PlayerQueryCriteria;
+import com.srr.dto.PlayerDto;
+import com.srr.dto.PlayerQueryCriteria;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;

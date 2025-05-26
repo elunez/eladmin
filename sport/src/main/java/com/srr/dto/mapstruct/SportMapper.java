@@ -13,20 +13,20 @@
 *  See the License for the specific language governing permissions and
 *  limitations under the License.
 */
-package com.srr.service.mapstruct;
+package com.srr.dto.mapstruct;
 
 import me.zhengjie.base.BaseMapper;
-import com.srr.domain.Player;
-import com.srr.service.dto.PlayerDto;
+import com.srr.domain.Sport;
+import com.srr.dto.SportDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 
 /**
 * @website https://eladmin.vip
 * @author Chanheng
-* @date 2025-05-18
+* @date 2025-05-17
 **/
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
-public interface PlayerMapper extends BaseMapper<PlayerDto, Player> {
+public interface SportMapper extends BaseMapper<SportDto, Sport> {
 
 }

@@ -13,11 +13,11 @@
 *  See the License for the specific language governing permissions and
 *  limitations under the License.
 */
-package com.srr.service.mapstruct;
+package com.srr.dto.mapstruct;
 
 import me.zhengjie.base.BaseMapper;
 import com.srr.domain.Club;
-import com.srr.service.dto.ClubDto;
+import com.srr.dto.ClubDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 

@@ -13,11 +13,11 @@
 *  See the License for the specific language governing permissions and
 *  limitations under the License.
 */
-package com.srr.service.mapstruct;
+package com.srr.dto.mapstruct;
 
 import me.zhengjie.base.BaseMapper;
-import com.srr.domain.Event;
-import com.srr.service.dto.EventDto;
+import com.srr.domain.Player;
+import com.srr.dto.PlayerDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 
@@ -27,6 +27,6 @@ import org.mapstruct.ReportingPolicy;
 * @date 2025-05-18
 **/
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
-public interface EventMapper extends BaseMapper<EventDto, Event> {
+public interface PlayerMapper extends BaseMapper<PlayerDto, Player> {
 
 }

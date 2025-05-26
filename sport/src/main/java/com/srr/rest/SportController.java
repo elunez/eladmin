@@ -18,7 +18,7 @@ package com.srr.rest;
 import me.zhengjie.annotation.Log;
 import com.srr.domain.Sport;
 import com.srr.service.SportService;
-import com.srr.service.dto.SportQueryCriteria;
+import com.srr.dto.SportQueryCriteria;
 import me.zhengjie.annotation.rest.AnonymousGetMapping;
 import org.springframework.data.domain.Pageable;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +31,7 @@ import io.swagger.annotations.*;
 import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
 import me.zhengjie.utils.PageResult;
-import com.srr.service.dto.SportDto;
+import com.srr.dto.SportDto;
 
 /**
 * @website https://eladmin.vip

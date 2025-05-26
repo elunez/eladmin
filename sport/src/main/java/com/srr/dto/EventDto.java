@@ -13,7 +13,7 @@
 *  See the License for the specific language governing permissions and
 *  limitations under the License.
 */
-package com.srr.service.dto;
+package com.srr.dto;
 
 import com.srr.enumeration.Format;
 import io.swagger.annotations.ApiModelProperty;

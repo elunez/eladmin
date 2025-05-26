@@ -18,7 +18,7 @@ package com.srr.rest;
 import me.zhengjie.annotation.Log;
 import com.srr.domain.Club;
 import com.srr.service.ClubService;
-import com.srr.service.dto.ClubQueryCriteria;
+import com.srr.dto.ClubQueryCriteria;
 import org.springframework.data.domain.Pageable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -30,7 +30,7 @@ import io.swagger.annotations.*;
 import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
 import me.zhengjie.utils.PageResult;
-import com.srr.service.dto.ClubDto;
+import com.srr.dto.ClubDto;
 
 /**
 * @website https://eladmin.vip
