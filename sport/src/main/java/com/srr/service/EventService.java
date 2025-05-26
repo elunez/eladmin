@@ -18,6 +18,7 @@ package com.srr.service;
 import com.srr.domain.Event;
 import com.srr.dto.EventDto;
 import com.srr.dto.EventQueryCriteria;
+import com.srr.enumeration.EventStatus;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
@@ -59,13 +60,15 @@ public interface EventService {
     * Create
     * @param resources /
     */
-    void create(Event resources);
+    EventDto create(Event resources);
 
     /**
     * Edit
     * @param resources /
     */
-    void update(Event resources);
+    EventDto update(Event resources);
+
+    EventDto updateStatus(Long id, EventStatus status);
 
     /**
     * Multi-select delete

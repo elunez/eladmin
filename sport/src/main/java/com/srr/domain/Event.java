@@ -15,6 +15,7 @@
 */
 package com.srr.domain;
 
+import com.srr.converter.StringListConverter;
 import com.srr.enumeration.EventStatus;
 import com.srr.enumeration.Format;
 import lombok.Data;
@@ -24,6 +25,7 @@ import cn.hutool.core.bean.copier.CopyOptions;
 import javax.persistence.*;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Convert;
 import org.hibernate.annotations.*;
 import java.sql.Timestamp;
 import javax.validation.constraints.NotBlank;
@@ -137,6 +139,13 @@ public class Event implements Serializable {
 
     @Column(name = "`allow_wait_list`")
     private boolean allowWaitList;
+
+    @Column(name = "`poster_image`")
+    private String posterImage;
+
+    @Column(name = "`tags`")
+    @Convert(converter = StringListConverter.class)
+    private List<String> tags = new ArrayList<>();
 
     @ManyToMany
     @JoinTable(name = "event_co_host_player",

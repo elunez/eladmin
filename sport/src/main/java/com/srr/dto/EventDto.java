@@ -92,7 +92,12 @@ public class EventDto implements Serializable {
     
     @ApiModelProperty(value = "Number of groups")
     private Integer groupCount;
+
+    private String posterImage;
     
     @ApiModelProperty(value = "Co-host players")
     private List<PlayerDto> coHostPlayers;
+    
+    @ApiModelProperty(value = "Tags")
+    private List<String> tags;
 }
