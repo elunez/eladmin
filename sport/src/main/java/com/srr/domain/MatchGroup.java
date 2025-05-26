@@ -10,25 +10,19 @@ import java.io.Serializable;
 @Getter
 @Setter
 @Entity
-@Table(name = "`team_player`")
-public class TeamPlayer implements Serializable {
+public class MatchGroup implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "`id`")
     @ApiModelProperty(value = "id", hidden = true)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "team_id")
-    private Team team;
-
-    @Column(name = "`score`")
-    private Double score;
+    @Column(name = "`name`")
+    @ApiModelProperty(value = "Name")
+    private String name;
 
     @ManyToOne
-    @JoinColumn(name = "player_id")
-    private Player player;
-
-    @Column(name = "`is_checked_in`")
-    private boolean isCheckedIn;
+    @JoinColumn(name = "event_id")
+    private Event event;
 }

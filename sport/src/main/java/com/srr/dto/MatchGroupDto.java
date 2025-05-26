@@ -27,23 +27,14 @@ import java.io.Serializable;
 * @date 2025-05-25
 **/
 @Data
-public class TeamPlayerDto implements Serializable {
+public class MatchGroupDto implements Serializable {
 
     @ApiModelProperty(value = "id")
     private Long id;
 
-    @ApiModelProperty(value = "Team id")
-    private Long teamId;
+    @ApiModelProperty(value = "Name")
+    private String name;
 
-    @ApiModelProperty(value = "Player id")
-    private Long playerId;
-    
-    @ApiModelProperty(value = "Player name")
-    private String playerName;
-
-    @ApiModelProperty(value = "Score")
-    private Double score;
-
-    @ApiModelProperty(value = "Is checked in")
-    private Boolean isCheckedIn;
+    @ApiModelProperty(value = "Event id")
+    private Long eventId;
 }

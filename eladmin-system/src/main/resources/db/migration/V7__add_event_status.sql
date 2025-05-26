@@ -14,6 +14,7 @@ CREATE TABLE team_player (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     team_id BIGINT,
     player_id BIGINT,
+    score DOUBLE DEFAULT NULL,
     is_checked_in BIT DEFAULT 0,
     CONSTRAINT fk_team FOREIGN KEY (team_id) REFERENCES team(id),
     CONSTRAINT fk_player FOREIGN KEY (player_id) REFERENCES player(id)

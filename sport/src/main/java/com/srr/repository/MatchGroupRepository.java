@@ -13,37 +13,16 @@
 *  See the License for the specific language governing permissions and
 *  limitations under the License.
 */
-package com.srr.dto;
+package com.srr.repository;
 
-import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
-
-import java.io.Serializable;
+import com.srr.domain.MatchGroup;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 /**
 * @website https://eladmin.vip
-* @description /
 * @author Chanheng
 * @date 2025-05-25
 **/
-@Data
-public class TeamPlayerDto implements Serializable {
-
-    @ApiModelProperty(value = "id")
-    private Long id;
-
-    @ApiModelProperty(value = "Team id")
-    private Long teamId;
-
-    @ApiModelProperty(value = "Player id")
-    private Long playerId;
-    
-    @ApiModelProperty(value = "Player name")
-    private String playerName;
-
-    @ApiModelProperty(value = "Score")
-    private Double score;
-
-    @ApiModelProperty(value = "Is checked in")
-    private Boolean isCheckedIn;
+public interface MatchGroupRepository extends JpaRepository<MatchGroup, Long>, JpaSpecificationExecutor<MatchGroup> {
 }
