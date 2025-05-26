@@ -93,7 +93,13 @@ public class EventController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    @PostMapping("/{id}/join")
+    @Log("Join event")
+    @ApiOperation("Join event")
+    @PreAuthorize("@el.check('event:join')")
     public ResponseEntity<Object> joinEvent(@PathVariable Long id, @RequestBody JoinEventDto joinEventDto) {
+        // Ensure ID in path matches ID in DTO
+        joinEventDto.setEventId(id);
         final EventDto result = eventService.joinEvent(joinEventDto);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }

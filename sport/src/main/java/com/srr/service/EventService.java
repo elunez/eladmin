@@ -18,6 +18,7 @@ package com.srr.service;
 import com.srr.domain.Event;
 import com.srr.dto.EventDto;
 import com.srr.dto.EventQueryCriteria;
+import com.srr.dto.JoinEventDto;
 import com.srr.enumeration.EventStatus;
 import org.springframework.data.domain.Pageable;
 
@@ -69,6 +70,13 @@ public interface EventService {
     EventDto update(Event resources);
 
     EventDto updateStatus(Long id, EventStatus status);
+
+    /**
+     * Join an event
+     * @param joinEventDto Data for joining an event
+     * @return Updated event data
+     */
+    EventDto joinEvent(JoinEventDto joinEventDto);
 
     /**
     * Multi-select delete

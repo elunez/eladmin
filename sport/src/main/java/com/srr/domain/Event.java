@@ -68,10 +68,6 @@ public class Event implements Serializable {
     @ApiModelProperty(value = "SINGLE, DOUBLE")
     private Format format;
 
-    @Column(name = "`max_player`")
-    @ApiModelProperty(value = "Maximum number of people")
-    private Integer maxPlayer;
-
     @Column(name = "`location`")
     @ApiModelProperty(value = "Location")
     private String location;
@@ -139,6 +135,14 @@ public class Event implements Serializable {
 
     @Column(name = "`allow_wait_list`")
     private boolean allowWaitList;
+
+    @Column(name = "`current_participants`")
+    @ApiModelProperty(value = "Current number of participants")
+    private Integer currentParticipants = 0;
+
+    @Column(name = "`max_participants`")
+    @ApiModelProperty(value = "Maximum number of participants")
+    private Integer maxParticipants;
 
     @Column(name = "`poster_image`")
     private String posterImage;

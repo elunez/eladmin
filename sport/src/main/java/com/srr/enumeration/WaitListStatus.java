@@ -13,31 +13,24 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package com.srr.dto;
+package com.srr.enumeration;
 
-import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
-
-import javax.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 /**
+ * Enum representing the possible states of a wait list entry
  * @author Chanheng
  * @date 2025-05-26
  */
-@Data
-public class JoinEventDto {
+@Getter
+@AllArgsConstructor
+public enum WaitListStatus {
     
-    @ApiModelProperty(value = "Event ID")
-    @NotNull
-    private Long eventId;
+    WAITING("Waiting"),
+    PROMOTED("Promoted to participant"),
+    CANCELLED("Cancelled by player"),
+    EXPIRED("Expired due to event start");
     
-    @ApiModelProperty(value = "Player ID")
-    @NotNull
-    private Long playerId;
-    
-    @ApiModelProperty(value = "Team ID (optional)")
-    private Long teamId;
-    
-    @ApiModelProperty(value = "Join as wait list")
-    private Boolean joinWaitList = false;
+    private final String description;
 }

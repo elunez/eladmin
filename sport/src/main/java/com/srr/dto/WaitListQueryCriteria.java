@@ -15,29 +15,37 @@
  */
 package com.srr.dto;
 
+import com.srr.enumeration.WaitListStatus;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import me.zhengjie.annotation.Query;
 
-import javax.validation.constraints.NotNull;
+import java.sql.Timestamp;
+import java.util.List;
 
 /**
  * @author Chanheng
  * @date 2025-05-26
  */
 @Data
-public class JoinEventDto {
+public class WaitListQueryCriteria {
+
+    @Query
+    private Long id;
     
+    @Query
     @ApiModelProperty(value = "Event ID")
-    @NotNull
     private Long eventId;
     
+    @Query
     @ApiModelProperty(value = "Player ID")
-    @NotNull
     private Long playerId;
     
-    @ApiModelProperty(value = "Team ID (optional)")
-    private Long teamId;
+    @Query
+    @ApiModelProperty(value = "Status")
+    private WaitListStatus status;
     
-    @ApiModelProperty(value = "Join as wait list")
-    private Boolean joinWaitList = false;
+    @Query(type = Query.Type.BETWEEN)
+    @ApiModelProperty(value = "Create time range")
+    private List<Timestamp> createTime;
 }

@@ -26,6 +26,10 @@ import com.srr.service.EventService;
 import com.srr.dto.EventDto;
 import com.srr.dto.EventQueryCriteria;
 import com.srr.dto.mapstruct.EventMapper;
+import com.srr.dto.JoinEventDto;
+import com.srr.repository.TeamPlayerRepository;
+import com.srr.repository.TeamRepository;
+import me.zhengjie.exception.BadRequestException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Page;
@@ -56,6 +60,8 @@ public class EventServiceImpl implements EventService {
 
     private final EventRepository eventRepository;
     private final EventMapper eventMapper;
+    private final TeamRepository teamRepository;
+    private final TeamPlayerRepository teamPlayerRepository;
 
     @Override
     public PageResult<EventDto> queryAll(EventQueryCriteria criteria, Pageable pageable) {
@@ -111,6 +117,50 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
+    public EventDto joinEvent(JoinEventDto joinEventDto) {
+        // Find the event
+        Event event = eventRepository.findById(joinEventDto.getEventId())
+                .orElseThrow(() -> new EntityNotFoundException(Event.class, "id", joinEventDto.getEventId()));
+        
+        // Check if event allows joining
+        if (event.getStatus() != EventStatus.OPEN) {
+            throw new BadRequestException("Event is not open for joining");
+        }
+        
+        // Check if event is full and handle waitlist
+        boolean isWaitList = joinEventDto.getJoinWaitList() != null && joinEventDto.getJoinWaitList();
+        if (event.getMaxParticipants() != null && 
+            event.getCurrentParticipants() >= event.getMaxParticipants() && 
+            !isWaitList) {
+            if (!event.isAllowWaitList()) {
+                throw new BadRequestException("Event is full and does not allow waitlist");
+            }
+            // Set joinWaitList to true if event is full and waitlist is allowed
+            isWaitList = true;
+        }
+        
+        // Handle team-related logic
+        if (joinEventDto.getTeamId() != null) {
+            // Add player to existing team
+            // For implementation, you'd use teamRepository and teamPlayerRepository
+            // to check if team exists and add the player
+        } else {
+            // Create new team for the player if needed
+            // or add as individual participant depending on event format
+        }
+        
+        // Update participant count if not joining waitlist
+        if (!isWaitList) {
+            event.setCurrentParticipants(event.getCurrentParticipants() + 1);
+        }
+        
+        // Save and return updated event
+        final var result = eventRepository.save(event);
+        return eventMapper.toDto(result);
+    }
+
+    @Override
     public void deleteAll(Long[] ids) {
         for (Long id : ids) {
             eventRepository.deleteById(id);
@@ -125,7 +175,6 @@ public class EventServiceImpl implements EventService {
             map.put("名称", event.getName());
             map.put("描述", event.getDescription());
             map.put("SINGLE, DOUBLE", event.getFormat());
-            map.put("最大人数", event.getMaxPlayer());
             map.put("位置", event.getLocation());
             map.put("图片", event.getImage());
             map.put("创建时间", event.getCreateTime());
