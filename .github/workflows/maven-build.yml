@@ -52,8 +52,12 @@ jobs:
         # Start SSH session
         spawn ssh root@172.235.32.135
         
-        # Handle the password prompt
+        # Handle the host key verification prompt and password prompt
         expect {
+          "Are you sure you want to continue connecting (yes/no/[fingerprint])?" {
+            send "yes\r"
+            exp_continue
+          }
           "Password:" {
             send "$password\r"
             exp_continue
