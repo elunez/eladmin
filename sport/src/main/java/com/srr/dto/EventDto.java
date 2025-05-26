@@ -13,12 +13,15 @@
 *  See the License for the specific language governing permissions and
 *  limitations under the License.
 */
-package com.srr.service.dto;
+package com.srr.dto;
 
-import lombok.Data;
-import java.sql.Timestamp;
-import java.io.Serializable;
+import com.srr.enumeration.EventStatus;
+import com.srr.enumeration.Format;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+
+import java.io.Serializable;
+import java.sql.Timestamp;
 
 /**
 * @website https://eladmin.vip
@@ -27,7 +30,7 @@ import io.swagger.annotations.ApiModelProperty;
 * @date 2025-05-18
 **/
 @Data
-public class ClubDto implements Serializable {
+public class EventDto implements Serializable {
 
     @ApiModelProperty(value = "id")
     private Long id;
@@ -38,14 +41,23 @@ public class ClubDto implements Serializable {
     @ApiModelProperty(value = "描述")
     private String description;
 
+    @ApiModelProperty(value = "SINGLE, DOUBLE")
+    private Format format;
+
+    @ApiModelProperty(value = "最大人数")
+    private Integer maxPlayer;
+
+    @ApiModelProperty(value = "位置")
+    private String location;
+
+    @ApiModelProperty(value = "图片")
+    private String image;
+
     @ApiModelProperty(value = "创建时间")
     private Timestamp createTime;
 
     @ApiModelProperty(value = "更新时间")
     private Timestamp updateTime;
-
-    @ApiModelProperty(value = "图标")
-    private String icon;
 
     @ApiModelProperty(value = "排序")
     private Integer sort;
@@ -53,12 +65,24 @@ public class ClubDto implements Serializable {
     @ApiModelProperty(value = "是否启用")
     private Boolean enabled;
 
-    @ApiModelProperty(value = "位置")
-    private String location;
+    @ApiModelProperty(value = "时间")
+    private Timestamp eventTime;
 
-    @ApiModelProperty(value = "经度")
-    private Double longitude;
+    @ApiModelProperty(value = "clubId")
+    private Long clubId;
 
-    @ApiModelProperty(value = "纬度")
-    private Double latitude;
+    @ApiModelProperty(value = "publicLink")
+    private String publicLink;
+
+    @ApiModelProperty(value = "sportId")
+    private Long sportId;
+
+    @ApiModelProperty(value = "createBy")
+    private Long createBy;
+
+    private EventStatus status;
+
+    private boolean isPublic;
+
+    private boolean allowWaitList;
 }

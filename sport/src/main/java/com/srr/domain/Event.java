@@ -15,6 +15,7 @@
 */
 package com.srr.domain;
 
+import com.srr.enumeration.EventStatus;
 import com.srr.enumeration.Format;
 import lombok.Data;
 import cn.hutool.core.bean.BeanUtil;
@@ -113,6 +114,17 @@ public class Event implements Serializable {
     @Column(name = "`create_by`")
     @ApiModelProperty(value = "createBy")
     private Long createBy;
+
+    @Column(name = "`status`")
+    @Enumerated(EnumType.STRING)
+    @ApiModelProperty(value = "status")
+    private EventStatus status;
+
+    @Column(name = "`is_public`")
+    private boolean isPublic;
+
+    @Column(name = "`allow_wait_list`")
+    private boolean allowWaitList;
 
     public void copy(Event source){
         BeanUtil.copyProperties(source,this, CopyOptions.create().setIgnoreNullValue(true));

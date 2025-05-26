@@ -13,43 +13,28 @@
 *  See the License for the specific language governing permissions and
 *  limitations under the License.
 */
-package com.srr.service.dto;
+package com.srr.dto;
 
-import lombok.Data;
-import java.sql.Timestamp;
-import java.io.Serializable;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+
+import java.io.Serializable;
 
 /**
 * @website https://eladmin.vip
 * @description /
 * @author Chanheng
-* @date 2025-05-17
+* @date 2025-05-25
 **/
 @Data
-public class SportDto implements Serializable {
+public class MatchGroupDto implements Serializable {
 
     @ApiModelProperty(value = "id")
     private Long id;
 
-    @ApiModelProperty(value = "名称")
+    @ApiModelProperty(value = "Name")
     private String name;
 
-    @ApiModelProperty(value = "描述")
-    private String description;
-
-    @ApiModelProperty(value = "创建时间")
-    private Timestamp createTime;
-
-    @ApiModelProperty(value = "更新时间")
-    private Timestamp updateTime;
-
-    @ApiModelProperty(value = "图标")
-    private String icon;
-
-    @ApiModelProperty(value = "排序")
-    private Integer sort;
-
-    @ApiModelProperty(value = "是否启用")
-    private Boolean enabled;
+    @ApiModelProperty(value = "Event id")
+    private Long eventId;
 }

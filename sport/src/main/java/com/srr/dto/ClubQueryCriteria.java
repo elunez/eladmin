@@ -13,20 +13,32 @@
 *  See the License for the specific language governing permissions and
 *  limitations under the License.
 */
-package com.srr.service.mapstruct;
+package com.srr.dto;
 
-import me.zhengjie.base.BaseMapper;
-import com.srr.domain.Sport;
-import com.srr.service.dto.SportDto;
-import org.mapstruct.Mapper;
-import org.mapstruct.ReportingPolicy;
+import lombok.Data;
+import me.zhengjie.annotation.Query;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
 * @website https://eladmin.vip
 * @author Chanheng
-* @date 2025-05-17
+* @date 2025-05-18
 **/
-@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
-public interface SportMapper extends BaseMapper<SportDto, Sport> {
+@Data
+public class ClubQueryCriteria{
 
+    /** 精确 */
+    @Query
+    @ApiModelProperty(value = "id")
+    private Long id;
+
+    /** 模糊 */
+    @Query(type = Query.Type.INNER_LIKE)
+    @ApiModelProperty(value = "名称")
+    private String name;
+
+    /** 精确 */
+    @Query
+    @ApiModelProperty(value = "是否启用")
+    private Boolean enabled;
 }

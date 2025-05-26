@@ -1,10 +1,5 @@
 # ELADMIN Backend Management System
 
-[![AUR](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg)](https://github.com/elunez/eladmin/blob/master/LICENSE)
-[![star](https://gitee.com/elunez/eladmin/badge/star.svg?theme=white)](https://gitee.com/elunez/eladmin)
-[![GitHub stars](https://img.shields.io/github/stars/elunez/eladmin.svg?style=social&label=Stars)](https://github.com/elunez/eladmin)
-[![GitHub forks](https://img.shields.io/github/forks/elunez/eladmin.svg?style=social&label=Fork)](https://github.com/elunez/eladmin)
-
 ## Project Introduction
 
 A front-end and back-end separated management system based on Spring Boot 2.7.18, Spring Boot JPA, JWT, Spring Security, Redis, and Vue.
@@ -25,12 +20,6 @@ A MyBatis-Plus version has also been released:
 |--------|---------------|----------------|
 | GitHub | https://github.com/elunez/eladmin | https://github.com/elunez/eladmin-web |
 | Gitee  | https://gitee.com/elunez/eladmin  | https://gitee.com/elunez/eladmin-web  |
-
-## VPS Recommendation
-
-[![VPS Banner](https://eladmin.vip/images/banner/side.jpeg)](https://bwh81.net/aff.php?aff=70876)
-
-Use promo code: `BWHCGLUKKB` for a 6.81% discount [See details](https://bwhstock.in/)
 
 ## Main Features
 
@@ -58,7 +47,7 @@ Use promo code: `BWHCGLUKKB` for a 6.81% discount [See details](https://bwhstock
 - Scheduled Tasks: Integrate Quartz for scheduled tasks, with task logs and task execution status.
 - Code Generation: High flexibility code generation for front-end and back-end, reducing repetitive work.
 - Email Tool: Send HTML format emails with rich text.
-- Qiniu Cloud Storage: Synchronize Qiniu cloud storage data to the system, no need to log in to Qiniu cloud to operate cloud data.
+- AWS Cloud Storage: Synchronize AWS cloud storage data to the system, no need to log in to AWS cloud to operate cloud data.
 - Alipay Payment: Integrate Alipay payment and provide a test account for self-testing.
 - Server Monitoring: Monitor server load status.
 - Operations Management: One-click deployment of your application.
@@ -70,7 +59,7 @@ The project uses a modular development approach, with the following structure:
 - `eladmin-common`: System public module, including various utility classes and public configurations.
 - `eladmin-system`: System core module and project entry module, also the final module to be packaged and deployed.
 - `eladmin-logging`: System log module, other modules need to import this module to record logs.
-- `eladmin-tools`: Third-party tool module, including email, Qiniu cloud storage, local storage, and Alipay payment.
+- `eladmin-tools`: Third-party tool module, including email, AWS cloud storage, local storage
 - `eladmin-generator`: System code generation module, supporting front-end and back-end CRUD code generation.
 
 ## Detailed Structure
@@ -100,7 +89,7 @@ The project uses a modular development approach, with the following structure:
 - eladmin-logging System Log Module
 - eladmin-tools Third-party Tool Module
     - email Email tool
-    - qiniu Qiniu cloud storage tool
+    - AWS S3 cloud storage tool
     - alipay Alipay payment tool
     - local-storage Local storage tool
 - eladmin-generator System Code Generation Module

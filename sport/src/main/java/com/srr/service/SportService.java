@@ -16,10 +16,10 @@
 package com.srr.service;
 
 import com.srr.domain.Sport;
-import com.srr.service.dto.SportDto;
-import com.srr.service.dto.SportQueryCriteria;
+import com.srr.dto.SportDto;
+import com.srr.dto.SportQueryCriteria;
 import org.springframework.data.domain.Pageable;
-import java.util.Map;
+
 import java.util.List;
 import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;

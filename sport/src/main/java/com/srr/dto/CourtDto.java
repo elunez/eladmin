@@ -13,20 +13,37 @@
 *  See the License for the specific language governing permissions and
 *  limitations under the License.
 */
-package com.srr.service.mapstruct;
+package com.srr.dto;
 
-import me.zhengjie.base.BaseMapper;
-import com.srr.domain.Player;
-import com.srr.service.dto.PlayerDto;
-import org.mapstruct.Mapper;
-import org.mapstruct.ReportingPolicy;
+import lombok.Data;
+import java.sql.Timestamp;
+import java.io.Serializable;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
 * @website https://eladmin.vip
+* @description /
 * @author Chanheng
 * @date 2025-05-18
 **/
-@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
-public interface PlayerMapper extends BaseMapper<PlayerDto, Player> {
+@Data
+public class CourtDto implements Serializable {
 
+    @ApiModelProperty(value = "id")
+    private Long id;
+
+    @ApiModelProperty(value = "clubId")
+    private Long clubId;
+
+    @ApiModelProperty(value = "sportId")
+    private Long sportId;
+
+    @ApiModelProperty(value = "创建时间")
+    private Timestamp createTime;
+
+    @ApiModelProperty(value = "更新时间")
+    private Timestamp updateTime;
+
+    @ApiModelProperty(value = "数量")
+    private Integer amount;
 }

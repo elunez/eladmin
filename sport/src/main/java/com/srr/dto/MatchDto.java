@@ -13,32 +13,37 @@
 *  See the License for the specific language governing permissions and
 *  limitations under the License.
 */
-package com.srr.service.dto;
+package com.srr.dto;
 
-import lombok.Data;
-import me.zhengjie.annotation.Query;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+
+import java.io.Serializable;
 
 /**
 * @website https://eladmin.vip
+* @description /
 * @author Chanheng
-* @date 2025-05-18
+* @date 2025-05-25
 **/
 @Data
-public class ClubQueryCriteria{
+public class MatchDto implements Serializable {
 
-    /** 精确 */
-    @Query
     @ApiModelProperty(value = "id")
     private Long id;
-
-    /** 模糊 */
-    @Query(type = Query.Type.INNER_LIKE)
-    @ApiModelProperty(value = "名称")
-    private String name;
-
-    /** 精确 */
-    @Query
-    @ApiModelProperty(value = "是否启用")
-    private Boolean enabled;
+    
+    @ApiModelProperty(value = "Match Group id")
+    private Long matchGroupId;
+    
+    @ApiModelProperty(value = "Team 1 id")
+    private Long team1Id;
+    
+    @ApiModelProperty(value = "Team 2 id")
+    private Long team2Id;
+    
+    @ApiModelProperty(value = "Score Team 1")
+    private Integer scoreTeam1;
+    
+    @ApiModelProperty(value = "Score Team 2")
+    private Integer scoreTeam2;
 }

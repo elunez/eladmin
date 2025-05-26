@@ -16,8 +16,8 @@
 package com.srr.service;
 
 import com.srr.domain.Event;
-import com.srr.service.dto.EventDto;
-import com.srr.service.dto.EventQueryCriteria;
+import com.srr.dto.EventDto;
+import com.srr.dto.EventQueryCriteria;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;

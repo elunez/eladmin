@@ -16,8 +16,8 @@
 package com.srr.service;
 
 import com.srr.domain.Court;
-import com.srr.service.dto.CourtDto;
-import com.srr.service.dto.CourtQueryCriteria;
+import com.srr.dto.CourtDto;
+import com.srr.dto.CourtQueryCriteria;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;

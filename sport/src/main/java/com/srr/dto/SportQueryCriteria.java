@@ -13,27 +13,34 @@
 *  See the License for the specific language governing permissions and
 *  limitations under the License.
 */
-package com.srr.service.dto;
+package com.srr.dto;
 
 import lombok.Data;
+import java.sql.Timestamp;
+import java.util.List;
 import me.zhengjie.annotation.Query;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
 * @website https://eladmin.vip
 * @author Chanheng
-* @date 2025-05-18
+* @date 2025-05-17
 **/
 @Data
-public class PlayerQueryCriteria{
+public class SportQueryCriteria{
+
+    /** 模糊 */
+    @Query(type = Query.Type.INNER_LIKE)
+    @ApiModelProperty(value = "名称")
+    private String name;
 
     /** 精确 */
     @Query
-    @ApiModelProperty(value = "id")
-    private Long id;
+    @ApiModelProperty(value = "创建时间")
+    private Timestamp createTime;
 
     /** 精确 */
     @Query
-    @ApiModelProperty(value = "userId")
-    private Long userId;
+    @ApiModelProperty(value = "是否启用")
+    private Boolean enabled;
 }

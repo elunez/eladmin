@@ -13,20 +13,16 @@
 *  See the License for the specific language governing permissions and
 *  limitations under the License.
 */
-package com.srr.service.mapstruct;
+package com.srr.repository;
 
-import me.zhengjie.base.BaseMapper;
-import com.srr.domain.Event;
-import com.srr.service.dto.EventDto;
-import org.mapstruct.Mapper;
-import org.mapstruct.ReportingPolicy;
+import com.srr.domain.TeamPlayer;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 /**
 * @website https://eladmin.vip
 * @author Chanheng
-* @date 2025-05-18
+* @date 2025-05-25
 **/
-@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
-public interface EventMapper extends BaseMapper<EventDto, Event> {
-
+public interface TeamPlayerRepository extends JpaRepository<TeamPlayer, Long>, JpaSpecificationExecutor<TeamPlayer> {
 }

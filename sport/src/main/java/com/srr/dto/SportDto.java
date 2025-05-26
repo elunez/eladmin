@@ -13,23 +13,21 @@
 *  See the License for the specific language governing permissions and
 *  limitations under the License.
 */
-package com.srr.service.dto;
+package com.srr.dto;
 
-import com.srr.enumeration.Format;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-
-import java.io.Serializable;
 import java.sql.Timestamp;
+import java.io.Serializable;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
 * @website https://eladmin.vip
 * @description /
 * @author Chanheng
-* @date 2025-05-18
+* @date 2025-05-17
 **/
 @Data
-public class EventDto implements Serializable {
+public class SportDto implements Serializable {
 
     @ApiModelProperty(value = "id")
     private Long id;
@@ -40,42 +38,18 @@ public class EventDto implements Serializable {
     @ApiModelProperty(value = "描述")
     private String description;
 
-    @ApiModelProperty(value = "SINGLE, DOUBLE")
-    private Format format;
-
-    @ApiModelProperty(value = "最大人数")
-    private Integer maxPlayer;
-
-    @ApiModelProperty(value = "位置")
-    private String location;
-
-    @ApiModelProperty(value = "图片")
-    private String image;
-
     @ApiModelProperty(value = "创建时间")
     private Timestamp createTime;
 
     @ApiModelProperty(value = "更新时间")
     private Timestamp updateTime;
 
+    @ApiModelProperty(value = "图标")
+    private String icon;
+
     @ApiModelProperty(value = "排序")
     private Integer sort;
 
     @ApiModelProperty(value = "是否启用")
     private Boolean enabled;
-
-    @ApiModelProperty(value = "时间")
-    private Timestamp eventTime;
-
-    @ApiModelProperty(value = "clubId")
-    private Long clubId;
-
-    @ApiModelProperty(value = "publicLink")
-    private String publicLink;
-
-    @ApiModelProperty(value = "sportId")
-    private Long sportId;
-
-    @ApiModelProperty(value = "createBy")
-    private Long createBy;
 }

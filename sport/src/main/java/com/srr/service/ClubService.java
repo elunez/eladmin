@@ -16,8 +16,8 @@
 package com.srr.service;
 
 import com.srr.domain.Club;
-import com.srr.service.dto.ClubDto;
-import com.srr.service.dto.ClubQueryCriteria;
+import com.srr.dto.ClubDto;
+import com.srr.dto.ClubQueryCriteria;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;

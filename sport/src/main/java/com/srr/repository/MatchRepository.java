@@ -13,34 +13,16 @@
 *  See the License for the specific language governing permissions and
 *  limitations under the License.
 */
-package com.srr.service.dto;
+package com.srr.repository;
 
-import lombok.Data;
-import java.sql.Timestamp;
-import java.util.List;
-import me.zhengjie.annotation.Query;
-import io.swagger.annotations.ApiModelProperty;
+import com.srr.domain.Match;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 /**
 * @website https://eladmin.vip
 * @author Chanheng
-* @date 2025-05-17
+* @date 2025-05-25
 **/
-@Data
-public class SportQueryCriteria{
-
-    /** 模糊 */
-    @Query(type = Query.Type.INNER_LIKE)
-    @ApiModelProperty(value = "名称")
-    private String name;
-
-    /** 精确 */
-    @Query
-    @ApiModelProperty(value = "创建时间")
-    private Timestamp createTime;
-
-    /** 精确 */
-    @Query
-    @ApiModelProperty(value = "是否启用")
-    private Boolean enabled;
+public interface MatchRepository extends JpaRepository<Match, Long>, JpaSpecificationExecutor<Match> {
 }
