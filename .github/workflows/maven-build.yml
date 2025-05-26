@@ -34,22 +34,56 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     
-    - name: Install sshpass
-      run: sudo apt-get install -y sshpass
-    
-    - name: Add server to known hosts
-      run: |
-        mkdir -p ~/.ssh
-        ssh-keyscan -H 172.235.32.135 >> ~/.ssh/known_hosts
+    - name: Install expect
+      run: sudo apt-get install -y expect
         
-    - name: Deploy to server
+    - name: Deploy using expect script
       env:
         SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
       run: |
-        # Using -o options to handle first-time connection and avoid strict host checking
-        export SSHPASS="$SSH_PASSWORD"
-        sshpass -e ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@172.235.32.135 "cd backend && \
-        pkill -f 'java -jar' || true && \
-        git pull && \
-        ./mvnw clean package && \
-        nohup java -jar eladmin-system/target/eladmin-system-2.7.jar > app.log 2>&1 &"
+        # Create an expect script to handle interactive password prompts
+        cat > deploy.exp << 'EOF'
+        #!/usr/bin/expect -f
+        
+        # Get password from environment
+        set password $env(SSH_PASSWORD)
+        set timeout 300
+        
+        # Start SSH session
+        spawn ssh root@172.235.32.135
+        
+        # Handle the password prompt
+        expect {
+          "Password:" {
+            send "$password\r"
+            exp_continue
+          }
+          "password:" {
+            send "$password\r"
+            exp_continue
+          }
+          "*#" {
+            # We have a root prompt, continue
+          }
+        }
+        
+        # Run deployment commands
+        send "cd backend\r"
+        expect "*#"
+        send "pkill -f 'java -jar' || true\r"
+        expect "*#"
+        send "git pull\r"
+        expect "*#"
+        send "./mvnw clean package\r"
+        expect "*#"
+        send "nohup java -jar eladmin-system/target/eladmin-system-2.7.jar > app.log 2>&1 &\r"
+        expect "*#"
+        send "exit\r"
+        expect eof
+        EOF
+        
+        # Make script executable
+        chmod +x deploy.exp
+        
+        # Run the expect script
+        ./deploy.exp
