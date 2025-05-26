@@ -22,6 +22,7 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.List;
 
 /**
 * @website https://eladmin.vip
@@ -85,4 +86,7 @@ public class EventDto implements Serializable {
     private boolean isPublic;
 
     private boolean allowWaitList;
+    
+    @ApiModelProperty(value = "Co-host players")
+    private List<PlayerDto> coHostPlayers;
 }

@@ -36,6 +36,9 @@ public class TeamDto implements Serializable {
     @ApiModelProperty(value = "Event")
     private Long eventId;
 
+    @ApiModelProperty(value = "Match Group")
+    private Long matchGroupId;
+
     @ApiModelProperty(value = "Name")
     private String name;
 

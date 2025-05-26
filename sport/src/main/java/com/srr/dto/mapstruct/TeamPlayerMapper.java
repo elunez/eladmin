@@ -13,31 +13,20 @@
 *  See the License for the specific language governing permissions and
 *  limitations under the License.
 */
-package com.srr.dto;
+package com.srr.dto.mapstruct;
 
-import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
-
-import java.io.Serializable;
+import me.zhengjie.base.BaseMapper;
+import com.srr.domain.TeamPlayer;
+import com.srr.dto.TeamPlayerDto;
+import org.mapstruct.Mapper;
+import org.mapstruct.ReportingPolicy;
 
 /**
 * @website https://eladmin.vip
-* @description /
 * @author Chanheng
 * @date 2025-05-25
 **/
-@Data
-public class MatchGroupDto implements Serializable {
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+public interface TeamPlayerMapper extends BaseMapper<TeamPlayerDto, TeamPlayer> {
 
-    @ApiModelProperty(value = "id")
-    private Long id;
-
-    @ApiModelProperty(value = "Name")
-    private String name;
-
-    @ApiModelProperty(value = "Event id")
-    private Long eventId;
-    
-    @ApiModelProperty(value = "Group team size")
-    private Integer groupTeamSize;
 }

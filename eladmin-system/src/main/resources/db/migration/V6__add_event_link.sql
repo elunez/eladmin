@@ -1,15 +1,6 @@
 alter table event
     add column public_link varchar(255);
 
-create table match_group
-(
-    id          bigint auto_increment primary key,
-    create_time datetime,
-    size        int default 2 not null,
-    name        varchar(255)  not null,
-    score       int default 0
-);
-
 create table group_player
 (
     id        bigint auto_increment primary key,

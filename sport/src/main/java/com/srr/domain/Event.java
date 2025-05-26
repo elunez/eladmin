@@ -29,6 +29,8 @@ import java.sql.Timestamp;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
 * @website https://eladmin.vip
@@ -125,6 +127,12 @@ public class Event implements Serializable {
 
     @Column(name = "`allow_wait_list`")
     private boolean allowWaitList;
+
+    @ManyToMany
+    @JoinTable(name = "event_co_host_player",
+            joinColumns = {@JoinColumn(name = "event_id",referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "player_id",referencedColumnName = "id")})
+    private List<Player> coHostPlayers = new ArrayList<>();
 
     public void copy(Event source){
         BeanUtil.copyProperties(source,this, CopyOptions.create().setIgnoreNullValue(true));
