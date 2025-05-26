@@ -27,7 +27,7 @@ jobs:
       run: ./mvnw clean package -DskipTests
     
     - name: Archive production artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v2
       with:
         name: jar-files
         path: |
