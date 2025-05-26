@@ -15,6 +15,7 @@
 */
 package com.srr.domain;
 
+import com.srr.converter.StringListConverter;
 import com.srr.enumeration.EventStatus;
 import com.srr.enumeration.Format;
 import lombok.Data;
@@ -24,6 +25,7 @@ import cn.hutool.core.bean.copier.CopyOptions;
 import javax.persistence.*;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Convert;
 import org.hibernate.annotations.*;
 import java.sql.Timestamp;
 import javax.validation.constraints.NotBlank;
@@ -41,6 +43,8 @@ import java.util.List;
 @Entity
 @Data
 @Table(name="event")
+@SQLDelete(sql = "update event set status = 'DELETED' where id = ?", check = ResultCheckStyle.COUNT)
+@Where(clause = "status != 'DELETED'")
 public class Event implements Serializable {
 
     @Id
@@ -64,10 +68,6 @@ public class Event implements Serializable {
     @ApiModelProperty(value = "SINGLE, DOUBLE")
     private Format format;
 
-    @Column(name = "`max_player`")
-    @ApiModelProperty(value = "Maximum number of people")
-    private Integer maxPlayer;
-
     @Column(name = "`location`")
     @ApiModelProperty(value = "Location")
     private String location;
@@ -85,6 +85,14 @@ public class Event implements Serializable {
     @UpdateTimestamp
     @ApiModelProperty(value = "Update time", hidden = true)
     private Timestamp updateTime;
+
+    @Column(name = "`check_in_at`")
+    @ApiModelProperty(value = "Check in time", hidden = true)
+    private Timestamp checkInAt;
+
+    @Column(name = "`group_count`")
+    @ApiModelProperty(value = "Number of groups")
+    private Integer groupCount;
 
     @Column(name = "`sort`")
     @ApiModelProperty(value = "Sort")
@@ -127,6 +135,21 @@ public class Event implements Serializable {
 
     @Column(name = "`allow_wait_list`")
     private boolean allowWaitList;
+
+    @Column(name = "`current_participants`")
+    @ApiModelProperty(value = "Current number of participants")
+    private Integer currentParticipants = 0;
+
+    @Column(name = "`max_participants`")
+    @ApiModelProperty(value = "Maximum number of participants")
+    private Integer maxParticipants;
+
+    @Column(name = "`poster_image`")
+    private String posterImage;
+
+    @Column(name = "`tags`")
+    @Convert(converter = StringListConverter.class)
+    private List<String> tags = new ArrayList<>();
 
     @ManyToMany
     @JoinTable(name = "event_co_host_player",

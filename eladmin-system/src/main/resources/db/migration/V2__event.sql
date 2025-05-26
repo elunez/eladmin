@@ -41,7 +41,6 @@ create table event
     name        varchar(32)  not null comment '名称',
     description varchar(255) null comment '描述',
     format      enum ('SINGLE', 'DOUBLE', 'TEAM') not null,
-    max_player  int          null comment '最大人数',
     location    varchar(255) null comment '位置',
     image       varchar(255) null comment '图片',
     create_time datetime     null comment '创建时间',

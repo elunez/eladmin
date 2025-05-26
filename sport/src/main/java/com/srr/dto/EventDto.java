@@ -45,9 +45,6 @@ public class EventDto implements Serializable {
     @ApiModelProperty(value = "SINGLE, DOUBLE")
     private Format format;
 
-    @ApiModelProperty(value = "最大人数")
-    private Integer maxPlayer;
-
     @ApiModelProperty(value = "位置")
     private String location;
 
@@ -87,6 +84,23 @@ public class EventDto implements Serializable {
 
     private boolean allowWaitList;
     
+    @ApiModelProperty(value = "Check-in time")
+    private Timestamp checkInAt;
+    
+    @ApiModelProperty(value = "Number of groups")
+    private Integer groupCount;
+
+    private String posterImage;
+    
+    @ApiModelProperty(value = "Current number of participants")
+    private Integer currentParticipants;
+    
+    @ApiModelProperty(value = "Maximum number of participants")
+    private Integer maxParticipants;
+    
     @ApiModelProperty(value = "Co-host players")
     private List<PlayerDto> coHostPlayers;
+    
+    @ApiModelProperty(value = "Tags")
+    private List<String> tags;
 }
