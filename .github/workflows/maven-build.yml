@@ -23,3 +23,28 @@ jobs:
     
     - name: Build with Maven
       run: ./mvnw clean package -DskipTests
+
+  deploy:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master'
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup SSH
+      uses: webfactory/ssh-agent@v0.7.0
+      with:
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+        
+    - name: Add server to known hosts
+      run: |
+        mkdir -p ~/.ssh
+        ssh-keyscan -H 172.235.32.135 >> ~/.ssh/known_hosts
+        
+    - name: Deploy to server
+      run: |
+        ssh ubuntu@172.235.32.135 "cd backend && \
+        pkill -f 'java -jar' || true && \
+        git pull && \
+        ./mvnw clean package && \
+        nohup java -jar target/*.jar > app.log 2>&1 &"
