@@ -36,10 +36,10 @@ public class MatchDto implements Serializable {
     private Long matchGroupId;
     
     @ApiModelProperty(value = "Team A id")
-    private Long teamA;
+    private Long teamAId;
     
     @ApiModelProperty(value = "Team B id")
-    private Long teamB;
+    private Long teamBId;
     
     @ApiModelProperty(value = "Score A")
     private Integer scoreA;

@@ -37,4 +37,7 @@ public class MatchGroupDto implements Serializable {
 
     @ApiModelProperty(value = "Event id")
     private Long eventId;
+    
+    @ApiModelProperty(value = "Group team size")
+    private Integer groupTeamSize;
 }
