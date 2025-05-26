@@ -16,6 +16,10 @@ public class Team implements Serializable {
     @ApiModelProperty(value = "id", hidden = true)
     private Long id;
 
+    @ManyToOne
+    @JoinColumn(name = "event_id")
+    private Event event;
+
     @Column(name = "`name`")
     @ApiModelProperty(value = "Name")
     private String name;
@@ -25,8 +29,6 @@ public class Team implements Serializable {
     private int teamSize;
 
     @OneToMany(mappedBy = "team")
-    @JoinTable(name = "team_players",
-            joinColumns = {@JoinColumn(name = "team_id",referencedColumnName = "id")})
-    @ApiModelProperty(value = "Players")
-    private List<Player> players; // <Player>
+    @ApiModelProperty(value = "teamPlayers")
+    private List<TeamPlayer> teamPlayers;
 }
