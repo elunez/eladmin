@@ -2,7 +2,9 @@ name: Maven Build
 
 on:
   push:
-    branches: [ '*' ]
+    branches: 
+      - '*'         # This runs on all branches for the build job
+      - 'master'    # Explicitly include master
 
 jobs:
   build:
@@ -23,3 +25,65 @@ jobs:
     
     - name: Build with Maven
       run: ./mvnw clean package -DskipTests
+
+  deploy:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master'
+    needs: build
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Install expect
+      run: sudo apt-get install -y expect
+        
+    - name: Deploy using expect script
+      env:
+        SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
+      run: |
+        # Create an expect script to handle interactive password prompts
+        cat > deploy.exp << 'EOF'
+        #!/usr/bin/expect -f
+        
+        # Get password from environment
+        set password $env(SSH_PASSWORD)
+        set timeout 300
+        
+        # Start SSH session
+        spawn ssh -o StrictHostKeyChecking=no root@172.235.32.135
+        
+        # Handle the password prompt
+        expect {
+          "Password:" {
+            send "$password\r"
+            exp_continue
+          }
+          "password:" {
+            send "$password\r"
+            exp_continue
+          }
+          "*#" {
+            # We have a root prompt, continue
+          }
+        }
+        
+        # Run deployment commands
+        send "cd backend\r"
+        expect "*#"
+        send "pkill -f 'java -jar' || true\r"
+        expect "*#"
+        send "git pull\r"
+        expect "*#"
+        send "./mvnw clean package\r"
+        expect "*#"
+        send "nohup java -jar eladmin-system/target/eladmin-system-2.7.jar > app.log 2>&1 &\r"
+        expect "*#"
+        send "exit\r"
+        expect eof
+        EOF
+        
+        # Make script executable
+        chmod +x deploy.exp
+        
+        # Run the expect script
+        ./deploy.exp
