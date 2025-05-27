@@ -19,9 +19,11 @@ import com.srr.domain.Event;
 import com.srr.dto.EventDto;
 import com.srr.dto.EventQueryCriteria;
 import com.srr.dto.JoinEventDto;
+import com.srr.dto.MatchGroupGenerationDto;
 import com.srr.dto.TeamPlayerDto;
 import com.srr.enumeration.EventStatus;
 import com.srr.service.EventService;
+import com.srr.service.MatchGroupService;
 import com.srr.service.TeamPlayerService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -38,7 +40,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Chanheng
@@ -53,6 +57,7 @@ public class EventController {
 
     private final EventService eventService;
     private final TeamPlayerService teamPlayerService;
+    private final MatchGroupService matchGroupService;
 
     @ApiOperation("Export Data")
     @GetMapping(value = "/download")
@@ -113,6 +118,20 @@ public class EventController {
     @PreAuthorize("@el.check('event:list')")
     public ResponseEntity<List<TeamPlayerDto>> findEventPlayers(@PathVariable("id") Long eventId) {
         return new ResponseEntity<>(teamPlayerService.findByEventId(eventId), HttpStatus.OK);
+    }
+    
+    @PostMapping("/generate-groups")
+    @Log("Generate match groups")
+    @ApiOperation("Generate match groups based on team scores")
+    @PreAuthorize("@el.check('event:admin')")
+    public ResponseEntity<Object> generateMatchGroups(@Validated @RequestBody MatchGroupGenerationDto dto) {
+        Integer groupsCreated = matchGroupService.generateMatchGroups(dto);
+        
+        Map<String, Object> result = new HashMap<>();
+        result.put("groupsCreated", groupsCreated);
+        result.put("message", "Successfully created " + groupsCreated + " match groups based on team scores");
+        
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @DeleteMapping

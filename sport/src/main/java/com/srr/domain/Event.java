@@ -159,6 +159,12 @@ public class Event implements Serializable {
             inverseJoinColumns = {@JoinColumn(name = "player_id",referencedColumnName = "id")})
     private List<Player> coHostPlayers = new ArrayList<>();
 
+    @OneToMany(mappedBy = "event")
+    private List<MatchGroup> matchGroups = new ArrayList<>();
+
+    @OneToMany(mappedBy = "event")
+    private List<Team> teams = new ArrayList<>();
+
     public void copy(Event source){
         BeanUtil.copyProperties(source,this, CopyOptions.create().setIgnoreNullValue(true));
     }
