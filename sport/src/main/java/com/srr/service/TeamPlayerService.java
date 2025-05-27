@@ -17,6 +17,7 @@ package com.srr.service;
 
 import com.srr.domain.TeamPlayer;
 import com.srr.dto.TeamPlayerDto;
+import com.srr.dto.TeamPlayerReassignDto;
 import org.springframework.data.domain.Pageable;
 import me.zhengjie.utils.PageResult;
 
@@ -50,4 +51,11 @@ public interface TeamPlayerService {
      * @return List of TeamPlayerDto objects
      */
     List<TeamPlayerDto> findByEventId(Long eventId);
+    
+    /**
+     * Reassign a player from one team to another
+     * @param dto Contains teamPlayerId and targetTeamId
+     * @return The updated TeamPlayerDto
+     */
+    TeamPlayerDto reassignPlayer(TeamPlayerReassignDto dto);
 }

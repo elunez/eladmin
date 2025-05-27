@@ -16,6 +16,7 @@
 package com.srr.rest;
 
 import com.srr.dto.TeamPlayerDto;
+import com.srr.dto.TeamPlayerReassignDto;
 import com.srr.service.TeamPlayerService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -24,6 +25,7 @@ import me.zhengjie.annotation.Log;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -52,5 +54,13 @@ public class TeamPlayerController {
     @PreAuthorize("@el.check('event:edit')")
     public ResponseEntity<TeamPlayerDto> checkIn(@PathVariable Long id) {
         return new ResponseEntity<>(teamPlayerService.checkIn(id), HttpStatus.OK);
+    }
+    
+    @PostMapping("/reassign")
+    @Log("Reassign player to another team")
+    @ApiOperation("Reassign player to another team")
+    @PreAuthorize("@el.check('event:admin')")
+    public ResponseEntity<TeamPlayerDto> reassignPlayer(@Validated @RequestBody TeamPlayerReassignDto dto) {
+        return new ResponseEntity<>(teamPlayerService.reassignPlayer(dto), HttpStatus.OK);
     }
 }
