@@ -20,6 +20,8 @@ import com.srr.dto.TeamPlayerDto;
 import org.springframework.data.domain.Pageable;
 import me.zhengjie.utils.PageResult;
 
+import java.util.List;
+
 /**
  * @author Chanheng
  * @website https://eladmin.vip
@@ -43,10 +45,9 @@ public interface TeamPlayerService {
     TeamPlayerDto checkIn(Long id);
     
     /**
-     * Find TeamPlayer by teamId and playerId
-     * @param teamId the team ID
-     * @param playerId the player ID
-     * @return TeamPlayerDto if found, null otherwise
+     * Find all TeamPlayers by event ID
+     * @param eventId the event ID
+     * @return List of TeamPlayerDto objects
      */
-    TeamPlayerDto findByTeamIdAndPlayerId(Long teamId, Long playerId);
+    List<TeamPlayerDto> findByEventId(Long eventId);
 }

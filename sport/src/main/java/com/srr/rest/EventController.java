@@ -19,8 +19,10 @@ import com.srr.domain.Event;
 import com.srr.dto.EventDto;
 import com.srr.dto.EventQueryCriteria;
 import com.srr.dto.JoinEventDto;
+import com.srr.dto.TeamPlayerDto;
 import com.srr.enumeration.EventStatus;
 import com.srr.service.EventService;
+import com.srr.service.TeamPlayerService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -36,6 +38,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * @author Chanheng
@@ -49,6 +52,7 @@ import java.io.IOException;
 public class EventController {
 
     private final EventService eventService;
+    private final TeamPlayerService teamPlayerService;
 
     @ApiOperation("Export Data")
     @GetMapping(value = "/download")
@@ -102,6 +106,13 @@ public class EventController {
         joinEventDto.setEventId(id);
         final EventDto result = eventService.joinEvent(joinEventDto);
         return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/players")
+    @ApiOperation("Find all team players in an event")
+    @PreAuthorize("@el.check('event:list')")
+    public ResponseEntity<List<TeamPlayerDto>> findEventPlayers(@PathVariable("id") Long eventId) {
+        return new ResponseEntity<>(teamPlayerService.findByEventId(eventId), HttpStatus.OK);
     }
 
     @DeleteMapping

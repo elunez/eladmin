@@ -26,6 +26,9 @@ import me.zhengjie.exception.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * @author Chanheng
  * @website https://eladmin.vip
@@ -64,8 +67,10 @@ public class TeamPlayerServiceImpl implements TeamPlayerService {
     
     @Override
     @Transactional(readOnly = true)
-    public TeamPlayerDto findByTeamIdAndPlayerId(Long teamId, Long playerId) {
-        TeamPlayer teamPlayer = teamPlayerRepository.findByTeamIdAndPlayerId(teamId, playerId);
-        return teamPlayer != null ? teamPlayerMapper.toDto(teamPlayer) : null;
+    public List<TeamPlayerDto> findByEventId(Long eventId) {
+        List<TeamPlayer> teamPlayers = teamPlayerRepository.findByEventId(eventId);
+        return teamPlayers.stream()
+                .map(teamPlayerMapper::toDto)
+                .collect(Collectors.toList());
     }
 }

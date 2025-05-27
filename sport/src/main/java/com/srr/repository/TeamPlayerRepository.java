@@ -18,6 +18,10 @@ package com.srr.repository;
 import com.srr.domain.TeamPlayer;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import java.util.List;
 
 /**
 * @website https://eladmin.vip
@@ -28,4 +32,7 @@ public interface TeamPlayerRepository extends JpaRepository<TeamPlayer, Long>, J
     boolean existsByTeamIdAndPlayerId(Long teamId, Long playerId);
     
     TeamPlayer findByTeamIdAndPlayerId(Long teamId, Long playerId);
+    
+    @Query("SELECT tp FROM TeamPlayer tp JOIN tp.team t JOIN t.event e WHERE e.id = :eventId")
+    List<TeamPlayer> findByEventId(@Param("eventId") Long eventId);
 }

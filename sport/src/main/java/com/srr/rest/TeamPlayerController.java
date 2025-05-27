@@ -53,17 +53,4 @@ public class TeamPlayerController {
     public ResponseEntity<TeamPlayerDto> checkIn(@PathVariable Long id) {
         return new ResponseEntity<>(teamPlayerService.checkIn(id), HttpStatus.OK);
     }
-
-    @GetMapping("/find")
-    @ApiOperation("Find team player by team and player IDs")
-    @PreAuthorize("@el.check('event:list')")
-    public ResponseEntity<TeamPlayerDto> findByTeamAndPlayer(
-            @RequestParam Long teamId, 
-            @RequestParam Long playerId) {
-        TeamPlayerDto teamPlayer = teamPlayerService.findByTeamIdAndPlayerId(teamId, playerId);
-        if (teamPlayer == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(teamPlayer, HttpStatus.OK);
-    }
 }
