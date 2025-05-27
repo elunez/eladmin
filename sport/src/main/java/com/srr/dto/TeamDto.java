@@ -44,6 +44,9 @@ public class TeamDto implements Serializable {
 
     @ApiModelProperty(value = "Team size")
     private Integer teamSize;
+    
+    @ApiModelProperty(value = "Average team score based on player scores")
+    private Double averageScore;
 
     @ApiModelProperty(value = "Team players")
     private List<TeamPlayerDto> teamPlayers;
