@@ -42,8 +42,8 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class TokenProvider implements InitializingBean {
 
+    private Key signingKey;
     private JwtParser jwtParser;
-    private JwtBuilder jwtBuilder;
     private final RedisUtils redisUtils;
     private final SecurityProperties properties;
     public static final String AUTHORITIES_UUID_KEY = "uid";
@@ -56,13 +56,13 @@ public class TokenProvider implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() {
+        // 解码Base64密钥并创建签名密钥
         byte[] keyBytes = Decoders.BASE64.decode(properties.getBase64Secret());
-        Key key = Keys.hmacShaKeyFor(keyBytes);
+        this.signingKey = Keys.hmacShaKeyFor(keyBytes);
+        // 初始化 JwtParser
         jwtParser = Jwts.parserBuilder()
-                .setSigningKey(key)
+                .setSigningKey(signingKey) // 使用预生成的签名密钥
                 .build();
-        jwtBuilder = Jwts.builder()
-                .signWith(key, SignatureAlgorithm.HS512);
     }
 
     /**
@@ -79,9 +79,14 @@ public class TokenProvider implements InitializingBean {
         claims.put(AUTHORITIES_UID_KEY, user.getUser().getId());
         // 设置UUID，确保每次Token不一样
         claims.put(AUTHORITIES_UUID_KEY, IdUtil.simpleUUID());
-        return jwtBuilder
+        // 直接调用 Jwts.builder() 创建新实例
+        return Jwts.builder()
+                // 设置自定义 Claims
                 .setClaims(claims)
+                // 设置主题
                 .setSubject(user.getUsername())
+                // 使用预生成的签名密钥和算法签名
+                .signWith(signingKey, SignatureAlgorithm.HS512)
                 .compact();
     }
 
