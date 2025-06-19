@@ -16,6 +16,7 @@
 package me.zhengjie.utils;
 
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson2.JSON;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import org.slf4j.Logger;
@@ -234,7 +235,10 @@ public class RedisUtils {
         if (value == null) {
             return null;
         }
-        if (clazz.isInstance(value)) {
+        // 如果 value 不是目标类型，则尝试将其反序列化为 clazz 类型
+        if (!clazz.isInstance(value)) {
+            return JSON.parseObject(value.toString(), clazz);
+        } else if (clazz.isInstance(value)) {
             return clazz.cast(value);
         } else {
             return null;
