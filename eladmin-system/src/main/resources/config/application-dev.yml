@@ -116,3 +116,17 @@ file:
   # 文件大小 /M
   maxSize: 100
   avatarMaxSize: 5
+  # FTP文件服务器配置
+  ftp:
+    mainPath: \home\eladmin\file\
+    username: ftptest
+    password: B6890183857ABC452C9E3170906AF9AB97872252D8A4769E
+    host: pcshao.cn
+    port: 21
+    connectTimeout: 5000 # 连接超时时间 ms
+    dataTimeout: 30000 # 数据传输超时时间 ms
+    # FTP线程池
+    minIdle: 1
+    maxIdle: 3
+    maxTotal: 5
+    maxWait: 5000 # ms
