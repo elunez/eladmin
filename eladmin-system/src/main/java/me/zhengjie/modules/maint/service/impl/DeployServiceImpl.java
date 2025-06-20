@@ -263,9 +263,13 @@ public class DeployServiceImpl implements DeployService {
 		return "执行完毕";
 	}
 
-	private boolean checkFile(ExecuteShellUtil executeShellUtil, AppDto appDTO) {
-		String result = executeShellUtil.executeForResult("find " + appDTO.getDeployPath() + " -name " + appDTO.getName());
-		return result.indexOf(appDTO.getName())>0;
+	private boolean checkFile(ExecuteShellUtil executeShellUtil, AppDto app) {
+		String deployPath = app.getDeployPath();
+		String appName = app.getName();
+		// 使用安全的命令执行方式，避免直接拼接字符串，https://github.com/elunez/eladmin/issues/873
+		String[] command = {"find", deployPath, "-name", appName};
+		String result = executeShellUtil.executeForResult(Arrays.toString(command));
+		return result.contains(appName);
 	}
 
 	/**
