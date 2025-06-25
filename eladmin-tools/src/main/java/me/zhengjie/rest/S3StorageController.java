@@ -22,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 import me.zhengjie.annotation.Log;
 import me.zhengjie.config.AmzS3Config;
 import me.zhengjie.domain.S3Storage;
+import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.service.S3StorageService;
 import me.zhengjie.service.dto.S3StorageQueryCriteria;
 import me.zhengjie.utils.PageResult;
@@ -69,12 +70,7 @@ public class S3StorageController {
     @PostMapping
     @ApiOperation("上传文件")
     public ResponseEntity<Object> uploadS3Storage(@RequestParam MultipartFile file){
-        S3Storage storage = s3StorageService.upload(file);
-        Map<String,Object> map = new HashMap<>(3);
-        map.put("id",storage.getId());
-        map.put("errno",0);
-        map.put("data",new String[]{amzS3Config.getDomain() + "/" + storage.getFilePath()});
-        return new ResponseEntity<>(map,HttpStatus.OK);
+        throw new BadRequestException("演示环境不可操作，请部署到本地或服务器进行测试");
     }
 
     @Log("下载文件")
