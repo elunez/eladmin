@@ -2,16 +2,16 @@
  Navicat Premium Dump SQL
 
  Source Server         : localhost
- Source Server Type    : MySQL
+ Source Server Type    : MariaDB
  Source Server Version : 110206 (11.2.6-MariaDB)
  Source Host           : localhost:3306
  Source Schema         : eladmin
 
- Target Server Type    : MySQL
+ Target Server Type    : MariaDB
  Target Server Version : 110206 (11.2.6-MariaDB)
  File Encoding         : 65001
 
- Date: 15/01/2025 18:20:01
+ Date: 25/06/2025 15:56:51
 */
 
 SET NAMES utf8mb4;
@@ -38,7 +38,7 @@ CREATE TABLE `code_column` (
   `date_annotation` varchar(255) DEFAULT NULL COMMENT '日期注解',
   PRIMARY KEY (`column_id`) USING BTREE,
   KEY `idx_table_name` (`table_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=259 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=COMPACT COMMENT='代码生成字段信息存储';
+) ENGINE=InnoDB AUTO_INCREMENT=266 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=COMPACT COMMENT='代码生成字段信息存储';
 
 -- ----------------------------
 -- Records of code_column
@@ -536,7 +536,7 @@ CREATE TABLE `sys_role` (
 -- Records of sys_role
 -- ----------------------------
 BEGIN;
-INSERT INTO `sys_role` (`role_id`, `name`, `level`, `description`, `data_scope`, `create_by`, `update_by`, `create_time`, `update_time`) VALUES (1, '超级管理员', 1, '-', '全部', NULL, 'admin', '2018-11-23 11:04:37', '2020-08-06 16:10:24');
+INSERT INTO `sys_role` (`role_id`, `name`, `level`, `description`, `data_scope`, `create_by`, `update_by`, `create_time`, `update_time`) VALUES (1, '管理员', 1, '-', '全部', NULL, 'admin', '2018-11-23 11:04:37', '2025-01-21 14:53:13');
 INSERT INTO `sys_role` (`role_id`, `name`, `level`, `description`, `data_scope`, `create_by`, `update_by`, `create_time`, `update_time`) VALUES (2, '普通用户', 2, '-', '本级', NULL, 'admin', '2018-11-23 13:09:06', '2020-09-05 10:45:12');
 COMMIT;
 
@@ -705,8 +705,8 @@ CREATE TABLE `sys_user` (
 -- Records of sys_user
 -- ----------------------------
 BEGIN;
-INSERT INTO `sys_user` (`user_id`, `dept_id`, `username`, `nick_name`, `gender`, `phone`, `email`, `avatar_name`, `avatar_path`, `password`, `is_admin`, `enabled`, `create_by`, `update_by`, `pwd_reset_time`, `create_time`, `update_time`) VALUES (1, 2, 'admin', '管理员', '男', '18888888888', '201507802@qq.com', 'avatar-20250114101539224.png', '/Users/jie/Documents/work/me/admin/eladmin-mp/eladmin/~/avatar/avatar-20250114101539224.png', '$2a$10$Egp1/gvFlt7zhlXVfEFw4OfWQCGPw0ClmMcc6FjTnvXNRVf9zdMRa', b'1', b'1', NULL, 'admin', '2020-05-03 16:38:31', '2018-08-23 09:11:56', '2020-09-05 10:43:31');
-INSERT INTO `sys_user` (`user_id`, `dept_id`, `username`, `nick_name`, `gender`, `phone`, `email`, `avatar_name`, `avatar_path`, `password`, `is_admin`, `enabled`, `create_by`, `update_by`, `pwd_reset_time`, `create_time`, `update_time`) VALUES (2, 2, 'test', '测试', '男', '19999999999', '231@qq.com', NULL, NULL, '$2a$10$4XcyudOYTSz6fue6KFNMHeUQnCX5jbBQypLEnGk1PmekXt5c95JcK', b'0', b'1', 'admin', 'admin', NULL, '2020-05-05 11:15:49', '2020-09-05 10:43:38');
+INSERT INTO `sys_user` (`user_id`, `dept_id`, `username`, `nick_name`, `gender`, `phone`, `email`, `avatar_name`, `avatar_path`, `password`, `is_admin`, `enabled`, `create_by`, `update_by`, `pwd_reset_time`, `create_time`, `update_time`) VALUES (1, 2, 'admin', '管理员', '男', '18888888888', '201507802@qq.com', 'avatar-20250122102642222.png', '/Users/jie/Documents/work/private/eladmin/~/avatar/avatar-20250122102642222.png', '$2a$10$Egp1/gvFlt7zhlXVfEFw4OfWQCGPw0ClmMcc6FjTnvXNRVf9zdMRa', b'1', b'1', NULL, 'admin', '2020-05-03 16:38:31', '2018-08-23 09:11:56', '2025-01-22 10:26:42');
+INSERT INTO `sys_user` (`user_id`, `dept_id`, `username`, `nick_name`, `gender`, `phone`, `email`, `avatar_name`, `avatar_path`, `password`, `is_admin`, `enabled`, `create_by`, `update_by`, `pwd_reset_time`, `create_time`, `update_time`) VALUES (2, 7, 'test', '测试', '男', '19999999999', '231@qq.com', NULL, NULL, '$2a$10$4XcyudOYTSz6fue6KFNMHeUQnCX5jbBQypLEnGk1PmekXt5c95JcK', b'0', b'1', 'admin', 'admin', NULL, '2020-05-05 11:15:49', '2025-01-21 14:53:04');
 COMMIT;
 
 -- ----------------------------
@@ -820,47 +820,29 @@ BEGIN;
 COMMIT;
 
 -- ----------------------------
--- Table structure for tool_qiniu_config
+-- Table structure for tool_s3_storage
 -- ----------------------------
-DROP TABLE IF EXISTS `tool_qiniu_config`;
-CREATE TABLE `tool_qiniu_config` (
-  `config_id` bigint(20) NOT NULL COMMENT 'ID',
-  `access_key` text DEFAULT NULL COMMENT 'accessKey',
-  `bucket` varchar(255) DEFAULT NULL COMMENT 'Bucket 识别符',
-  `host` varchar(255) NOT NULL COMMENT '外链域名',
-  `secret_key` text DEFAULT NULL COMMENT 'secretKey',
-  `type` varchar(255) DEFAULT NULL COMMENT '空间类型',
-  `zone` varchar(255) DEFAULT NULL COMMENT '机房',
-  PRIMARY KEY (`config_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=COMPACT COMMENT='七牛云配置';
+DROP TABLE IF EXISTS `tool_s3_storage`;
+CREATE TABLE `tool_s3_storage` (
+  `storage_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `file_name` varchar(255) NOT NULL COMMENT '文件名称',
+  `file_real_name` varchar(255) NOT NULL COMMENT '真实存储的名称',
+  `file_size` varchar(100) NOT NULL COMMENT '文件大小',
+  `file_mime_type` varchar(50) NOT NULL COMMENT '文件MIME 类型',
+  `file_type` varchar(50) NOT NULL COMMENT '文件类型',
+  `file_path` tinytext NOT NULL COMMENT '文件路径',
+  `create_by` varchar(255) NOT NULL COMMENT '创建者',
+  `update_by` varchar(255) NOT NULL COMMENT '更新者',
+  `create_time` datetime NOT NULL COMMENT '创建日期',
+  `update_time` datetime NOT NULL COMMENT '更新时间',
+  PRIMARY KEY (`storage_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='s3 协议对象存储';
 
 -- ----------------------------
--- Records of tool_qiniu_config
+-- Records of tool_s3_storage
 -- ----------------------------
 BEGIN;
-COMMIT;
-
--- ----------------------------
--- Table structure for tool_qiniu_content
--- ----------------------------
-DROP TABLE IF EXISTS `tool_qiniu_content`;
-CREATE TABLE `tool_qiniu_content` (
-  `content_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'ID',
-  `bucket` varchar(255) DEFAULT NULL COMMENT 'Bucket 识别符',
-  `name` varchar(180) DEFAULT NULL COMMENT '文件名称',
-  `size` varchar(255) DEFAULT NULL COMMENT '文件大小',
-  `type` varchar(255) DEFAULT NULL COMMENT '文件类型：私有或公开',
-  `url` varchar(255) DEFAULT NULL COMMENT '文件url',
-  `suffix` varchar(255) DEFAULT NULL COMMENT '文件后缀',
-  `update_time` datetime DEFAULT NULL COMMENT '上传或同步的时间',
-  PRIMARY KEY (`content_id`) USING BTREE,
-  UNIQUE KEY `uniq_name` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=COMPACT COMMENT='七牛云文件存储';
-
--- ----------------------------
--- Records of tool_qiniu_content
--- ----------------------------
-BEGIN;
+INSERT INTO `tool_s3_storage` (`storage_id`, `file_name`, `file_real_name`, `file_size`, `file_mime_type`, `file_type`, `file_path`, `create_by`, `update_by`, `create_time`, `update_time`) VALUES (4, 'tx.jpg', '2ca1de24d8fa422eae4ede30e97c46d8.jpg', '29.67KB', 'image/jpeg', 'jpg', '2025-06/2ca1de24d8fa422eae4ede30e97c46d8.jpg', 'admin', 'admin', '2025-06-25 15:48:22', '2025-06-25 15:48:22');
 COMMIT;
 
 SET FOREIGN_KEY_CHECKS = 1;

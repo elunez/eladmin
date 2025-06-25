@@ -65,11 +65,6 @@ task:
     # 队列容量
     queue-capacity: 30
 
-#七牛云
-qiniu:
-  # 文件大小 /M
-  max-size: 1
-
 #邮箱验证码有效时间/秒
 code:
   expiration: 300

@@ -44,5 +44,13 @@
             <artifactId>alipay-sdk-java</artifactId>
             <version>${alipay.version}</version>
         </dependency>
+
+        <!--amazon s3 依赖-->
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>s3</artifactId>
+            <version>2.30.13</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 </project>
