@@ -127,3 +127,21 @@ file:
   # 文件大小 /M
   maxSize: 100
   avatarMaxSize: 5
+
+# 亚马逊S3协议云存储配置
+#支持七牛云，阿里云OSS，腾讯云COS，华为云OBS，移动云EOS等
+amz:
+  s3:
+    # 地域
+    region: test
+    # 地域对应的 endpoint
+    endPoint: https://s3.test.com
+    # 访问的域名
+    domain: https://s3.test.com
+    # 账号的认证信息，或者子账号的认证信息
+    accessKey: 填写你的AccessKey
+    secretKey: 填写你的SecretKey
+    # 存储桶（Bucket）
+    defaultBucket: 填写你的存储桶名称
+    # 文件存储路径
+    timeformat: yyyy-MM
