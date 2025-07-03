@@ -15,6 +15,7 @@
  */
 package me.zhengjie.modules.system.service.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
@@ -62,6 +63,7 @@ public class MenuDto extends BaseDTO implements Serializable {
     private Integer subCount;
 
     @ApiModelProperty(value = "是否为Iframe")
+    @JsonProperty("iFrame")
     private Boolean iFrame;
 
     @ApiModelProperty(value = "是否缓存")
