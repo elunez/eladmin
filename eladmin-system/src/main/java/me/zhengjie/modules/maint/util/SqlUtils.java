@@ -104,8 +104,6 @@ public class SqlUtils {
 		} catch (Exception e) {
 			log.error("create connection error, jdbcUrl: {}", jdbcUrl);
 			throw new RuntimeException("create connection error, jdbcUrl: " + jdbcUrl);
-		} finally {
-			CloseUtil.close(connection);
 		}
 		return connection;
 	}
