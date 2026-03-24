@@ -64,13 +64,18 @@ public class AsyncExecutor implements AsyncConfigurer {
     }
 
     /**
+     * 定义自定义异步处理线程池，线程名的标号自增计数器
+     */
+    private static AtomicInteger atomicInteger = new AtomicInteger(1);
+
+    /**
      * 自定义线程池，用法 @Async
      * @return Executor
      */
     @Override
     public Executor getAsyncExecutor() {
         // 自定义工厂
-        ThreadFactory factory = r -> new Thread(r, "el-async-" + new AtomicInteger(1).getAndIncrement());
+        ThreadFactory factory = r -> new Thread(r, "el-async-" + atomicInteger.getAndIncrement());
         // 自定义线程池
         return new ThreadPoolExecutor(corePoolSize, maxPoolSize, keepAliveSeconds,
                 TimeUnit.SECONDS, new ArrayBlockingQueue<>(queueCapacity), factory,
