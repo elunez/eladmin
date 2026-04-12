@@ -20,7 +20,7 @@ spring:
             # 可选，集群检查间隔时间，可以根据需要调整
             clusterCheckinInterval: 10000
             # 必需，指定 JDBC 驱动代理类
-            driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+            driverDelegateClass: org.quartz.impl.jdbcjobstore.H2Delegate
             # 可选，是否使用属性存储，可以根据需要调整
             useProperties: false
             # 必需，指定表的前缀

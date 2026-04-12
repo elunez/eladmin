@@ -3,10 +3,10 @@ spring:
   datasource:
     druid:
       db-type: com.alibaba.druid.pool.DruidDataSource
-      driverClassName: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:eladmin}?serverTimezone=Asia/Shanghai&characterEncoding=utf8&useSSL=false
-      username: ${DB_USER:root}
-      password: ${DB_PWD:123456}
+      driverClassName: org.h2.Driver
+      url: jdbc:h2:file:./data/eladmin;DB_CLOSE_DELAY=-1;MODE=MySQL;NON_KEYWORDS=VALUE,USER,NAME,PATH,TYPE,TIME,LEVEL,PASSWORD,PORT,DESCRIPTION,KEY,EXTRA,FORMAT,CHARSET,HOST,PASS
+      username: sa
+      password:
       # 初始连接数，建议设置为与最小空闲连接数相同
       initial-size: 20
       # 最小空闲连接数，保持足够的空闲连接以应对请求

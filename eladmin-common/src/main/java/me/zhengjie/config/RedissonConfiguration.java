@@ -53,7 +53,7 @@ public class RedissonConfiguration {
     private int connectionMinimumIdleSize;
 
     @Bean
-    public RedissonClient redissonClient() {
+    public RedissonClient redissonClient(EmbeddedRedisConfig embeddedRedisConfig) {
         Config config = new Config();
         config.useSingleServer()
                 .setAddress("redis://" + redisHost + ":" + redisPort)

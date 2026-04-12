@@ -29,6 +29,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
+        <skipTests>true</skipTests>
         <fastjson2.version>2.0.54</fastjson2.version>
         <druid.version>1.2.19</druid.version>
         <commons-pool2.version>2.11.1</commons-pool2.version>
@@ -86,6 +87,13 @@
             <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
 
+        <!--Embedded Redis (Pure Java)-->
+        <dependency>
+            <groupId>com.github.microwww</groupId>
+            <artifactId>redis-server</artifactId>
+            <version>0.3.5</version>
+        </dependency>
+
         <!--Spring boot redisson-->
         <dependency>
             <groupId>org.redisson</groupId>
@@ -133,11 +141,10 @@
             <version>1.5.22</version>
         </dependency>
 
-        <!--Mysql依赖包-->
+        <!--H2依赖包-->
         <dependency>
-            <groupId>com.mysql</groupId>
-            <artifactId>mysql-connector-j</artifactId>
-            <version>9.2.0</version>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
             <scope>runtime</scope>
         </dependency>
 
@@ -231,7 +238,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
-                    <skip>true</skip>
+                    <skip>${skipTests}</skip>
                 </configuration>
             </plugin>
         </plugins>
