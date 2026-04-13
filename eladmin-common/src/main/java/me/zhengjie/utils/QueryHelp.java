@@ -21,6 +21,11 @@ import cn.hutool.core.util.ObjectUtil;
 import lombok.extern.slf4j.Slf4j;
 import me.zhengjie.annotation.DataPermission;
 import me.zhengjie.annotation.Query;
+import me.zhengjie.utils.query.JoinStrategy;
+import me.zhengjie.utils.query.JoinStrategyFactory;
+import me.zhengjie.utils.query.QueryPredicateStrategy;
+import me.zhengjie.utils.query.QueryPredicateStrategyFactory;
+
 import javax.persistence.criteria.*;
 import java.lang.reflect.Field;
 import java.util.*;
@@ -86,95 +91,22 @@ public class QueryHelp {
                         join = joinKey.get(joinName);
                         if(join == null){
                             String[] joinNames = joinName.split(">");
-                            for (String name : joinNames) {
-                                switch (q.join()) {
-                                    case LEFT:
-                                        if(ObjectUtil.isNotNull(join) && ObjectUtil.isNotNull(val)){
-                                            join = join.join(name, JoinType.LEFT);
-                                        } else {
-                                            join = root.join(name, JoinType.LEFT);
-                                        }
-                                        break;
-                                    case RIGHT:
-                                        if(ObjectUtil.isNotNull(join) && ObjectUtil.isNotNull(val)){
-                                            join = join.join(name, JoinType.RIGHT);
-                                        } else {
-                                            join = root.join(name, JoinType.RIGHT);
-                                        }
-                                        break;
-                                    case INNER:
-                                        if(ObjectUtil.isNotNull(join) && ObjectUtil.isNotNull(val)){
-                                            join = join.join(name, JoinType.INNER);
-                                        } else {
-                                            join = root.join(name, JoinType.INNER);
-                                        }
-                                        break;
-                                    default: break;
+                            JoinStrategy joinStrategy = JoinStrategyFactory.getStrategy(q.join());
+                            if (joinStrategy != null) {
+                                for (String name : joinNames) {
+                                    join = joinStrategy.createJoin(root, join, name, val);
                                 }
                             }
                             joinKey.put(joinName, join);
                         }
                     }
-                    switch (q.type()) {
-                        case EQUAL:
-                            list.add(cb.equal(getExpression(attributeName,join,root)
-                                    .as((Class<? extends Comparable>) fieldType),val));
-                            break;
-                        case GREATER_THAN:
-                            list.add(cb.greaterThanOrEqualTo(getExpression(attributeName,join,root)
-                                    .as((Class<? extends Comparable>) fieldType), (Comparable) val));
-                            break;
-                        case LESS_THAN:
-                            list.add(cb.lessThanOrEqualTo(getExpression(attributeName,join,root)
-                                    .as((Class<? extends Comparable>) fieldType), (Comparable) val));
-                            break;
-                        case LESS_THAN_NQ:
-                            list.add(cb.lessThan(getExpression(attributeName,join,root)
-                                    .as((Class<? extends Comparable>) fieldType), (Comparable) val));
-                            break;
-                        case INNER_LIKE:
-                            list.add(cb.like(getExpression(attributeName,join,root)
-                                    .as(String.class), "%" + val.toString() + "%"));
-                            break;
-                        case LEFT_LIKE:
-                            list.add(cb.like(getExpression(attributeName,join,root)
-                                    .as(String.class), "%" + val.toString()));
-                            break;
-                        case RIGHT_LIKE:
-                            list.add(cb.like(getExpression(attributeName,join,root)
-                                    .as(String.class), val.toString() + "%"));
-                            break;
-                        case IN:
-                            if (CollUtil.isNotEmpty((Collection<Object>)val)) {
-                                list.add(getExpression(attributeName,join,root).in((Collection<Object>) val));
-                            }
-                            break;
-                        case NOT_IN:
-                            if (CollUtil.isNotEmpty((Collection<Object>)val)) {
-                                list.add(getExpression(attributeName,join,root).in((Collection<Object>) val).not());
-                            }
-                            break;
-                        case NOT_EQUAL:
-                            list.add(cb.notEqual(getExpression(attributeName,join,root), val));
-                            break;
-                        case NOT_NULL:
-                            list.add(cb.isNotNull(getExpression(attributeName,join,root)));
-                            break;
-                        case IS_NULL:
-                            list.add(cb.isNull(getExpression(attributeName,join,root)));
-                            break;
-                        case BETWEEN:
-                            List<Object> between = new ArrayList<>((List<Object>)val);
-                            if(between.size() == 2){
-                                list.add(cb.between(getExpression(attributeName, join, root).as((Class<? extends Comparable>) between.get(0).getClass()),
-                                        (Comparable) between.get(0), (Comparable) between.get(1)));
-                            }
-                            break;
-                        case FIND_IN_SET:
-                            list.add(cb.greaterThan(cb.function("FIND_IN_SET", Integer.class,
-                                    cb.literal(val.toString()), root.get(attributeName)), 0));
-                            break;
-                        default: break;
+                    QueryPredicateStrategy strategy = QueryPredicateStrategyFactory.getStrategy(q.type());
+                    if (strategy != null) {
+                        Expression<?> expression = getExpression(attributeName, join, root);
+                        Predicate predicate = strategy.createPredicate(cb, expression, fieldType, val, root, attributeName);
+                        if (predicate != null) {
+                            list.add(predicate);
+                        }
                     }
                 }
                 field.setAccessible(accessible);
