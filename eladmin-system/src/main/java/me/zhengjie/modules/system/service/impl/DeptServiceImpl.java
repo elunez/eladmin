@@ -59,31 +59,48 @@ public class DeptServiceImpl implements DeptService {
     public List<DeptDto> queryAll(DeptQueryCriteria criteria, Boolean isQuery) throws Exception {
         Sort sort = Sort.by(Sort.Direction.ASC, "deptSort");
         String dataScopeType = SecurityUtils.getDataScopeType();
-        if (isQuery) {
-            if(dataScopeType.equals(DataScopeEnum.ALL.getValue())){
-                criteria.setPidIsNull(true);
-            }
+        
+        if (Boolean.TRUE.equals(isQuery)) {
+            processQueryCriteria(criteria, dataScopeType);
+        }
+        
+        List<DeptDto> list = deptMapper.toDto(deptRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),sort));
+        
+        return shouldDeduplicate(dataScopeType) ? deduplication(list) : list;
+    }
+    
+    private void processQueryCriteria(DeptQueryCriteria criteria, String dataScopeType) {
+        if (dataScopeType.equals(DataScopeEnum.ALL.getValue())) {
+            criteria.setPidIsNull(true);
+        }
+        
+        if (hasNonDefaultFieldValue(criteria)) {
+            criteria.setPidIsNull(null);
+        }
+    }
+    
+    private boolean hasNonDefaultFieldValue(DeptQueryCriteria criteria) {
+        try {
             List<Field> fields = QueryHelp.getAllFields(criteria.getClass(), new ArrayList<>());
-            List<String> fieldNames = new ArrayList<String>(){{ add("pidIsNull");add("enabled");}};
+            List<String> excludedFieldNames = Arrays.asList("pidIsNull", "enabled");
+            
             for (Field field : fields) {
-                //设置对象的访问权限，保证对private的属性的访问
                 field.setAccessible(true);
-                Object val = field.get(criteria);
-                if(fieldNames.contains(field.getName())){
+                if (excludedFieldNames.contains(field.getName())) {
                     continue;
                 }
-                if (ObjectUtil.isNotNull(val)) {
-                    criteria.setPidIsNull(null);
-                    break;
+                if (ObjectUtil.isNotNull(field.get(criteria))) {
+                    return true;
                 }
             }
+            return false;
+        } catch (IllegalAccessException e) {
+            return false;
         }
-        List<DeptDto> list = deptMapper.toDto(deptRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),sort));
-        // 如果为空，就代表为自定义权限或者本级权限，就需要去重，不理解可以注释掉，看查询结果
-        if(StringUtils.isBlank(dataScopeType)){
-            return deduplication(list);
-        }
-        return list;
+    }
+    
+    private boolean shouldDeduplicate(String dataScopeType) {
+        return StringUtils.isBlank(dataScopeType);
     }
 
     @Override

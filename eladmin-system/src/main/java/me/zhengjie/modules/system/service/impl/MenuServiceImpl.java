@@ -34,6 +34,7 @@ import me.zhengjie.modules.system.service.dto.MenuDto;
 import me.zhengjie.modules.system.service.dto.MenuQueryCriteria;
 import me.zhengjie.modules.system.service.dto.RoleSmallDto;
 import me.zhengjie.modules.system.service.mapstruct.MenuMapper;
+import me.zhengjie.modules.system.service.strategy.MenuBuildStrategyContext;
 import me.zhengjie.utils.*;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -57,6 +58,7 @@ public class MenuServiceImpl implements MenuService {
     private final MenuMapper menuMapper;
     private final RoleService roleService;
     private final RedisUtils redisUtils;
+    private final MenuBuildStrategyContext menuBuildStrategyContext;
 
     private static final String HTTP_PRE = "http://";
     private static final String HTTPS_PRE = "https://";
@@ -67,23 +69,39 @@ public class MenuServiceImpl implements MenuService {
     @Override
     public List<MenuDto> queryAll(MenuQueryCriteria criteria, Boolean isQuery) throws Exception {
         Sort sort = Sort.by(Sort.Direction.ASC, "menuSort");
-        if(Boolean.TRUE.equals(isQuery)){
-            criteria.setPidIsNull(true);
+        
+        if (Boolean.TRUE.equals(isQuery)) {
+            processMenuQueryCriteria(criteria);
+        }
+        
+        return menuMapper.toDto(menuRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),sort));
+    }
+    
+    private void processMenuQueryCriteria(MenuQueryCriteria criteria) {
+        criteria.setPidIsNull(true);
+        
+        if (hasNonDefaultFieldValue(criteria)) {
+            criteria.setPidIsNull(null);
+        }
+    }
+    
+    private boolean hasNonDefaultFieldValue(MenuQueryCriteria criteria) {
+        try {
             List<Field> fields = QueryHelp.getAllFields(criteria.getClass(), new ArrayList<>());
+            
             for (Field field : fields) {
-                //设置对象的访问权限，保证对private的属性的访问
                 field.setAccessible(true);
-                Object val = field.get(criteria);
-                if("pidIsNull".equals(field.getName())){
+                if ("pidIsNull".equals(field.getName())) {
                     continue;
                 }
-                if (ObjectUtil.isNotNull(val)) {
-                    criteria.setPidIsNull(null);
-                    break;
+                if (ObjectUtil.isNotNull(field.get(criteria))) {
+                    return true;
                 }
             }
+            return false;
+        } catch (IllegalAccessException e) {
+            return false;
         }
-        return menuMapper.toDto(menuRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),sort));
     }
 
     @Override
@@ -268,46 +286,7 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public List<MenuVo> buildMenus(List<MenuDto> menuDtos) {
-        List<MenuVo> list = new LinkedList<>();
-        menuDtos.forEach(menuDTO -> {
-                    if (menuDTO!=null){
-                        List<MenuDto> menuDtoList = menuDTO.getChildren();
-                        MenuVo menuVo = new MenuVo();
-                        menuVo.setName(ObjectUtil.isNotEmpty(menuDTO.getComponentName())  ? menuDTO.getComponentName() : menuDTO.getTitle());
-                        // 一级目录需要加斜杠，不然会报警告
-                        menuVo.setPath(menuDTO.getPid() == null ? "/" + menuDTO.getPath() :menuDTO.getPath());
-                        menuVo.setHidden(menuDTO.getHidden());
-                        // 如果不是外链
-                        if(!menuDTO.getIFrame()){
-                            if(menuDTO.getPid() == null){
-                                menuVo.setComponent(StringUtils.isEmpty(menuDTO.getComponent())?"Layout":menuDTO.getComponent());
-                                // 如果不是一级菜单，并且菜单类型为目录，则代表是多级菜单
-                            }else if(menuDTO.getType() == 0){
-                                menuVo.setComponent(StringUtils.isEmpty(menuDTO.getComponent())?"ParentView":menuDTO.getComponent());
-                            }else if(StringUtils.isNoneBlank(menuDTO.getComponent())){
-                                menuVo.setComponent(menuDTO.getComponent());
-                            }
-                        }
-                        menuVo.setMeta(new MenuMetaVo(menuDTO.getTitle(),menuDTO.getIcon(),!menuDTO.getCache()));
-                        if(CollectionUtil.isNotEmpty(menuDtoList)){
-                            menuVo.setAlwaysShow(true);
-                            menuVo.setRedirect("noredirect");
-                            menuVo.setChildren(buildMenus(menuDtoList));
-                            // 处理是一级菜单并且没有子菜单的情况
-                        } else if(menuDTO.getPid() == null){
-                            MenuVo menuVo1 = getMenuVo(menuDTO, menuVo);
-                            menuVo.setName(null);
-                            menuVo.setMeta(null);
-                            menuVo.setComponent("Layout");
-                            List<MenuVo> list1 = new ArrayList<>();
-                            list1.add(menuVo1);
-                            menuVo.setChildren(list1);
-                        }
-                        list.add(menuVo);
-                    }
-                }
-        );
-        return list;
+        return menuBuildStrategyContext.buildMenus(menuDtos);
     }
 
     @Override
@@ -354,25 +333,5 @@ public class MenuServiceImpl implements MenuService {
             add(id);
         }});
         redisUtils.delByKeys(CacheKey.ROLE_ID, roles.stream().map(Role::getId).collect(Collectors.toSet()));
-    }
-
-    /**
-     * 构建前端路由
-     * @param menuDTO /
-     * @param menuVo /
-     * @return /
-     */
-    private static MenuVo getMenuVo(MenuDto menuDTO, MenuVo menuVo) {
-        MenuVo menuVo1 = new MenuVo();
-        menuVo1.setMeta(menuVo.getMeta());
-        // 非外链
-        if(!menuDTO.getIFrame()){
-            menuVo1.setPath("index");
-            menuVo1.setName(menuVo.getName());
-            menuVo1.setComponent(menuVo.getComponent());
-        } else {
-            menuVo1.setPath(menuDTO.getPath());
-        }
-        return menuVo1;
     }
 }
