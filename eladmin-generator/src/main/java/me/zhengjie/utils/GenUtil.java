@@ -20,6 +20,9 @@ import cn.hutool.extra.template.*;
 import lombok.extern.slf4j.Slf4j;
 import me.zhengjie.domain.GenConfig;
 import me.zhengjie.domain.ColumnInfo;
+import me.zhengjie.utils.gen.FilePathStrategy;
+import me.zhengjie.utils.gen.FilePathStrategyFactory;
+import me.zhengjie.utils.gen.FrontFilePathStrategy;
 import org.springframework.util.ObjectUtils;
 
 import java.io.File;
@@ -348,44 +351,10 @@ public class GenUtil {
      * 定义后端文件路径以及名称
      */
     private static String getAdminFilePath(String templateName, GenConfig genConfig, String className, String rootPath) {
-        String projectPath = rootPath + File.separator + genConfig.getModuleName();
-        String packagePath = projectPath + File.separator + "src" + File.separator + "main" + File.separator + "java" + File.separator;
-        if (!ObjectUtils.isEmpty(genConfig.getPack())) {
-            packagePath += genConfig.getPack().replace(".", File.separator) + File.separator;
+        FilePathStrategy strategy = FilePathStrategyFactory.getAdminStrategy(templateName);
+        if (strategy != null) {
+            return strategy.getFilePath(templateName, genConfig, className, rootPath);
         }
-
-        if ("Entity".equals(templateName)) {
-            return packagePath + "domain" + File.separator + className + ".java";
-        }
-
-        if ("Controller".equals(templateName)) {
-            return packagePath + "rest" + File.separator + className + "Controller.java";
-        }
-
-        if ("Service".equals(templateName)) {
-            return packagePath + "service" + File.separator + className + "Service.java";
-        }
-
-        if ("ServiceImpl".equals(templateName)) {
-            return packagePath + "service" + File.separator + "impl" + File.separator + className + "ServiceImpl.java";
-        }
-
-        if ("Dto".equals(templateName)) {
-            return packagePath + "service" + File.separator + "dto" + File.separator + className + "Dto.java";
-        }
-
-        if ("QueryCriteria".equals(templateName)) {
-            return packagePath + "service" + File.separator + "dto" + File.separator + className + "QueryCriteria.java";
-        }
-
-        if ("Mapper".equals(templateName)) {
-            return packagePath + "service" + File.separator + "mapstruct" + File.separator + className + "Mapper.java";
-        }
-
-        if ("Repository".equals(templateName)) {
-            return packagePath + "repository" + File.separator + className + "Repository.java";
-        }
-
         return null;
     }
 
@@ -393,15 +362,10 @@ public class GenUtil {
      * 定义前端文件路径以及名称
      */
     private static String getFrontFilePath(String templateName, String apiPath, String path, String apiName) {
-
-        if ("api".equals(templateName)) {
-            return apiPath + File.separator + apiName + ".js";
+        FrontFilePathStrategy strategy = FilePathStrategyFactory.getFrontStrategy(templateName);
+        if (strategy != null) {
+            return strategy.getFilePath(templateName, apiPath, path, apiName);
         }
-
-        if ("index".equals(templateName)) {
-            return path + File.separator + "index.vue";
-        }
-
         return null;
     }
 
