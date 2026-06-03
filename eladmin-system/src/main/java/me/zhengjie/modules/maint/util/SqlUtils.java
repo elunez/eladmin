@@ -23,6 +23,7 @@ import me.zhengjie.utils.CloseUtil;
 import javax.sql.DataSource;
 import java.io.BufferedReader;
 import java.io.File;
+import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.sql.Connection;
@@ -207,26 +208,76 @@ public class SqlUtils {
 	 * @return /
 	 */
 	private static String sanitizeJdbcUrl(String jdbcUrl) {
-		// 定义不安全参数和其安全替代值
-		String[][] unsafeParams = {
-				// allowLoadLocalInfile：允许使用 LOAD DATA LOCAL INFILE，可能导致文件泄露
-				{"allowLoadLocalInfile", "false"},
-				// allowUrlInLocalInfile：允许在 LOAD DATA LOCAL INFILE 中使用 URL，可能导致未经授权的文件访问
-				{"allowUrlInLocalInfile", "false"},
-				// autoDeserialize：允许自动反序列化对象，可能导致反序列化漏洞
-				{"autoDeserialize", "false"},
-				// allowNanAndInf：允许使用 NaN 和 Infinity 作为数字值，可能导致不一致的数据处理
-				{"allowNanAndInf", "false"},
-				// allowMultiQueries：允许在一个语句中执行多个查询，可能导致 SQL 注入攻击
-				{"allowMultiQueries", "false"},
-				// allowPublicKeyRetrieval：允许从服务器检索公钥，可能导致中间人攻击
-				{"allowPublicKeyRetrieval", "false"}
-		};
-
-		// 替换不安全的参数
-		for (String[] param : unsafeParams) {
-			jdbcUrl = jdbcUrl.replaceAll("(?i)" + param[0] + "=true", param[0] + "=" + param[1]);
+		if (jdbcUrl == null) {
+			return null;
 		}
-		return jdbcUrl;
+		int idx = jdbcUrl.indexOf('?');
+		if (idx < 0) {
+			return jdbcUrl;
+		}
+		String base = jdbcUrl.substring(0, idx);
+		String query = jdbcUrl.substring(idx + 1);
+		// 按 & 拆分参数，对每个参数名按“解码后、小写”比较；命中危险参数则整段丢弃，
+		// 而不是仅把 "=true" 替换为 "=false"。这样可覆盖大小写、URL 编码，以及
+		// allowLoadLocalInfileInPath 这类不在原名单里的同族参数。
+		StringBuilder kept = new StringBuilder();
+		for (String pair : query.split("&")) {
+			if (pair.isEmpty()) {
+				continue;
+			}
+			int eq = pair.indexOf('=');
+			String rawKey = eq >= 0 ? pair.substring(0, eq) : pair;
+			String key = decodeRepeatedly(rawKey).trim().toLowerCase();
+			if (isDangerousParam(key)) {
+				continue;
+			}
+			if (kept.length() > 0) {
+				kept.append('&');
+			}
+			kept.append(pair);
+		}
+		return kept.length() > 0 ? base + "?" + kept : base;
+	}
+
+	/**
+	 * 判断参数名（已解码、已小写）是否为危险的 JDBC 连接参数。
+	 */
+	private static boolean isDangerousParam(String key) {
+		// allowLoadLocalInfile 与 allowLoadLocalInfileInPath 都以该前缀开头
+		if (key.startsWith("allowloadlocalinfile")) {
+			return true;
+		}
+		switch (key) {
+			case "allowurlinlocalinfile":
+			case "autodeserialize":
+			case "allownanandinf":
+			case "allowmultiqueries":
+			case "allowpublickeyretrieval":
+			case "uselocalinfile":
+				return true;
+			default:
+				return false;
+		}
+	}
+
+	/**
+	 * 对参数名反复 URL 解码（最多 3 次）直到稳定，使比较与驱动的解码行为一致，
+	 * 防止用百分号编码绕过名单。
+	 */
+	private static String decodeRepeatedly(String s) {
+		String prev = s;
+		for (int i = 0; i < 3; i++) {
+			String decoded;
+			try {
+				decoded = URLDecoder.decode(prev, StandardCharsets.UTF_8.name());
+			} catch (Exception e) {
+				return prev;
+			}
+			if (decoded.equals(prev)) {
+				return decoded;
+			}
+			prev = decoded;
+		}
+		return prev;
 	}
 }
