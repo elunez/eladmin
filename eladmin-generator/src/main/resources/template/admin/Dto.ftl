@@ -25,7 +25,6 @@ import java.math.BigDecimal;
 import java.io.Serializable;
 <#if !auto && pkColumnType = 'Long'>
 import com.alibaba.fastjson2.annotation.JSONField;
-import com.alibaba.fastjson2.serializer.ToStringSerializer;
 </#if>
 import io.swagger.annotations.ApiModelProperty;
 
@@ -47,8 +46,6 @@ public class ${className}Dto implements Serializable {
     </#if>
     <#if column.columnKey = 'PRI'>
     <#if !auto && pkColumnType = 'Long'>
-    /** 防止精度丢失 */
-    @JSONField(serializeUsing = ToStringSerializer.class)
     </#if>
     </#if>
     private ${column.columnType} ${column.changeColumnName};
