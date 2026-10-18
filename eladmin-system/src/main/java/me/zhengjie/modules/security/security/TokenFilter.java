@@ -19,6 +19,7 @@ import cn.hutool.core.util.StrUtil;
 import me.zhengjie.modules.security.config.SecurityProperties;
 import me.zhengjie.modules.security.service.dto.OnlineUserDto;
 import me.zhengjie.modules.security.service.OnlineUserService;
+import me.zhengjie.utils.EncryptUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -64,8 +65,8 @@ public class TokenFilter extends GenericFilterBean {
             // 获取用户Token的Key
             String loginKey = tokenProvider.loginKey(token);
             OnlineUserDto onlineUserDto = onlineUserService.getOne(loginKey);
-            // 判断用户在线信息是否为空
-            if (onlineUserDto != null) {
+            // 请求 Token 必须与服务端为该在线会话保存的原始 Token 一致
+            if (onlineUserDto != null && matchesOnlineToken(token, onlineUserDto)) {
                 // Token 续期判断
                 tokenProvider.checkRenewal(token);
                 // 获取认证信息，设置上下文
@@ -74,6 +75,15 @@ public class TokenFilter extends GenericFilterBean {
             }
         }
         filterChain.doFilter(servletRequest, servletResponse);
+    }
+
+    private boolean matchesOnlineToken(String token, OnlineUserDto onlineUserDto) {
+        try {
+            return EncryptUtils.desEncrypt(token).equals(onlineUserDto.getKey());
+        } catch (Exception e) {
+            log.warn("Failed to validate online session token", e);
+            return false;
+        }
     }
 
     /**
