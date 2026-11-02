@@ -19,7 +19,6 @@ import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
 import io.jsonwebtoken.*;
-import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 import me.zhengjie.modules.security.config.SecurityProperties;
@@ -30,6 +29,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import javax.servlet.http.HttpServletRequest;
 import java.security.Key;
 import java.util.*;
@@ -56,8 +56,19 @@ public class TokenProvider implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() {
-        // 解码Base64密钥并创建签名密钥
-        byte[] keyBytes = Decoders.BASE64.decode(properties.getBase64Secret());
+        String secret = properties.getBase64Secret();
+        if (!StringUtils.hasText(secret)) {
+            throw new IllegalStateException("Configure JWT_BASE64_SECRET with a Base64-encoded random key of at least 64 bytes");
+        }
+        byte[] keyBytes;
+        try {
+            keyBytes = Base64.getDecoder().decode(secret);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalStateException("JWT_BASE64_SECRET must be valid Base64", e);
+        }
+        if (keyBytes.length < 64) {
+            throw new IllegalStateException("JWT_BASE64_SECRET must decode to at least 64 bytes for HS512");
+        }
         this.signingKey = Keys.hmacShaKeyFor(keyBytes);
         // 初始化 JwtParser
         jwtParser = Jwts.parserBuilder()
