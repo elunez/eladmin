@@ -141,7 +141,13 @@ public class RsaUtils {
     private static byte[] doLongerCipherFinal(int opMode,Cipher cipher, byte[] source) throws Exception {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         if (opMode == Cipher.DECRYPT_MODE) {
-            out.write(cipher.doFinal(source));
+            int blockSize = cipher.getOutputSize(0);
+            if (source.length == 0 || source.length % blockSize != 0) {
+                throw new javax.crypto.IllegalBlockSizeException("Invalid RSA ciphertext length");
+            }
+            for (int offset = 0; offset < source.length; offset += blockSize) {
+                out.write(cipher.doFinal(source, offset, blockSize));
+            }
         } else {
             int offset = 0;
             int totalSize = source.length;
