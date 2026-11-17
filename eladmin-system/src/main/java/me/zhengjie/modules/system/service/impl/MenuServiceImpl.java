@@ -163,8 +163,21 @@ public class MenuServiceImpl implements MenuService {
             throw new EntityExistException(Menu.class,"title",resources.getTitle());
         }
 
-        if(resources.getPid().equals(0L)){
+        if (Long.valueOf(0L).equals(resources.getPid())) {
             resources.setPid(null);
+        }
+
+        Long parentId = resources.getPid();
+        Set<Long> visited = new HashSet<>();
+        while (parentId != null && parentId != 0L) {
+            if (parentId.equals(resources.getId()) || !visited.add(parentId)) {
+                throw new BadRequestException("菜单上级不能形成循环");
+            }
+            Menu parent = menuRepository.findById(parentId).orElse(null);
+            if (parent == null) {
+                break;
+            }
+            parentId = parent.getPid();
         }
 
         // 记录的父节点ID
@@ -200,7 +213,9 @@ public class MenuServiceImpl implements MenuService {
     @Override
     public Set<Menu> getChildMenus(List<Menu> menuList, Set<Menu> menuSet) {
         for (Menu menu : menuList) {
-            menuSet.add(menu);
+            if (!menuSet.add(menu)) {
+                continue;
+            }
             List<Menu> menus = menuRepository.findByPidOrderByMenuSort(menu.getId());
             if(CollUtil.isNotEmpty(menus)){
                 getChildMenus(menus, menuSet);
@@ -234,12 +249,17 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public List<MenuDto> getSuperior(MenuDto menuDto, List<Menu> menus) {
-        if(menuDto.getPid() == null){
-            menus.addAll(menuRepository.findByPidIsNullOrderByMenuSort());
-            return menuMapper.toDto(menus);
+        Set<Long> visited = new HashSet<>();
+        while (menuDto.getPid() != null) {
+            Long parentId = menuDto.getPid();
+            if (!visited.add(parentId)) {
+                throw new BadRequestException("菜单上级存在循环");
+            }
+            menus.addAll(menuRepository.findByPidOrderByMenuSort(parentId));
+            menuDto = findById(parentId);
         }
-        menus.addAll(menuRepository.findByPidOrderByMenuSort(menuDto.getPid()));
-        return getSuperior(findById(menuDto.getPid()), menus);
+        menus.addAll(menuRepository.findByPidIsNullOrderByMenuSort());
+        return menuMapper.toDto(menus);
     }
 
     @Override
