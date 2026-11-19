@@ -87,6 +87,9 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
             return null;
         }
         s = toCamelCase(s);
+        if (s.isEmpty()) {
+            return s;
+        }
         return s.substring(0, 1).toUpperCase() + s.substring(1);
     }
 
