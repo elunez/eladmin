@@ -267,17 +267,21 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
     }
 
     public static String getFileType(String type) {
-        String documents = "txt doc pdf ppt pps xlsx xls docx";
-        String music = "mp3 wav wma mpa ram ra aac aif m4a";
-        String video = "avi mpg mpe mpeg asf wmv mov qt rm mp4 flv m4v webm ogv ogg";
-        String image = "bmp dib pcp dif wmf gif jpg tif eps psd cdr iff tga pcd mpt png jpeg";
-        if (image.contains(type)) {
+        if (type == null || type.isEmpty()) {
+            return OTHER;
+        }
+        String extension = type.toLowerCase(Locale.ROOT);
+        List<String> documents = Arrays.asList("txt doc pdf ppt pps xlsx xls docx".split(" "));
+        List<String> music = Arrays.asList("mp3 wav wma mpa ram ra aac aif m4a".split(" "));
+        List<String> video = Arrays.asList("avi mpg mpe mpeg asf wmv mov qt rm mp4 flv m4v webm ogv ogg".split(" "));
+        List<String> image = Arrays.asList("bmp dib pcp dif wmf gif jpg tif eps psd cdr iff tga pcd mpt png jpeg".split(" "));
+        if (image.contains(extension)) {
             return IMAGE;
-        } else if (documents.contains(type)) {
+        } else if (documents.contains(extension)) {
             return TXT;
-        } else if (music.contains(type)) {
+        } else if (music.contains(extension)) {
             return MUSIC;
-        } else if (video.contains(type)) {
+        } else if (video.contains(extension)) {
             return VIDEO;
         } else {
             return OTHER;
