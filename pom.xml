@@ -33,6 +33,8 @@
         <druid.version>1.2.19</druid.version>
         <commons-pool2.version>2.11.1</commons-pool2.version>
         <mapstruct.version>1.4.2.Final</mapstruct.version>
+        <!-- 默认打包不执行测试，需要时用 -DskipTests=false 从命令行开启 -->
+        <skipTests>true</skipTests>
     </properties>
 
     <dependencies>
@@ -226,12 +228,12 @@
 
     <build>
         <plugins>
-            <!-- 打包时跳过测试 -->
+            <!-- 打包时跳过测试执行，保留测试代码编译 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
-                    <skip>true</skip>
+                    <skipTests>${skipTests}</skipTests>
                 </configuration>
             </plugin>
         </plugins>

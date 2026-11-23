@@ -41,7 +41,18 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
     /**
      * 注入bean
      */
-    private final static Ip2regionSearcher IP_SEARCHER = SpringBeanHolder.getBean(Ip2regionSearcher.class);
+    private static Ip2regionSearcher ipSearcher;
+
+    /**
+     * 首次调用时再查找 bean，否则类加载就依赖 Spring 容器，
+     * 本类中与容器无关的字符串方法也会跟着初始化失败。
+     */
+    private static synchronized Ip2regionSearcher ipSearcher() {
+        if (ipSearcher == null) {
+            ipSearcher = SpringBeanHolder.getBean(Ip2regionSearcher.class);
+        }
+        return ipSearcher;
+    }
 
     /**
      * 驼峰命名法工具
@@ -162,7 +173,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
      * 根据ip获取详细地址
      */
     public static String getCityInfo(String ip) {
-        IpInfo ipInfo = IP_SEARCHER.memorySearch(ip);
+        IpInfo ipInfo = ipSearcher().memorySearch(ip);
         if(ipInfo != null){
             return ipInfo.getAddress();
         }
