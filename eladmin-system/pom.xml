@@ -87,7 +87,10 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
-            <!-- 跳过单元测试 -->
+            <!--
+                本模块的测试需要真实启动应用（MySQL / Redis），不参与根 pom 的
+                -DskipTests=false 开关，否则本地无中间件时构建会直接失败。
+            -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>

@@ -5,6 +5,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import static me.zhengjie.utils.StringUtils.getIp;
 import static me.zhengjie.utils.StringUtils.getWeekDay;
@@ -37,12 +38,26 @@ public class StringUtilsTest {
 
     @Test
     public void testGetWeekDay() {
-        SimpleDateFormat simpleDateformat = new SimpleDateFormat("E");
+        // getWeekDay() 固定返回英文缩写，用默认 locale 断言会在中文环境得到“星期一”
+        SimpleDateFormat simpleDateformat = new SimpleDateFormat("E", Locale.ENGLISH);
         assertEquals(simpleDateformat.format(new Date()), getWeekDay());
     }
 
     @Test
-    public void testGetIP() {
-        assertEquals("127.0.0.1", getIp(new MockHttpServletRequest()));
+    public void testGetIPFromForwardedHeader() {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.addHeader("x-forwarded-for", "1.2.3.4, 5.6.7.8");
+        // 多级代理时只取第一个地址
+        assertEquals("1.2.3.4", getIp(request));
+    }
+
+    @Test
+    public void testGetIPFallbackToRemoteAddr() {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.addHeader("x-forwarded-for", "unknown");
+        request.addHeader("Proxy-Client-IP", "unknown");
+        request.addHeader("WL-Proxy-Client-IP", "unknown");
+        request.setRemoteAddr("10.0.0.5");
+        assertEquals("10.0.0.5", getIp(request));
     }
 }
